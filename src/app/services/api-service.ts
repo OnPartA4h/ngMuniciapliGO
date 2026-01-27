@@ -7,7 +7,8 @@ import { helloWorld } from '../models/helloWorld';
   providedIn: 'root',
 })
 export class ApiService {
-  domain = "https://localhost:7288"
+  //domain = "https://localhost:7288"
+  domain = "https://municipaligo.onrender.com"
 
   constructor(public http: HttpClient) {}
 

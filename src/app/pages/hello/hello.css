@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+p {
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+}
