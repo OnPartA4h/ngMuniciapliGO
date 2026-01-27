@@ -1,0 +1,8 @@
+name = "ngmuniciapligo"
+compatibility_date = "2026-01-27"
+main = "src/worker.js"
+
+# Configuration pour servir les assets statiques Angular
+[assets]
+directory = "./dist/ng-municipali-go/browser"
+binding = "ASSETS"
