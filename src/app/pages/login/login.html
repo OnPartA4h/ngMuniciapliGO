@@ -10,22 +10,32 @@
         <p>Connectez-vous à votre compte</p>
       </div>
       
-      <form class="login-form">
+      <form [formGroup]="formGroup" class="login-form">
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" placeholder="votre@email.com" [(ngModel)]="email" name="email"/>
+          <input  type="email" id="email" placeholder="votre@email.com" name="email" formControlName="email"/>
+          @if(formGroup.get('email')?.hasError('required') && formGroup.get('email')?.touched) {
+            <div style="color: red;">your email is REQUIRED</div>
+            }
+
+            @if(formGroup.get('email')?.hasError('email') && formGroup.get('email')?.touched) {
+            <div style="color: red;">enter a valid email</div>
+            }
         </div>
         
         <div class="form-group">
           <label for="password">Mot de passe</label>
-          <input type="password" id="password" placeholder="••••••••" [(ngModel)]="password" name="password"/>
+          <input type="password" id="password" placeholder="••••••••" name="password" formControlName="password"/>
+          @if(formGroup.get('password')?.hasError('required') && formGroup.get('password')?.touched) {
+            <div style="color: red;">your password is REQUIRED</div>
+            }
         </div>
         
         <div class="form-options">
           <a href="#" class="forgot-password">Mot de passe oublié ?</a>
         </div>
         
-        <button type="submit" class="btn-login" (click)="login()">Se connecter</button>
+        <button type="submit" [disabled]="!formGroup.valid" class="btn-login" (click)="login()">Se connecter</button>
       </form>  
     </div>
   </div>
