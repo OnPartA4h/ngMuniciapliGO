@@ -7,5 +7,14 @@
     <a routerLink="/manage-reports" routerLinkActive="active">Manage Reports</a>
     <a routerLink="/manage-users" routerLinkActive="active">Manage Users</a>
   </nav>
-  <a routerLink="/login" class="btn-login">Login</a>
+  <div *ngIf="!isConnected">
+    <a routerLink="/login" class="btn-login">Login</a>
+  </div>
+
+  <div *ngIf="isConnected">
+    <a routerLink="/login" class="btn-login" (click)="logout()">Logout</a>
+  </div>
+
+
+  
 </header>
