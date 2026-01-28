@@ -1,1 +1,300 @@
-<p>manage-reports works!</p>
+<div class="manage-reports-container">
+  <div class="page-header">
+    <h1>Gestion des Problèmes</h1>
+    <p>Liste de tous les problèmes signalés</p>
+  </div>
+
+  <div class="filters-bar">
+    <div class="search-box">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input type="text" placeholder="Rechercher un problème..." />
+    </div>
+    <div class="filter-group">
+      <select>
+        <option value="">Toutes les catégories</option>
+        <option value="voirie">Voirie</option>
+        <option value="eclairage">Éclairage</option>
+        <option value="proprete">Propreté</option>
+        <option value="espaces-verts">Espaces verts</option>
+        <option value="autre">Autre</option>
+      </select>
+      <select>
+        <option value="">Tous les statuts</option>
+        <option value="nouveau">Nouveau</option>
+        <option value="en-cours">En cours</option>
+        <option value="assigne">Assigné</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="reports-list">
+    <!-- Report Item 1 -->
+    <div class="report-card" routerLink="/report-details">
+      <div class="report-thumbnail">
+        <img src="https://placehold.co/120x90/e8f4f8/1565c0?text=Photo" alt="Photo du problème" />
+      </div>
+      <div class="report-info">
+        <div class="report-header">
+          <h3 class="report-title">Nid-de-poule dangereux</h3>
+          <span class="report-status status-nouveau">Nouveau</span>
+        </div>
+        <div class="report-details">
+          <span class="report-location">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            123 Rue Principale, Quartier Centre
+          </span>
+          <span class="report-category">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+            Voirie
+          </span>
+        </div>
+        <div class="report-meta">
+          <span class="report-date">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Signalé il y a 5 jours
+          </span>
+          <span class="report-assignee">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Non assigné
+          </span>
+        </div>
+      </div>
+      <div class="report-action">
+        <svg class="icon arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Report Item 2 -->
+    <div class="report-card" routerLink="/report-details">
+      <div class="report-thumbnail">
+        <img src="https://placehold.co/120x90/e8f5e9/2e7d32?text=Photo" alt="Photo du problème" />
+      </div>
+      <div class="report-info">
+        <div class="report-header">
+          <h3 class="report-title">Lampadaire défectueux</h3>
+          <span class="report-status status-en-cours">En cours</span>
+        </div>
+        <div class="report-details">
+          <span class="report-location">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            45 Avenue des Lilas
+          </span>
+          <span class="report-category">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+            Éclairage
+          </span>
+        </div>
+        <div class="report-meta">
+          <span class="report-date">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Signalé il y a 12 jours
+          </span>
+          <span class="report-assignee">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Jean Dupont
+          </span>
+        </div>
+      </div>
+      <div class="report-action">
+        <svg class="icon arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Report Item 3 -->
+    <div class="report-card" routerLink="/report-details">
+      <div class="report-thumbnail">
+        <img src="https://placehold.co/120x90/fff3e0/e65100?text=Photo" alt="Photo du problème" />
+      </div>
+      <div class="report-info">
+        <div class="report-header">
+          <h3 class="report-title">Dépôt sauvage de déchets</h3>
+          <span class="report-status status-assigne">Assigné</span>
+        </div>
+        <div class="report-details">
+          <span class="report-location">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            Parc Municipal, Entrée Sud
+          </span>
+          <span class="report-category">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+            Propreté
+          </span>
+        </div>
+        <div class="report-meta">
+          <span class="report-date">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Signalé il y a 3 jours
+          </span>
+          <span class="report-assignee">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Marie Martin
+          </span>
+        </div>
+      </div>
+      <div class="report-action">
+        <svg class="icon arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Report Item 4 -->
+    <div class="report-card" routerLink="/report-details">
+      <div class="report-thumbnail">
+        <img src="https://placehold.co/120x90/e8f4f8/1565c0?text=Photo" alt="Photo du problème" />
+      </div>
+      <div class="report-info">
+        <div class="report-header">
+          <h3 class="report-title">Arbre tombé sur le trottoir</h3>
+          <span class="report-status status-nouveau">Nouveau</span>
+        </div>
+        <div class="report-details">
+          <span class="report-location">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            Boulevard de la Liberté
+          </span>
+          <span class="report-category">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+            Espaces verts
+          </span>
+        </div>
+        <div class="report-meta">
+          <span class="report-date">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Signalé il y a 1 jour
+          </span>
+          <span class="report-assignee">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Non assigné
+          </span>
+        </div>
+      </div>
+      <div class="report-action">
+        <svg class="icon arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Report Item 5 -->
+    <div class="report-card" routerLink="/report-details">
+      <div class="report-thumbnail">
+        <img src="https://placehold.co/120x90/e8f5e9/2e7d32?text=Photo" alt="Photo du problème" />
+      </div>
+      <div class="report-info">
+        <div class="report-header">
+          <h3 class="report-title">Graffiti sur mur public</h3>
+          <span class="report-status status-en-cours">En cours</span>
+        </div>
+        <div class="report-details">
+          <span class="report-location">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            Place de la Mairie
+          </span>
+          <span class="report-category">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+            Propreté
+          </span>
+        </div>
+        <div class="report-meta">
+          <span class="report-date">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Signalé il y a 8 jours
+          </span>
+          <span class="report-assignee">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Pierre Durand
+          </span>
+        </div>
+      </div>
+      <div class="report-action">
+        <svg class="icon arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <button class="pagination-btn">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Précédent
+    </button>
+    <span class="pagination-info">Page 1 sur 3</span>
+    <button class="pagination-btn">
+      Suivant
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+</div>

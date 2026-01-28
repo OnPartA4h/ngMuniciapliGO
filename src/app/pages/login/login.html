@@ -6,19 +6,19 @@
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">
-        <img src="/assets/images/LogoText.png" style="width: 200px;">
+        <img src="/assets/images/LogoText.png" style="width: 200px;">  
         <p>Connectez-vous à votre compte</p>
       </div>
       
       <form class="login-form">
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" placeholder="votre@email.com" />
+          <input type="email" id="email" placeholder="votre@email.com" [(ngModel)]="email" name="email"/>
         </div>
         
         <div class="form-group">
           <label for="password">Mot de passe</label>
-          <input type="password" id="password" placeholder="••••••••" />
+          <input type="password" id="password" placeholder="••••••••" [(ngModel)]="password" name="password"/>
         </div>
         
         <div class="form-options">
@@ -29,7 +29,7 @@
           <a href="#" class="forgot-password">Mot de passe oublié ?</a>
         </div>
         
-        <button type="submit" class="btn-login">Se connecter</button>
+        <button type="submit" class="btn-login" (click)="login()">Se connecter</button>
       </form>
       
       <div class="login-footer">
