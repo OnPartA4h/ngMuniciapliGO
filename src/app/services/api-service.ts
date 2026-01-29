@@ -16,6 +16,13 @@ export class ApiService {
     let x = await lastValueFrom(this.http.get<helloWorld>(this.domain + "/api/Hello"))
     console.log(x);
 
-    return x.text
+    return x.text;
+  }
+
+  async getProblem(id: number): Promise<any> {
+    let x = await lastValueFrom(this.http.get<any>(this.domain + "/api/general/problem/" + id))
+    console.log(x);
+
+    return x;
   }
 }
