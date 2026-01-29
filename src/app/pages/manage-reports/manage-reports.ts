@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { lastValueFrom } from 'rxjs';
 import { WhiteService } from '../../services/white-service';
 import { Problem } from '../../models/problem';
 import { CommonModule } from '@angular/common';

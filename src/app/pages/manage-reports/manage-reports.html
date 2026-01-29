@@ -32,7 +32,7 @@
     <!-- Report Item 1 -->
     <div class="report-card" routerLink="/report-details/{{p.id}}" *ngFor="let p of problems">
       <div class="report-thumbnail">
-        <img src="https://placehold.co/120x90/e8f4f8/1565c0?text=Photo" alt="Photo du problème" />
+        <img [src]="p.photos[0].url" alt="Photo du problème" />
       </div>
       <div class="report-info">
         <div class="report-header">
