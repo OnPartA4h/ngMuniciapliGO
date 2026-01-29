@@ -1,0 +1,188 @@
+<div class="create-user-container">
+  <div class="page-header">
+    <button class="back-btn" (click)="cancel()">
+      <i class="fas fa-arrow-left"></i>
+      <span>Retour</span>
+    </button>
+    <h1>Créer un nouvel utilisateur</h1>
+    <p class="subtitle">Remplissez les informations ci-dessous pour créer un compte utilisateur</p>
+  </div>
+
+  <div class="form-card">
+    <form (ngSubmit)="createUser()" #userForm="ngForm">
+      <!-- Error/Success Messages -->
+      <div class="alert alert-error" *ngIf="errorMessage">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <div class="alert alert-success" *ngIf="successMessage && !showPasswordModal">
+        <i class="fas fa-check-circle"></i>
+        <span>{{ successMessage }}</span>
+      </div>
+
+      <!-- Personal Information -->
+      <div class="form-section">
+        <h2 class="section-title">Informations personnelles</h2>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="firstName">
+              Prénom <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              [(ngModel)]="userData.firstName"
+              placeholder="Entrez le prénom"
+              required
+              [class.error]="formTouched && !userData.firstName.trim()"
+            />
+            <span class="error-text" *ngIf="formTouched && !userData.firstName.trim()">
+              Le prénom est requis
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">
+              Nom <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              [(ngModel)]="userData.lastName"
+              placeholder="Entrez le nom"
+              required
+              [class.error]="formTouched && !userData.lastName.trim()"
+            />
+            <span class="error-text" *ngIf="formTouched && !userData.lastName.trim()">
+              Le nom est requis
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">
+              Email <span class="required">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              [(ngModel)]="userData.email"
+              placeholder="exemple@email.com"
+              required
+              [class.error]="formTouched && !userData.email.trim()"
+            />
+            <span class="error-text" *ngIf="formTouched && !userData.email.trim()">
+              L'email est requis
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumber">
+              Téléphone <span class="required">*</span>
+            </label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              [(ngModel)]="userData.phoneNumber"
+              placeholder="(123) 456-7890"
+              required
+              [class.error]="formTouched && !userData.phoneNumber.trim()"
+            />
+            <span class="error-text" *ngIf="formTouched && !userData.phoneNumber.trim()">
+              Le numéro de téléphone est requis
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Roles Section -->
+      <div class="form-section">
+        <h2 class="section-title">
+          Rôles <span class="required">*</span>
+        </h2>
+        <p class="section-description">Sélectionnez au moins un rôle pour cet utilisateur</p>
+        
+        <div class="roles-grid">
+          <div 
+            class="role-card" 
+            *ngFor="let role of availableRoles"
+            [class.selected]="hasRole(role)"
+            (click)="toggleRole(role)"
+          >
+            <div class="role-checkbox">
+              <input 
+                type="checkbox" 
+                [id]="'role-' + role"
+                [checked]="hasRole(role)"
+                (click)="$event.stopPropagation()"
+              />
+              <label [for]="'role-' + role"></label>
+            </div>
+            <div class="role-info">
+              <h3>{{ role }}</h3>
+              <p class="role-description" [ngSwitch]="role">
+                <span *ngSwitchCase="'Admin'">Accès complet à toutes les fonctionnalités</span>
+                <span *ngSwitchCase="'ColBlanc'">Personnel administratif de la municipalité</span>
+                <span *ngSwitchCase="'ColBleu'">Personnel technique et opérationnel</span>
+                <span *ngSwitchCase="'Citoyen'">Citoyen avec accès de base</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <span class="error-text" *ngIf="formTouched && userData.roles.length === 0">
+          Veuillez sélectionner au moins un rôle
+        </span>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="isLoading">
+          Annuler
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+          <i class="fas fa-save" *ngIf="!isLoading"></i>
+          <span class="spinner" *ngIf="isLoading"></span>
+          {{ isLoading ? 'Création en cours...' : 'Créer l\'utilisateur' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Password Modal -->
+<div class="modal-backdrop" *ngIf="showPasswordModal" (click)="closePasswordModal()">
+  <div class="password-modal" (click)="$event.stopPropagation()">
+    <div class="modal-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    
+    <h2>Utilisateur créé avec succès!</h2>
+    <p class="modal-message">Un mot de passe temporaire a été généré. Veuillez le copier et le communiquer à l'utilisateur de manière sécurisée.</p>
+    
+    <div class="password-display">
+      <span class="password-label">Mot de passe temporaire:</span>
+      <div class="password-box">
+        <code>{{ generatedPassword }}</code>
+        <button type="button" class="copy-btn" (click)="copyPassword()">
+          <i class="fas fa-copy"></i>
+          Copier
+        </button>
+      </div>
+    </div>
+    
+    <div class="modal-warning">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span>L'utilisateur devra changer ce mot de passe lors de sa première connexion.</span>
+    </div>
+    
+    <button type="button" class="btn btn-primary btn-full" (click)="closePasswordModal()">
+      Compris, retourner à la liste
+    </button>
+  </div>
+</div>

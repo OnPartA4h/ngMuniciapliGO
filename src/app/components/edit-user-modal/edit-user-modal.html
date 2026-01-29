@@ -1,0 +1,92 @@
+<div class="modal-backdrop" *ngIf="isOpen" (click)="handleBackdropClick($event)">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Gérer l'utilisateur</h2>
+      <button class="close-btn" (click)="closeModal()" [disabled]="isLoading">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="user">
+      <div class="user-details">
+        <div class="detail-group">
+          <label>Prénom</label>
+          <p>{{ user.firstName }}</p>
+        </div>
+        
+        <div class="detail-group">
+          <label>Nom</label>
+          <p>{{ user.lastName }}</p>
+        </div>
+        
+        <div class="detail-group">
+          <label>Email</label>
+          <p>{{ user.email }}</p>
+        </div>
+        
+        <div class="detail-group">
+          <label>Téléphone</label>
+          <p>{{ user.phoneNumber }}</p>
+        </div>
+
+        <div class="detail-group">
+          <label>Mot de passe à réinitialiser</label>
+          <p>{{ user.mustResetPassword ? 'Oui' : 'Non' }}</p>
+        </div>
+      </div>
+
+      <div class="roles-section">
+        <h3>Rôles</h3>
+        <div class="roles-list">
+          <div class="role-item" *ngFor="let role of roles">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                [checked]="hasRole(role)" 
+                (change)="toggleRole(role)"
+                [disabled]="isLoading"
+              />
+              <span>{{ role }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-danger" (click)="openDeleteConfirm()" [disabled]="isLoading">
+        <i class="fas fa-trash"></i>
+        Supprimer l'utilisateur
+      </button>
+      <button class="btn btn-secondary" (click)="closeModal()" [disabled]="isLoading">
+        Fermer
+      </button>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Overlay -->
+  <div class="delete-confirm-overlay" *ngIf="showDeleteConfirm" (click)="cancelDelete()">
+    <div class="delete-confirm-modal" (click)="$event.stopPropagation()">
+      <div class="confirm-header">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h2>Confirmer la suppression</h2>
+      </div>
+      
+      <div class="confirm-body">
+        <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{{ user?.firstName }} {{ user?.lastName }}</strong> ?</p>
+        <p class="warning-text">Cette action est irréversible.</p>
+      </div>
+      
+      <div class="confirm-footer">
+        <button class="btn btn-secondary" (click)="cancelDelete()" [disabled]="isLoading">
+          Annuler
+        </button>
+        <button class="btn btn-danger" (click)="confirmDelete()" [disabled]="isLoading">
+          <i class="fas fa-trash"></i>
+          <span *ngIf="!isLoading">Supprimer</span>
+          <span *ngIf="isLoading">Suppression...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

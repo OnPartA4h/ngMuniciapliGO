@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, Signal, WritableSignal } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  domain = "https://localhost:7288"
-  //domain = "https://municipaligo.onrender.com"
+  private apiUrl = environment.apiUrl;
 
   private tokenSignal : WritableSignal<string|null> = signal(localStorage.getItem("token"));
   readonly token : Signal<string|null> = this.tokenSignal.asReadonly();
@@ -20,34 +20,35 @@ export class AuthService {
   constructor(public http: HttpClient) {}
 
   async login(email: string, password: string) {
-    let dto = {
+    const dto = {
       email: email,
       password: password
-    }
+    };
 
-    let x = await lastValueFrom(this.http.post<any>(this.domain + "/api/Auth/login", dto))
-    console.log(x);
+    const response = await lastValueFrom(
+      this.http.post<any>(`${this.apiUrl}/api/Auth/login`, dto)
+    );
+    console.log(response);
 
-    let roles: string[] = x.user.roles
+    const roles: string[] = response.user.roles;
 
     if (!roles.includes("Admin") && !roles.includes("ColBlanc")) {
       console.log("NOT ADMIN OR COL BLANC!!!!");
-      return
+      return;
     }
 
-    localStorage.setItem("token", x.token)
-    this.tokenSignal.set(x.token)
+    localStorage.setItem("token", response.token);
+    this.tokenSignal.set(response.token)
 
-    localStorage.setItem("roles", JSON.stringify(x.user.roles))
-    this.rolesSignal.set(x.user.roles)
+    localStorage.setItem("roles", JSON.stringify(response.user.roles))
+    this.rolesSignal.set(response.user.roles)
   }
 
   logout() {
-    localStorage.removeItem("token")
+    localStorage.removeItem("token");
     localStorage.removeItem("roles")
     
     this.tokenSignal.set(null)
     this.rolesSignal.set([])
   }
-
 }
