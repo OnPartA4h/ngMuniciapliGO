@@ -14,7 +14,7 @@ import { filter } from 'rxjs/operators';
 })
 export class App {
   showHeaderFooter = true;
-  private hiddenRoutes = ['/login', '/signup'];
+  private hiddenRoutes = ['/login'];
 
   constructor(private router: Router) {
     this.router.events

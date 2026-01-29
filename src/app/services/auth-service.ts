@@ -22,7 +22,7 @@ export class AuthService {
 
     let roles: string[] = x.user.roles
 
-    if (!roles.includes("Admin") || !roles.includes("ColBlanc")) {
+    if (!roles.includes("Admin") && !roles.includes("ColBlanc")) {
       console.log("NOT ADMIN OR COL BLANC!!!!");
       return
     }
