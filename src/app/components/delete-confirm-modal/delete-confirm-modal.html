@@ -1,0 +1,21 @@
+<div class="modal-backdrop" *ngIf="isOpen" (click)="handleBackdropClick($event)">
+  <div class="modal-container">
+    <div class="modal-header">
+      <i class="fas fa-exclamation-triangle icon-warning"></i>
+      <h2>Confirmer la suppression</h2>
+    </div>
+
+    <div class="modal-body" *ngIf="user">
+      <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{{ user.firstName }} {{ user.lastName }}</strong> ?</p>
+      <p class="warning-text">Cette action est irréversible.</p>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="onCancel()">Annuler</button>
+      <button class="btn btn-danger" (click)="onConfirm()">
+        <i class="fas fa-trash"></i>
+        Supprimer
+      </button>
+    </div>
+  </div>
+</div>
