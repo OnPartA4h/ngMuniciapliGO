@@ -2,22 +2,40 @@
   <a routerLink="/home" class="logo">
     <img src="/assets/images/Logo.png" style="width: 50px;"> <span>MunicipalGO</span>
   </a>
-  <nav>
-    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-
-    <a *ngIf="authService.roles().includes('ColBlanc')" routerLink="/manage-reports" routerLinkActive="active">Manage Reports</a>
-    
-    <a *ngIf="authService.roles().includes('Admin')" routerLink="/manage-users" routerLinkActive="active">Manage Users</a>
-
-  </nav>
-  <div *ngIf="!isConnected">
-    <a routerLink="/login" class="btn-login">Login</a>
-  </div>
-
-  <div *ngIf="isConnected">
-    <a routerLink="/login" class="btn-login" (click)="logout()">Logout</a>
-  </div>
-
-
   
+  <nav>
+    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      {{ 'HEADER.HOME' | translate }}
+    </a>
+
+    <a *ngIf="authService.roles().includes('ColBlanc')" 
+       routerLink="/manage-reports" 
+       routerLinkActive="active">
+      {{ 'HEADER.MANAGE_REPORTS' | translate }}
+    </a>
+    
+    <a *ngIf="authService.roles().includes('Admin')" 
+       routerLink="/manage-users" 
+       routerLinkActive="active">
+      {{ 'HEADER.MANAGE_USERS' | translate }}
+    </a>
+  </nav>
+
+  <div class="header-actions">
+    <!-- Language Toggle -->
+    <button class="btn-language" (click)="toggleLanguage()" title="Change language">
+      <i class="fas fa-globe"></i>
+      <span>{{ getCurrentLanguage() }}</span>
+    </button>
+
+    <!-- Login/Logout -->
+    <a *ngIf="!isConnected" routerLink="/login" class="btn-login">
+      {{ 'HEADER.LOGIN' | translate }}
+    </a>
+
+    <button *ngIf="isConnected" class="btn-login" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      {{ 'HEADER.LOGOUT' | translate }}
+    </button>
+  </div>
 </header>

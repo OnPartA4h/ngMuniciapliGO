@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, Signal, WritableSignal } from '@angular/core';
+import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -17,7 +18,7 @@ export class AuthService {
   );
   readonly roles : Signal<string[]> = this.rolesSignal.asReadonly();
 
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient, private router: Router) {}
 
   async login(email: string, password: string) {
     const dto = {
@@ -50,5 +51,7 @@ export class AuthService {
     
     this.tokenSignal.set(null)
     this.rolesSignal.set([])
+
+    this.router.navigate(['/login']);
   }
 }

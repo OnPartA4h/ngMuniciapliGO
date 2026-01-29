@@ -59,7 +59,45 @@ nav a.active {
   font-weight: var(--font-weight-semibold);
 }
 
+/* Header Actions */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+/* Language Toggle Button */
+.btn-language {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: transparent;
+  border: 2px solid var(--color-gray-300);
+  color: var(--color-text-primary);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-language:hover {
+  background-color: var(--color-gray-100);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.btn-language i {
+  font-size: var(--font-size-base);
+}
+
+/* Login/Logout Button */
 .btn-login {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
   background: var(--color-bg-gradient-primary);
   color: var(--color-white);
   text-decoration: none;
@@ -67,10 +105,31 @@ nav a.active {
   border-radius: var(--border-radius-sm);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
+  border: none;
+  cursor: pointer;
   transition: all var(--transition-base);
 }
 
 .btn-login:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-primary);
+}
+
+.btn-login i {
+  font-size: var(--font-size-base);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    padding: 0 var(--spacing-lg);
+  }
+
+  nav {
+    display: none; /* Hide on mobile, you can add a hamburger menu later */
+  }
+
+  .btn-language span {
+    display: none; /* Show only icon on mobile */
+  }
 }
