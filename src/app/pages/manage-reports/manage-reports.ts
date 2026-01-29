@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, Signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { WhiteService } from '../../services/white-service';
 import { Problem } from '../../models/problem';
@@ -18,17 +18,19 @@ export class ManageReports implements OnInit {
   StatutProbleme = StatutProbleme;
   CategorieProbleme = CategorieProbleme
 
-  public categories: any[] = [];
-  public statuts: any[] = [];
+  loading = true;
+
+  public categories = signal<any[]>([]);
+  public statuts = signal<any[]>([]);
   
   problems: Problem[] = []
 
   constructor(public whiteService: WhiteService, public apiService: ApiService) {}
 
-  async ngOnInit(): Promise<void> {
-      this.getAllReports();
-      this.categories = await this.apiService.getCategories();
-      this.statuts = await this.apiService.getStatuts()
+  async ngOnInit() {
+    await this.getAllReports();
+    this.categories.set(await this.apiService.getCategories());
+    this.statuts.set(await this.apiService.getStatuts());
   }
   
   async getAllReports() {
@@ -42,10 +44,10 @@ export class ManageReports implements OnInit {
   }
 
   getStatutLabel(statut: StatutProbleme) {
-    return this.statuts[statut]?.label;
+    return this.statuts()[statut]?.label;
   }
 
   getCategorieLabel(categorie: CategorieProbleme) {
-    return this.categories[categorie]?.label;
+    return this.categories()[categorie]?.label;
   }
 }

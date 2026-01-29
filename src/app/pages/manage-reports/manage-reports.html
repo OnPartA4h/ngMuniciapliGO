@@ -15,13 +15,13 @@
     <div class="filter-group">
       <select>
         <option value="">Toutes les catégories</option>
-        <option *ngFor="let c of categories" [value]="c.key">
+        <option *ngFor="let c of categories()" [value]="c.key">
           {{ c.label }}
         </option>
       </select>
       <select>
         <option value="">Tous les statuts</option>
-        <option *ngFor="let s of statuts" [value]="s.key">
+        <option *ngFor="let s of statuts()" [value]="s.key">
           {{ s.label }}
         </option>
       </select>
@@ -32,7 +32,7 @@
     <!-- Report Item 1 -->
     <div class="report-card" routerLink="/report-details/{{p.id}}" *ngFor="let p of problems">
       <div class="report-thumbnail">
-        <img [src]="p.photos[0].url" alt="Photo du problème" />
+        <img [src]="p.photos[0].url" alt="Photo du problème" *ngIf="p.photos" />
       </div>
       <div class="report-info">
         <div class="report-header">
@@ -70,7 +70,7 @@
             </svg>
             <div *ngIf="!p.assignedUser">Non assigné</div>
             <div *ngIf="p.assignedUser">{{p.assignedUser.firstName + ' ' + p.assignedUser.lastName}}</div>
-           
+
           </span>
         </div>
       </div>
@@ -81,21 +81,21 @@
       </div>
     </div>
 
-    
 
-  <div class="pagination">
-    <button class="pagination-btn">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="15 18 9 12 15 6"></polyline>
-      </svg>
-      Précédent
-    </button>
-    <span class="pagination-info">Page 1 sur 3</span>
-    <button class="pagination-btn">
-      Suivant
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="9 18 15 12 9 6"></polyline>
-      </svg>
-    </button>
+
+    <div class="pagination">
+      <button class="pagination-btn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Précédent
+      </button>
+      <span class="pagination-info">Page 1 sur 3</span>
+      <button class="pagination-btn">
+        Suivant
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
   </div>
-</div>
