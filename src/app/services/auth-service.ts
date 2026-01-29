@@ -1,37 +1,38 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  domain = "https://localhost:7288"
-  //domain = "https://municipaligo.onrender.com"
+  private apiUrl = environment.apiUrl;
 
   constructor(public http: HttpClient) {}
 
   async login(email: string, password: string) {
-    let dto = {
+    const dto = {
       email: email,
       password: password
-    }
+    };
 
-    let x = await lastValueFrom(this.http.post<any>(this.domain + "/api/Auth/login", dto))
-    console.log(x);
+    const response = await lastValueFrom(
+      this.http.post<any>(`${this.apiUrl}/api/Auth/login`, dto)
+    );
+    console.log(response);
 
-    let roles: string[] = x.user.roles
+    const roles: string[] = response.user.roles;
 
     if (!roles.includes("Admin") && !roles.includes("ColBlanc")) {
       console.log("NOT ADMIN OR COL BLANC!!!!");
-      return
+      return;
     }
 
-    localStorage.setItem("token", x.token)
+    localStorage.setItem("token", response.token);
   }
 
   logout() {
-    localStorage.removeItem("token")
+    localStorage.removeItem("token");
   }
-
 }
