@@ -20,4 +20,11 @@ export class ApiService {
 
     return response.text;
   }
+
+  async getProblem(id: number): Promise<any> {
+    let x = await lastValueFrom(this.http.get<any>(this.apiUrl + "/api/general/problem/" + id))
+    console.log(x);
+
+    return x;
+  }
 }
