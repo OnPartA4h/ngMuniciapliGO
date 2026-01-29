@@ -19,5 +19,5 @@ export const routes: Routes = [
   { path: 'manage-reports', component: ManageReports, canActivate: [authGuard, whiteGuard]},
   { path: 'manage-users', component: ManageUsers, canActivate: [authGuard, adminGuard]},
   { path: 'create-user', component: CreateUser, canActivate: [authGuard, adminGuard]},
-  { path: 'report-details', component: ReportDetails, canActivate: [authGuard]}
+  { path: 'report-details/:id', component: ReportDetails, canActivate: [authGuard]}
 ];
