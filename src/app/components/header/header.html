@@ -4,8 +4,11 @@
   </a>
   <nav>
     <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-    <a routerLink="/manage-reports" routerLinkActive="active">Manage Reports</a>
-    <a routerLink="/manage-users" routerLinkActive="active">Manage Users</a>
+
+    <a *ngIf="authService.roles().includes('ColBlanc')" routerLink="/manage-reports" routerLinkActive="active">Manage Reports</a>
+    
+    <a *ngIf="authService.roles().includes('Admin')" routerLink="/manage-users" routerLinkActive="active">Manage Users</a>
+
   </nav>
   <div *ngIf="!isConnected">
     <a routerLink="/login" class="btn-login">Login</a>
