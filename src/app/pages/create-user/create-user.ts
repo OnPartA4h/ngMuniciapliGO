@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdminService } from '../../services/admin-service';
-import { CreateUserDto, Role, CreateUserResponseDto } from '../../models/user';
+import { GeneralService } from '../../services/general-service';
+import { LanguageService } from '../../services/language-service';
+import { CreateUserDto, RoleOption, CreateUserResponseDto } from '../../models/user';
 
 @Component({
   selector: 'app-create-user',
@@ -11,7 +13,7 @@ import { CreateUserDto, Role, CreateUserResponseDto } from '../../models/user';
   templateUrl: './create-user.html',
   styleUrl: './create-user.css',
 })
-export class CreateUser {
+export class CreateUser implements OnInit {
   // Form data
   userData: CreateUserDto = {
     firstName: '',
@@ -22,7 +24,7 @@ export class CreateUser {
   };
 
   // Available roles
-  availableRoles = Object.values(Role);
+  availableRoles: RoleOption[] = [];
 
   // State management
   isLoading = false;
@@ -36,20 +38,35 @@ export class CreateUser {
 
   constructor(
     private adminService: AdminService,
+    private generalService: GeneralService,
+    private languageService: LanguageService,
     private router: Router
   ) {}
 
-  toggleRole(role: string) {
-    const index = this.userData.roles.indexOf(role);
-    if (index > -1) {
-      this.userData.roles.splice(index, 1);
-    } else {
-      this.userData.roles.push(role);
+  async ngOnInit() {
+    await this.loadRoles();
+  }
+
+  async loadRoles() {
+    try {
+      const lang = this.languageService.getCurrentLanguage();
+      this.availableRoles = await this.generalService.getRoles(lang);
+    } catch (error) {
+      console.error('Error loading roles:', error);
     }
   }
 
-  hasRole(role: string): boolean {
-    return this.userData.roles.includes(role);
+  toggleRole(roleKey: string) {
+    const index = this.userData.roles.indexOf(roleKey);
+    if (index > -1) {
+      this.userData.roles.splice(index, 1);
+    } else {
+      this.userData.roles.push(roleKey);
+    }
+  }
+
+  hasRole(roleKey: string): boolean {
+    return this.userData.roles.includes(roleKey);
   }
 
   isFormValid(): boolean {

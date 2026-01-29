@@ -1,8 +1,6 @@
-export enum Role {
-  Citoyen = 'Citoyen',
-  ColBleu = 'ColBleu',
-  ColBlanc = 'ColBlanc',
-  Admin = 'Admin'
+export interface RoleOption {
+  key: string;
+  label: string;
 }
 
 export interface User {

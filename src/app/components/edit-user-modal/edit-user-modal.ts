@@ -1,7 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { User, Role } from '../../models/user';
+import { User, RoleOption } from '../../models/user';
 import { AdminService } from '../../services/admin-service';
+import { GeneralService } from '../../services/general-service';
+import { LanguageService } from '../../services/language-service';
 
 @Component({
   selector: 'app-edit-user-modal',
@@ -10,17 +12,40 @@ import { AdminService } from '../../services/admin-service';
   templateUrl: './edit-user-modal.html',
   styleUrl: './edit-user-modal.css',
 })
-export class EditUserModal {
+export class EditUserModal implements OnInit, OnChanges {
   @Input() user: User | null = null;
   @Input() isOpen: boolean = false;
   @Output() close = new EventEmitter<void>();
   @Output() userDeleted = new EventEmitter<void>();
 
-  roles = Object.values(Role);
+  roles: RoleOption[] = [];
   isLoading = false;
   showDeleteConfirm = false;
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private generalService: GeneralService,
+    private languageService: LanguageService
+  ) {}
+
+  async ngOnInit() {
+    await this.loadRoles();
+  }
+
+  async ngOnChanges(changes: SimpleChanges) {
+    if (changes['isOpen'] && changes['isOpen'].currentValue) {
+      await this.loadRoles();
+    }
+  }
+
+  async loadRoles() {
+    try {
+      const lang = this.languageService.getCurrentLanguage();
+      this.roles = await this.generalService.getRoles(lang);
+    } catch (error) {
+      console.error('Error loading roles:', error);
+    }
+  }
 
   closeModal() {
     this.showDeleteConfirm = false;
@@ -28,19 +53,19 @@ export class EditUserModal {
     this.close.emit();
   }
 
-  async toggleRole(role: string) {
+  async toggleRole(role: RoleOption) {
     if (!this.user || this.isLoading) return;
 
     try {
       this.isLoading = true;
-      const hasRole = this.user.roles.includes(role);
+      const hasRole = this.user.roles.includes(role.key);
 
       if (hasRole) {
-        await this.adminService.removeRole(this.user.id, role);
-        this.user.roles = this.user.roles.filter(r => r !== role);
+        await this.adminService.removeRole(this.user.id, role.key);
+        this.user.roles = this.user.roles.filter(r => r !== role.key);
       } else {
-        await this.adminService.assignRole(this.user.id, role);
-        this.user.roles.push(role);
+        await this.adminService.assignRole(this.user.id, role.key);
+        this.user.roles.push(role.key);
       }
     } catch (error) {
       console.error('Error toggling role:', error);

@@ -23,10 +23,9 @@
     <div class="filter-group">
       <select [(ngModel)]="selectedRole" (change)="onRoleFilterChange()">
         <option value="">Tous les rôles</option>
-        <option value="Citoyen">Citoyen</option>
-        <option value="ColBleu">Col Bleu</option>
-        <option value="ColBlanc">Col Blanc</option>
-        <option value="Admin">Admin</option>
+        <option *ngFor="let role of availableRoles" [value]="role.key">
+          {{ role.label }}
+        </option>
       </select>
       <button class="btn btn-secondary" (click)="onSearch()">
         <i class="fas fa-search"></i>
@@ -52,7 +51,7 @@
           <td>
             <div class="roles-badges">
               <span class="badge badge-info" *ngFor="let role of user.roles">
-                {{ role }}
+                {{ getRoleLabel(role) }}
               </span>
             </div>
           </td>

@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AdminService } from '../../services/admin-service';
-import { User } from '../../models/user';
+import { GeneralService } from '../../services/general-service';
+import { LanguageService } from '../../services/language-service';
+import { User, RoleOption } from '../../models/user';
 import { EditUserModal } from '../../components/edit-user-modal/edit-user-modal';
 
 @Component({
@@ -14,6 +16,7 @@ import { EditUserModal } from '../../components/edit-user-modal/edit-user-modal'
 })
 export class ManageUsers implements OnInit {
   users: User[] = [];
+  availableRoles: RoleOption[] = [];
   
   // Pagination
   currentPage: number = 1;
@@ -34,11 +37,25 @@ export class ManageUsers implements OnInit {
 
   constructor(
     private adminService: AdminService,
+    private generalService: GeneralService,
+    private languageService: LanguageService,
     private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
-    await this.loadUsers();
+    await Promise.all([
+      this.loadRoles(),
+      this.loadUsers()
+    ]);
+  }
+
+  async loadRoles() {
+    try {
+      const lang = this.languageService.getCurrentLanguage();
+      this.availableRoles = await this.generalService.getRoles(lang);
+    } catch (error) {
+      console.error('Error loading roles:', error);
+    }
   }
 
   async loadUsers() {
@@ -102,6 +119,11 @@ export class ManageUsers implements OnInit {
   async onUserDeleted() {
     this.closeEditModal();
     await this.loadUsers();
+  }
+
+  getRoleLabel(roleKey: string): string {
+    const role = this.availableRoles.find(r => r.key === roleKey);
+    return role ? role.label : roleKey;
   }
 }
 

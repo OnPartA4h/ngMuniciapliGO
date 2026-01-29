@@ -42,11 +42,11 @@
             <label class="checkbox-label">
               <input 
                 type="checkbox" 
-                [checked]="hasRole(role)" 
+                [checked]="hasRole(role.key)" 
                 (change)="toggleRole(role)"
                 [disabled]="isLoading"
               />
-              <span>{{ role }}</span>
+              <span>{{ role.label }}</span>
             </label>
           </div>
         </div>
