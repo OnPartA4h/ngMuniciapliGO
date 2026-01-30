@@ -15,17 +15,15 @@
     <div class="filter-group">
       <select>
         <option value="">Toutes les catégories</option>
-        <option value="voirie">Voirie</option>
-        <option value="eclairage">Éclairage</option>
-        <option value="proprete">Propreté</option>
-        <option value="espaces-verts">Espaces verts</option>
-        <option value="autre">Autre</option>
+        <option *ngFor="let c of categories()" [value]="c.key">
+          {{ c.label }}
+        </option>
       </select>
       <select>
         <option value="">Tous les statuts</option>
-        <option value="nouveau">Nouveau</option>
-        <option value="en-cours">En cours</option>
-        <option value="assigne">Assigné</option>
+        <option *ngFor="let s of statuts()" [value]="s.key">
+          {{ s.label }}
+        </option>
       </select>
     </div>
   </div>
@@ -34,12 +32,12 @@
     <!-- Report Item 1 -->
     <div class="report-card" routerLink="/report-details/{{p.id}}" *ngFor="let p of problems">
       <div class="report-thumbnail">
-        <img [src]="p.photos[0].url" alt="Photo du problème" />
+        <img [src]="p.photos[0].url" alt="Photo du problème" *ngIf="p.photos" />
       </div>
       <div class="report-info">
         <div class="report-header">
           <h3 class="report-title">{{p.titre}}</h3>
-          <span class="report-status status-nouveau">{{StatutProbleme[p.statut]}}</span>
+          <span class="report-status status-nouveau">{{ getStatutLabel(p.statut) }}</span>
         </div>
         <div class="report-details">
           <span class="report-location">
@@ -54,7 +52,7 @@
               <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
               <line x1="7" y1="7" x2="7.01" y2="7"></line>
             </svg>
-            {{CategorieProbleme[p.categorie]}}
+            {{getCategorieLabel(p.categorie)}}
           </span>
         </div>
         <div class="report-meta">
@@ -72,7 +70,7 @@
             </svg>
             <div *ngIf="!p.assignedUser">Non assigné</div>
             <div *ngIf="p.assignedUser">{{p.assignedUser.firstName + ' ' + p.assignedUser.lastName}}</div>
-           
+
           </span>
         </div>
       </div>
@@ -83,21 +81,21 @@
       </div>
     </div>
 
-    
 
-  <div class="pagination">
-    <button class="pagination-btn">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="15 18 9 12 15 6"></polyline>
-      </svg>
-      Précédent
-    </button>
-    <span class="pagination-info">Page 1 sur 3</span>
-    <button class="pagination-btn">
-      Suivant
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="9 18 15 12 9 6"></polyline>
-      </svg>
-    </button>
+
+    <div class="pagination">
+      <button class="pagination-btn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Précédent
+      </button>
+      <span class="pagination-info">Page 1 sur 3</span>
+      <button class="pagination-btn">
+        Suivant
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
   </div>
-</div>

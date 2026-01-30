@@ -27,4 +27,25 @@ export class ApiService {
 
     return x;
   }
+
+  async getRoles(): Promise<any> {
+    let x = await lastValueFrom(this.http.get<any>(this.apiUrl + "/api/general/roles/" + "en"))
+    console.log(x);
+
+    return x;
+  }
+  
+  async getStatuts(): Promise<any> {
+    let x = await lastValueFrom(this.http.get<any>(this.apiUrl + "/api/general/statuts/" + "en"))
+    console.log(x);
+
+    return x;
+  }
+
+  async getCategories(): Promise<any> {
+    let x = await lastValueFrom(this.http.get<any>(this.apiUrl + "/api/general/categories/" + "en"))
+    console.log(x);
+
+    return x;
+  }
 }
