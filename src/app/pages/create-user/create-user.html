@@ -79,9 +79,10 @@
               {{ 'CREATE_USER.PHONE' | translate }} <span class="required">*</span>
             </label>
             <input
-              type="tel"
+              type="text"
               id="phoneNumber"
               formControlName="phoneNumber"
+              mask="(000) 000-0000"
               [placeholder]="'CREATE_USER.PHONE_PLACEHOLDER' | translate"
               [class.error]="getError('phoneNumber')"
             />
