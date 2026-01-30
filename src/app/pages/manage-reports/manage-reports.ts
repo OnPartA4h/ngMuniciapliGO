@@ -6,8 +6,6 @@ import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { Problem, StatusOption, CategoryOption } from '../../models/problem';
 import { CommonModule } from '@angular/common';
-import { StatutProbleme } from '../../enums/statut-probleme';
-import { CategorieProbleme } from '../../enums/categorie-probleme';
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 
 @Component({
@@ -17,9 +15,6 @@ import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
   styleUrl: './manage-reports.css',
 })
 export class ManageReports implements OnInit {
-  StatutProbleme = StatutProbleme;
-  CategorieProbleme = CategorieProbleme
-
   loading = true;
 
   categories = signal<CategoryOption[]>([]);
