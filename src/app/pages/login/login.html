@@ -7,37 +7,37 @@
     <div class="login-card">
       <div class="login-header">
         <img src="/assets/images/LogoText.png" style="width: 200px;">  
-        <p>Connectez-vous à votre compte</p>
+        <p>{{ 'LOGIN.SUBTITLE' | translate }}</p>
       </div>
 
-      <div *ngIf="authService.errorMessage != ''" style="color: red; padding: 0 0 30px 0; text-align: center;">{{authService.errorMessage}}</div>
+      <div *ngIf="authService.errorMessage != ''" style="color: red; padding: 0 0 30px 0; text-align: center;">{{ 'LOGIN.ERROR_MESSAGE' | translate }}</div>
       
       <form [formGroup]="formGroup" class="login-form">
         <div class="form-group">
-          <label for="email">Email</label>
-          <input  type="email" id="email" placeholder="votre@email.com" name="email" formControlName="email"/>
+          <label for="email">{{ 'LOGIN.EMAIL' | translate }}</label>
+          <input  type="email" id="email" [placeholder]="'LOGIN.EMAIL_PLACEHOLDER' | translate" name="email" formControlName="email"/>
           @if(formGroup.get('email')?.hasError('required') && formGroup.get('email')?.touched) {
-            <div style="color: red;">your email is REQUIRED</div>
+            <div style="color: red;">{{ 'LOGIN.EMAIL_REQUIRED' | translate }}</div>
             }
 
             @if(formGroup.get('email')?.hasError('email') && formGroup.get('email')?.touched) {
-            <div style="color: red;">enter a valid email</div>
+            <div style="color: red;">{{ 'LOGIN.EMAIL_INVALID' | translate }}</div>
             }
         </div>
         
         <div class="form-group">
-          <label for="password">Mot de passe</label>
+          <label for="password">{{ 'LOGIN.PASSWORD' | translate }}</label>
           <input type="password" id="password" placeholder="••••••••" name="password" formControlName="password"/>
           @if(formGroup.get('password')?.hasError('required') && formGroup.get('password')?.touched) {
-            <div style="color: red;">your password is REQUIRED</div>
+            <div style="color: red;">{{ 'LOGIN.PASSWORD_REQUIRED' | translate }}</div>
             }
         </div>
         
         <div class="form-options">
-          <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+          <a href="#" class="forgot-password">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
         </div>
         
-        <button type="submit" [disabled]="!formGroup.valid" class="btn-login" (click)="login()">Se connecter</button>
+        <button type="submit" [disabled]="!formGroup.valid" class="btn-login" (click)="login()">{{ 'LOGIN.SIGN_IN' | translate }}</button>
       </form>  
     </div>
   </div>

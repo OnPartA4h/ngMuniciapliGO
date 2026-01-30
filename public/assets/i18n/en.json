@@ -86,5 +86,35 @@
     "MUST_CHANGE_PASSWORD": "The user must change this password on first login.",
     "UNDERSTOOD": "Understood, return to list",
     "ERROR_OCCURRED": "An error occurred while creating the user"
+  },
+  "MANAGE_REPORTS": {
+    "TITLE": "Problem Management",
+    "SUBTITLE": "List of all reported problems",
+    "SEARCH_PLACEHOLDER": "Search for a problem...",
+    "ALL_CATEGORIES": "All categories",
+    "ALL_STATUSES": "All statuses",
+    "NO_REPORTS": "No problems found",
+    "NO_REPORTS_DESC": "No problems have been reported yet",
+    "LOCATION": "Location",
+    "CATEGORY": "Category",
+    "STATUS": "Status",
+    "DATE": "Date",
+    "ASSIGNEE": "Assigned to",
+    "UNASSIGNED": "Unassigned",
+    "PREVIOUS": "Previous",
+    "NEXT": "Next",
+    "PAGE_INFO": "Page {{current}} of {{total}}"
+  },
+  "LOGIN": {
+    "SUBTITLE": "Sign in to your account",
+    "EMAIL": "Email",
+    "EMAIL_PLACEHOLDER": "your@email.com",
+    "EMAIL_REQUIRED": "Email is required",
+    "EMAIL_INVALID": "Please enter a valid email",
+    "PASSWORD": "Password",
+    "PASSWORD_REQUIRED": "Password is required",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "SIGN_IN": "Sign in",
+    "ERROR_MESSAGE": "Invalid credentials. Please try again."
   }
 }

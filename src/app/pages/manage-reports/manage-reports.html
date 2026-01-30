@@ -1,27 +1,24 @@
 <div class="manage-reports-container">
   <div class="page-header">
-    <h1>Gestion des Problèmes</h1>
-    <p>Liste de tous les problèmes signalés</p>
+    <h1>{{ 'MANAGE_REPORTS.TITLE' | translate }}</h1>
+    <p>{{ 'MANAGE_REPORTS.SUBTITLE' | translate }}</p>
   </div>
 
   <div class="filters-bar">
     <div class="search-box">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="m21 21-4.35-4.35"></path>
-      </svg>
-      <input type="text" placeholder="Rechercher un problème..." />
+      <i class="fas fa-search"></i>
+      <input type="text" [placeholder]="'MANAGE_REPORTS.SEARCH_PLACEHOLDER' | translate" />
     </div>
     <div class="filter-group">
       <select>
-        <option value="">Toutes les catégories</option>
-        <option *ngFor="let c of categories()" [value]="c.key">
+        <option value="">{{ 'MANAGE_REPORTS.ALL_CATEGORIES' | translate }}</option>
+        <option *ngFor="let c of categories" [value]="c.key">
           {{ c.label }}
         </option>
       </select>
       <select>
-        <option value="">Tous les statuts</option>
-        <option *ngFor="let s of statuts()" [value]="s.key">
+        <option value="">{{ 'MANAGE_REPORTS.ALL_STATUSES' | translate }}</option>
+        <option *ngFor="let s of statuts" [value]="s.key">
           {{ s.label }}
         </option>
       </select>
@@ -29,10 +26,10 @@
   </div>
 
   <div class="reports-list">
-    <!-- Report Item 1 -->
+    <!-- Report Item -->
     <div class="report-card" routerLink="/report-details/{{p.id}}" *ngFor="let p of problems">
       <div class="report-thumbnail">
-        <img [src]="p.photos[0].url" alt="Photo du problème" *ngIf="p.photos" />
+        <img [src]="p.photos[0].url" alt="Photo du problème" *ngIf="p.photos && p.photos.length > 0" />
       </div>
       <div class="report-info">
         <div class="report-header">
@@ -41,61 +38,48 @@
         </div>
         <div class="report-details">
           <span class="report-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
+            <i class="fas fa-map-marker-alt"></i>
             {{p.location}}
           </span>
           <span class="report-category">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-              <line x1="7" y1="7" x2="7.01" y2="7"></line>
-            </svg>
+            <i class="fas fa-tag"></i>
             {{getCategorieLabel(p.categorie)}}
           </span>
         </div>
         <div class="report-meta">
           <span class="report-date">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
+            <i class="fas fa-clock"></i>
             {{p.dateCreation | daysAgo}}
           </span>
           <span class="report-assignee">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <div *ngIf="!p.assignedUser">Non assigné</div>
+            <i class="fas fa-user"></i>
+            <div *ngIf="!p.assignedUser">{{ 'MANAGE_REPORTS.UNASSIGNED' | translate }}</div>
             <div *ngIf="p.assignedUser">{{p.assignedUser.firstName + ' ' + p.assignedUser.lastName}}</div>
-
           </span>
         </div>
       </div>
       <div class="report-action">
-        <svg class="icon arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
+        <i class="fas fa-chevron-right"></i>
       </div>
     </div>
 
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="problems.length === 0 && !loading">
+      <i class="fas fa-clipboard-list icon-large"></i>
+      <h3>{{ 'MANAGE_REPORTS.NO_REPORTS' | translate }}</h3>
+      <p>{{ 'MANAGE_REPORTS.NO_REPORTS_DESC' | translate }}</p>
+    </div>
 
-
-    <div class="pagination">
+    <div class="pagination" *ngIf="problems.length > 0">
       <button class="pagination-btn">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-        Précédent
+        <i class="fas fa-chevron-left"></i>
+        {{ 'MANAGE_REPORTS.PREVIOUS' | translate }}
       </button>
-      <span class="pagination-info">Page 1 sur 3</span>
+      <span class="pagination-info">{{ 'MANAGE_REPORTS.PAGE_INFO' | translate: {current: 1, total: 3} }}</span>
       <button class="pagination-btn">
-        Suivant
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
+        {{ 'MANAGE_REPORTS.NEXT' | translate }}
+        <i class="fas fa-chevron-right"></i>
       </button>
     </div>
   </div>
+</div>

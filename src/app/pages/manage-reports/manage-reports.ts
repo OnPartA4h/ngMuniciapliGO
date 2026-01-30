@@ -1,5 +1,6 @@
-import { Component, OnInit, signal, Signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { WhiteService } from '../../services/white-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
@@ -11,7 +12,7 @@ import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 
 @Component({
   selector: 'app-manage-reports',
-  imports: [RouterLink, CommonModule, DaysAgoPipe],
+  imports: [RouterLink, CommonModule, DaysAgoPipe, TranslateModule],
   templateUrl: './manage-reports.html',
   styleUrl: './manage-reports.css',
 })

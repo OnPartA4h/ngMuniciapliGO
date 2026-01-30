@@ -86,5 +86,35 @@
     "MUST_CHANGE_PASSWORD": "L'utilisateur devra changer ce mot de passe lors de sa première connexion.",
     "UNDERSTOOD": "Compris, retourner à la liste",
     "ERROR_OCCURRED": "Une erreur est survenue lors de la création de l'utilisateur"
+  },
+  "MANAGE_REPORTS": {
+    "TITLE": "Gestion des problèmes",
+    "SUBTITLE": "Liste de tous les problèmes signalés",
+    "SEARCH_PLACEHOLDER": "Rechercher un problème...",
+    "ALL_CATEGORIES": "Toutes les catégories",
+    "ALL_STATUSES": "Tous les statuts",
+    "NO_REPORTS": "Aucun problème trouvé",
+    "NO_REPORTS_DESC": "Aucun problème n'a été signalé pour le moment",
+    "LOCATION": "Localisation",
+    "CATEGORY": "Catégorie",
+    "STATUS": "Statut",
+    "DATE": "Date",
+    "ASSIGNEE": "Assigné à",
+    "UNASSIGNED": "Non assigné",
+    "PREVIOUS": "Précédent",
+    "NEXT": "Suivant",
+    "PAGE_INFO": "Page {{current}} sur {{total}}"
+  },
+  "LOGIN": {
+    "SUBTITLE": "Connectez-vous à votre compte",
+    "EMAIL": "Email",
+    "EMAIL_PLACEHOLDER": "votre@email.com",
+    "EMAIL_REQUIRED": "L'email est requis",
+    "EMAIL_INVALID": "Veuillez entrer un email valide",
+    "PASSWORD": "Mot de passe",
+    "PASSWORD_REQUIRED": "Le mot de passe est requis",
+    "FORGOT_PASSWORD": "Mot de passe oublié ?",
+    "SIGN_IN": "Se connecter",
+    "ERROR_MESSAGE": "Identifiants invalides. Veuillez réessayer."
   }
 }
