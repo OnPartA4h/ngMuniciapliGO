@@ -8,10 +8,11 @@ import { AuthService } from '../../services/auth-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { RoleOption, UpdateProfileDto, User } from '../../models/user';
+import { ImageCropperModal } from '../../components/image-cropper-modal/image-cropper-modal';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, NgxMaskDirective, ImageCropperModal],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -32,7 +33,11 @@ export class Profile implements OnInit {
   passwordErrorMessage: string | null = null;
   
   profileImageUrl: string | null = null;
-  selectedFile: File | null = null;
+  
+  // Image cropper properties
+  showImageCropper = false;
+  imageChangedEvent: Event | null = null;
+  isUploadingImage = false;
 
   constructor(
     private fb: FormBuilder,
@@ -71,6 +76,11 @@ export class Profile implements OnInit {
   async loadProfile() {
     try {
       this.profile = await this.authService.getProfile();
+      
+      // Set profile image if it exists
+      if (this.profile.profilePictureUrl) {
+        this.profileImageUrl = this.profile.profilePictureUrl;
+      }
       
       this.profileForm.patchValue({
         firstName: this.profile.firstName,
@@ -180,15 +190,67 @@ export class Profile implements OnInit {
   }
 
   onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.selectedFile = input.files[0];
+    this.imageChangedEvent = event;
+    this.showImageCropper = true;
+    this.cdr.detectChanges();
+    console.log('File selected, opening cropper modal');
+  }
+
+  onCropCancelled() {
+    console.log('Cancel clicked, closing modal');
+    this.showImageCropper = false;
+    this.imageChangedEvent = null;
+    // Reset the file input
+    const fileInput = document.getElementById('profileImageInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+    // Force change detection to ensure modal closes immediately
+    this.cdr.detectChanges();
+  }
+
+  onCropperError(errorKey: string) {
+    this.infoErrorMessage = this.translateService.instant(errorKey);
+    this.showImageCropper = false;
+    this.imageChangedEvent = null;
+  }
+
+  async onImageUploaded(croppedBlob: Blob) {
+    this.isUploadingImage = true;
+    this.infoSuccessMessage = null;
+    this.infoErrorMessage = null;
+
+    try {
+      // Create a file from the cropped blob
+      const file = new File([croppedBlob], 'profile-picture.jpg', { type: 'image/jpeg' });
       
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.profileImageUrl = e.target?.result as string;
-      };
-      reader.readAsDataURL(this.selectedFile);
+      // Upload the file
+      const updatedUser = await this.authService.uploadProfilePicture(file);
+      
+      // Update the profile image URL
+      this.profileImageUrl = updatedUser.profilePictureUrl || null;
+      this.profile = updatedUser;
+      
+      this.infoSuccessMessage = this.translateService.instant('PROFILE.PHOTO_UPLOADED');
+      this.showImageCropper = false;
+      this.imageChangedEvent = null;
+      
+      // Reset the file input
+      const fileInput = document.getElementById('profileImageInput') as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = '';
+      }
+      
+    } catch (error: any) {
+      console.error('Error uploading profile picture:', error);
+      if (error?.error?.message) {
+        this.infoErrorMessage = error.error.message;
+      } else {
+        this.infoErrorMessage = this.translateService.instant('PROFILE.PHOTO_ERROR');
+      }
+    } finally {
+      this.isUploadingImage = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -196,9 +258,27 @@ export class Profile implements OnInit {
     document.getElementById('profileImageInput')?.click();
   }
 
-  removeProfileImage() {
-    this.profileImageUrl = null;
-    this.selectedFile = null;
+  async removeProfileImage() {
+    if (!confirm(this.translateService.instant('PROFILE.CONFIRM_DELETE_PHOTO'))) {
+      return;
+    }
+
+    this.isUploadingImage = true;
+    this.infoSuccessMessage = null;
+    this.infoErrorMessage = null;
+
+    try {
+      const updatedUser = await this.authService.deleteProfilePicture();
+      this.profileImageUrl = null;
+      this.profile = updatedUser;
+      this.infoSuccessMessage = this.translateService.instant('PROFILE.PHOTO_DELETED');
+    } catch (error: any) {
+      console.error('Error deleting profile picture:', error);
+      this.infoErrorMessage = this.translateService.instant('PROFILE.PHOTO_DELETE_ERROR');
+    } finally {
+      this.isUploadingImage = false;
+      this.cdr.detectChanges();
+    }
   }
 
   goBack() {

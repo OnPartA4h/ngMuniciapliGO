@@ -63,6 +63,16 @@ export class AuthService {
     await lastValueFrom(this.http.put(`${this.apiUrl}/api/Auth/me`, dto));
   }
 
+  async uploadProfilePicture(file: File): Promise<User> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return await lastValueFrom(this.http.post<User>(`${this.apiUrl}/api/Auth/profile-picture`, formData));
+  }
+
+  async deleteProfilePicture(): Promise<User> {
+    return await lastValueFrom(this.http.delete<User>(`${this.apiUrl}/api/Auth/profile-picture`));
+  }
+
   isAuthenticated(): boolean {
     return this.tokenSignal() !== null;
   }

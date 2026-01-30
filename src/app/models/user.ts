@@ -11,6 +11,7 @@ export interface User {
   phoneNumber: string;
   roles: string[];
   mustResetPassword: boolean;
+  profilePictureUrl?: string;
 }
 
 export interface CreateUserDto {

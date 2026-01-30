@@ -239,4 +239,14 @@
       </div>
     </div>
   </div>
+
+  <!-- Image Cropper Modal -->
+  <app-image-cropper-modal
+    *ngIf="showImageCropper"
+    [imageChangedEvent]="imageChangedEvent"
+    [isUploading]="isUploadingImage"
+    (cropCancelled)="onCropCancelled()"
+    (imageUploaded)="onImageUploaded($event)"
+    (cropperError)="onCropperError($event)"
+  ></app-image-cropper-modal>
 </div>
