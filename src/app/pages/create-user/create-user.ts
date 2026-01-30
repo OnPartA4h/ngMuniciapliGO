@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdminService } from '../../services/admin-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
@@ -9,39 +10,34 @@ import { CreateUserDto, RoleOption, CreateUserResponseDto } from '../../models/u
 
 @Component({
   selector: 'app-create-user',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './create-user.html',
   styleUrl: './create-user.css',
 })
 export class CreateUser implements OnInit {
-  // Form data
-  userData: CreateUserDto = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
-    roles: []
-  };
-
-  // Available roles
+  userForm: FormGroup;
   availableRoles: RoleOption[] = [];
-
-  // State management
   isLoading = false;
   errorMessage: string | null = null;
-  successMessage: string | null = null;
   generatedPassword: string | null = null;
   showPasswordModal = false;
 
-  // Validation state
-  formTouched = false;
-
   constructor(
+    private fb: FormBuilder,
     private adminService: AdminService,
     private generalService: GeneralService,
     private languageService: LanguageService,
+    private translateService: TranslateService,
     private router: Router
-  ) {}
+  ) {
+    this.userForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^[\d\s\-\(\)]+$/)]],
+      roles: this.fb.array([], Validators.required)
+    });
+  }
 
   async ngOnInit() {
     await this.loadRoles();
@@ -53,64 +49,84 @@ export class CreateUser implements OnInit {
       this.availableRoles = await this.generalService.getRoles(lang);
     } catch (error) {
       console.error('Error loading roles:', error);
+      this.errorMessage = this.translateService.instant('CREATE_USER.ERROR_OCCURRED');
     }
   }
 
+  get rolesFormArray(): FormArray {
+    return this.userForm.get('roles') as FormArray;
+  }
+
   toggleRole(roleKey: string) {
-    const index = this.userData.roles.indexOf(roleKey);
+    const index = this.rolesFormArray.value.indexOf(roleKey);
     if (index > -1) {
-      this.userData.roles.splice(index, 1);
+      this.rolesFormArray.removeAt(index);
     } else {
-      this.userData.roles.push(roleKey);
+      this.rolesFormArray.push(this.fb.control(roleKey));
     }
   }
 
   hasRole(roleKey: string): boolean {
-    return this.userData.roles.includes(roleKey);
+    return this.rolesFormArray.value.includes(roleKey);
   }
 
-  isFormValid(): boolean {
-    return !!(
-      this.userData.firstName.trim() &&
-      this.userData.lastName.trim() &&
-      this.userData.email.trim() &&
-      this.userData.phoneNumber.trim() &&
-      this.userData.roles.length > 0
-    );
+  // Simplified error checking
+  getError(field: string): string | null {
+    const control = this.userForm.get(field);
+    if (!control?.touched || !control?.errors) return null;
+
+    if (control.hasError('required')) return this.translateService.instant('COMMON.REQUIRED_FIELD');
+    if (control.hasError('email')) return this.translateService.instant('COMMON.INVALID_EMAIL');
+    if (control.hasError('minlength')) {
+      const min = control.getError('minlength').requiredLength;
+      return this.translateService.instant('COMMON.MIN_LENGTH', { min });
+    }
+    if (control.hasError('maxlength')) {
+      const max = control.getError('maxlength').requiredLength;
+      return this.translateService.instant('COMMON.MAX_LENGTH', { max });
+    }
+    if (control.hasError('pattern')) {
+      return this.translateService.instant('COMMON.INVALID_FORMAT');
+    }
+
+    return null;
   }
 
   async createUser() {
-    this.formTouched = true;
+    // Mark all as touched to show errors
+    this.userForm.markAllAsTouched();
 
-    if (!this.isFormValid()) {
-      this.errorMessage = 'Veuillez remplir tous les champs requis.';
+    if (this.userForm.invalid) {
+      if (this.rolesFormArray.length === 0) {
+        this.errorMessage = this.translateService.instant('CREATE_USER.SELECT_AT_LEAST_ONE_ROLE');
+      }
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = null;
-    this.successMessage = null;
 
     try {
-      const response: CreateUserResponseDto = await this.adminService.createUser(this.userData);
+      const userData: CreateUserDto = {
+        firstName: this.userForm.value.firstName,
+        lastName: this.userForm.value.lastName,
+        email: this.userForm.value.email,
+        phoneNumber: this.userForm.value.phoneNumber,
+        roles: this.userForm.value.roles
+      };
+
+      const response: CreateUserResponseDto = await this.adminService.createUser(userData);
       
       this.generatedPassword = response.generatedPassword;
       this.showPasswordModal = true;
-      this.successMessage = 'Utilisateur créé avec succès!';
       
       // Reset form
-      this.userData = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phoneNumber: '',
-        roles: []
-      };
-      this.formTouched = false;
+      this.userForm.reset();
+      this.rolesFormArray.clear();
 
     } catch (error: any) {
       console.error('Error creating user:', error);
-      this.errorMessage = error?.error?.message || 'Une erreur est survenue lors de la création de l\'utilisateur.';
+      this.errorMessage = error?.error?.message || this.translateService.instant('CREATE_USER.ERROR_OCCURRED');
     } finally {
       this.isLoading = false;
     }
@@ -130,7 +146,7 @@ export class CreateUser implements OnInit {
     if (this.generatedPassword) {
       try {
         await navigator.clipboard.writeText(this.generatedPassword);
-        alert('Mot de passe copié dans le presse-papier!');
+        alert(this.translateService.instant('CREATE_USER.PASSWORD_COPIED'));
       } catch (err) {
         console.error('Failed to copy password:', err);
       }
