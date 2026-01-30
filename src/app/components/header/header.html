@@ -28,6 +28,11 @@
       <span>{{ getCurrentLanguage() }}</span>
     </button>
 
+    <!-- Profile Avatar (when connected) -->
+    <a *ngIf="isConnected" routerLink="/profile" class="profile-avatar" routerLinkActive="active">
+      <i class="fas fa-user"></i>
+    </a>
+
     <!-- Login/Logout -->
     <a *ngIf="!isConnected" routerLink="/login" class="btn-login">
       {{ 'HEADER.LOGIN' | translate }}

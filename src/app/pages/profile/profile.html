@@ -1,0 +1,242 @@
+<div class="profile-container">
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>{{ 'COMMON.LOADING' | translate }}</p>
+  </div>
+
+  <!-- Profile Content -->
+  <div class="profile-content" *ngIf="!isLoading && profile">
+    <!-- Page Header -->
+    <div class="page-header">
+      <button class="btn-back" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i>
+        {{ 'COMMON.BACK' | translate }}
+      </button>
+      <h1>{{ 'PROFILE.TITLE' | translate }}</h1>
+      <p>{{ 'PROFILE.SUBTITLE' | translate }}</p>
+    </div>
+
+    <div class="profile-grid">
+      <!-- Left Column: Profile Image & Read-only Info -->
+      <div class="profile-sidebar">
+        <!-- Profile Image Section -->
+        <div class="profile-image-section">
+          <div class="profile-image-container" (click)="triggerFileInput()">
+            <img *ngIf="profileImageUrl" [src]="profileImageUrl" alt="Profile" class="profile-image" />
+            <div *ngIf="!profileImageUrl" class="profile-image-placeholder">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-image-overlay">
+              <i class="fas fa-camera"></i>
+              <span>{{ 'PROFILE.CHANGE_PHOTO' | translate }}</span>
+            </div>
+          </div>
+          <input 
+            type="file" 
+            id="profileImageInput" 
+            accept="image/*" 
+            (change)="onFileSelected($event)" 
+            style="display: none;"
+          />
+          <button *ngIf="profileImageUrl" class="btn-remove-image" (click)="removeProfileImage()">
+            <i class="fas fa-trash"></i>
+            {{ 'PROFILE.REMOVE_PHOTO' | translate }}
+          </button>
+        </div>
+
+        <!-- Read-only Information -->
+        <div class="info-card">
+          <h3>{{ 'PROFILE.ACCOUNT_INFO' | translate }}</h3>
+          
+          <div class="info-item">
+            <label>{{ 'PROFILE.ROLES' | translate }}</label>
+            <div class="roles-list">
+              <span class="role-badge" *ngFor="let role of profile.roles">
+                {{ getRoleLabel(role) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <label>{{ 'PROFILE.MUST_RESET_PASSWORD' | translate }}</label>
+            <span class="status-badge" [class.status-warning]="profile.mustResetPassword" [class.status-yes]="!profile.mustResetPassword">
+              <i [class]="profile.mustResetPassword ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'"></i>
+              {{ (profile.mustResetPassword ? 'COMMON.YES' : 'COMMON.NO') | translate }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Editable Form -->
+      <div class="profile-main">
+        <!-- Personal Information Card -->
+        <div class="form-card">
+          <h2>{{ 'PROFILE.PERSONAL_INFO' | translate }}</h2>
+          <p class="form-description">{{ 'PROFILE.PERSONAL_INFO_DESC' | translate }}</p>
+
+          <!-- Info Messages -->
+          <div *ngIf="infoSuccessMessage" style="color: green; padding: 0 0 20px 0;">
+            <i class="fas fa-check-circle"></i> {{ infoSuccessMessage }}
+          </div>
+          <div *ngIf="infoErrorMessage" style="color: red; padding: 0 0 20px 0;">
+            {{ infoErrorMessage }}
+          </div>
+
+          <form [formGroup]="profileForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="firstName">{{ 'PROFILE.FIRST_NAME' | translate }}</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  formControlName="firstName"
+                />
+                @if(profileForm.get('firstName')?.hasError('required') && profileForm.get('firstName')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                }
+                @if(profileForm.get('firstName')?.hasError('minlength') && profileForm.get('firstName')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.MIN_LENGTH' | translate: {min: 2} }}</div>
+                }
+                @if(profileForm.get('firstName')?.hasError('maxlength') && profileForm.get('firstName')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.MAX_LENGTH' | translate: {max: 50} }}</div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="lastName">{{ 'PROFILE.LAST_NAME' | translate }}</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  formControlName="lastName"
+                />
+                @if(profileForm.get('lastName')?.hasError('required') && profileForm.get('lastName')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                }
+                @if(profileForm.get('lastName')?.hasError('minlength') && profileForm.get('lastName')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.MIN_LENGTH' | translate: {min: 2} }}</div>
+                }
+                @if(profileForm.get('lastName')?.hasError('maxlength') && profileForm.get('lastName')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.MAX_LENGTH' | translate: {max: 50} }}</div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="email">{{ 'PROFILE.EMAIL' | translate }}</label>
+                <input
+                  type="email"
+                  id="email"
+                  formControlName="email"
+                />
+                @if(profileForm.get('email')?.hasError('required') && profileForm.get('email')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                }
+                @if(profileForm.get('email')?.hasError('email') && profileForm.get('email')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.INVALID_EMAIL' | translate }}</div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="phoneNumber">{{ 'PROFILE.PHONE' | translate }}</label>
+                <input
+                  type="text"
+                  id="phoneNumber"
+                  formControlName="phoneNumber"
+                  mask="(000) 000-0000"
+                />
+                @if(profileForm.get('phoneNumber')?.hasError('required') && profileForm.get('phoneNumber')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                }
+                @if(profileForm.get('phoneNumber')?.hasError('minlength') && profileForm.get('phoneNumber')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.INVALID_PHONE' | translate }}</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-primary" [disabled]="isSavingInfo" (click)="savePersonalInfo()">
+                <i class="fas fa-save" *ngIf="!isSavingInfo"></i>
+                <i class="fas fa-spinner fa-spin" *ngIf="isSavingInfo"></i>
+                {{ (isSavingInfo ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Password Change Card -->
+        <div class="form-card">
+          <h2>{{ 'PROFILE.CHANGE_PASSWORD' | translate }}</h2>
+          <p class="form-description">{{ 'PROFILE.CHANGE_PASSWORD_DESC' | translate }}</p>
+
+          <!-- Password Messages -->
+          <div *ngIf="passwordSuccessMessage" style="color: green; padding: 0 0 20px 0;">
+            <i class="fas fa-check-circle"></i> {{ passwordSuccessMessage }}
+          </div>
+          <div *ngIf="passwordErrorMessage" style="color: red; padding: 0 0 20px 0;">
+            {{ passwordErrorMessage }}
+          </div>
+
+          <form [formGroup]="passwordForm">
+            <div class="form-group">
+              <label for="currentPassword">{{ 'PROFILE.CURRENT_PASSWORD' | translate }}</label>
+              <input
+                type="password"
+                id="currentPassword"
+                formControlName="currentPassword"
+                placeholder="••••••••"
+              />
+              @if(passwordForm.get('currentPassword')?.hasError('required') && passwordForm.get('currentPassword')?.touched) {
+                <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+              }
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="newPassword">{{ 'PROFILE.NEW_PASSWORD' | translate }}</label>
+                <input
+                  type="password"
+                  id="newPassword"
+                  formControlName="newPassword"
+                  placeholder="••••••••"
+                />
+                @if(passwordForm.get('newPassword')?.hasError('required') && passwordForm.get('newPassword')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                }
+                @if(passwordForm.get('newPassword')?.hasError('minlength') && passwordForm.get('newPassword')?.touched) {
+                  <div style="color: red;">{{ 'PROFILE.PASSWORD_MIN_LENGTH' | translate }}</div>
+                }
+                @if(passwordForm.get('newPassword')?.hasError('pattern') && passwordForm.get('newPassword')?.touched && !passwordForm.get('newPassword')?.hasError('minlength')) {
+                  <div style="color: red;">{{ 'PROFILE.PASSWORD_PATTERN' | translate }}</div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="confirmPassword">{{ 'PROFILE.CONFIRM_PASSWORD' | translate }}</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  formControlName="confirmPassword"
+                  placeholder="••••••••"
+                />
+                @if(passwordForm.get('confirmPassword')?.hasError('required') && passwordForm.get('confirmPassword')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                }
+                @if(passwordForm.get('confirmPassword')?.touched && passwordForm.get('newPassword')?.touched && passwordForm.value.newPassword && passwordForm.value.confirmPassword && passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
+                  <div style="color: red;">{{ 'PROFILE.PASSWORD_MISMATCH' | translate }}</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-primary" [disabled]="isSavingPassword" (click)="savePassword()">
+                <i class="fas fa-key" *ngIf="!isSavingPassword"></i>
+                <i class="fas fa-spinner fa-spin" *ngIf="isSavingPassword"></i>
+                {{ (isSavingPassword ? 'COMMON.SAVING' : 'PROFILE.UPDATE_PASSWORD') | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -36,3 +36,11 @@ export interface PaginatedUsersResponse {
   };
 }
 
+export interface UpdateProfileDto {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  currentPassword?: string;
+  newPassword?: string;
+}

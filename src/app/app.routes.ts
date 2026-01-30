@@ -6,6 +6,7 @@ import { ManageReports } from './pages/manage-reports/manage-reports';
 import { ManageUsers } from './pages/manage-users/manage-users';
 import { CreateUser } from './pages/create-user/create-user';
 import { ReportDetails } from './pages/report-details/report-details';
+import { Profile } from './pages/profile/profile';
 import { authGuard } from './guards/auth-guard';
 import { loginGuard } from './guards/login-guard';
 import { adminGuard } from './guards/admin-guard';
@@ -19,5 +20,6 @@ export const routes: Routes = [
   { path: 'manage-reports', component: ManageReports, canActivate: [authGuard, whiteGuard]},
   { path: 'manage-users', component: ManageUsers, canActivate: [authGuard, adminGuard]},
   { path: 'create-user', component: CreateUser, canActivate: [authGuard, adminGuard]},
-  { path: 'report-details/:id', component: ReportDetails, canActivate: [authGuard]}
+  { path: 'report-details/:id', component: ReportDetails, canActivate: [authGuard]},
+  { path: 'profile', component: Profile, canActivate: [authGuard]}
 ];

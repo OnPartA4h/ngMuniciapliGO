@@ -3,6 +3,7 @@ import { Injectable, signal, Signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { UpdateProfileDto, User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -51,11 +52,19 @@ export class AuthService {
       } else {
         this.errorMessage = "Erreur serveur. Veuillez réessayer plus tard."
       }
-      
     }
-    
+  }
 
-    
+  async getProfile(): Promise<User> {
+    return await lastValueFrom(this.http.get<User>(`${this.apiUrl}/api/Auth/me`));
+  }
+
+  async updateProfile(dto: UpdateProfileDto): Promise<void> {
+    await lastValueFrom(this.http.put(`${this.apiUrl}/api/Auth/me`, dto));
+  }
+
+  isAuthenticated(): boolean {
+    return this.tokenSignal() !== null;
   }
 
   logout() {
