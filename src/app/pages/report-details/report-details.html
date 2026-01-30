@@ -1,1 +1,60 @@
-<p>report-details works!</p>
+<div class="manage-reports-container">
+    <div class="page-header">
+        <h1>{{ problem?.titre }}</h1>
+        <p>Les informations du problème signalé</p>
+    </div>
+
+    <div *ngIf="isLoading" style="text-align: center; padding: 40px;">Chargement...</div>
+
+    <div *ngIf="!isLoading && problem" class="details-grid">
+        <div class="details-main">
+            <div class="details-carousel">
+                <button class="details-carousel-btn">&#8592;</button>
+                <div class="details-carousel-img">
+                    <div style="color: var(--color-gray-400);">
+                        <i class="fas fa-image" style="font-size: 48px; display: block; margin-bottom: 8px;"></i>
+                        <span *ngIf="!problem.photos || problem.photos.length === 0">Aucune photo</span>
+                        <span *ngIf="problem.photos && problem.photos.length > 0">{{ problem.photos.length }}
+                            photo(s)</span>
+                    </div>
+                </div>
+                <button class="details-carousel-btn">&#8594;</button>
+            </div>
+            <div class="details-box">
+                <h3 class="details-section-title">Description</h3>
+                <p style="margin: 0; color: var(--color-text-primary); line-height: 1.8; white-space: pre-wrap;">{{
+                    problem.description }}</p>
+                <div class="details-section-divider">
+                    <h3 class="details-section-title">Localisation</h3>
+                    <p style="margin: 0; color: var(--color-text-primary);">{{ problem.location }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="details-box" style="margin-bottom: 24px; display: flex;">
+                <div class="details-badges">
+                    <span class="badge badge-info">{{ getCategoryLabel(problem.categorie) }}</span>
+                    <span class="badge badge-info">{{ getStatusLabel(problem.statut) }}</span>
+                    <span class="badge badge-info">
+                        <i class="fas fa-user" style="margin-right: 6px;"></i>
+                        {{ problem.assignedUser ? (problem.assignedUser.firstName + ' ' + problem.assignedUser.lastName)
+                        : 'Pas d\'assigné' }}
+                    </span>
+                </div>
+            </div>
+            <div class="details-actions">
+                <button class="btn btn-primary details-btn-accept">
+                    <i class="fas fa-check" style="margin-right: 8px;"></i>
+                    Accepter
+                </button>
+                <button class="btn btn-primary details-btn-refuse">
+                    <i class="fas fa-times" style="margin-right: 8px;"></i>
+                    Refuser
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading && !problem" style="text-align: center; padding: 40px;">Aucun problème trouvé.</div>
+</div>

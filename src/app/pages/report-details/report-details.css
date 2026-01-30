@@ -1,0 +1,121 @@
+.manage-reports-container {
+    padding: var(--spacing-3xl);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.page-header h1 {
+    color: var(--color-primary);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.page-header p {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    margin: 0;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 32px;
+}
+
+.details-main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.details-carousel {
+    background: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 16px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.details-carousel-img {
+    flex: 1;
+    text-align: center;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-gray-100);
+    border-radius: 8px;
+}
+
+.details-carousel-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--color-primary);
+}
+
+.details-box {
+    background: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 24px;
+}
+
+.details-section-title {
+    margin: 0 0 16px 0;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.details-section-divider {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-gray-200);
+}
+
+.details-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.details-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.details-btn-accept {
+    background: var(--color-secondary);
+    width: 100%;
+}
+
+.details-btn-refuse {
+    background: var(--color-error);
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .manage-reports-container {
+        padding: var(--spacing-xl);
+    }
+
+    [style*="grid-template-columns: 2fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+}
