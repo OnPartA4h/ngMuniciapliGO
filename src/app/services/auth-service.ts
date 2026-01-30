@@ -20,29 +20,42 @@ export class AuthService {
 
   constructor(public http: HttpClient, private router: Router) {}
 
+  errorMessage: string = ""
+
   async login(email: string, password: string) {
     const dto = {
       email: email,
       password: password
     };
 
-    const response = await lastValueFrom(
-      this.http.post<any>(`${this.apiUrl}/api/Auth/login`, dto)
-    );
-    console.log(response);
+    try {
+      const response = await lastValueFrom(this.http.post<any>(`${this.apiUrl}/api/Auth/login`, dto));
+      console.log(response);
 
-    const roles: string[] = response.user.roles;
+      const roles: string[] = response.user.roles;
 
-    if (!roles.includes("Admin") && !roles.includes("ColBlanc")) {
-      console.log("NOT ADMIN OR COL BLANC!!!!");
-      return;
+      if (!roles.includes("Admin") && !roles.includes("ColBlanc")) {
+        console.log("NOT ADMIN OR COL BLANC!!!!");
+        this.errorMessage = "NOT ADMIN OR COL BLANC!!!!"
+        return;
+      }
+
+      localStorage.setItem("token", response.token);
+      this.tokenSignal.set(response.token)
+
+      localStorage.setItem("roles", JSON.stringify(response.user.roles))
+      this.rolesSignal.set(response.user.roles)
+    } catch (error: any) {
+      if (error.status < 500 && error.status > 0) {
+        this.errorMessage = "Email or password is incorrect"
+      } else {
+        this.errorMessage = "Erreur serveur. Veuillez réessayer plus tard."
+      }
+      
     }
+    
 
-    localStorage.setItem("token", response.token);
-    this.tokenSignal.set(response.token)
-
-    localStorage.setItem("roles", JSON.stringify(response.user.roles))
-    this.rolesSignal.set(response.user.roles)
+    
   }
 
   logout() {

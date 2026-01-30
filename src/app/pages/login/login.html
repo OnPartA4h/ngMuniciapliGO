@@ -9,6 +9,8 @@
         <img src="/assets/images/LogoText.png" style="width: 200px;">  
         <p>Connectez-vous à votre compte</p>
       </div>
+
+      <div *ngIf="authService.errorMessage != ''" style="color: red; padding: 0 0 30px 0; text-align: center;">{{authService.errorMessage}}</div>
       
       <form [formGroup]="formGroup" class="login-form">
         <div class="form-group">
