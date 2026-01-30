@@ -25,7 +25,9 @@
     "MAX_LENGTH": "Maximum {{max}} caractères autorisés",
     "CREATING": "Création en cours...",
     "SUCCESS": "Succès",
-    "ERROR": "Erreur"
+    "ERROR": "Erreur",
+    "PREVIOUS": "Précédent",
+    "NEXT": "Suivant"
   },
   "MANAGE_USERS": {
     "TITLE": "Gestion des utilisateurs",
@@ -40,9 +42,6 @@
     "EDIT": "Modifier",
     "NO_USERS": "Aucun utilisateur trouvé",
     "NO_USERS_DESC": "Essayez de modifier vos critères de recherche",
-    "LOADING": "Chargement...",
-    "PREVIOUS": "Précédent",
-    "NEXT": "Suivant",
     "PAGE_INFO": "Page {{current}} sur {{total}} ({{count}} utilisateurs)"
   },
   "EDIT_USER_MODAL": {
@@ -101,8 +100,6 @@
     "DATE": "Date",
     "ASSIGNEE": "Assigné à",
     "UNASSIGNED": "Non assigné",
-    "PREVIOUS": "Précédent",
-    "NEXT": "Suivant",
     "PAGE_INFO": "Page {{current}} sur {{total}}"
   },
   "LOGIN": {

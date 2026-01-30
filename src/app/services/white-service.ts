@@ -14,8 +14,6 @@ export class WhiteService {
 
   async getAllProblems(): Promise<Problem[]> {
     let x = await lastValueFrom(this.http.get<Problem[]>(this.domain + "/api/ColBlanc/problems"))
-    console.log(x);
-
     return x
   }
 }

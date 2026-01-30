@@ -73,19 +73,19 @@
 
   <div class="loading-spinner" *ngIf="isLoading">
     <div class="spinner"></div>
-    <p>{{ 'MANAGE_USERS.LOADING' | translate }}</p>
+    <p>{{ 'COMMON.LOADING' | translate }}</p>
   </div>
 
   <div class="pagination" *ngIf="!isLoading && users.length > 0">
     <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
       <i class="fas fa-chevron-left"></i>
-      {{ 'MANAGE_USERS.PREVIOUS' | translate }}
+      {{ 'COMMON.PREVIOUS' | translate }}
     </button>
     <span class="pagination-info">
       {{ 'MANAGE_USERS.PAGE_INFO' | translate: {current: currentPage, total: totalPages, count: totalUsers} }}
     </span>
     <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
-      {{ 'MANAGE_USERS.NEXT' | translate }}
+      {{ 'COMMON.NEXT' | translate }}
       <i class="fas fa-chevron-right"></i>
     </button>
   </div>

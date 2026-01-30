@@ -34,11 +34,13 @@ export class ManageReports implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.loading = true;
     await Promise.all([
       this.loadCategories(),
       this.loadStatuses(),
       this.getAllReports()
     ]);
+    this.loading = false;
   }
 
   async loadCategories() {

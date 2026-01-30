@@ -25,7 +25,9 @@
     "MAX_LENGTH": "Maximum {{max}} characters allowed",
     "CREATING": "Creating...",
     "SUCCESS": "Success",
-    "ERROR": "Error"
+    "ERROR": "Error",
+    "PREVIOUS": "Previous",
+    "NEXT": "Next"
   },
   "MANAGE_USERS": {
     "TITLE": "User Management",
@@ -40,9 +42,6 @@
     "EDIT": "Edit",
     "NO_USERS": "No users found",
     "NO_USERS_DESC": "Try changing your search criteria",
-    "LOADING": "Loading...",
-    "PREVIOUS": "Previous",
-    "NEXT": "Next",
     "PAGE_INFO": "Page {{current}} of {{total}} ({{count}} users)"
   },
   "EDIT_USER_MODAL": {
@@ -101,8 +100,6 @@
     "DATE": "Date",
     "ASSIGNEE": "Assigned to",
     "UNASSIGNED": "Unassigned",
-    "PREVIOUS": "Previous",
-    "NEXT": "Next",
     "PAGE_INFO": "Page {{current}} of {{total}}"
   },
   "LOGIN": {
