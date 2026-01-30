@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import { ApiInterceptor } from './interceptors/api-interceptor';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([ApiInterceptor])
     ),
+    provideEnvironmentNgxMask(),
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NgxMaskDirective } from 'ngx-mask';
 import { AdminService } from '../../services/admin-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
@@ -10,7 +11,7 @@ import { CreateUserDto, RoleOption, CreateUserResponseDto } from '../../models/u
 
 @Component({
   selector: 'app-create-user',
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, NgxMaskDirective],
   templateUrl: './create-user.html',
   styleUrl: './create-user.css',
 })
@@ -34,7 +35,7 @@ export class CreateUser implements OnInit {
       firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^[\d\s\-\(\)]+$/)]],
+      phoneNumber: ['', [Validators.required, Validators.minLength(10)]],
       roles: this.fb.array([], Validators.required)
     });
   }
@@ -78,15 +79,15 @@ export class CreateUser implements OnInit {
     if (control.hasError('required')) return this.translateService.instant('COMMON.REQUIRED_FIELD');
     if (control.hasError('email')) return this.translateService.instant('COMMON.INVALID_EMAIL');
     if (control.hasError('minlength')) {
+      if (field === 'phoneNumber') {
+        return this.translateService.instant('COMMON.INVALID_PHONE');
+      }
       const min = control.getError('minlength').requiredLength;
       return this.translateService.instant('COMMON.MIN_LENGTH', { min });
     }
     if (control.hasError('maxlength')) {
       const max = control.getError('maxlength').requiredLength;
       return this.translateService.instant('COMMON.MAX_LENGTH', { max });
-    }
-    if (control.hasError('pattern')) {
-      return this.translateService.instant('COMMON.INVALID_FORMAT');
     }
 
     return null;
