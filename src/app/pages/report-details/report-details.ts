@@ -17,6 +17,7 @@ export class ReportDetails implements OnInit {
   isLoading = true;
   categories = signal<CategoryOption[]>([]);
   statuses = signal<StatusOption[]>([]);
+  photoIndex = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -55,6 +56,7 @@ export class ReportDetails implements OnInit {
       if (params['id']) {
         try {
           this.problem = await this.generalService.getProblem(params['id']);
+          this.photoIndex = 0;
         } catch (error) {
           console.error('Error loading problem:', error);
         }
@@ -71,5 +73,15 @@ export class ReportDetails implements OnInit {
   getCategoryLabel(categoryKey: number): string {
     const category = this.categories()[categoryKey];
     return category ? category.label : categoryKey.toString();
+  }
+
+  prevPhoto() {
+    if (!this.problem?.photos?.length) return;
+    this.photoIndex = (this.photoIndex - 1 + this.problem.photos.length) % this.problem.photos.length;
+  }
+
+  nextPhoto() {
+    if (!this.problem?.photos?.length) return;
+    this.photoIndex = (this.photoIndex + 1) % this.problem.photos.length;
   }
 }

@@ -47,11 +47,10 @@
 .details-carousel-img {
     flex: 1;
     text-align: center;
-    min-height: 300px;
+    min-height: 360px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-gray-100);
     border-radius: 8px;
 }
 
@@ -126,6 +125,13 @@
     gap: 6px;
     font-size: var(--font-size-xs);
     color: var(--color-text-tertiary);
+}
+
+.photo-probleme {
+    max-width: 100%;
+    max-height: 480px;
+    border-radius: 12px;
+    object-fit: contain;
 }
 
 @media (max-width: 768px) {

@@ -1,11 +1,10 @@
 <div class="manage-reports-container">
-    <div class="page-header">
+    <div class="page-header" *ngIf="!isLoading && problem">
         <h1>{{ problem?.titre }}</h1>
-        <p>Les informations du problème signalé</p>
+        <p>{{ problem.description }}</p>
     </div>
 
     <div *ngIf="isLoading" style="text-align: center; padding: 40px;">Chargement...</div>
-
     <div *ngIf="!isLoading && problem" class="details-grid">
         <div class="details-main">
             <div class="details-carousel">
@@ -13,22 +12,19 @@
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="details-carousel-img">
-                    <div style="color: var(--color-gray-400);">
-                        <i class="fas fa-image" style="font-size: 48px; display: block; margin-bottom: 8px;"></i>
-                        <span *ngIf="!problem.photos || problem.photos.length === 0">Aucune photo</span>
-                        <span *ngIf="problem.photos && problem.photos.length > 0">{{ problem.photos.length }}
-                            photo(s)</span>
-                    </div>
+                    @if(problem.photos && problem.photos.length > 0){
+                    <span>
+                        <img class="photo-probleme" [src]="problem.photos[photoIndex]?.url" alt="Photo du problème">
+                    </span>
+                    }
+                    @else {
+                    <i class="fas fa-image" style="font-size: 48px; display: block; margin-bottom: 8px;"></i>
+                    <span>Aucune photo</span>
+                    }
                 </div>
                 <button class="details-carousel-btn">
                     <i class="fas fa-chevron-right"></i>
                 </button>
-            </div>
-            <div class="details-box">
-                <h3 class="details-section-title">Description</h3>
-                <p style="margin: 0; color: var(--color-text-primary); line-height: 1.8; white-space: pre-wrap;">{{
-                    problem.description }}
-                </p>
             </div>
         </div>
 
