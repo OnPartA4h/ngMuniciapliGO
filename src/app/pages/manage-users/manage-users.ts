@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../services/admin-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
@@ -10,7 +11,7 @@ import { EditUserModal } from '../../components/edit-user-modal/edit-user-modal'
 
 @Component({
   selector: 'app-manage-users',
-  imports: [CommonModule, FormsModule, RouterLink, EditUserModal],
+  imports: [CommonModule, FormsModule, RouterLink, EditUserModal, TranslateModule],
   templateUrl: './manage-users.html',
   styleUrl: './manage-users.css',
 })

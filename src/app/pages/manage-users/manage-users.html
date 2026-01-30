@@ -1,12 +1,12 @@
 <div class="manage-users-container">
   <div class="page-header">
     <div>
-      <h1>Gestion des Utilisateurs</h1>
-      <p>Liste de tous les utilisateurs du système</p>
+      <h1>{{ 'MANAGE_USERS.TITLE' | translate }}</h1>
+      <p>{{ 'MANAGE_USERS.SUBTITLE' | translate }}</p>
     </div>
     <a routerLink="/create-user" class="btn btn-primary">
       <i class="fas fa-user-plus"></i>
-      Créer un utilisateur
+      {{ 'MANAGE_USERS.CREATE_USER' | translate }}
     </a>
   </div>
 
@@ -15,21 +15,21 @@
       <i class="fas fa-search"></i>
       <input 
         type="text" 
-        placeholder="Rechercher un utilisateur..." 
+        [placeholder]="'MANAGE_USERS.SEARCH_PLACEHOLDER' | translate"
         [(ngModel)]="searchQuery"
         (keyup.enter)="onSearch()"
       />
     </div>
     <div class="filter-group">
       <select [(ngModel)]="selectedRole" (change)="onRoleFilterChange()">
-        <option value="">Tous les rôles</option>
+        <option value="">{{ 'MANAGE_USERS.FILTER_ALL' | translate }}</option>
         <option *ngFor="let role of availableRoles" [value]="role.key">
           {{ role.label }}
         </option>
       </select>
       <button class="btn btn-secondary" (click)="onSearch()">
         <i class="fas fa-search"></i>
-        Rechercher
+        {{ 'COMMON.SEARCH' | translate }}
       </button>
     </div>
   </div>
@@ -38,10 +38,10 @@
     <table class="users-table">
       <thead>
         <tr>
-          <th>Prénom</th>
-          <th>Nom</th>
-          <th>Rôles</th>
-          <th>Actions</th>
+          <th>{{ 'MANAGE_USERS.FIRST_NAME' | translate }}</th>
+          <th>{{ 'MANAGE_USERS.LAST_NAME' | translate }}</th>
+          <th>{{ 'MANAGE_USERS.ROLES' | translate }}</th>
+          <th>{{ 'MANAGE_USERS.ACTIONS' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -66,26 +66,26 @@
 
     <div class="empty-state" *ngIf="users.length === 0">
       <i class="fas fa-users icon-large"></i>
-      <h3>Aucun utilisateur trouvé</h3>
-      <p>Essayez de modifier vos critères de recherche</p>
+      <h3>{{ 'MANAGE_USERS.NO_USERS' | translate }}</h3>
+      <p>{{ 'MANAGE_USERS.NO_USERS_DESC' | translate }}</p>
     </div>
   </div>
 
   <div class="loading-spinner" *ngIf="isLoading">
     <div class="spinner"></div>
-    <p>Chargement...</p>
+    <p>{{ 'MANAGE_USERS.LOADING' | translate }}</p>
   </div>
 
   <div class="pagination" *ngIf="!isLoading && users.length > 0">
     <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
       <i class="fas fa-chevron-left"></i>
-      Précédent
+      {{ 'MANAGE_USERS.PREVIOUS' | translate }}
     </button>
     <span class="pagination-info">
-      Page {{ currentPage }} sur {{ totalPages }} ({{ totalUsers }} utilisateurs)
+      {{ 'MANAGE_USERS.PAGE_INFO' | translate: {current: currentPage, total: totalPages, count: totalUsers} }}
     </span>
     <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
-      Suivant
+      {{ 'MANAGE_USERS.NEXT' | translate }}
       <i class="fas fa-chevron-right"></i>
     </button>
   </div>

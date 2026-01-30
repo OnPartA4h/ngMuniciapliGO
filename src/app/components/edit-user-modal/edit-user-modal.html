@@ -1,7 +1,7 @@
 <div class="modal-backdrop" *ngIf="isOpen" (click)="handleBackdropClick($event)">
   <div class="modal-container" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>Gérer l'utilisateur</h2>
+      <h2>{{ 'EDIT_USER_MODAL.TITLE' | translate }}</h2>
       <button class="close-btn" (click)="closeModal()" [disabled]="isLoading">
         <i class="fas fa-times"></i>
       </button>
@@ -10,33 +10,33 @@
     <div class="modal-body" *ngIf="user">
       <div class="user-details">
         <div class="detail-group">
-          <label>Prénom</label>
+          <label>{{ 'EDIT_USER_MODAL.FIRST_NAME' | translate }}</label>
           <p>{{ user.firstName }}</p>
         </div>
         
         <div class="detail-group">
-          <label>Nom</label>
+          <label>{{ 'EDIT_USER_MODAL.LAST_NAME' | translate }}</label>
           <p>{{ user.lastName }}</p>
         </div>
         
         <div class="detail-group">
-          <label>Email</label>
+          <label>{{ 'EDIT_USER_MODAL.EMAIL' | translate }}</label>
           <p>{{ user.email }}</p>
         </div>
         
         <div class="detail-group">
-          <label>Téléphone</label>
+          <label>{{ 'EDIT_USER_MODAL.PHONE' | translate }}</label>
           <p>{{ user.phoneNumber }}</p>
         </div>
 
         <div class="detail-group">
-          <label>Mot de passe à réinitialiser</label>
-          <p>{{ user.mustResetPassword ? 'Oui' : 'Non' }}</p>
+          <label>{{ 'EDIT_USER_MODAL.MUST_RESET_PASSWORD' | translate }}</label>
+          <p>{{ user.mustResetPassword ? ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}</p>
         </div>
       </div>
 
       <div class="roles-section">
-        <h3>Rôles</h3>
+        <h3>{{ 'EDIT_USER_MODAL.ROLES' | translate }}</h3>
         <div class="roles-list">
           <div class="role-item" *ngFor="let role of roles">
             <label class="checkbox-label">
@@ -56,37 +56,20 @@
     <div class="modal-footer">
       <button class="btn btn-danger" (click)="openDeleteConfirm()" [disabled]="isLoading">
         <i class="fas fa-trash"></i>
-        Supprimer l'utilisateur
+        {{ 'EDIT_USER_MODAL.DELETE_USER' | translate }}
       </button>
       <button class="btn btn-secondary" (click)="closeModal()" [disabled]="isLoading">
-        Fermer
+        {{ 'COMMON.CLOSE' | translate }}
       </button>
-    </div>
-  </div>
-
-  <!-- Delete Confirmation Overlay -->
-  <div class="delete-confirm-overlay" *ngIf="showDeleteConfirm" (click)="cancelDelete()">
-    <div class="delete-confirm-modal" (click)="$event.stopPropagation()">
-      <div class="confirm-header">
-        <i class="fas fa-exclamation-triangle"></i>
-        <h2>Confirmer la suppression</h2>
-      </div>
-      
-      <div class="confirm-body">
-        <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{{ user?.firstName }} {{ user?.lastName }}</strong> ?</p>
-        <p class="warning-text">Cette action est irréversible.</p>
-      </div>
-      
-      <div class="confirm-footer">
-        <button class="btn btn-secondary" (click)="cancelDelete()" [disabled]="isLoading">
-          Annuler
-        </button>
-        <button class="btn btn-danger" (click)="confirmDelete()" [disabled]="isLoading">
-          <i class="fas fa-trash"></i>
-          <span *ngIf="!isLoading">Supprimer</span>
-          <span *ngIf="isLoading">Suppression...</span>
-        </button>
-      </div>
     </div>
   </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<app-delete-confirm-modal
+  [user]="user"
+  [isOpen]="showDeleteConfirm"
+  [isLoading]="isLoading"
+  (confirm)="confirmDelete()"
+  (cancel)="cancelDelete()"
+></app-delete-confirm-modal>
