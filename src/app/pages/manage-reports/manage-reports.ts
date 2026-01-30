@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { WhiteService } from '../../services/white-service';
@@ -22,16 +22,16 @@ export class ManageReports implements OnInit {
 
   loading = true;
 
-  public categories: CategoryOption[] = [];
-  public statuts: StatusOption[] = [];
-  
+  categories = signal<CategoryOption[]>([]);
+  statuses = signal<StatusOption[]>([]);
+
   problems: Problem[] = []
 
   constructor(
     public whiteService: WhiteService,
     private generalService: GeneralService,
     private languageService: LanguageService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.loading = true;
@@ -46,7 +46,7 @@ export class ManageReports implements OnInit {
   async loadCategories() {
     try {
       const lang = this.languageService.getCurrentLanguage();
-      this.categories = await this.generalService.getCategories(lang);
+      this.categories.set(await this.generalService.getCategories(lang));
     } catch (error) {
       console.error('Error loading categories:', error);
     }
@@ -55,29 +55,29 @@ export class ManageReports implements OnInit {
   async loadStatuses() {
     try {
       const lang = this.languageService.getCurrentLanguage();
-      this.statuts = await this.generalService.getStatuses(lang);
+      this.statuses.set(await this.generalService.getStatuses(lang));
     } catch (error) {
       console.error('Error loading statuses:', error);
     }
   }
-  
+
   async getAllReports() {
     this.problems = await this.whiteService.getAllProblems()
 
     this.problems.sort((a, b) => {
       const dateA = new Date(a.dateCreation).getTime();
       const dateB = new Date(b.dateCreation).getTime();
-      return dateA - dateB; 
+      return dateA - dateB;
     });
   }
 
-  getStatutLabel(statut: StatutProbleme): string {
-    const status = this.statuts.find(s => s.key === statut.toString());
-    return status ? status.label : statut.toString();
+  getStatusLabel(statusKey: number): string {
+    const status = this.statuses()[statusKey];
+    return status ? status.label : statusKey.toString();
   }
 
-  getCategorieLabel(categorie: CategorieProbleme): string {
-    const category = this.categories.find(c => c.key === categorie.toString());
-    return category ? category.label : categorie.toString();
+  getCategoryLabel(categoryKey: number): string {
+    const category = this.categories()[categoryKey];
+    return category ? category.label : categoryKey.toString();
   }
 }

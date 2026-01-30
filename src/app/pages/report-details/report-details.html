@@ -27,23 +27,35 @@
             <div class="details-box">
                 <h3 class="details-section-title">Description</h3>
                 <p style="margin: 0; color: var(--color-text-primary); line-height: 1.8; white-space: pre-wrap;">{{
-                    problem.description }}</p>
-                <div class="details-section-divider">
-                    <h3 class="details-section-title">Localisation</h3>
-                    <p style="margin: 0; color: var(--color-text-primary);">{{ problem.location }}</p>
-                </div>
+                    problem.description }}
+                </p>
             </div>
         </div>
 
         <div>
             <div class="details-box" style="margin-bottom: 24px; display: flex;">
                 <div class="details-badges">
-                    <span class="badge badge-info">{{ getCategoryLabel(problem.categorie) }}</span>
-                    <span class="badge badge-info">{{ getStatusLabel(problem.statut) }}</span>
+                    <h2>Informations</h2>
+                    <span>
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{problem.location}}
+                    </span>
+                    <span>
+                        <i class="fas fa-tag"></i>
+                        {{getCategoryLabel(problem.categorie)}}
+                    </span>
+                    <span>
+                        <i class="fas fa-clock"></i>
+                        {{problem.dateCreation | daysAgo}}
+                    </span>
+                    <span>
+                        <i class="fas fa-user"></i>
+                        {{ problem.assignedUser ? (problem.assignedUser.firstName + ' ' +
+                        problem.assignedUser.lastName)
+                        : 'Non assigné' }}
+                    </span>
                     <span class="badge badge-info">
-                        <i class="fas fa-user" style="margin-right: 6px;"></i>
-                        {{ problem.assignedUser ? (problem.assignedUser.firstName + ' ' + problem.assignedUser.lastName)
-                        : 'Pas d\'assigné' }}
+                        {{ getStatusLabel(problem.statut) }}
                     </span>
                 </div>
             </div>

@@ -12,13 +12,13 @@
     <div class="filter-group">
       <select>
         <option value="">{{ 'MANAGE_REPORTS.ALL_CATEGORIES' | translate }}</option>
-        <option *ngFor="let c of categories" [value]="c.key">
+        <option *ngFor="let c of categories()" [value]="c.key">
           {{ c.label }}
         </option>
       </select>
       <select>
         <option value="">{{ 'MANAGE_REPORTS.ALL_STATUSES' | translate }}</option>
-        <option *ngFor="let s of statuts" [value]="s.key">
+        <option *ngFor="let s of statuses()" [value]="s.key">
           {{ s.label }}
         </option>
       </select>
@@ -34,7 +34,7 @@
       <div class="report-info">
         <div class="report-header">
           <h3 class="report-title">{{p.titre}}</h3>
-          <span class="report-status status-nouveau">{{ getStatutLabel(p.statut) }}</span>
+          <span class="report-status status-nouveau">{{ getStatusLabel(p.statut) }}</span>
         </div>
         <div class="report-details">
           <span class="report-location">
@@ -43,7 +43,7 @@
           </span>
           <span class="report-category">
             <i class="fas fa-tag"></i>
-            {{getCategorieLabel(p.categorie)}}
+            {{getCategoryLabel(p.categorie)}}
           </span>
         </div>
         <div class="report-meta">

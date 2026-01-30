@@ -120,6 +120,14 @@
     width: 100%;
 }
 
+.info-no-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+}
+
 @media (max-width: 768px) {
     .manage-reports-container {
         padding: var(--spacing-xl);
