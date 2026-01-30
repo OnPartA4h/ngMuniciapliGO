@@ -56,11 +56,25 @@
 }
 
 .details-carousel-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
+    background: var(--color-white);
+    border: 2px solid var(--color-gray-700);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--color-gray-700);
+    box-shadow: var(--shadow-sm);
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.details-carousel-btn:hover {
+    opacity: 1;
     color: var(--color-primary);
+    border-color: var(--color-primary);
 }
 
 .details-box {

@@ -9,7 +9,9 @@
     <div *ngIf="!isLoading && problem" class="details-grid">
         <div class="details-main">
             <div class="details-carousel">
-                <button class="details-carousel-btn">&#8592;</button>
+                <button class="details-carousel-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
                 <div class="details-carousel-img">
                     <div style="color: var(--color-gray-400);">
                         <i class="fas fa-image" style="font-size: 48px; display: block; margin-bottom: 8px;"></i>
@@ -18,7 +20,9 @@
                             photo(s)</span>
                     </div>
                 </div>
-                <button class="details-carousel-btn">&#8594;</button>
+                <button class="details-carousel-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
             <div class="details-box">
                 <h3 class="details-section-title">Description</h3>
