@@ -4,6 +4,16 @@ import { StatutProbleme } from "../enums/statut-probleme";
 import { Photo } from "./photo";
 import { User } from "./user";
 
+export interface StatusOption {
+  key: string;
+  label: string;
+}
+
+export interface CategoryOption {
+  key: string;
+  label: string;
+}
+
 export class Problem {
     constructor(
         public id: number,

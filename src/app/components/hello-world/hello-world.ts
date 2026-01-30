@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, NgZone } from '@angular/core';
-import { ApiService } from '../../services/api-service';
+import { ApiService } from '../../services/hello-service';
 
 @Component({
   selector: 'app-hello-world',

@@ -1,12 +1,13 @@
 import { Component, OnInit, signal, Signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { WhiteService } from '../../services/white-service';
-import { Problem } from '../../models/problem';
+import { GeneralService } from '../../services/general-service';
+import { LanguageService } from '../../services/language-service';
+import { Problem, StatusOption, CategoryOption } from '../../models/problem';
 import { CommonModule } from '@angular/common';
 import { StatutProbleme } from '../../enums/statut-probleme';
 import { CategorieProbleme } from '../../enums/categorie-probleme';
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
-import { ApiService } from '../../services/api-service';
 
 @Component({
   selector: 'app-manage-reports',
@@ -20,17 +21,41 @@ export class ManageReports implements OnInit {
 
   loading = true;
 
-  public categories = signal<any[]>([]);
-  public statuts = signal<any[]>([]);
+  public categories: CategoryOption[] = [];
+  public statuts: StatusOption[] = [];
   
   problems: Problem[] = []
 
-  constructor(public whiteService: WhiteService, public apiService: ApiService) {}
+  constructor(
+    public whiteService: WhiteService,
+    private generalService: GeneralService,
+    private languageService: LanguageService
+  ) {}
 
   async ngOnInit() {
-    await this.getAllReports();
-    this.categories.set(await this.apiService.getCategories());
-    this.statuts.set(await this.apiService.getStatuts());
+    await Promise.all([
+      this.loadCategories(),
+      this.loadStatuses(),
+      this.getAllReports()
+    ]);
+  }
+
+  async loadCategories() {
+    try {
+      const lang = this.languageService.getCurrentLanguage();
+      this.categories = await this.generalService.getCategories(lang);
+    } catch (error) {
+      console.error('Error loading categories:', error);
+    }
+  }
+
+  async loadStatuses() {
+    try {
+      const lang = this.languageService.getCurrentLanguage();
+      this.statuts = await this.generalService.getStatuses(lang);
+    } catch (error) {
+      console.error('Error loading statuses:', error);
+    }
   }
   
   async getAllReports() {
@@ -43,11 +68,13 @@ export class ManageReports implements OnInit {
     });
   }
 
-  getStatutLabel(statut: StatutProbleme) {
-    return this.statuts()[statut]?.label;
+  getStatutLabel(statut: StatutProbleme): string {
+    const status = this.statuts.find(s => s.key === statut.toString());
+    return status ? status.label : statut.toString();
   }
 
-  getCategorieLabel(categorie: CategorieProbleme) {
-    return this.categories()[categorie]?.label;
+  getCategorieLabel(categorie: CategorieProbleme): string {
+    const category = this.categories.find(c => c.key === categorie.toString());
+    return category ? category.label : categorie.toString();
   }
 }
