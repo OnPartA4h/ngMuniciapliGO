@@ -11,6 +11,7 @@ import { authGuard } from './guards/auth-guard';
 import { loginGuard } from './guards/login-guard';
 import { adminGuard } from './guards/admin-guard';
 import { whiteGuard } from './guards/white-guard';
+import { Landing } from './pages/landing/landing';
 
 export const routes: Routes = [
   { path: 'hello', component: Hello },
@@ -21,5 +22,6 @@ export const routes: Routes = [
   { path: 'manage-users', component: ManageUsers, canActivate: [authGuard, adminGuard]},
   { path: 'create-user', component: CreateUser, canActivate: [authGuard, adminGuard]},
   { path: 'report-details/:id', component: ReportDetails, canActivate: [authGuard]},
-  { path: 'profile', component: Profile, canActivate: [authGuard]}
+  { path: 'profile', component: Profile, canActivate: [authGuard]},
+  { path: 'landing', component: Landing,}
 ];

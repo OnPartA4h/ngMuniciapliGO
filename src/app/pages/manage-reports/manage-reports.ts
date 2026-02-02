@@ -20,6 +20,9 @@ export class ManageReports implements OnInit {
   categories = signal<CategoryOption[]>([]);
   statuses = signal<StatusOption[]>([]);
 
+  currentPage: number = 1
+  lastPage: number = 3
+
   problems: Problem[] = []
 
   constructor(
