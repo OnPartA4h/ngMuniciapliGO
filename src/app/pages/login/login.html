@@ -41,4 +41,16 @@
       </form>  
     </div>
   </div>
+
+  <!-- Force Reset Password Modal -->
+  <app-force-reset-password-modal
+    *ngIf="showResetPasswordModal"
+    [currentPassword]="currentPassword"
+    [firstName]="userFirstName"
+    [lastName]="userLastName"
+    [email]="userEmail"
+    [phoneNumber]="userPhoneNumber"
+    (passwordReset)="onPasswordReset()"
+    (resetError)="onResetError($event)"
+  ></app-force-reset-password-modal>
 </div>

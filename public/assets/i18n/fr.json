@@ -69,7 +69,11 @@
     "PASSWORD_MIN_LENGTH": "Le mot de passe doit contenir au moins 8 caractères",
     "PASSWORD_PATTERN": "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre",
     "CURRENT_PASSWORD_REQUIRED": "Le mot de passe actuel est requis",
-    "NEW_PASSWORD_REQUIRED": "Le nouveau mot de passe est requis"
+    "NEW_PASSWORD_REQUIRED": "Le nouveau mot de passe est requis",
+    "RESET_PASSWORD_REQUIRED": "Réinitialisation du mot de passe requise",
+    "RESET_PASSWORD_SUBTITLE": "Votre compte nécessite une réinitialisation du mot de passe pour des raisons de sécurité. Veuillez entrer un nouveau mot de passe.",
+    "RESET_PASSWORD": "Réinitialiser le mot de passe",
+    "PASSWORD_REQUIREMENTS_INFO": "Le mot de passe doit contenir au moins 8 caractères, incluant une majuscule, une minuscule et un chiffre."
   },
   "MANAGE_USERS": {
     "TITLE": "Gestion des utilisateurs",

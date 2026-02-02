@@ -4,16 +4,23 @@ import { AuthService } from '../../services/auth-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { ForceResetPasswordModal } from '../../components/force-reset-password-modal/force-reset-password-modal';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TranslateModule],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TranslateModule, ForceResetPasswordModal],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
   
   formGroup: FormGroup;
+  showResetPasswordModal = false;
+  currentPassword = '';
+  userFirstName = '';
+  userLastName = '';
+  userEmail = '';
+  userPhoneNumber = '';
 
   constructor(public authService: AuthService, private formBuilder: FormBuilder, public router: Router) {
     this.formGroup = this.formBuilder.group(
@@ -34,6 +41,19 @@ export class Login {
     let token = this.authService.token()
     let roles = this.authService.roles()
 
+    // Check if user needs to reset password
+    const loginResponse = this.authService.getLoginResponse();
+    if (loginResponse && loginResponse.user.mustResetPassword) {
+      // Store the current password for the reset modal
+      this.currentPassword = password;
+      this.userFirstName = loginResponse.user.firstName;
+      this.userLastName = loginResponse.user.lastName;
+      this.userEmail = loginResponse.user.email;
+      this.userPhoneNumber = loginResponse.user.phoneNumber;
+      this.showResetPasswordModal = true;
+      return;
+    }
+
     if (roles.includes('Admin') && token){
       this.router.navigate(['/manage-users'])
       return
@@ -44,4 +64,27 @@ export class Login {
       return
     }
   }
+
+  onPasswordReset() {
+    // After password reset, redirect based on roles
+    this.showResetPasswordModal = false;
+    let roles = this.authService.roles()
+    let token = this.authService.token()
+
+    if (roles.includes('Admin') && token){
+      this.router.navigate(['/manage-users'])
+      return
+    }
+
+    if (roles.includes('ColBlanc') && token){
+      this.router.navigate(['/manage-reports'])
+      return
+    }
+  }
+
+  onResetError(error: string | undefined) {
+    // Handle error if needed
+    console.error('Password reset error:', error);
+  }
 }
+
