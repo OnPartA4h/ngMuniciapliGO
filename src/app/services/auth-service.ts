@@ -61,35 +61,12 @@ export class AuthService {
     }
   }
 
-  async getProfile(): Promise<User> {
-    const profile = await lastValueFrom(this.http.get<User>(`${this.apiUrl}/api/Auth/me`));
-    // Update the profile picture signal
-    this.profilePictureSignal.set(profile.profilePictureUrl || null);
-    return profile;
-  }
-
-  async updateProfile(dto: UpdateProfileDto): Promise<void> {
-    await lastValueFrom(this.http.put(`${this.apiUrl}/api/Auth/me`, dto));
-  }
-
-  async uploadProfilePicture(file: File): Promise<{ message: string; profilePictureUrl: string }> {
-    const formData = new FormData();
-    formData.append('file', file);
-    const response = await lastValueFrom(this.http.post<{ message: string; profilePictureUrl: string }>(`${this.apiUrl}/api/Auth/profile-picture`, formData));
-    // Update the profile picture signal
-    this.profilePictureSignal.set(response.profilePictureUrl);
-    return response;
-  }
-
-  async deleteProfilePicture(): Promise<{ message: string }> {
-    const response = await lastValueFrom(this.http.delete<{ message: string }>(`${this.apiUrl}/api/Auth/profile-picture`));
-    // Clear the profile picture signal
-    this.profilePictureSignal.set(null);
-    return response;
-  }
-
   isAuthenticated(): boolean {
     return this.tokenSignal() !== null;
+  }
+
+  setProfilePictureUrl(url: string | null) {
+    this.profilePictureSignal.set(url);
   }
 
   logout() {

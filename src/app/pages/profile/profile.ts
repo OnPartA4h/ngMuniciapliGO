@@ -9,6 +9,7 @@ import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { RoleOption, UpdateProfileDto, User } from '../../models/user';
 import { ImageCropperModal } from '../../components/image-cropper-modal/image-cropper-modal';
+import { UserService } from '../../services/user-service';
 
 @Component({
   selector: 'app-profile',
@@ -42,6 +43,7 @@ export class Profile implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private userService: UserService,
     private generalService: GeneralService,
     private languageService: LanguageService,
     private translateService: TranslateService,
@@ -75,7 +77,7 @@ export class Profile implements OnInit {
 
   async loadProfile() {
     try {
-      this.profile = await this.authService.getProfile();
+      this.profile = await this.userService.getProfile();
       
       // Set profile image if it exists
       if (this.profile.profilePictureUrl) {
@@ -127,11 +129,11 @@ export class Profile implements OnInit {
         phoneNumber: this.profileForm.value.phoneNumber
       };
 
-      await this.authService.updateProfile(dto);
+      await this.userService.updateProfile(dto);
       this.infoSuccessMessage = this.translateService.instant('PROFILE.SUCCESS_UPDATE');
       
       // Reload profile data without showing loading screen
-      this.profile = await this.authService.getProfile();
+      this.profile = await this.userService.getProfile();
       this.cdr.detectChanges();
       
     } catch (error: any) {
@@ -174,7 +176,7 @@ export class Profile implements OnInit {
         newPassword: newPassword
       };
 
-      await this.authService.updateProfile(dto);
+      await this.userService.updateProfile(dto);
       this.passwordSuccessMessage = this.translateService.instant('PROFILE.PASSWORD_SUCCESS');
       
       // Clear password fields after successful update
@@ -225,13 +227,13 @@ export class Profile implements OnInit {
       const file = new File([croppedBlob], 'profile-picture.jpg', { type: 'image/jpeg' });
       
       // Upload the file
-      const response = await this.authService.uploadProfilePicture(file);
+      const response = await this.userService.uploadProfilePicture(file);
       
       // Update the profile image URL from the response
       this.profileImageUrl = response.profilePictureUrl;
       
       // Reload profile to get updated data
-      this.profile = await this.authService.getProfile();
+      this.profile = await this.userService.getProfile();
       
       this.infoSuccessMessage = this.translateService.instant('PROFILE.PHOTO_UPLOADED');
       this.showImageCropper = false;
@@ -270,11 +272,11 @@ export class Profile implements OnInit {
     this.infoErrorMessage = null;
 
     try {
-      await this.authService.deleteProfilePicture();
+      await this.userService.deleteProfilePicture();
       this.profileImageUrl = null;
       
       // Reload profile to get updated data
-      this.profile = await this.authService.getProfile();
+      this.profile = await this.userService.getProfile();
       
       this.infoSuccessMessage = this.translateService.instant('PROFILE.PHOTO_DELETED');
     } catch (error: any) {
