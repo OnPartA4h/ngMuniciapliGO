@@ -57,6 +57,8 @@ export class AuthService {
 
       // Store the login response for mustResetPassword check
       this.loginResponse = response;
+
+      this.errorMessage = ""
     } catch (error: any) {
       if (error.status < 500 && error.status > 0) {
         this.errorMessage = "Email or password is incorrect"
