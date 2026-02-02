@@ -30,7 +30,8 @@
 
     <!-- Profile Avatar (when connected) -->
     <a *ngIf="isConnected" routerLink="/profile" class="profile-avatar" routerLinkActive="active">
-      <i class="fas fa-user"></i>
+      <img *ngIf="authService.profilePictureUrl()" [src]="authService.profilePictureUrl()!" alt="Profile" />
+      <i *ngIf="!authService.profilePictureUrl()" class="fas fa-user"></i>
     </a>
 
     <!-- Login/Logout -->

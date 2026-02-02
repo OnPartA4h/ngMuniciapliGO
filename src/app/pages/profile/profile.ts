@@ -225,11 +225,13 @@ export class Profile implements OnInit {
       const file = new File([croppedBlob], 'profile-picture.jpg', { type: 'image/jpeg' });
       
       // Upload the file
-      const updatedUser = await this.authService.uploadProfilePicture(file);
+      const response = await this.authService.uploadProfilePicture(file);
       
-      // Update the profile image URL
-      this.profileImageUrl = updatedUser.profilePictureUrl || null;
-      this.profile = updatedUser;
+      // Update the profile image URL from the response
+      this.profileImageUrl = response.profilePictureUrl;
+      
+      // Reload profile to get updated data
+      this.profile = await this.authService.getProfile();
       
       this.infoSuccessMessage = this.translateService.instant('PROFILE.PHOTO_UPLOADED');
       this.showImageCropper = false;
@@ -268,9 +270,12 @@ export class Profile implements OnInit {
     this.infoErrorMessage = null;
 
     try {
-      const updatedUser = await this.authService.deleteProfilePicture();
+      await this.authService.deleteProfilePicture();
       this.profileImageUrl = null;
-      this.profile = updatedUser;
+      
+      // Reload profile to get updated data
+      this.profile = await this.authService.getProfile();
+      
       this.infoSuccessMessage = this.translateService.instant('PROFILE.PHOTO_DELETED');
     } catch (error: any) {
       console.error('Error deleting profile picture:', error);
