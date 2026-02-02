@@ -16,4 +16,27 @@ export class WhiteService {
     let x = await lastValueFrom(this.http.get<Problem[]>(this.domain + "/api/ColBlanc/problems"))
     return x
   }
+
+  async acceptProblem(id: number): Promise<any> {
+    return await lastValueFrom(
+      this.http.get<any>(`${this.domain}/api/ColBlanc/accept/${id}`)
+    );
+  }
+
+  async refuseProblem(id: number): Promise<any> {
+    return await lastValueFrom(
+      this.http.get<any>(`${this.domain}/api/ColBlanc/refuser/${id}`)
+    );
+  }
+
+  async assignProblem(id: number, colBleuId: string | null = null): Promise<any> {
+    if (colBleuId) {
+      return await lastValueFrom(
+        this.http.get<any>(`${this.domain}/api/ColBlanc/assign/${id}/${colBleuId}`)
+      );
+    }
+    return await lastValueFrom(
+      this.http.get<any>(`${this.domain}/api/ColBlanc/assign/${id}`)
+    );
+  }
 }

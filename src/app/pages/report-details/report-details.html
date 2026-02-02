@@ -56,23 +56,25 @@
                 </div>
             </div>
             <div class="details-actions">
-                <button class="btn btn-primary details-btn-accept">
-                    <i class="fas fa-check" style="margin-right: 8px;"></i>
-                    Accepter
-                </button>
-                <button class="btn btn-primary details-btn-refuse">
-                    <i class="fas fa-times" style="margin-right: 8px;"></i>
-                    Refuser
-                </button>
-                <div class="divider"></div>
                 <div class="search-box">
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="Assigner à un col bleu..." />
                 </div>
-                <button class="btn btn-primary btn-primary">
+                <button class="btn btn-primary btn-primary" (click)="assignCitoyen()">
                     <i class="fas fa-user" style="margin-right: 8px;"></i>
                     Assigner aux Citoyens
                 </button>
+                <div class="divider"></div>
+                @if (problem.statut === 0) {
+                <button class="btn btn-primary details-btn-accept" (click)="acceptProblem()">
+                    <i class="fas fa-check" style="margin-right: 8px;"></i>
+                    Accepter
+                </button>
+                <button class="btn btn-primary details-btn-refuse" (click)="refuseProblem()">
+                    <i class="fas fa-times" style="margin-right: 8px;"></i>
+                    Refuser
+                </button>
+                }
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@ import { LanguageService } from '../../services/language-service';
 import { StatusOption, CategoryOption } from '../../models/problem';
 import { CommonModule } from '@angular/common';
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
+import { WhiteService } from '../../services/white-service';
 
 @Component({
   selector: 'app-report-details',
@@ -22,7 +23,8 @@ export class ReportDetails implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private generalService: GeneralService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private whiteService: WhiteService
   ) { }
 
   async ngOnInit() {
@@ -63,6 +65,22 @@ export class ReportDetails implements OnInit {
       }
       this.isLoading = false;
     });
+  }
+
+  acceptProblem() {
+    this.whiteService.acceptProblem(this.problem.id)
+  }
+
+  refuseProblem() {
+    this.whiteService.refuseProblem(this.problem.id)
+  }
+
+  assignCitoyen() {
+    this.whiteService.assignProblem(this.problem.id)
+  }
+
+  assignColBleu(colBleuId: string) {
+    this.whiteService.assignProblem(this.problem.id, colBleuId)
   }
 
   getStatusLabel(statusKey: number): string {

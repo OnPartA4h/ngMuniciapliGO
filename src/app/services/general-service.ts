@@ -11,7 +11,7 @@ import { StatusOption, CategoryOption } from '../models/problem';
 export class GeneralService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   async getRoles(lang: string): Promise<RoleOption[]> {
     return await lastValueFrom(
