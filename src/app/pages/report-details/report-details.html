@@ -1,1 +1,81 @@
-<p>report-details works!</p>
+<div class="manage-reports-container">
+    <div class="page-header" *ngIf="!isLoading && problem">
+        <h1>{{ problem?.titre }}</h1>
+        <p>{{ problem.description }}</p>
+    </div>
+
+    <div *ngIf="isLoading" style="text-align: center; padding: 40px;">Chargement...</div>
+    <div *ngIf="!isLoading && problem" class="details-grid">
+        <div class="details-main">
+            <div class="details-carousel">
+                <button class="details-carousel-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="details-carousel-img">
+                    @if(problem.photos && problem.photos.length > 0){
+                    <span>
+                        <img class="photo-probleme" [src]="problem.photos[photoIndex]?.url" alt="Photo du problème">
+                    </span>
+                    }
+                    @else {
+                    <i class="fas fa-image" style="font-size: 48px; display: block; margin-bottom: 8px;"></i>
+                    <span>Aucune photo</span>
+                    }
+                </div>
+                <button class="details-carousel-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <div class="details-box" style="margin-bottom: 24px; display: flex;">
+                <div class="details-badges">
+                    <h2>Informations</h2>
+                    <span>
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{problem.location}}
+                    </span>
+                    <span>
+                        <i class="fas fa-tag"></i>
+                        {{getCategoryLabel(problem.categorie)}}
+                    </span>
+                    <span>
+                        <i class="fas fa-clock"></i>
+                        {{problem.dateCreation | daysAgo}}
+                    </span>
+                    <span>
+                        <i class="fas fa-user"></i>
+                        {{ problem.assignedUser ? (problem.assignedUser.firstName + ' ' +
+                        problem.assignedUser.lastName)
+                        : 'Non assigné' }}
+                    </span>
+                    <span class="badge badge-info">
+                        {{ getStatusLabel(problem.statut) }}
+                    </span>
+                </div>
+            </div>
+            <div class="details-actions">
+                <button class="btn btn-primary details-btn-accept">
+                    <i class="fas fa-check" style="margin-right: 8px;"></i>
+                    Accepter
+                </button>
+                <button class="btn btn-primary details-btn-refuse">
+                    <i class="fas fa-times" style="margin-right: 8px;"></i>
+                    Refuser
+                </button>
+                <div class="divider"></div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Assigner à un col bleu..." />
+                </div>
+                <button class="btn btn-primary btn-primary">
+                    <i class="fas fa-user" style="margin-right: 8px;"></i>
+                    Assigner aux Citoyens
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading && !problem" style="text-align: center; padding: 40px;">Aucun problème trouvé.</div>
+</div>
