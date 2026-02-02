@@ -1,0 +1,292 @@
+<div class="landing-page">
+  <!-- Navigation -->
+  <nav class="landing-nav">
+    <a href="/" class="nav-logo">
+      <img src="/assets/images/Logo.png" alt="MunicipalGO" class="logo-img">
+      <span>MunicipalGO</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Fonctionnalités</a>
+      <a href="#before-after">Avant/Après</a>
+      <a href="#testimonials">Témoignages</a>
+      <a href="#map">Carte</a>
+      <a routerLink="/login" class="btn-nav-login">Connexion</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Ensemble, améliorons notre ville</h1>
+      <p>Signalez les problèmes de votre quartier et suivez leur résolution en temps réel. MunicipalGO connecte les citoyens et la municipalité pour une ville plus belle.</p>
+      <div class="hero-buttons">
+        <a href="#download" class="btn-primary">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Télécharger l'app
+        </a>
+        <a href="#map" class="btn-secondary">Voir la carte</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="https://placehold.co/600x400/e8f4f8/1565c0?text=App+Mobile" alt="Application MunicipalGO">
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="statistics" id="stats">
+    <div class="stat-card">
+      <div class="stat-number">{{stats.problemsResolved}}</div>
+      <div class="stat-label">Problèmes résolus ce mois</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{stats.activeCitizens}}</div>
+      <div class="stat-label">Citoyens actifs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{stats.avgResolutionTime}}</div>
+      <div class="stat-label">Jours de résolution moyenne</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{stats.satisfactionRate}}%</div>
+      <div class="stat-label">Taux de satisfaction</div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <h2>Pourquoi choisir MunicipalGO ?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </div>
+        <h3>Signalement facile</h3>
+        <p>Prenez une photo, ajoutez une description et envoyez. C'est aussi simple que ça.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </div>
+        <h3>Géolocalisation</h3>
+        <p>Localisez précisément le problème sur la carte pour une intervention rapide.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <h3>Suivi en temps réel</h3>
+        <p>Recevez des notifications à chaque étape de la résolution de votre signalement.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <h3>Communauté engagée</h3>
+        <p>Rejoignez des milliers de citoyens qui améliorent leur ville au quotidien.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Before/After Section -->
+  <section class="before-after" id="before-after">
+    <h2>Histoires de succès</h2>
+    <p class="section-subtitle">Découvrez comment MunicipalGO transforme notre ville</p>
+    
+    <div class="before-after-slider">
+      <div class="before-after-card" *ngFor="let story of successStories">
+        <div class="comparison">
+          <div class="before">
+            <span class="label">Avant</span>
+            <img [src]="story.beforeImage" alt="Avant">
+          </div>
+          <div class="after">
+            <span class="label">Après</span>
+            <img [src]="story.afterImage" alt="Après">
+          </div>
+        </div>
+        <div class="story-info">
+          <h4>{{story.title}}</h4>
+          <p>{{story.description}}</p>
+          <span class="resolution-time">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Résolu en {{story.resolutionDays}} jours
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials" id="testimonials">
+    <h2>Ce que disent nos citoyens</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+        <div class="testimonial-content">
+          <svg class="quote-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+          </svg>
+          <p>{{testimonial.content}}</p>
+        </div>
+        <div class="testimonial-author">
+          <img [src]="testimonial.avatar" alt="{{testimonial.name}}">
+          <div>
+            <strong>{{testimonial.name}}</strong>
+            <span>{{testimonial.neighborhood}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section -->
+  <section class="map-section" id="map">
+    <h2>Carte des problèmes signalés</h2>
+    <p class="section-subtitle">Consultez les problèmes signalés dans votre quartier</p>
+    
+    <div class="map-container">
+      <div class="map-placeholder">
+        <img src="https://placehold.co/1200x500/e8f4f8/1565c0?text=Carte+Interactive" alt="Carte des problèmes">
+        <div class="map-overlay">
+          <p>Carte interactive des problèmes signalés</p>
+        </div>
+      </div>
+      
+      <div class="map-legend">
+        <h4>Légende</h4>
+        <div class="legend-item">
+          <span class="dot nouveau"></span>
+          <span>Nouveau</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot en-cours"></span>
+          <span>En cours</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot resolu"></span>
+          <span>Résolu</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Problems List -->
+    <div class="recent-problems">
+      <h3>Problèmes récents</h3>
+      <div class="problems-grid">
+        <div class="problem-card-mini" *ngFor="let problem of recentProblems">
+          <img [src]="problem.imageUrl" alt="{{problem.title}}">
+          <div class="problem-info">
+            <h5>{{problem.title}}</h5>
+            <span class="problem-location">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              {{problem.location}}
+            </span>
+            <span class="problem-status" [ngClass]="'status-' + problem.status">
+              {{problem.statusLabel}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download Section -->
+  <section class="download" id="download">
+    <div class="download-content">
+      <h2>Téléchargez l'application</h2>
+      <p>Disponible sur iOS et Android. Rejoignez la communauté MunicipalGO et participez à l'amélioration de votre ville.</p>
+      <div class="download-buttons">
+        <a href="#" class="store-button">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+          </svg>
+          <div>
+            <span>Télécharger sur</span>
+            <strong>App Store</strong>
+          </div>
+        </a>
+        <a href="#" class="store-button">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
+          </svg>
+          <div>
+            <span>Disponible sur</span>
+            <strong>Google Play</strong>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="download-image">
+      <img src="https://placehold.co/400x500/e8f5e9/2e7d32?text=App+Screenshot" alt="Application mobile">
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="/assets/images/Logo.png" alt="MunicipalGO" class="footer-logo">
+        <span>MunicipalGO</span>
+        <p>Ensemble, construisons une ville meilleure.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Liens rapides</h4>
+        <a href="#features">Fonctionnalités</a>
+        <a href="#before-after">Avant/Après</a>
+        <a href="#testimonials">Témoignages</a>
+        <a href="#map">Carte</a>
+      </div>
+      <div class="footer-links">
+        <h4>Contact</h4>
+        <a href="mailto:contact@municipaligo.com">contact&#64;municipaligo.com</a>
+        <a href="tel:+15141234567">+1 514 123 4567</a>
+      </div>
+      <div class="footer-social">
+        <h4>Suivez-nous</h4>
+        <div class="social-icons">
+          <a href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Twitter">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MunicipalGO. Tous droits réservés.</p>
+    </div>
+  </footer>
+</div>

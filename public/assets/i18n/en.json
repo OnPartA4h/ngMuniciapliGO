@@ -69,7 +69,11 @@
     "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters",
     "PASSWORD_PATTERN": "Password must contain at least one uppercase letter, one lowercase letter, and one digit",
     "CURRENT_PASSWORD_REQUIRED": "Current password is required",
-    "NEW_PASSWORD_REQUIRED": "New password is required"
+    "NEW_PASSWORD_REQUIRED": "New password is required",
+    "RESET_PASSWORD_REQUIRED": "Password Reset Required",
+    "RESET_PASSWORD_SUBTITLE": "Your account requires a password reset for security reasons. Please enter a new password.",
+    "RESET_PASSWORD": "Reset Password",
+    "PASSWORD_REQUIREMENTS_INFO": "Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, and one digit."
   },
   "MANAGE_USERS": {
     "TITLE": "User Management",

@@ -22,6 +22,8 @@ export class AuthService {
   private profilePictureSignal : WritableSignal<string|null> = signal(null);
   readonly profilePictureUrl : Signal<string|null> = this.profilePictureSignal.asReadonly();
 
+  private loginResponse: any = null;
+
   constructor(public http: HttpClient, private router: Router) {}
 
   errorMessage: string = ""
@@ -52,6 +54,11 @@ export class AuthService {
 
       // Update profile picture signal from login response
       this.profilePictureSignal.set(response.user.profilePictureUrl || null);
+
+      // Store the login response for mustResetPassword check
+      this.loginResponse = response;
+
+      this.errorMessage = ""
     } catch (error: any) {
       if (error.status < 500 && error.status > 0) {
         this.errorMessage = "Email or password is incorrect"
@@ -69,6 +76,10 @@ export class AuthService {
     this.profilePictureSignal.set(url);
   }
 
+  getLoginResponse() {
+    return this.loginResponse;
+  }
+
   logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("roles")
@@ -76,6 +87,7 @@ export class AuthService {
     this.tokenSignal.set(null)
     this.rolesSignal.set([])
     this.profilePictureSignal.set(null)
+    this.loginResponse = null
 
     this.router.navigate(['/login']);
   }

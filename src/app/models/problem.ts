@@ -17,7 +17,7 @@ export class Problem {
     public id: number,
     public titre: string,
     public description: string,
-    public location: string,
+    public address: string,
     public statut: number,
     public categorie: number,
     public dateCreation: Date,
