@@ -11,6 +11,7 @@
         [maintainAspectRatio]="true"
         [aspectRatio]="1"
         [resizeToWidth]="300"
+        [autoCrop]="true"
         format="jpeg"
         outputType="blob"
         (imageCropped)="imageCropped($event)"
@@ -24,7 +25,7 @@
       <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="isUploading">
         {{ 'COMMON.CANCEL' | translate }}
       </button>
-      <button type="button" class="btn btn-primary" [disabled]="isUploading || !croppedImage" (click)="upload()">
+      <button type="button" class="btn btn-primary" [disabled]="isUploading" (click)="upload()">
         <i class="fas fa-upload" *ngIf="!isUploading"></i>
         <i class="fas fa-spinner fa-spin" *ngIf="isUploading"></i>
         {{ (isUploading ? 'COMMON.SAVING' : 'PROFILE.UPLOAD_PHOTO') | translate }}

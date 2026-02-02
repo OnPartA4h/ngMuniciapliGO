@@ -23,6 +23,7 @@ export class ImageCropperModal {
   imageCropped(event: ImageCroppedEvent) {
     if (event.blob) {
       this.croppedImage = event.blob;
+      console.log('Image cropped, blob available:', !!event.blob);
     }
   }
 
