@@ -13,10 +13,10 @@ export class UserService {
   private apiUrl = environment.apiUrl;
 
   constructor(
-    public http: HttpClient, 
+    public http: HttpClient,
     private router: Router,
     private authService: AuthService
-  ) {}
+  ) { }
 
   async getProfile(): Promise<User> {
     const profile = await lastValueFrom(this.http.get<User>(`${this.apiUrl}/api/User/me`));
@@ -43,5 +43,13 @@ export class UserService {
     // Clear the profile picture signal in AuthService
     this.authService.setProfilePictureUrl(null);
     return response;
+  }
+
+  async getColBleus(search: string): Promise<any> {
+    if (search == "") return;
+
+    let x = await lastValueFrom(this.http.get<any>(`${this.apiUrl}/api/User/colbleus/${search}`));
+
+    return x;
   }
 }

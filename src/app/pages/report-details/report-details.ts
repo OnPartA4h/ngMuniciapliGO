@@ -1,17 +1,19 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { StatusOption, CategoryOption } from '../../models/problem';
 import { CommonModule } from '@angular/common';
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 import { WhiteService } from '../../services/white-service';
+import { UserService } from '../../services/user-service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-report-details',
   templateUrl: './report-details.html',
   styleUrl: './report-details.css',
-  imports: [CommonModule, DaysAgoPipe],
+  imports: [CommonModule, DaysAgoPipe, FormsModule],
 })
 export class ReportDetails implements OnInit {
   problem: any = null;
@@ -19,12 +21,16 @@ export class ReportDetails implements OnInit {
   categories = signal<CategoryOption[]>([]);
   statuses = signal<StatusOption[]>([]);
   photoIndex = 0;
+  colBleus: any[] = [];
+  search = "";
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private generalService: GeneralService,
     private languageService: LanguageService,
-    private whiteService: WhiteService
+    private whiteService: WhiteService,
+    private userService: UserService
   ) { }
 
   async ngOnInit() {
@@ -67,20 +73,40 @@ export class ReportDetails implements OnInit {
     });
   }
 
-  acceptProblem() {
-    this.whiteService.acceptProblem(this.problem.id)
+  async acceptProblem() {
+    try {
+      await this.whiteService.acceptProblem(this.problem.id);
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  refuseProblem() {
-    this.whiteService.refuseProblem(this.problem.id)
+  async refuseProblem() {
+    try {
+      this.whiteService.refuseProblem(this.problem.id);
+      this.router.navigate(['/manage-reports']);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  assignCitoyen() {
-    this.whiteService.assignProblem(this.problem.id)
+  async assignCitoyen() {
+    try {
+      this.whiteService.assignProblem(this.problem.id);
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  assignColBleu(colBleuId: string) {
-    this.whiteService.assignProblem(this.problem.id, colBleuId)
+  async assignColBleu(colBleuId: string) {
+    try {
+      this.whiteService.assignProblem(this.problem.id, colBleuId);
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   getStatusLabel(statusKey: number): string {
@@ -101,5 +127,12 @@ export class ReportDetails implements OnInit {
   nextPhoto() {
     if (!this.problem?.photos?.length) return;
     this.photoIndex = (this.photoIndex + 1) % this.problem.photos.length;
+  }
+
+  async getColBleus() {
+    if (this.search == "")
+      this.colBleus = [];
+    else
+      this.colBleus = await this.userService.getColBleus(this.search);
   }
 }
