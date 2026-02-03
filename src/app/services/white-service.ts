@@ -20,24 +20,25 @@ export class WhiteService {
 
   async acceptProblem(id: number): Promise<any> {
     return await lastValueFrom(
-      this.http.get<any>(`${this.domain}/api/ColBlanc/accept/${id}`)
+      this.http.get<any>(`${this.domain}/api/ColBlanc/${id}/accepter`)
     );
   }
 
   async refuseProblem(id: number): Promise<any> {
     return await lastValueFrom(
-      this.http.get<any>(`${this.domain}/api/ColBlanc/refuser/${id}`)
+      this.http.get<any>(`${this.domain}/api/ColBlanc/${id}/refuser`)
     );
   }
 
-  async assignProblem(id: number, colBleuId: string | null = null): Promise<any> {
-    if (colBleuId) {
-      return await lastValueFrom(
-        this.http.get<any>(`${this.domain}/api/ColBlanc/assign/${id}/${colBleuId}`)
-      );
-    }
+  async assignProblemCitoyen(id: number): Promise<any> {
     return await lastValueFrom(
-      this.http.get<any>(`${this.domain}/api/ColBlanc/assign/${id}`)
+      this.http.get<any>(`${this.domain}/api/ColBlanc/${id}/assign-citoyens`)
+    );
+  }
+
+  async assignProblemColbleu(id: number, colBleuId: string) {
+    return await lastValueFrom(
+      this.http.get<any>(`${this.domain}/api/ColBlanc/${id}/assign-colbleu/${colBleuId}`)
     );
   }
 }
