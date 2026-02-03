@@ -6,7 +6,7 @@ export const whiteGuard: CanActivateFn = (route, state) => {
   let router = inject(Router)
   let roles = inject(AuthService).roles()
 
-   if (!roles.includes("ColBlanc")) {
+   if (!roles.includes("ColBlanc") && !roles.includes("Admin")) {
       console.log("NOT Col Blanc!!!");
       return router.createUrlTree(['/home'])
     }
