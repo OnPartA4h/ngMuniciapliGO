@@ -92,6 +92,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("roles")
+    localStorage.removeItem("userId")
     
     this.tokenSignal.set(null)
     this.rolesSignal.set([])

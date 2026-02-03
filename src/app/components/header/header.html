@@ -8,7 +8,7 @@
       {{ 'HEADER.HOME' | translate }}
     </a>
 
-    <a *ngIf="userRoles().includes('ColBlanc')" 
+    <a *ngIf="userRoles().includes('ColBlanc') || userRoles().includes('Admin')" 
        routerLink="/manage-reports" 
        routerLinkActive="active">
       {{ 'HEADER.MANAGE_REPORTS' | translate }}
