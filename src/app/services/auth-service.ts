@@ -52,6 +52,8 @@ export class AuthService {
       localStorage.setItem("roles", JSON.stringify(response.user.roles))
       this.rolesSignal.set(response.user.roles)
 
+      localStorage.setItem("userId", response.user.id)
+
       // Update profile picture signal from login response
       this.profilePictureSignal.set(response.user.profilePictureUrl || null);
 
