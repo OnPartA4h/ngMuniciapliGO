@@ -163,10 +163,12 @@ nav a.active {
   }
 
   nav {
-    display: none; /* Hide on mobile, you can add a hamburger menu later */
+    display: none;
+    /* Hide on mobile, you can add a hamburger menu later */
   }
 
   .btn-language span {
-    display: none; /* Show only icon on mobile */
+    display: none;
+    /* Show only icon on mobile */
   }
 }

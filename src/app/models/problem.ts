@@ -27,7 +27,8 @@ export class Problem {
     public categorie: number,
     public dateCreation: Date,
     public dateResolution: Date,
-    public assignedUser: User | null,
+    public colBleuAssigne: User | null,
+    public assigneA: number,
     public photos: Photo[]
   ) { }
 }

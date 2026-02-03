@@ -39,7 +39,7 @@
                     </span>
                     <span>
                         <i class="fas fa-tag"></i>
-                        {{getCategoryLabel(problem.categorie)}}
+                        {{this.generalService.getCategoryLabel(problem.categorie)}}
                     </span>
                     <span>
                         <i class="fas fa-clock"></i>
@@ -50,11 +50,11 @@
                         @if(problem.assigneA == 2){
                         {{problem.colBleuAssigne.firstName + ' ' + problem.colBleuAssigne.lastName}}
                         } @else {
-                        {{assignees()[problem.assigneA].label}}
+                        {{this.generalService.assignees()[problem.assigneA].label}}
                         }
                     </span>
                     <span class="badge badge-info">
-                        {{ getStatusLabel(problem.statut) }}
+                        {{ this.generalService.getStatusLabel(problem.statut) }}
                     </span>
                 </div>
             </div>

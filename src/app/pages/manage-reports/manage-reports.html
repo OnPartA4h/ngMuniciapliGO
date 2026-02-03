@@ -34,7 +34,7 @@
       <div class="report-info">
         <div class="report-header">
           <h3 class="report-title">{{p.titre}}</h3>
-          <span class="report-status status-nouveau">{{ getStatusLabel(p.statut) }}</span>
+          <span class="report-status status-nouveau">{{ this.generalService.getStatusLabel(p.statut) }}</span>
         </div>
         <div class="report-details">
           <span class="report-location">
@@ -43,7 +43,7 @@
           </span>
           <span class="report-category">
             <i class="fas fa-tag"></i>
-            {{getCategoryLabel(p.categorie)}}
+            {{ this.generalService.getCategoryLabel(p.categorie) }}
           </span>
         </div>
         <div class="report-meta">
@@ -53,8 +53,11 @@
           </span>
           <span class="report-assignee">
             <i class="fas fa-user"></i>
-            <div *ngIf="!p.assignedUser">{{ 'MANAGE_REPORTS.UNASSIGNED' | translate }}</div>
-            <div *ngIf="p.assignedUser">{{p.assignedUser.firstName + ' ' + p.assignedUser.lastName}}</div>
+            @if(p.assigneA == 2 && p.colBleuAssigne){
+            {{p.colBleuAssigne.firstName + ' ' + p.colBleuAssigne.lastName}}
+            } @else {
+            {{this.generalService.assignees()[p.assigneA].label}}
+            }
           </span>
         </div>
       </div>

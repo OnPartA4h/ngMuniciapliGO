@@ -19,9 +19,6 @@ import { TranslateModule } from '@ngx-translate/core';
 export class ReportDetails implements OnInit {
   problem: any = null;
   isLoading = true;
-  categories = signal<CategoryOption[]>([]);
-  statuses = signal<StatusOption[]>([]);
-  assignees = signal<AssigneAOption[]>([]);
   photoIndex = 0;
   colBleus: any[] = [];
   search = "";
@@ -29,7 +26,7 @@ export class ReportDetails implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private generalService: GeneralService,
+    public generalService: GeneralService,
     private languageService: LanguageService,
     private whiteService: WhiteService,
     private userService: UserService,
@@ -37,43 +34,16 @@ export class ReportDetails implements OnInit {
 
   async ngOnInit() {
     await Promise.all([
-      this.loadCategories(),
-      this.loadStatuses(),
-      this.loadProblem(),
-      this.loadAssigneA()
+      this.generalService.loadCategories(),
+      this.generalService.loadStatuses(),
+      this.generalService.loadAssigneA(),
+      this.loadProblem()
     ]);
     this.languageService.onLangChange().subscribe(() => {
-      this.loadCategories();
-      this.loadStatuses();
-      this.loadAssigneA();
+      this.generalService.loadCategories();
+      this.generalService.loadStatuses();
+      this.generalService.loadAssigneA();
     });
-  }
-
-  async loadCategories() {
-    try {
-      const lang = this.languageService.getCurrentLanguage();
-      this.categories.set(await this.generalService.getCategories(lang));
-    } catch (error) {
-      console.error('Error loading categories:', error);
-    }
-  }
-
-  async loadStatuses() {
-    try {
-      const lang = this.languageService.getCurrentLanguage();
-      this.statuses.set(await this.generalService.getStatuses(lang));
-    } catch (error) {
-      console.error('Error loading statuses:', error);
-    }
-  }
-
-  async loadAssigneA() {
-    try {
-      const lang = this.languageService.getCurrentLanguage();
-      this.assignees.set(await this.generalService.getAssigneA(lang));
-    } catch (error) {
-      console.error('Error loading statuses:', error);
-    }
   }
 
   async loadProblem() {
@@ -124,16 +94,6 @@ export class ReportDetails implements OnInit {
     } catch (err) {
       console.error(err);
     }
-  }
-
-  getStatusLabel(statusKey: number): string {
-    const status = this.statuses()[statusKey];
-    return status ? status.label : statusKey.toString();
-  }
-
-  getCategoryLabel(categoryKey: number): string {
-    const category = this.categories()[categoryKey];
-    return category ? category.label : categoryKey.toString();
   }
 
   prevPhoto() {

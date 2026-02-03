@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { RoleOption } from '../models/user';
 import { StatusOption, CategoryOption, AssigneAOption } from '../models/problem';
+import { LanguageService } from './language-service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,11 @@ import { StatusOption, CategoryOption, AssigneAOption } from '../models/problem'
 export class GeneralService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  categories = signal<CategoryOption[]>([]);
+  statuses = signal<StatusOption[]>([]);
+  assignees = signal<AssigneAOption[]>([]);
+
+  constructor(private http: HttpClient, private languageService: LanguageService) { }
 
   async getRoles(lang: string): Promise<RoleOption[]> {
     return await lastValueFrom(
@@ -41,5 +46,42 @@ export class GeneralService {
     return await lastValueFrom(
       this.http.get<any>(`${this.apiUrl}/api/General/problem/${id}`)
     );
+  }
+
+  async loadCategories() {
+    try {
+      const lang = this.languageService.getCurrentLanguage();
+      this.categories.set(await this.getCategories(lang));
+    } catch (error) {
+      console.error('Error loading categories:', error);
+    }
+  }
+
+  async loadStatuses() {
+    try {
+      const lang = this.languageService.getCurrentLanguage();
+      this.statuses.set(await this.getStatuses(lang));
+    } catch (error) {
+      console.error('Error loading statuses:', error);
+    }
+  }
+
+  async loadAssigneA() {
+    try {
+      const lang = this.languageService.getCurrentLanguage();
+      this.assignees.set(await this.getAssigneA(lang));
+    } catch (error) {
+      console.error('Error loading statuses:', error);
+    }
+  }
+
+  getStatusLabel(statusKey: number): string {
+    const status = this.statuses()[statusKey];
+    return status ? status.label : statusKey.toString();
+  }
+
+  getCategoryLabel(categoryKey: number): string {
+    const category = this.categories()[categoryKey];
+    return category ? category.label : categoryKey.toString();
   }
 }
