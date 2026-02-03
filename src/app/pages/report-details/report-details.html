@@ -46,9 +46,13 @@
                     </span>
                     <span>
                         <i class="fas fa-user"></i>
-                        {{ problem.assignedUser ? (problem.assignedUser.firstName + ' ' +
-                        problem.assignedUser.lastName)
-                        : 'Non assigné' }}
+                        @if(problem.assigneA == 2){
+                        {{problem.colBleuAssigne.firstName + ' ' + problem.colBleuAssigne.lastName}}
+                        } @else if (problem.assigneA == 1) {
+                        Citoyens
+                        } @else {
+                        Non assigné
+                        }
                     </span>
                     <span class="badge badge-info">
                         {{ getStatusLabel(problem.statut) }}

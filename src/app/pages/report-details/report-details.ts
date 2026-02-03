@@ -93,7 +93,7 @@ export class ReportDetails implements OnInit {
 
   async assignCitoyen() {
     try {
-      this.whiteService.assignProblem(this.problem.id);
+      this.whiteService.assignProblemCitoyen(this.problem.id);
       window.location.reload();
     } catch (err) {
       console.error(err);
@@ -102,7 +102,7 @@ export class ReportDetails implements OnInit {
 
   async assignColBleu(colBleuId: string) {
     try {
-      this.whiteService.assignProblem(this.problem.id, colBleuId);
+      this.whiteService.assignProblemColbleu(this.problem.id, colBleuId);
       window.location.reload();
     } catch (err) {
       console.error(err);

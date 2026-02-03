@@ -20,31 +20,32 @@ export class WhiteService {
 
   async acceptProblem(id: number): Promise<any> {
     return await lastValueFrom(
-      this.http.get<any>(`${this.domain}/api/ColBlanc/accept/${id}`)
+      this.http.post<any>(`${this.domain}/api/ColBlanc/${id}/accepter`, null)
     );
   }
 
   async refuseProblem(id: number): Promise<any> {
     return await lastValueFrom(
-      this.http.get<any>(`${this.domain}/api/ColBlanc/refuser/${id}`)
+      this.http.post<any>(`${this.domain}/api/ColBlanc/${id}/refuser`, null)
     );
   }
 
-  async assignProblem(id: number, colBleuId: string | null = null): Promise<any> {
-    if (colBleuId) {
-      return await lastValueFrom(
-        this.http.get<any>(`${this.domain}/api/ColBlanc/assign/${id}/${colBleuId}`)
-      );
-    }
+  async assignProblemCitoyen(id: number): Promise<any> {
     return await lastValueFrom(
-      this.http.get<any>(`${this.domain}/api/ColBlanc/assign/${id}`)
+      this.http.post<any>(`${this.domain}/api/ColBlanc/${id}/assign-citoyens`, null)
+    );
+  }
+
+  async assignProblemColbleu(id: number, colBleuId: string) {
+    return await lastValueFrom(
+      this.http.post<any>(`${this.domain}/api/ColBlanc/${id}/assign-colbleu/${colBleuId}`, null)
     );
   }
 
   async getProblem(id: number): Promise<any> {
     let x = await lastValueFrom(this.http.get<Problem>(this.domain + "/api/ColBlanc/problems/" + id))
     console.log(x);
-    
+
     return x
   }
 }

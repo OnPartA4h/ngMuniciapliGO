@@ -38,20 +38,34 @@ export class AdminService {
   }
 
   async assignRole(userId: string, roleName: string): Promise<void> {
-    await lastValueFrom(
-      this.http.put(`${this.apiUrl}/api/Admin/users/${userId}/roles`, JSON.stringify(roleName), {
+    let response = await lastValueFrom(
+      this.http.put<any>(`${this.apiUrl}/api/Admin/users/${userId}/roles`, JSON.stringify(roleName), {
         headers: { 'Content-Type': 'application/json' }
       })
     );
+
+    console.log(response);
+    let currentUserId: string | null = localStorage.getItem("userId")
+    if (userId == currentUserId){
+      localStorage.setItem("roles", JSON.stringify(response.roles))
+      localStorage.setItem("token", response.token)
+    }
   }
 
   async removeRole(userId: string, roleName: string): Promise<void> {
-    await lastValueFrom(
-      this.http.request('delete', `${this.apiUrl}/api/Admin/users/${userId}/roles`, {
+    let response = await lastValueFrom(
+      this.http.request<any>('delete', `${this.apiUrl}/api/Admin/users/${userId}/roles`, {
         body: JSON.stringify(roleName),
         headers: { 'Content-Type': 'application/json' }
       })
     );
+
+    console.log(response);
+    let currentUserId: string | null = localStorage.getItem("userId")
+    if (userId == currentUserId){
+      localStorage.setItem("roles", JSON.stringify(response.roles))
+      localStorage.setItem("token", response.token)
+    }
   }
 
   async deleteUser(userId: string): Promise<void> {
