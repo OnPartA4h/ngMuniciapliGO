@@ -215,6 +215,7 @@
     "FORGOT_PASSWORD_ERROR": "An error occurred while processing your request. Please try again.",
     "SEND_RESET_LINK": "Send Reset Link",
     "SIGN_IN": "Sign in",
+    "SIGNING_IN": "Signing in...",
     "ERROR_MESSAGE": "Invalid credentials. Please try again."
   }
 }

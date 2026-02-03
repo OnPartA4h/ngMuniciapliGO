@@ -19,6 +19,7 @@ export class Login {
   showResetPasswordModal = false;
   showForgotPasswordModal = false;
   currentPassword = '';
+  isLoading = false;
 
   constructor(public authService: AuthService, private formBuilder: FormBuilder, public router: Router) {
     this.formGroup = this.formBuilder.group(
@@ -31,31 +32,41 @@ export class Login {
 
   async login() {
     if (!this.formGroup.valid) return
+    
+    this.isLoading = true;
+    
     let email = this.formGroup.get('email')?.value
     let password = this.formGroup.get('password')?.value
 
-    await this.authService.login(email, password)
+    try {
+      await this.authService.login(email, password)
 
-    let token = this.authService.token()
-    let roles = this.authService.roles()
+      let token = this.authService.token()
+      let roles = this.authService.roles()
 
-    // Check if user needs to reset password
-    const loginResponse = this.authService.getLoginResponse();
-    if (loginResponse && loginResponse.user.mustResetPassword) {
-      // Store the current password for the reset modal
-      this.currentPassword = password;
-      this.showResetPasswordModal = true;
-      return;
-    }
+      // Check if user needs to reset password
+      const loginResponse = this.authService.getLoginResponse();
+      if (loginResponse && loginResponse.user.mustResetPassword) {
+        // Store the current password for the reset modal
+        this.currentPassword = password;
+        this.showResetPasswordModal = true;
+        this.isLoading = false;
+        return;
+      }
 
-    if (roles.includes('Admin') && token){
-      this.router.navigate(['/manage-users'])
-      return
-    }
+      if (roles.includes('Admin') && token){
+        this.router.navigate(['/manage-users'])
+        return
+      }
 
-    if (roles.includes('ColBlanc') && token){
-      this.router.navigate(['/manage-reports'])
-      return
+      if (roles.includes('ColBlanc') && token){
+        this.router.navigate(['/manage-reports'])
+        return
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    } finally {
+      this.isLoading = false;
     }
   }
 
