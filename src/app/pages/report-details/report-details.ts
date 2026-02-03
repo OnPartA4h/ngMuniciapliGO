@@ -19,7 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
 export class ReportDetails implements OnInit {
   problem: any = null;
   isLoading = true;
-  photoIndex = 0;
+  photoIndex = signal<number>(0);
   colBleus: any[] = [];
   search = "";
 
@@ -51,7 +51,8 @@ export class ReportDetails implements OnInit {
       if (params['id']) {
         try {
           this.problem = await this.whiteService.getProblem(params['id']);
-          this.photoIndex = 0;
+          this.photoIndex.set(0);
+          console.log(this.problem);
         } catch (error) {
           console.error('Error loading problem:', error);
         }
@@ -98,12 +99,12 @@ export class ReportDetails implements OnInit {
 
   prevPhoto() {
     if (!this.problem?.photos?.length) return;
-    this.photoIndex = (this.photoIndex - 1 + this.problem.photos.length) % this.problem.photos.length;
+    this.photoIndex.set((this.photoIndex() - 1 + this.problem.photos.length) % this.problem.photos.length);
   }
 
   nextPhoto() {
     if (!this.problem?.photos?.length) return;
-    this.photoIndex = (this.photoIndex + 1) % this.problem.photos.length;
+    this.photoIndex.set((this.photoIndex() + 1) % this.problem.photos.length);
   }
 
   async getColBleus() {

@@ -9,13 +9,13 @@
     <div *ngIf="!isLoading && problem" class="details-grid">
         <div class="details-main">
             <div class="details-carousel">
-                <button class="details-carousel-btn">
+                <button class="details-carousel-btn" (click)="prevPhoto()">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="details-carousel-img">
                     @if(problem.photos && problem.photos.length > 0){
                     <span>
-                        <img class="photo-probleme" [src]="problem.photos[photoIndex]?.url" alt="Photo du problème">
+                        <img class="photo-probleme" [src]="problem.photos[photoIndex()]?.url" alt="Photo du problème">
                     </span>
                     }
                     @else {
@@ -23,7 +23,7 @@
                     <span>{{ 'MANAGE_REPORTS.NO_PHOTO' | translate }}</span>
                     }
                 </div>
-                <button class="details-carousel-btn">
+                <button class="details-carousel-btn" (click)="nextPhoto()">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
