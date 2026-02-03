@@ -25,6 +25,11 @@ export interface CreateUserDto {
   lastName: string;
   email: string;
   phoneNumber: string;
+  streetNumber: string;
+  streetName: string;
+  city: string;
+  province: string;
+  postalCode: string;
   roles: string[];
 }
 

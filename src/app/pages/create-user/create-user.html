@@ -93,6 +93,99 @@
         </div>
       </div>
 
+      <!-- Address Information -->
+      <div class="form-section">
+        <h2 class="section-title">{{ 'CREATE_USER.ADDRESS_INFO' | translate }}</h2>
+        <p class="section-description">{{ 'CREATE_USER.ADDRESS_INFO_DESC' | translate }}</p>
+        
+        <div class="form-grid">
+          <!-- Street Number -->
+          <div class="form-group">
+            <label for="streetNumber">
+              {{ 'CREATE_USER.STREET_NUMBER' | translate }} <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="streetNumber"
+              formControlName="streetNumber"
+              [placeholder]="'CREATE_USER.STREET_NUMBER_PLACEHOLDER' | translate"
+              [class.error]="getError('streetNumber')"
+            />
+            <span class="error-text" *ngIf="getError('streetNumber')">
+              {{ getError('streetNumber') }}
+            </span>
+          </div>
+
+          <!-- Street Name -->
+          <div class="form-group">
+            <label for="streetName">
+              {{ 'CREATE_USER.STREET_NAME' | translate }} <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="streetName"
+              formControlName="streetName"
+              [placeholder]="'CREATE_USER.STREET_NAME_PLACEHOLDER' | translate"
+              [class.error]="getError('streetName')"
+            />
+            <span class="error-text" *ngIf="getError('streetName')">
+              {{ getError('streetName') }}
+            </span>
+          </div>
+
+          <!-- City -->
+          <div class="form-group">
+            <label for="city">
+              {{ 'CREATE_USER.CITY' | translate }} <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="city"
+              formControlName="city"
+              [placeholder]="'CREATE_USER.CITY_PLACEHOLDER' | translate"
+              [class.error]="getError('city')"
+            />
+            <span class="error-text" *ngIf="getError('city')">
+              {{ getError('city') }}
+            </span>
+          </div>
+
+          <!-- Province -->
+          <div class="form-group">
+            <label for="province">
+              {{ 'CREATE_USER.PROVINCE' | translate }} <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="province"
+              formControlName="province"
+              [placeholder]="'CREATE_USER.PROVINCE_PLACEHOLDER' | translate"
+              [class.error]="getError('province')"
+            />
+            <span class="error-text" *ngIf="getError('province')">
+              {{ getError('province') }}
+            </span>
+          </div>
+
+          <!-- Postal Code -->
+          <div class="form-group">
+            <label for="postalCode">
+              {{ 'CREATE_USER.POSTAL_CODE' | translate }} <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="postalCode"
+              formControlName="postalCode"
+              [placeholder]="'CREATE_USER.POSTAL_CODE_PLACEHOLDER' | translate"
+              [class.error]="getError('postalCode')"
+            />
+            <span class="error-text" *ngIf="getError('postalCode')">
+              {{ getError('postalCode') }}
+            </span>
+          </div>
+        </div>
+      </div>
+
       <!-- Roles Section -->
       <div class="form-section">
         <h2 class="section-title">
