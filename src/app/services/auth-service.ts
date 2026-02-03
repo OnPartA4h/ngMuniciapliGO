@@ -82,6 +82,13 @@ export class AuthService {
     return this.loginResponse;
   }
 
+  async forgotPassword(email: string): Promise<void> {
+    const dto = { email };
+    await lastValueFrom(
+      this.http.post<void>(`${this.apiUrl}/api/Auth/forgot-password`, dto)
+    );
+  }
+
   logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("roles")

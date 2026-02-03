@@ -5,10 +5,11 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ForceResetPasswordModal } from '../../components/force-reset-password-modal/force-reset-password-modal';
+import { ForgotPasswordModal } from '../../components/forgot-password-modal/forgot-password-modal';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TranslateModule, ForceResetPasswordModal],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TranslateModule, ForceResetPasswordModal, ForgotPasswordModal],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -16,6 +17,7 @@ export class Login {
   
   formGroup: FormGroup;
   showResetPasswordModal = false;
+  showForgotPasswordModal = false;
   currentPassword = '';
   userFirstName = '';
   userLastName = '';
@@ -85,6 +87,14 @@ export class Login {
   onResetError(error: string | undefined) {
     // Handle error if needed
     console.error('Password reset error:', error);
+  }
+
+  openForgotPasswordModal() {
+    this.showForgotPasswordModal = true;
+  }
+
+  closeForgotPasswordModal() {
+    this.showForgotPasswordModal = false;
   }
 }
 
