@@ -49,10 +49,8 @@
                         <i class="fas fa-user"></i>
                         @if(problem.assigneA == 2){
                         {{problem.colBleuAssigne.firstName + ' ' + problem.colBleuAssigne.lastName}}
-                        } @else if (problem.assigneA == 1) {
-                        Citoyens
                         } @else {
-                        Non assigné
+                        {{assignees()[problem.assigneA].label}}
                         }
                     </span>
                     <span class="badge badge-info">

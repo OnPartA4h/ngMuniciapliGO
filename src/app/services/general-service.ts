@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { RoleOption } from '../models/user';
-import { StatusOption, CategoryOption } from '../models/problem';
+import { StatusOption, CategoryOption, AssigneAOption } from '../models/problem';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +28,12 @@ export class GeneralService {
   async getCategories(lang: string): Promise<CategoryOption[]> {
     return await lastValueFrom(
       this.http.get<CategoryOption[]>(`${this.apiUrl}/api/General/categories/${lang}`)
+    );
+  }
+
+  async getAssigneA(lang: string): Promise<AssigneAOption[]> {
+    return await lastValueFrom(
+      this.http.get<CategoryOption[]>(`${this.apiUrl}/api/General/assignees/${lang}`)
     );
   }
 

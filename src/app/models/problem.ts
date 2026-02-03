@@ -12,6 +12,11 @@ export interface CategoryOption {
   label: string;
 }
 
+export interface AssigneAOption {
+  key: string;
+  label: string;
+}
+
 export class Problem {
   constructor(
     public id: number,

@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
-import { StatusOption, CategoryOption } from '../../models/problem';
+import { StatusOption, CategoryOption, AssigneAOption } from '../../models/problem';
 import { CommonModule } from '@angular/common';
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 import { WhiteService } from '../../services/white-service';
@@ -21,6 +21,7 @@ export class ReportDetails implements OnInit {
   isLoading = true;
   categories = signal<CategoryOption[]>([]);
   statuses = signal<StatusOption[]>([]);
+  assignees = signal<AssigneAOption[]>([]);
   photoIndex = 0;
   colBleus: any[] = [];
   search = "";
@@ -38,8 +39,14 @@ export class ReportDetails implements OnInit {
     await Promise.all([
       this.loadCategories(),
       this.loadStatuses(),
-      this.loadProblem()
+      this.loadProblem(),
+      this.loadAssigneA()
     ]);
+    this.languageService.onLangChange().subscribe(() => {
+      this.loadCategories();
+      this.loadStatuses();
+      this.loadAssigneA();
+    });
   }
 
   async loadCategories() {
@@ -55,6 +62,15 @@ export class ReportDetails implements OnInit {
     try {
       const lang = this.languageService.getCurrentLanguage();
       this.statuses.set(await this.generalService.getStatuses(lang));
+    } catch (error) {
+      console.error('Error loading statuses:', error);
+    }
+  }
+
+  async loadAssigneA() {
+    try {
+      const lang = this.languageService.getCurrentLanguage();
+      this.assignees.set(await this.generalService.getAssigneA(lang));
     } catch (error) {
       console.error('Error loading statuses:', error);
     }

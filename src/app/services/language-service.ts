@@ -24,7 +24,7 @@ export class LanguageService {
 
     if (!language) {
       const browserLang = this.translate.getBrowserLang();
-      language =  browserLang ? browserLang.substring(0, 2) : '';
+      language = browserLang ? browserLang.substring(0, 2) : '';
     }
 
     if (!language || !this.SUPPORTED_LANGUAGES.includes(language)) {
@@ -43,6 +43,10 @@ export class LanguageService {
 
   getCurrentLanguage(): string {
     return this.translate.currentLang || this.DEFAULT_LANGUAGE;
+  }
+
+  onLangChange() {
+    return this.translate.onLangChange;
   }
 
   toggleLanguage(): void {
