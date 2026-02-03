@@ -8,6 +8,31 @@
     </div>
 
     <div class="modal-body" *ngIf="user">
+      <!-- User Profile Picture -->
+      <div class="user-profile-section">
+        <div class="profile-picture-container">
+          <img *ngIf="user.profilePictureUrl" [src]="user.profilePictureUrl" alt="Profile" class="profile-picture" />
+          <div *ngIf="!user.profilePictureUrl" class="profile-picture-placeholder">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+        <div class="profile-info">
+          <h3>{{ user.firstName }} {{ user.lastName }}</h3>
+          <p class="email">{{ user.email }}</p>
+          <div class="status-badges">
+            <span class="badge" [class.badge-success]="user.emailConfirmed" [class.badge-warning]="!user.emailConfirmed">
+              <i [class]="user.emailConfirmed ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'"></i>
+              {{ (user.emailConfirmed ? 'COMMON.EMAIL_CONFIRMED' : 'COMMON.EMAIL_NOT_CONFIRMED') | translate }}
+            </span>
+            <span class="badge" [class.badge-warning]="user.mustResetPassword" [class.badge-success]="!user.mustResetPassword">
+              <i [class]="user.mustResetPassword ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'"></i>
+              {{ (user.mustResetPassword ? 'COMMON.MUST_RESET_PASSWORD' : 'COMMON.PASSWORD_OK') | translate }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Details -->
       <div class="user-details">
         <div class="detail-group">
           <label>{{ 'EDIT_USER_MODAL.FIRST_NAME' | translate }}</label>
@@ -28,10 +53,36 @@
           <label>{{ 'EDIT_USER_MODAL.PHONE' | translate }}</label>
           <p>{{ user.phoneNumber | mask: '(000) 000-0000' }}</p>
         </div>
+      </div>
 
-        <div class="detail-group">
-          <label>{{ 'EDIT_USER_MODAL.MUST_RESET_PASSWORD' | translate }}</label>
-          <p>{{ user.mustResetPassword ? ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}</p>
+      <!-- Address Information -->
+      <div class="address-section">
+        <h3>{{ 'EDIT_USER_MODAL.ADDRESS' | translate }}</h3>
+        <div class="address-details">
+          <div class="detail-group">
+            <label>{{ 'EDIT_USER_MODAL.STREET_NUMBER' | translate }}</label>
+            <p>{{ user.streetNumber || '-' }}</p>
+          </div>
+          
+          <div class="detail-group">
+            <label>{{ 'EDIT_USER_MODAL.STREET_NAME' | translate }}</label>
+            <p>{{ user.streetName || '-' }}</p>
+          </div>
+          
+          <div class="detail-group">
+            <label>{{ 'EDIT_USER_MODAL.CITY' | translate }}</label>
+            <p>{{ user.city || '-' }}</p>
+          </div>
+          
+          <div class="detail-group">
+            <label>{{ 'EDIT_USER_MODAL.PROVINCE' | translate }}</label>
+            <p>{{ user.province || '-' }}</p>
+          </div>
+          
+          <div class="detail-group">
+            <label>{{ 'EDIT_USER_MODAL.POSTAL_CODE' | translate }}</label>
+            <p>{{ user.postalCode || '-' }}</p>
+          </div>
         </div>
       </div>
 

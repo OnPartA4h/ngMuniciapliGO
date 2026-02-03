@@ -29,7 +29,11 @@
     "SUCCESS": "Succès",
     "ERROR": "Erreur",
     "PREVIOUS": "Précédent",
-    "NEXT": "Suivant"
+    "NEXT": "Suivant",
+    "EMAIL_CONFIRMED": "Email confirmé",
+    "EMAIL_NOT_CONFIRMED": "Email non confirmé",
+    "MUST_RESET_PASSWORD": "Doit réinitialiser le mot de passe",
+    "PASSWORD_OK": "Mot de passe OK"
   },
   "PROFILE": {
     "TITLE": "Mon profil",
@@ -99,7 +103,13 @@
     "PHONE": "Téléphone",
     "MUST_RESET_PASSWORD": "Mot de passe à réinitialiser",
     "ROLES": "Rôles",
-    "DELETE_USER": "Supprimer l'utilisateur"
+    "DELETE_USER": "Supprimer l'utilisateur",
+    "ADDRESS": "Adresse",
+    "STREET_NUMBER": "Numéro de rue",
+    "STREET_NAME": "Nom de la rue",
+    "CITY": "Ville",
+    "PROVINCE": "Province",
+    "POSTAL_CODE": "Code postal"
   },
   "DELETE_CONFIRM_MODAL": {
     "TITLE": "Confirmer la suppression",

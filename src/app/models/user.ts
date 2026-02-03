@@ -9,9 +9,15 @@ export interface User {
   lastName: string;
   email: string;
   phoneNumber: string;
+  profilePictureUrl?: string;
+  streetNumber: string;
+  streetName: string;
+  city: string;
+  province: string;
+  postalCode: string;
   roles: string[];
   mustResetPassword: boolean;
-  profilePictureUrl?: string;
+  emailConfirmed: boolean;
 }
 
 export interface CreateUserDto {

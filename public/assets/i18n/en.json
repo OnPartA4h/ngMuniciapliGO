@@ -29,7 +29,11 @@
     "SUCCESS": "Success",
     "ERROR": "Error",
     "PREVIOUS": "Previous",
-    "NEXT": "Next"
+    "NEXT": "Next",
+    "EMAIL_CONFIRMED": "Email Confirmed",
+    "EMAIL_NOT_CONFIRMED": "Email Not Confirmed",
+    "MUST_RESET_PASSWORD": "Must Reset Password",
+    "PASSWORD_OK": "Password OK"
   },
   "PROFILE": {
     "TITLE": "My Profile",
@@ -99,7 +103,13 @@
     "PHONE": "Phone",
     "MUST_RESET_PASSWORD": "Must Reset Password",
     "ROLES": "Roles",
-    "DELETE_USER": "Delete User"
+    "DELETE_USER": "Delete User",
+    "ADDRESS": "Address",
+    "STREET_NUMBER": "Street Number",
+    "STREET_NAME": "Street Name",
+    "CITY": "City",
+    "PROVINCE": "Province",
+    "POSTAL_CODE": "Postal Code"
   },
   "DELETE_CONFIRM_MODAL": {
     "TITLE": "Confirm Deletion",
