@@ -30,7 +30,7 @@ export class ReportDetails implements OnInit {
     private generalService: GeneralService,
     private languageService: LanguageService,
     private whiteService: WhiteService,
-    private userService: UserService
+    private userService: UserService,
   ) { }
 
   async ngOnInit() {
@@ -63,7 +63,7 @@ export class ReportDetails implements OnInit {
     this.route.params.subscribe(async params => {
       if (params['id']) {
         try {
-          this.problem = await this.generalService.getProblem(params['id']);
+          this.problem = await this.whiteService.getProblem(params['id']);
           this.photoIndex = 0;
         } catch (error) {
           console.error('Error loading problem:', error);

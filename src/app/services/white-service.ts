@@ -40,4 +40,11 @@ export class WhiteService {
       this.http.get<any>(`${this.domain}/api/ColBlanc/assign/${id}`)
     );
   }
+
+  async getProblem(id: number): Promise<any> {
+    let x = await lastValueFrom(this.http.get<Problem>(this.domain + "/api/ColBlanc/problems/" + id))
+    console.log(x);
+    
+    return x
+  }
 }
