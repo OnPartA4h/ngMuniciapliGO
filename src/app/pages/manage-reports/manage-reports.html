@@ -12,15 +12,19 @@
     <div class="filter-group">
       <select>
         <option value="">{{ 'MANAGE_REPORTS.ALL_CATEGORIES' | translate }}</option>
-        <option *ngFor="let c of categories()" [value]="c.key">
+        <option *ngFor="let c of this.generalService.categories()" [value]="c.key">
           {{ c.label }}
         </option>
       </select>
       <select>
         <option value="">{{ 'MANAGE_REPORTS.ALL_STATUSES' | translate }}</option>
-        <option *ngFor="let s of statuses()" [value]="s.key">
+        @for (s of this.generalService.statuses(); track $index) {
+        @if (s.key != "Refuse" && s.key != "Resolue"){
+        <option [value]="s.key">
           {{ s.label }}
         </option>
+        }
+        }
       </select>
     </div>
   </div>

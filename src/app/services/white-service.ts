@@ -14,7 +14,6 @@ export class WhiteService {
 
   async getAllProblems(): Promise<Problem[]> {
     let x = await lastValueFrom(this.http.get<Problem[]>(this.domain + "/api/ColBlanc/problems"))
-    console.log(x);
     return x
   }
 
@@ -44,8 +43,6 @@ export class WhiteService {
 
   async getProblem(id: number): Promise<any> {
     let x = await lastValueFrom(this.http.get<Problem>(this.domain + "/api/ColBlanc/problems/" + id))
-    console.log(x);
-
     return x
   }
 }
