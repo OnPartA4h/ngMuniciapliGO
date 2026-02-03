@@ -37,7 +37,13 @@
           <a href="javascript:void(0)" class="forgot-password" (click)="openForgotPasswordModal()">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
         </div>
         
-        <button type="submit" [disabled]="!formGroup.valid" class="btn-login" (click)="login()">{{ 'LOGIN.SIGN_IN' | translate }}</button>
+        <button type="submit" [disabled]="!formGroup.valid || isLoading" class="btn-login" (click)="login()">
+          <span *ngIf="!isLoading">{{ 'LOGIN.SIGN_IN' | translate }}</span>
+          <div *ngIf="isLoading" class="loading-spinner">
+            <div class="spinner"></div>
+            <span class="loading-text">{{ 'LOGIN.SIGNING_IN' | translate }}</span>
+          </div>
+        </button>
       </form>  
     </div>
   </div>

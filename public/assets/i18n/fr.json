@@ -222,6 +222,7 @@
     "FORGOT_PASSWORD_ERROR": "Une erreur s'est produite lors du traitement de votre demande. Veuillez réessayer.",
     "SEND_RESET_LINK": "Envoyer le lien de réinitialisation",
     "SIGN_IN": "Se connecter",
+    "SIGNING_IN": "Connexion en cours...",
     "ERROR_MESSAGE": "Identifiants invalides. Veuillez réessayer."
   }
 }
