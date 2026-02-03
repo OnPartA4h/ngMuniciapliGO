@@ -72,7 +72,7 @@
       <div class="profile-main">
         <!-- Personal Information Card -->
         <div class="form-card">
-          <h2>{{ 'PROFILE.PERSONAL_INFO' | translate }}</h2>
+          <h2>{{ 'PROFILE.PERSONAL_INFO_CARD' | translate }}</h2>
           <p class="form-description">{{ 'PROFILE.PERSONAL_INFO_DESC' | translate }}</p>
 
           <!-- Info Messages -->
@@ -84,56 +84,46 @@
           </div>
 
           <form [formGroup]="profileForm">
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="firstName">{{ 'PROFILE.FIRST_NAME' | translate }}</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  formControlName="firstName"
-                />
-                @if(profileForm.get('firstName')?.hasError('required') && profileForm.get('firstName')?.touched) {
-                  <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
-                }
-                @if(profileForm.get('firstName')?.hasError('minlength') && profileForm.get('firstName')?.touched) {
-                  <div style="color: red;">{{ 'COMMON.MIN_LENGTH' | translate: {min: 2} }}</div>
-                }
-                @if(profileForm.get('firstName')?.hasError('maxlength') && profileForm.get('firstName')?.touched) {
-                  <div style="color: red;">{{ 'COMMON.MAX_LENGTH' | translate: {max: 50} }}</div>
-                }
-              </div>
+            <!-- Personal Information Section -->
+            <div>
+              <h3 style="color: var(--color-text-primary); font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); margin: 0 0 var(--spacing-lg) 0;">{{ 'PROFILE.PERSONAL_INFO' | translate }}</h3>
+              
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label for="firstName">{{ 'PROFILE.FIRST_NAME' | translate }}</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    formControlName="firstName"
+                  />
+                  @if(profileForm.get('firstName')?.hasError('required') && profileForm.get('firstName')?.touched) {
+                    <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                  }
+                  @if(profileForm.get('firstName')?.hasError('minlength') && profileForm.get('firstName')?.touched) {
+                    <div style="color: red;">{{ 'COMMON.MIN_LENGTH' | translate: {min: 2} }}</div>
+                  }
+                  @if(profileForm.get('firstName')?.hasError('maxlength') && profileForm.get('firstName')?.touched) {
+                    <div style="color: red;">{{ 'COMMON.MAX_LENGTH' | translate: {max: 50} }}</div>
+                  }
+                </div>
 
-              <div class="form-group">
-                <label for="lastName">{{ 'PROFILE.LAST_NAME' | translate }}</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  formControlName="lastName"
-                />
-                @if(profileForm.get('lastName')?.hasError('required') && profileForm.get('lastName')?.touched) {
-                  <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
-                }
-                @if(profileForm.get('lastName')?.hasError('minlength') && profileForm.get('lastName')?.touched) {
-                  <div style="color: red;">{{ 'COMMON.MIN_LENGTH' | translate: {min: 2} }}</div>
-                }
-                @if(profileForm.get('lastName')?.hasError('maxlength') && profileForm.get('lastName')?.touched) {
-                  <div style="color: red;">{{ 'COMMON.MAX_LENGTH' | translate: {max: 50} }}</div>
-                }
-              </div>
-
-              <div class="form-group">
-                <label for="email">{{ 'PROFILE.EMAIL' | translate }}</label>
-                <input
-                  type="email"
-                  id="email"
-                  formControlName="email"
-                />
-                @if(profileForm.get('email')?.hasError('required') && profileForm.get('email')?.touched) {
-                  <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
-                }
-                @if(profileForm.get('email')?.hasError('email') && profileForm.get('email')?.touched) {
-                  <div style="color: red;">{{ 'COMMON.INVALID_EMAIL' | translate }}</div>
-                }
+                <div class="form-group">
+                  <label for="lastName">{{ 'PROFILE.LAST_NAME' | translate }}</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    formControlName="lastName"
+                  />
+                  @if(profileForm.get('lastName')?.hasError('required') && profileForm.get('lastName')?.touched) {
+                    <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                  }
+                  @if(profileForm.get('lastName')?.hasError('minlength') && profileForm.get('lastName')?.touched) {
+                    <div style="color: red;">{{ 'COMMON.MIN_LENGTH' | translate: {min: 2} }}</div>
+                  }
+                  @if(profileForm.get('lastName')?.hasError('maxlength') && profileForm.get('lastName')?.touched) {
+                    <div style="color: red;">{{ 'COMMON.MAX_LENGTH' | translate: {max: 50} }}</div>
+                  }
+                </div>
               </div>
 
               <div class="form-group">
@@ -153,11 +143,127 @@
               </div>
             </div>
 
+            <!-- Address Section -->
+            <div style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-xl); border-top: 1px solid var(--color-gray-200);">
+              <h3 style="color: var(--color-text-primary); font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); margin: 0 0 var(--spacing-lg) 0;">{{ 'EDIT_USER_MODAL.ADDRESS' | translate }}</h3>
+              
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label for="streetNumber">{{ 'PROFILE.STREET_NUMBER' | translate }}</label>
+                  <input
+                    type="text"
+                    id="streetNumber"
+                    formControlName="streetNumber"
+                  />
+                  @if(profileForm.get('streetNumber')?.hasError('required') && profileForm.get('streetNumber')?.touched) {
+                    <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                  }
+                </div>
+
+                <div class="form-group">
+                  <label for="streetName">{{ 'PROFILE.STREET_NAME' | translate }}</label>
+                  <input
+                    type="text"
+                    id="streetName"
+                    formControlName="streetName"
+                  />
+                  @if(profileForm.get('streetName')?.hasError('required') && profileForm.get('streetName')?.touched) {
+                    <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                  }
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label for="city">{{ 'PROFILE.CITY' | translate }}</label>
+                  <input
+                    type="text"
+                    id="city"
+                    formControlName="city"
+                  />
+                  @if(profileForm.get('city')?.hasError('required') && profileForm.get('city')?.touched) {
+                    <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                  }
+                </div>
+
+                <div class="form-group">
+                  <label for="province">{{ 'PROFILE.PROVINCE' | translate }}</label>
+                  <input
+                    type="text"
+                    id="province"
+                    formControlName="province"
+                  />
+                  @if(profileForm.get('province')?.hasError('required') && profileForm.get('province')?.touched) {
+                    <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                  }
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="postalCode">{{ 'PROFILE.POSTAL_CODE' | translate }}</label>
+                <input
+                  type="text"
+                  id="postalCode"
+                  formControlName="postalCode"
+                  style="max-width: 150px;"
+                />
+                @if(profileForm.get('postalCode')?.hasError('required') && profileForm.get('postalCode')?.touched) {
+                  <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+                }
+                @if(profileForm.get('postalCode')?.hasError('pattern') && profileForm.get('postalCode')?.touched) {
+                  <div style="color: red;">{{ 'PROFILE.INVALID_POSTAL_CODE' | translate }}</div>
+                }
+              </div>
+            </div>
+
+            <div style="height: var(--spacing-md);"></div>
+
             <div class="form-actions">
               <button type="button" class="btn btn-primary" [disabled]="isSavingInfo" (click)="savePersonalInfo()">
                 <i class="fas fa-save" *ngIf="!isSavingInfo"></i>
                 <i class="fas fa-spinner fa-spin" *ngIf="isSavingInfo"></i>
                 {{ (isSavingInfo ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Email Change Card -->
+        <div class="form-card">
+          <h2>{{ 'PROFILE.EMAIL' | translate }}</h2>
+
+          <!-- Email Messages -->
+          <div *ngIf="emailSuccessMessage" style="color: green; padding: 0 0 20px 0;">
+            <i class="fas fa-check-circle"></i> {{ emailSuccessMessage }}
+          </div>
+          <div *ngIf="emailErrorMessage" style="color: red; padding: 0 0 20px 0;">
+            {{ emailErrorMessage }}
+          </div>
+
+          <!-- Email Change Form -->
+          <form [formGroup]="emailForm">
+            <div class="form-group">
+              <input
+                type="email"
+                id="newEmail"
+                formControlName="newEmail"
+                placeholder="your.email@example.com"
+              />
+              @if(emailForm.get('newEmail')?.hasError('required') && emailForm.get('newEmail')?.touched) {
+                <div style="color: red;">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+              }
+              @if(emailForm.get('newEmail')?.hasError('email') && emailForm.get('newEmail')?.touched) {
+                <div style="color: red;">{{ 'COMMON.INVALID_EMAIL' | translate }}</div>
+              }
+            </div>
+
+            <div style="height: var(--spacing-md);"></div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-primary" [disabled]="isSavingEmail" (click)="requestEmailChange()">
+                <i class="fas fa-envelope" *ngIf="!isSavingEmail"></i>
+                <i class="fas fa-spinner fa-spin" *ngIf="isSavingEmail"></i>
+                {{ (isSavingEmail ? 'COMMON.SAVING' : 'PROFILE.SEND_VERIFICATION_CODE') | translate }}
               </button>
             </div>
           </form>
@@ -227,6 +333,8 @@
               </div>
             </div>
 
+            <div class="password-form-spacing"></div>
+
             <div class="form-actions">
               <button type="button" class="btn btn-primary" [disabled]="isSavingPassword" (click)="savePassword()">
                 <i class="fas fa-key" *ngIf="!isSavingPassword"></i>
@@ -249,4 +357,12 @@
     (imageUploaded)="onImageUploaded($event)"
     (cropperError)="onCropperError($event)"
   ></app-image-cropper-modal>
+
+  <!-- Change Email Verification Modal -->
+  <app-change-email-modal
+    *ngIf="showEmailVerificationModal"
+    [newEmail]="pendingEmail"
+    (close)="closeEmailVerificationModal()"
+    (emailVerified)="onEmailVerified($event)"
+  ></app-change-email-modal>
 </div>

@@ -3,7 +3,6 @@ import { Injectable, signal, Signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { UpdateProfileDto, User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',

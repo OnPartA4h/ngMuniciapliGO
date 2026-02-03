@@ -19,10 +19,6 @@ export class Login {
   showResetPasswordModal = false;
   showForgotPasswordModal = false;
   currentPassword = '';
-  userFirstName = '';
-  userLastName = '';
-  userEmail = '';
-  userPhoneNumber = '';
 
   constructor(public authService: AuthService, private formBuilder: FormBuilder, public router: Router) {
     this.formGroup = this.formBuilder.group(
@@ -48,10 +44,6 @@ export class Login {
     if (loginResponse && loginResponse.user.mustResetPassword) {
       // Store the current password for the reset modal
       this.currentPassword = password;
-      this.userFirstName = loginResponse.user.firstName;
-      this.userLastName = loginResponse.user.lastName;
-      this.userEmail = loginResponse.user.email;
-      this.userPhoneNumber = loginResponse.user.phoneNumber;
       this.showResetPasswordModal = true;
       return;
     }
