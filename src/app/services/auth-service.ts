@@ -3,7 +3,6 @@ import { Injectable, signal, Signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { UpdateProfileDto, User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -52,6 +51,8 @@ export class AuthService {
       localStorage.setItem("roles", JSON.stringify(response.user.roles))
       this.rolesSignal.set(response.user.roles)
 
+      localStorage.setItem("userId", response.user.id)
+
       // Update profile picture signal from login response
       this.profilePictureSignal.set(response.user.profilePictureUrl || null);
 
@@ -80,9 +81,17 @@ export class AuthService {
     return this.loginResponse;
   }
 
+  async forgotPassword(email: string): Promise<void> {
+    const dto = { email };
+    await lastValueFrom(
+      this.http.post<void>(`${this.apiUrl}/api/Auth/forgot-password`, dto)
+    );
+  }
+
   logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("roles")
+    localStorage.removeItem("userId")
     
     this.tokenSignal.set(null)
     this.rolesSignal.set([])

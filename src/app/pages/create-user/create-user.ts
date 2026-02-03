@@ -36,6 +36,11 @@ export class CreateUser implements OnInit {
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [Validators.required, Validators.minLength(10)]],
+      streetNumber: ['', [Validators.required, Validators.maxLength(20)]],
+      streetName: ['', [Validators.required, Validators.maxLength(200)]],
+      city: ['', [Validators.required, Validators.maxLength(100)]],
+      province: ['', [Validators.required, Validators.maxLength(100)]],
+      postalCode: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/)]],
       roles: this.fb.array([], Validators.required)
     });
   }
@@ -78,6 +83,12 @@ export class CreateUser implements OnInit {
 
     if (control.hasError('required')) return this.translateService.instant('COMMON.REQUIRED_FIELD');
     if (control.hasError('email')) return this.translateService.instant('COMMON.INVALID_EMAIL');
+    if (control.hasError('pattern')) {
+      if (field === 'postalCode') {
+        return this.translateService.instant('CREATE_USER.INVALID_POSTAL_CODE');
+      }
+      return this.translateService.instant('COMMON.INVALID_FORMAT');
+    }
     if (control.hasError('minlength')) {
       if (field === 'phoneNumber') {
         return this.translateService.instant('COMMON.INVALID_PHONE');
@@ -113,6 +124,11 @@ export class CreateUser implements OnInit {
         lastName: this.userForm.value.lastName,
         email: this.userForm.value.email,
         phoneNumber: this.userForm.value.phoneNumber,
+        streetNumber: this.userForm.value.streetNumber,
+        streetName: this.userForm.value.streetName,
+        city: this.userForm.value.city,
+        province: this.userForm.value.province,
+        postalCode: this.userForm.value.postalCode,
         roles: this.userForm.value.roles
       };
 

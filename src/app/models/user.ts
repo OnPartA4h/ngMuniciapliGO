@@ -9,9 +9,15 @@ export interface User {
   lastName: string;
   email: string;
   phoneNumber: string;
+  profilePictureUrl?: string;
+  streetNumber: string;
+  streetName: string;
+  city: string;
+  province: string;
+  postalCode: string;
   roles: string[];
   mustResetPassword: boolean;
-  profilePictureUrl?: string;
+  emailConfirmed: boolean;
 }
 
 export interface CreateUserDto {
@@ -19,6 +25,11 @@ export interface CreateUserDto {
   lastName: string;
   email: string;
   phoneNumber: string;
+  streetNumber: string;
+  streetName: string;
+  city: string;
+  province: string;
+  postalCode: string;
   roles: string[];
 }
 
@@ -37,11 +48,27 @@ export interface PaginatedUsersResponse {
   };
 }
 
-export interface UpdateProfileDto {
+export interface UpdateUserDto {
   firstName: string;
   lastName: string;
-  email: string;
   phoneNumber: string;
-  currentPassword?: string;
-  newPassword?: string;
+  streetNumber: string;
+  streetName: string;
+  city: string;
+  province: string;
+  postalCode: string;
+}
+
+export interface ChangePasswordDto {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface RequestEmailChangeDto {
+  newEmail: string;
+}
+
+export interface VerifyEmailChangeDto {
+  newEmail: string;
+  code: string;
 }

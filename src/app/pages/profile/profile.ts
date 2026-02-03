@@ -7,19 +7,21 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { AuthService } from '../../services/auth-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
-import { RoleOption, UpdateProfileDto, User } from '../../models/user';
+import { RoleOption, UpdateUserDto, ChangePasswordDto, User } from '../../models/user';
 import { ImageCropperModal } from '../../components/image-cropper-modal/image-cropper-modal';
+import { ChangeEmailModal } from '../../components/change-email-modal/change-email-modal';
 import { UserService } from '../../services/user-service';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, NgxMaskDirective, ImageCropperModal],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, NgxMaskDirective, ImageCropperModal, ChangeEmailModal],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
 export class Profile implements OnInit {
   profileForm: FormGroup;
   passwordForm: FormGroup;
+  emailForm: FormGroup;
   
   profile: User | null = null;
   roles: RoleOption[] = [];
@@ -27,11 +29,14 @@ export class Profile implements OnInit {
   isLoading = true;
   isSavingInfo = false;
   isSavingPassword = false;
+  isSavingEmail = false;
   
   infoSuccessMessage: string | null = null;
   infoErrorMessage: string | null = null;
   passwordSuccessMessage: string | null = null;
   passwordErrorMessage: string | null = null;
+  emailSuccessMessage: string | null = null;
+  emailErrorMessage: string | null = null;
   
   profileImageUrl: string | null = null;
   
@@ -39,6 +44,10 @@ export class Profile implements OnInit {
   showImageCropper = false;
   imageChangedEvent: Event | null = null;
   isUploadingImage = false;
+  
+  // Email verification modal
+  showEmailVerificationModal = false;
+  pendingEmail: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -53,14 +62,22 @@ export class Profile implements OnInit {
     this.profileForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required, Validators.minLength(10)]]
+      phoneNumber: ['', [Validators.required, Validators.minLength(10)]],
+      streetNumber: ['', [Validators.required, Validators.maxLength(20)]],
+      streetName: ['', [Validators.required, Validators.maxLength(200)]],
+      city: ['', [Validators.required, Validators.maxLength(100)]],
+      province: ['', [Validators.required, Validators.maxLength(100)]],
+      postalCode: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/)]]
     });
 
     this.passwordForm = this.fb.group({
       currentPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)]],
       confirmPassword: ['', [Validators.required]]
+    });
+
+    this.emailForm = this.fb.group({
+      newEmail: ['', [Validators.required, Validators.email]]
     });
   }
 
@@ -87,8 +104,17 @@ export class Profile implements OnInit {
       this.profileForm.patchValue({
         firstName: this.profile.firstName,
         lastName: this.profile.lastName,
-        email: this.profile.email,
-        phoneNumber: this.profile.phoneNumber
+        phoneNumber: this.profile.phoneNumber,
+        streetNumber: this.profile.streetNumber,
+        streetName: this.profile.streetName,
+        city: this.profile.city,
+        province: this.profile.province,
+        postalCode: this.profile.postalCode
+      });
+
+      // Pre-fill email form with current email
+      this.emailForm.patchValue({
+        newEmail: this.profile.email
       });
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -122,18 +148,22 @@ export class Profile implements OnInit {
     this.infoErrorMessage = null;
 
     try {
-      const dto: UpdateProfileDto = {
+      const dto: UpdateUserDto = {
         firstName: this.profileForm.value.firstName,
         lastName: this.profileForm.value.lastName,
-        email: this.profileForm.value.email,
-        phoneNumber: this.profileForm.value.phoneNumber
+        phoneNumber: this.profileForm.value.phoneNumber,
+        streetNumber: this.profileForm.value.streetNumber,
+        streetName: this.profileForm.value.streetName,
+        city: this.profileForm.value.city,
+        province: this.profileForm.value.province,
+        postalCode: this.profileForm.value.postalCode
       };
 
-      await this.userService.updateProfile(dto);
-      this.infoSuccessMessage = this.translateService.instant('PROFILE.SUCCESS_UPDATE');
+      const response = await this.userService.updateUser(dto);
+      this.infoSuccessMessage = response.message || this.translateService.instant('PROFILE.SUCCESS_UPDATE');
       
-      // Reload profile data without showing loading screen
-      this.profile = await this.userService.getProfile();
+      // Update profile data from response
+      this.profile = response.user;
       this.cdr.detectChanges();
       
     } catch (error: any) {
@@ -167,17 +197,13 @@ export class Profile implements OnInit {
     this.isSavingPassword = true;
 
     try {
-      const dto: UpdateProfileDto = {
-        firstName: this.profile!.firstName,
-        lastName: this.profile!.lastName,
-        email: this.profile!.email,
-        phoneNumber: this.profile!.phoneNumber,
+      const dto: ChangePasswordDto = {
         currentPassword: currentPassword,
         newPassword: newPassword
       };
 
-      await this.userService.updateProfile(dto);
-      this.passwordSuccessMessage = this.translateService.instant('PROFILE.PASSWORD_SUCCESS');
+      const response = await this.userService.changePassword(dto);
+      this.passwordSuccessMessage = response.message || this.translateService.instant('PROFILE.PASSWORD_SUCCESS');
       
       // Clear password fields after successful update
       this.passwordForm.reset();
@@ -189,6 +215,54 @@ export class Profile implements OnInit {
       this.isSavingPassword = false;
       this.cdr.detectChanges();
     }
+  }
+
+  async requestEmailChange() {
+    this.emailForm.markAllAsTouched();
+    
+    if (this.emailForm.invalid) {
+      return;
+    }
+
+    const newEmail = this.emailForm.value.newEmail;
+    this.emailSuccessMessage = null;
+    this.emailErrorMessage = null;
+    this.isSavingEmail = true;
+
+    try {
+      // Send request to change email
+      const response = await this.userService.requestEmailChange({ newEmail });
+      
+      // Store the pending email for the verification modal
+      this.pendingEmail = newEmail;
+      
+      // Show verification modal
+      this.showEmailVerificationModal = true;
+      
+      // Clear the form
+      this.emailForm.reset();
+      
+      this.cdr.detectChanges();
+    } catch (error: any) {
+      console.error('Error requesting email change:', error);
+      this.emailErrorMessage = error?.error?.message || this.translateService.instant('PROFILE.EMAIL_REQUEST_ERROR');
+    } finally {
+      this.isSavingEmail = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  closeEmailVerificationModal() {
+    this.showEmailVerificationModal = false;
+    this.pendingEmail = null;
+  }
+
+  async onEmailVerified(newEmail: string) {
+    // Reload profile to get updated email
+    this.profile = await this.userService.getProfile();
+    this.closeEmailVerificationModal();
+    this.emailSuccessMessage = this.translateService.instant('PROFILE.EMAIL_CHANGED_SUCCESS');
+    this.cdr.detectChanges();
   }
 
   onFileSelected(event: Event) {

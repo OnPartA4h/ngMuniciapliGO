@@ -5,10 +5,11 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ForceResetPasswordModal } from '../../components/force-reset-password-modal/force-reset-password-modal';
+import { ForgotPasswordModal } from '../../components/forgot-password-modal/forgot-password-modal';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TranslateModule, ForceResetPasswordModal],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TranslateModule, ForceResetPasswordModal, ForgotPasswordModal],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -16,11 +17,8 @@ export class Login {
   
   formGroup: FormGroup;
   showResetPasswordModal = false;
+  showForgotPasswordModal = false;
   currentPassword = '';
-  userFirstName = '';
-  userLastName = '';
-  userEmail = '';
-  userPhoneNumber = '';
 
   constructor(public authService: AuthService, private formBuilder: FormBuilder, public router: Router) {
     this.formGroup = this.formBuilder.group(
@@ -46,10 +44,6 @@ export class Login {
     if (loginResponse && loginResponse.user.mustResetPassword) {
       // Store the current password for the reset modal
       this.currentPassword = password;
-      this.userFirstName = loginResponse.user.firstName;
-      this.userLastName = loginResponse.user.lastName;
-      this.userEmail = loginResponse.user.email;
-      this.userPhoneNumber = loginResponse.user.phoneNumber;
       this.showResetPasswordModal = true;
       return;
     }
@@ -85,6 +79,14 @@ export class Login {
   onResetError(error: string | undefined) {
     // Handle error if needed
     console.error('Password reset error:', error);
+  }
+
+  openForgotPasswordModal() {
+    this.showForgotPasswordModal = true;
+  }
+
+  closeForgotPasswordModal() {
+    this.showForgotPasswordModal = false;
   }
 }
 

@@ -8,13 +8,13 @@
       {{ 'HEADER.HOME' | translate }}
     </a>
 
-    <a *ngIf="authService.roles().includes('ColBlanc')" 
+    <a *ngIf="userRoles().includes('ColBlanc') || userRoles().includes('Admin')" 
        routerLink="/manage-reports" 
        routerLinkActive="active">
       {{ 'HEADER.MANAGE_REPORTS' | translate }}
     </a>
     
-    <a *ngIf="authService.roles().includes('Admin')" 
+    <a *ngIf="userRoles().includes('Admin')" 
        routerLink="/manage-users" 
        routerLinkActive="active">
       {{ 'HEADER.MANAGE_USERS' | translate }}
@@ -29,17 +29,17 @@
     </button>
 
     <!-- Profile Avatar (when connected) -->
-    <a *ngIf="isConnected" routerLink="/profile" class="profile-avatar" routerLinkActive="active">
+    <a *ngIf="isConnected()" routerLink="/profile" class="profile-avatar" routerLinkActive="active">
       <img *ngIf="authService.profilePictureUrl()" [src]="authService.profilePictureUrl()!" alt="Profile" />
       <i *ngIf="!authService.profilePictureUrl()" class="fas fa-user"></i>
     </a>
 
     <!-- Login/Logout -->
-    <a *ngIf="!isConnected" routerLink="/login" class="btn-login">
+    <a *ngIf="!isConnected()" routerLink="/login" class="btn-login">
       {{ 'HEADER.LOGIN' | translate }}
     </a>
 
-    <button *ngIf="isConnected" class="btn-login" (click)="logout()">
+    <button *ngIf="isConnected()" class="btn-login" (click)="logout()">
       <i class="fas fa-sign-out-alt"></i>
       {{ 'HEADER.LOGOUT' | translate }}
     </button>

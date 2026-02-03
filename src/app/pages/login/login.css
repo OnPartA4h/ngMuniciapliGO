@@ -6,6 +6,18 @@
   right: 0;
   bottom: 0;
   z-index: var(--z-modal);
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  /* Cacher la scrollbar pour WebKit */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+/* Cacher la scrollbar pour WebKit (Chrome, Safari, Edge) */
+:host::-webkit-scrollbar {
+  display: none;
 }
 
 .login-page {

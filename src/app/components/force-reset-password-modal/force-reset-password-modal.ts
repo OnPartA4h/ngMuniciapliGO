@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserService } from '../../services/user-service';
-import { UpdateProfileDto } from '../../models/user';
+import { ChangePasswordDto } from '../../models/user';
 
 @Component({
   selector: 'app-force-reset-password-modal',
@@ -14,10 +14,6 @@ import { UpdateProfileDto } from '../../models/user';
 })
 export class ForceResetPasswordModal {
   @Input() currentPassword: string = '';
-  @Input() firstName: string = '';
-  @Input() lastName: string = '';
-  @Input() email: string = '';
-  @Input() phoneNumber: string = '';
   
   @Output() passwordReset = new EventEmitter<void>();
   @Output() resetError = new EventEmitter<string | undefined>();
@@ -59,16 +55,12 @@ export class ForceResetPasswordModal {
     this.resetPasswordForm.disable();
 
     try {
-      const dto: UpdateProfileDto = {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        phoneNumber: this.phoneNumber,
+      const dto: ChangePasswordDto = {
         currentPassword: this.currentPassword,
         newPassword: newPassword
       };
 
-      await this.userService.updateProfile(dto);
+      const response = await this.userService.changePassword(dto);
       this.passwordReset.emit();
       
     } catch (error: any) {

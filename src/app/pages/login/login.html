@@ -34,7 +34,7 @@
         </div>
         
         <div class="form-options">
-          <a href="#" class="forgot-password">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
+          <a href="javascript:void(0)" class="forgot-password" (click)="openForgotPasswordModal()">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
         </div>
         
         <button type="submit" [disabled]="!formGroup.valid" class="btn-login" (click)="login()">{{ 'LOGIN.SIGN_IN' | translate }}</button>
@@ -46,11 +46,13 @@
   <app-force-reset-password-modal
     *ngIf="showResetPasswordModal"
     [currentPassword]="currentPassword"
-    [firstName]="userFirstName"
-    [lastName]="userLastName"
-    [email]="userEmail"
-    [phoneNumber]="userPhoneNumber"
     (passwordReset)="onPasswordReset()"
     (resetError)="onResetError($event)"
   ></app-force-reset-password-modal>
+
+  <!-- Forgot Password Modal -->
+  <app-forgot-password-modal
+    *ngIf="showForgotPasswordModal"
+    (close)="closeForgotPasswordModal()"
+  ></app-forgot-password-modal>
 </div>
