@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { LanguageService } from '../../services/language-service';
@@ -12,7 +12,11 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './header.css',
 })
 export class Header {
-  isConnected: boolean = localStorage.getItem('token') != null;
+  // Utiliser un computed pour réagir aux changements du signal token
+  isConnected = computed(() => !!this.authService.token());
+  
+  // Computed pour les rôles (pour réactivité complète)
+  userRoles = computed(() => this.authService.roles());
 
   constructor(
     public authService: AuthService,
