@@ -205,7 +205,11 @@
     "ASSIGN_CITOYEN": "Assign to citizens",
     "NO_PROBLEM": "No problem found...",
     "ACCEPTER": "Accept",
-    "REFUSER": "Reject"
+    "REFUSER": "Reject",
+    "ASSIGN_SUCCESS_CITOYEN": "Successfully assigned to citizens.",
+    "ASSIGN_SUCCESS_COL_BLEU": "Successfully assigned to {{colbleu}}.",
+    "ACCEPTER_SUCCESS": "Successfully accepted the problem.",
+    "REFUSER_SUCCESS": "Successfully rejected the problem."
   },
   "LOGIN": {
     "SUBTITLE": "Sign in to your account",

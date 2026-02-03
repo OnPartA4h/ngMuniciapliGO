@@ -205,7 +205,11 @@
     "ASSIGN_CITOYEN": "Assigner aux citoyens",
     "NO_PROBLEM": "Aucun problème trouvé...",
     "ACCEPTER": "Accepter",
-    "REFUSER": "Refuser"
+    "REFUSER": "Refuser",
+    "ASSIGN_SUCCESS_CITOYEN": "Les citoyens ont été assignés.",
+    "ASSIGN_SUCCESS_COL_BLEU": "{{colbleu}} a été assigné.",
+    "ACCEPTER_SUCCESS": "Le problème a été accepté avec succès.",
+    "REFUSER_SUCCESS": "Le problème a été refusé avec succès."
   },
   "LOGIN": {
     "SUBTITLE": "Connectez-vous à votre compte",
