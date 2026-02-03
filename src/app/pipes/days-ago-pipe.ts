@@ -10,10 +10,9 @@ export class DaysAgoPipe implements PipeTransform {
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 0) return 'Aujourd\'hui';
-    if (diffDays === 1) return '1 jour';
-    return `${diffDays} jours`;
+
+    if (diffDays <= 1) return '1';
+    return `${diffDays}`;
   }
 
 }

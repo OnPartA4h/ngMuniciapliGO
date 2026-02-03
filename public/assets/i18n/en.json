@@ -146,7 +146,14 @@
     "DATE": "Date",
     "ASSIGNEE": "Assigned to",
     "UNASSIGNED": "Unassigned",
-    "PAGE_INFO": "Page {{current}} of {{total}}"
+    "PAGE_INFO": "Page {{current}} of {{total}}",
+    "NO_PHOTO": "No photo",
+    "DAYS": "days",
+    "ASSIGN_COL_BLEU": "Assign to a blue collar...",
+    "ASSIGN_CITOYEN": "Assign to citizens",
+    "NO_PROBLEM": "No problem found...",
+    "ACCEPTER": "Accept",
+    "REFUSER": "Reject"
   },
   "LOGIN": {
     "SUBTITLE": "Sign in to your account",

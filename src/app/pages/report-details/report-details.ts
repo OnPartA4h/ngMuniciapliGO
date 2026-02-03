@@ -8,12 +8,13 @@ import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 import { WhiteService } from '../../services/white-service';
 import { UserService } from '../../services/user-service';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-report-details',
   templateUrl: './report-details.html',
   styleUrl: './report-details.css',
-  imports: [CommonModule, DaysAgoPipe, FormsModule],
+  imports: [CommonModule, DaysAgoPipe, FormsModule, TranslateModule],
 })
 export class ReportDetails implements OnInit {
   problem: any = null;

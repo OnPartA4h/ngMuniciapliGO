@@ -146,7 +146,14 @@
     "DATE": "Date",
     "ASSIGNEE": "Assigné à",
     "UNASSIGNED": "Non assigné",
-    "PAGE_INFO": "Page {{current}} sur {{total}}"
+    "PAGE_INFO": "Page {{current}} sur {{total}}",
+    "NO_PHOTO": "Aucune photo",
+    "DAYS": "jours",
+    "ASSIGN_COL_BLEU": "Assigner à un col bleu...",
+    "ASSIGN_CITOYEN": "Assigner aux citoyens",
+    "NO_PROBLEM": "Aucun problème trouvé...",
+    "ACCEPTER": "Accepter",
+    "REFUSER": "Refuser"
   },
   "LOGIN": {
     "SUBTITLE": "Connectez-vous à votre compte",
