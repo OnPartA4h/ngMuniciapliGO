@@ -18,21 +18,21 @@ import { EditUserModal } from '../../components/edit-user-modal/edit-user-modal'
 export class ManageUsers implements OnInit {
   users: User[] = [];
   availableRoles: RoleOption[] = [];
-  
+
   // Pagination
   currentPage: number = 1;
   pageSize: number = 50;
   totalPages: number = 1;
   totalUsers: number = 0;
-  
+
   // Filters
   searchQuery: string = '';
   selectedRole: string = '';
-  
+
   // Modal state
   showEditModal: boolean = false;
   selectedUser: User | null = null;
-  
+
   // Loading state
   isLoading: boolean = false;
 
@@ -41,13 +41,16 @@ export class ManageUsers implements OnInit {
     private generalService: GeneralService,
     private languageService: LanguageService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   async ngOnInit() {
     await Promise.all([
       this.loadRoles(),
       this.loadUsers()
     ]);
+    this.languageService.onLangChange().subscribe(() => {
+      this.loadRoles();
+    });
   }
 
   async loadRoles() {
@@ -67,7 +70,7 @@ export class ManageUsers implements OnInit {
         this.selectedRole || undefined,
         this.searchQuery || undefined
       );
-      
+
       this.users = response.users;
       this.currentPage = response.pagination.currentPage;
       this.pageSize = response.pagination.pageSize;
