@@ -34,24 +34,43 @@
                 <div class="details-badges">
                     <h2>Information</h2>
                     <span>
-                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="property">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Localisation
+                        </div>
                         {{problem.address}}
                     </span>
                     <span>
-                        <i class="fas fa-tag"></i>
+                        <div class="property">
+                            <i class="fas fa-tag"></i>
+                            Catégorie
+                        </div>
                         {{this.generalService.getCategoryLabel(problem.categorie)}}
                     </span>
                     <span>
-                        <i class="fas fa-clock"></i>
+                        <div class="property">
+                            <i class="fas fa-clock"></i>
+                            Date Création
+                        </div>
                         {{problem.dateCreation | daysAgo}} {{"MANAGE_REPORTS.DAYS" | translate}}
                     </span>
                     <span>
-                        <i class="fas fa-user"></i>
+                        <div class="property">
+                            <i class="fas fa-user"></i>
+                            Assignation
+                        </div>
                         @if(problem.assigneA == 2){
                         {{problem.colBleuAssigne.firstName + ' ' + problem.colBleuAssigne.lastName}}
                         } @else {
                         {{this.generalService.assignees()[problem.assigneA].label}}
                         }
+                    </span>
+                    <span>
+                        <div class="property">
+                            <i class="fas fa-flag"></i>
+                            Demandeur
+                        </div>
+                        {{problem.citoyenDemandeur.firstName + ' ' + problem.citoyenDemandeur.lastName}}
                     </span>
                     <span class="badge badge-info">
                         {{ this.generalService.getStatusLabel(problem.statut) }}
