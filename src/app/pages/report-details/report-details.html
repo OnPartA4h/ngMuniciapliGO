@@ -36,28 +36,28 @@
                     <span>
                         <div class="property">
                             <i class="fas fa-map-marker-alt"></i>
-                            Localisation
+                            {{"MANAGE_REPORTS.LOCATION" | translate}}
                         </div>
                         {{problem.address}}
                     </span>
                     <span>
                         <div class="property">
                             <i class="fas fa-tag"></i>
-                            Catégorie
+                            {{"MANAGE_REPORTS.CATEGORY" | translate}}
                         </div>
                         {{this.generalService.getCategoryLabel(problem.categorie)}}
                     </span>
                     <span>
                         <div class="property">
                             <i class="fas fa-clock"></i>
-                            Date Création
+                            {{"MANAGE_REPORTS.DATE_CREATION" | translate}}
                         </div>
                         {{problem.dateCreation | daysAgo}} {{"MANAGE_REPORTS.DAYS" | translate}}
                     </span>
                     <span>
                         <div class="property">
                             <i class="fas fa-user"></i>
-                            Assignation
+                            {{"MANAGE_REPORTS.ASSIGNEE" | translate}}
                         </div>
                         @if(problem.assigneA == 2){
                         {{problem.colBleuAssigne.firstName + ' ' + problem.colBleuAssigne.lastName}}
@@ -68,7 +68,7 @@
                     <span>
                         <div class="property">
                             <i class="fas fa-flag"></i>
-                            Demandeur
+                            {{"MANAGE_REPORTS.DEMANDEUR" | translate}}
                         </div>
                         {{problem.citoyenDemandeur.firstName + ' ' + problem.citoyenDemandeur.lastName}}
                     </span>

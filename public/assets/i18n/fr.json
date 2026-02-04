@@ -196,6 +196,8 @@
     "CATEGORY": "Catégorie",
     "STATUS": "Statut",
     "DATE": "Date",
+    "DATE_CREATION": "Date Création",
+    "DEMANDEUR": "Demandeur",
     "ASSIGNEE": "Assigné à",
     "UNASSIGNED": "Non assigné",
     "PAGE_INFO": "Page {{current}} sur {{total}}",

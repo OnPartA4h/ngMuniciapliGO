@@ -196,6 +196,8 @@
     "CATEGORY": "Category",
     "STATUS": "Status",
     "DATE": "Date",
+    "DATE_CREATION": "Date Reported",
+    "DEMANDEUR": "Reported by",
     "ASSIGNEE": "Assigned to",
     "UNASSIGNED": "Unassigned",
     "PAGE_INFO": "Page {{current}} of {{total}}",
