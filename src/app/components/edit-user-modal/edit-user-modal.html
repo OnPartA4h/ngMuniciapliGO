@@ -105,7 +105,7 @@
     </div>
 
     <div class="modal-footer">
-      <button class="btn btn-danger" (click)="openDeleteConfirm()" [disabled]="isLoading">
+      <button class="btn btn-danger" (click)="openDeleteConfirm()" [disabled]="isLoading || user!.id == currentUserId!">
         <i class="fas fa-trash"></i>
         {{ 'EDIT_USER_MODAL.DELETE_USER' | translate }}
       </button>
