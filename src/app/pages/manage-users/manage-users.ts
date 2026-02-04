@@ -8,6 +8,7 @@ import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { User, RoleOption } from '../../models/user';
 import { EditUserModal } from '../../components/edit-user-modal/edit-user-modal';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-manage-users',
@@ -40,7 +41,7 @@ export class ManageUsers implements OnInit {
     private adminService: AdminService,
     private generalService: GeneralService,
     private languageService: LanguageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   async ngOnInit() {

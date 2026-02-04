@@ -1,17 +1,18 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxMaskPipe } from 'ngx-mask';
 import { User, RoleOption } from '../../models/user';
 import { AdminService } from '../../services/admin-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { DeleteConfirmModal } from '../delete-confirm-modal/delete-confirm-modal';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-user-modal',
   standalone: true,
-  imports: [CommonModule, TranslateModule, DeleteConfirmModal, NgxMaskPipe],
+  imports: [CommonModule, TranslateModule, DeleteConfirmModal, NgxMaskPipe, MatSnackBarModule],
   templateUrl: './edit-user-modal.html',
   styleUrl: './edit-user-modal.css',
 })
@@ -30,7 +31,9 @@ export class EditUserModal implements OnInit, OnChanges {
   constructor(
     private adminService: AdminService,
     private generalService: GeneralService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private snackbar: MatSnackBar,
+    private translate: TranslateService
   ) {}
 
   async ngOnInit() {
@@ -68,9 +71,23 @@ export class EditUserModal implements OnInit, OnChanges {
       if (hasRole) {
         await this.adminService.removeRole(this.user.id, role.key);
         this.user.roles = this.user.roles.filter(r => r !== role.key);
+        
+        const message = this.translate.instant('EDIT_USER_MODAL.ROLE_REMOVED', {
+          role: role.label,
+          firstName: this.user.firstName,
+          lastName: this.user.lastName
+        });
+        this.snackbar.open(message);
       } else {
         await this.adminService.assignRole(this.user.id, role.key);
         this.user.roles.push(role.key);
+        
+        const message = this.translate.instant('EDIT_USER_MODAL.ROLE_ADDED', {
+          role: role.label,
+          firstName: this.user.firstName,
+          lastName: this.user.lastName
+        });
+        this.snackbar.open(message);
       }
     } catch (error) {
       console.error('Error toggling role:', error);
