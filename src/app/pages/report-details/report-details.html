@@ -9,9 +9,6 @@
     <div *ngIf="!isLoading && problem" class="details-grid">
         <div class="details-main">
             <div class="details-carousel">
-                <button class="details-carousel-btn" (click)="prevPhoto()">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
                 <div class="details-carousel-img">
                     @if(problem.photos && problem.photos.length > 0){
                     <span>
@@ -23,9 +20,22 @@
                     <span>{{ 'MANAGE_REPORTS.NO_PHOTO' | translate }}</span>
                     }
                 </div>
-                <button class="details-carousel-btn" (click)="nextPhoto()">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+                <div class="details-carousel-menu">
+                    <button class="details-carousel-btn" (click)="prevPhoto()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div style="display:flex; flex-direction: row;">
+                        @for (p of problem.photos; track $index) {
+                        <button class="details-carousel-select-btn" [class.active-photo-btn]="$index === photoIndex()"
+                            (click)="selectPhoto($index)">
+                            <i class="fa-solid fa-circle"></i>
+                        </button>
+                        }
+                    </div>
+                    <button class="details-carousel-btn" (click)="nextPhoto()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
             </div>
         </div>
 

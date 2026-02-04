@@ -115,6 +115,11 @@ export class ReportDetails implements OnInit {
     this.photoIndex.set((this.photoIndex() + 1) % this.problem.photos.length);
   }
 
+  selectPhoto(index: number) {
+    if (!this.problem?.photos?.length) return;
+    this.photoIndex.set(index);
+  }
+
   async getColBleus() {
     if (this.search == "")
       this.colBleus = [];
