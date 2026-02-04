@@ -77,7 +77,7 @@ export class EditUserModal implements OnInit, OnChanges {
           firstName: this.user.firstName,
           lastName: this.user.lastName
         });
-        this.snackbar.open(message);
+        this.snackbar.open(message, "" , {duration: 3000});
       } else {
         await this.adminService.assignRole(this.user.id, role.key);
         this.user.roles.push(role.key);
@@ -87,7 +87,7 @@ export class EditUserModal implements OnInit, OnChanges {
           firstName: this.user.firstName,
           lastName: this.user.lastName
         });
-        this.snackbar.open(message);
+        this.snackbar.open(message, "", {duration: 3000});
       }
     } catch (error) {
       console.error('Error toggling role:', error);
