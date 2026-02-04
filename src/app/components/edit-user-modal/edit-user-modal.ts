@@ -25,6 +25,8 @@ export class EditUserModal implements OnInit, OnChanges {
   isLoading = false;
   showDeleteConfirm = false;
 
+  currentUserId: string | null = localStorage.getItem("userId")
+
   constructor(
     private adminService: AdminService,
     private generalService: GeneralService,
