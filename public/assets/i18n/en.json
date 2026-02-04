@@ -133,6 +133,8 @@
     "MUST_RESET_PASSWORD": "Must Reset Password",
     "ROLES": "Roles",
     "DELETE_USER": "Delete User",
+    "ROLE_ADDED": "{{role}} was added to {{firstName}} {{lastName}}",
+    "ROLE_REMOVED": "{{role}} was removed from {{firstName}} {{lastName}}",
     "ADDRESS": "Address",
     "STREET_NUMBER": "Street Number",
     "STREET_NAME": "Street Name",
