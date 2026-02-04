@@ -191,24 +191,26 @@
         <h2 class="section-title">
           {{ 'CREATE_USER.ROLES_SECTION' | translate }} <span class="required">*</span>
         </h2>
-        <p class="section-description">{{ 'CREATE_USER.ROLES_DESC' | translate }}</p>
+        <p class="section-description">{{ 'CREATE_USER.ROLES_DESC_SINGLE' | translate }}</p>
         
         <div class="roles-grid">
           <div 
             class="role-card" 
             *ngFor="let role of availableRoles"
-            [class.selected]="hasRole(role.key)"
-            (click)="toggleRole(role.key)"
+            [class.selected]="isRoleSelected(role.key)"
+            (click)="selectRole(role.key)"
           >
-            <div class="role-checkbox">
+            <div class="role-radio">
               <input 
-                type="checkbox" 
+                type="radio" 
+                name="userRole"
                 [id]="'role-' + role.key"
-                [checked]="hasRole(role.key)"
+                [value]="role.key"
+                [checked]="isRoleSelected(role.key)"
                 (click)="$event.stopPropagation()"
-                (change)="toggleRole(role.key)"
+                (change)="selectRole(role.key)"
               />
-              <label [for]="'role-' + role.key"></label>
+              <span class="radio-custom"></span>
             </div>
             <div class="role-info">
               <h3>{{ role.label }}</h3>
@@ -217,7 +219,7 @@
         </div>
         
         <span class="error-text" *ngIf="rolesFormArray.length === 0 && userForm.touched">
-          {{ 'CREATE_USER.SELECT_AT_LEAST_ONE_ROLE' | translate }}
+          {{ 'CREATE_USER.SELECT_ONE_ROLE' | translate }}
         </span>
       </div>
 

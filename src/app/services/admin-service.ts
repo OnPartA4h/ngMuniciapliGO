@@ -37,35 +37,26 @@ export class AdminService {
     return response;
   }
 
-  async assignRole(userId: string, roleName: string): Promise<void> {
-    let response = await lastValueFrom(
-      this.http.put<any>(`${this.apiUrl}/api/Admin/users/${userId}/roles`, JSON.stringify(roleName), {
-        headers: { 'Content-Type': 'application/json' }
-      })
+  async changeRole(userId: string, roleName: string): Promise<{ message?: string; roles: string[]; token?: string }> {
+    const response = await lastValueFrom(
+      this.http.put<{ message?: string; roles: string[]; token?: string }>(
+        `${this.apiUrl}/api/Admin/users/${userId}/change-role`, 
+        JSON.stringify(roleName), 
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
     );
 
     console.log(response);
-    let currentUserId: string | null = localStorage.getItem("userId")
-    if (userId == currentUserId){
-      localStorage.setItem("roles", JSON.stringify(response.roles))
-      localStorage.setItem("token", response.token)
+    const currentUserId: string | null = localStorage.getItem("userId");
+    
+    if (userId == currentUserId && response.token) {
+      localStorage.setItem("roles", JSON.stringify(response.roles));
+      localStorage.setItem("token", response.token);
     }
-  }
-
-  async removeRole(userId: string, roleName: string): Promise<void> {
-    let response = await lastValueFrom(
-      this.http.request<any>('delete', `${this.apiUrl}/api/Admin/users/${userId}/roles`, {
-        body: JSON.stringify(roleName),
-        headers: { 'Content-Type': 'application/json' }
-      })
-    );
-
-    console.log(response);
-    let currentUserId: string | null = localStorage.getItem("userId")
-    if (userId == currentUserId){
-      localStorage.setItem("roles", JSON.stringify(response.roles))
-      localStorage.setItem("token", response.token)
-    }
+    
+    return response;
   }
 
   async deleteUser(userId: string): Promise<void> {

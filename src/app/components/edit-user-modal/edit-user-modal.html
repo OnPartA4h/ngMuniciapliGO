@@ -86,17 +86,27 @@
         </div>
       </div>
 
+      <!-- Roles Section with Radio Buttons -->
       <div class="roles-section">
         <h3>{{ 'EDIT_USER_MODAL.ROLES' | translate }}</h3>
         <div class="roles-list">
-          <div class="role-item" *ngFor="let role of roles">
-            <label class="checkbox-label">
+          <div 
+            class="role-item" 
+            *ngFor="let role of roles"
+            [class.selected]="getCurrentRole() === role.key"
+            [class.disabled]="isCurrentUser() || isLoading"
+            (click)="changeRole(role)"
+          >
+            <label class="radio-label">
               <input 
-                type="checkbox" 
-                [checked]="hasRole(role.key)" 
-                (change)="toggleRole(role)"
-                [disabled]="isLoading"
+                type="radio" 
+                name="userRole"
+                [value]="role.key"
+                [checked]="getCurrentRole() === role.key"
+                [disabled]="isCurrentUser() || isLoading"
+                (click)="$event.stopPropagation()"
               />
+              <span class="radio-custom"></span>
               <span>{{ role.label }}</span>
             </label>
           </div>
@@ -105,7 +115,12 @@
     </div>
 
     <div class="modal-footer">
-      <button class="btn btn-danger" (click)="openDeleteConfirm()" [disabled]="isLoading">
+      <button 
+        class="btn btn-danger" 
+        (click)="openDeleteConfirm()" 
+        [disabled]="isLoading || isCurrentUser()"
+        [class.disabled]="isCurrentUser()"
+      >
         <i class="fas fa-trash"></i>
         {{ 'EDIT_USER_MODAL.DELETE_USER' | translate }}
       </button>

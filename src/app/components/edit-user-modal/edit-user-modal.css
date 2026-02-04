@@ -234,14 +234,27 @@
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius-md);
   transition: all var(--transition-fast);
+  cursor: pointer;
 }
 
-.role-item:hover {
+.role-item:hover:not(.disabled) {
   border-color: var(--color-primary);
   background-color: var(--color-primary-light);
 }
 
-.checkbox-label {
+.role-item.selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+}
+
+.role-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-gray-100);
+}
+
+.radio-label {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
@@ -249,13 +262,54 @@
   font-size: var(--font-size-base);
   color: var(--color-text-primary);
   font-weight: var(--font-weight-medium);
+  width: 100%;
 }
 
-.checkbox-label input[type="checkbox"] {
+.role-item.disabled .radio-label {
+  cursor: not-allowed;
+}
+
+.radio-label input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radio-custom {
   width: 20px;
   height: 20px;
-  cursor: pointer;
-  accent-color: var(--color-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom {
+  border-color: var(--color-primary);
+  background-color: var(--color-white);
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+}
+
+.role-item.disabled .radio-custom {
+  border-color: var(--color-gray-300);
+  background-color: var(--color-gray-100);
+}
+
+.role-item.disabled .radio-label input[type="radio"]:checked + .radio-custom::after {
+  background-color: var(--color-gray-400);
 }
 
 .modal-footer {
@@ -298,6 +352,13 @@
 
 .btn-secondary:hover {
   background-color: var(--color-gray-300);
+}
+
+.btn.disabled,
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 @media (max-width: 768px) {

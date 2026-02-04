@@ -22,6 +22,7 @@ export class CreateUser implements OnInit {
   errorMessage: string | null = null;
   generatedPassword: string | null = null;
   showPasswordModal = false;
+  selectedRole: string = ''; // Changed from array to single string
 
   constructor(
     private fb: FormBuilder,
@@ -63,17 +64,15 @@ export class CreateUser implements OnInit {
     return this.userForm.get('roles') as FormArray;
   }
 
-  toggleRole(roleKey: string) {
-    const index = this.rolesFormArray.value.indexOf(roleKey);
-    if (index > -1) {
-      this.rolesFormArray.removeAt(index);
-    } else {
-      this.rolesFormArray.push(this.fb.control(roleKey));
-    }
+  selectRole(roleKey: string) {
+    this.selectedRole = roleKey;
+    // Clear the array and add the single selected role
+    this.rolesFormArray.clear();
+    this.rolesFormArray.push(this.fb.control(roleKey));
   }
 
-  hasRole(roleKey: string): boolean {
-    return this.rolesFormArray.value.includes(roleKey);
+  isRoleSelected(roleKey: string): boolean {
+    return this.selectedRole === roleKey;
   }
 
   // Simplified error checking
@@ -108,9 +107,9 @@ export class CreateUser implements OnInit {
     // Mark all as touched to show errors
     this.userForm.markAllAsTouched();
 
-    if (this.userForm.invalid) {
-      if (this.rolesFormArray.length === 0) {
-        this.errorMessage = this.translateService.instant('CREATE_USER.SELECT_AT_LEAST_ONE_ROLE');
+    if (this.userForm.invalid || !this.selectedRole) {
+      if (!this.selectedRole) {
+        this.errorMessage = this.translateService.instant('CREATE_USER.SELECT_ONE_ROLE');
       }
       return;
     }
@@ -129,7 +128,7 @@ export class CreateUser implements OnInit {
         city: this.userForm.value.city,
         province: this.userForm.value.province,
         postalCode: this.userForm.value.postalCode,
-        roles: this.userForm.value.roles
+        roles: [this.selectedRole] // Send as array with single role
       };
 
       const response: CreateUserResponseDto = await this.adminService.createUser(userData);
@@ -140,6 +139,7 @@ export class CreateUser implements OnInit {
       // Reset form
       this.userForm.reset();
       this.rolesFormArray.clear();
+      this.selectedRole = '';
 
     } catch (error: any) {
       console.error('Error creating user:', error);

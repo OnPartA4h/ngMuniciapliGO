@@ -6,6 +6,7 @@ import { User, RoleOption } from '../../models/user';
 import { AdminService } from '../../services/admin-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
+import { AuthService } from '../../services/auth-service';
 import { DeleteConfirmModal } from '../delete-confirm-modal/delete-confirm-modal';
 
 @Component({
@@ -24,15 +25,18 @@ export class EditUserModal implements OnInit, OnChanges {
   roles: RoleOption[] = [];
   isLoading = false;
   showDeleteConfirm = false;
+  currentUserId: string | null = null;
 
   constructor(
     private adminService: AdminService,
     private generalService: GeneralService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private authService: AuthService
   ) {}
 
   async ngOnInit() {
     await this.loadRoles();
+    this.currentUserId = localStorage.getItem("userId");
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -52,32 +56,31 @@ export class EditUserModal implements OnInit, OnChanges {
 
   closeModal() {
     this.showDeleteConfirm = false;
-    this.isLoading = false; // Reset loading state
+    this.isLoading = false;
     this.close.emit();
   }
 
-  async toggleRole(role: RoleOption) {
-    if (!this.user || this.isLoading) return;
+  async changeRole(role: RoleOption) {
+    if (!this.user || this.isLoading || this.isCurrentUser()) return;
+
+    // If already has this role, do nothing
+    if (this.user.roles.includes(role.key)) return;
 
     try {
       this.isLoading = true;
-      const hasRole = this.user.roles.includes(role.key);
-
-      if (hasRole) {
-        await this.adminService.removeRole(this.user.id, role.key);
-        this.user.roles = this.user.roles.filter(r => r !== role.key);
-      } else {
-        await this.adminService.assignRole(this.user.id, role.key);
-        this.user.roles.push(role.key);
-      }
+      const response = await this.adminService.changeRole(this.user.id, role.key);
+      
+      // Update user roles with the response
+      this.user.roles = response.roles;
     } catch (error) {
-      console.error('Error toggling role:', error);
+      console.error('Error changing role:', error);
     } finally {
       this.isLoading = false;
     }
   }
 
   openDeleteConfirm() {
+    if (this.isCurrentUser()) return;
     this.showDeleteConfirm = true;
   }
 
@@ -86,13 +89,13 @@ export class EditUserModal implements OnInit, OnChanges {
   }
 
   async confirmDelete() {
-    if (!this.user || this.isLoading) return;
+    if (!this.user || this.isLoading || this.isCurrentUser()) return;
 
     try {
       this.isLoading = true;
       await this.adminService.deleteUser(this.user.id);
       this.showDeleteConfirm = false;
-      this.isLoading = false; // Reset before emitting
+      this.isLoading = false;
       this.userDeleted.emit();
       this.close.emit();
     } catch (error) {
@@ -101,8 +104,12 @@ export class EditUserModal implements OnInit, OnChanges {
     }
   }
 
-  hasRole(role: string): boolean {
-    return this.user?.roles.includes(role) || false;
+  getCurrentRole(): string {
+    return this.user?.roles[0] || '';
+  }
+
+  isCurrentUser(): boolean {
+    return this.user?.id === this.currentUserId;
   }
 
   handleBackdropClick(event: MouseEvent) {

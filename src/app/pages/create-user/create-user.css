@@ -185,33 +185,47 @@
   box-shadow: var(--shadow-primary);
 }
 
-.role-checkbox {
+.role-radio {
   flex-shrink: 0;
+  position: relative;
 }
 
-.role-checkbox input[type="checkbox"] {
+.role-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radio-custom {
+  display: block;
   width: 20px;
   height: 20px;
-  cursor: pointer;
-  accent-color: var(--color-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  position: relative;
+  transition: all var(--transition-fast);
+  background-color: var(--color-white);
 }
 
-.role-info {
-  flex: 1;
+.role-card:hover .radio-custom {
+  border-color: var(--color-primary);
 }
 
-.role-info h3 {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-  margin: 0 0 var(--spacing-xs) 0;
+.role-radio input[type="radio"]:checked + .radio-custom {
+  border-color: var(--color-primary);
 }
 
-.role-description {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin: 0;
-  line-height: 1.4;
+.role-radio input[type="radio"]:checked + .radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
 }
 
 /* Form Actions */
