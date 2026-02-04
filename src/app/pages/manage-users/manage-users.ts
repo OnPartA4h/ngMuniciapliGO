@@ -43,8 +43,6 @@ export class ManageUsers implements OnInit {
     private languageService: LanguageService,
     private cdr: ChangeDetectorRef,
   ) {}
-    private cdr: ChangeDetectorRef
-  ) { }
 
   async ngOnInit() {
     await Promise.all([
