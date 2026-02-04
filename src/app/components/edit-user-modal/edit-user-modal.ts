@@ -91,7 +91,7 @@ export class EditUserModal implements OnInit, OnChanges {
 
     setTimeout(() => {
       this.successMessage = null;
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     }, 3000);
   }
 
