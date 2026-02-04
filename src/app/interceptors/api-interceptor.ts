@@ -9,7 +9,7 @@ export const ApiInterceptor: HttpInterceptorFn = (
   const authService = inject(AuthService);
   const token = authService.token();
 
-  if (token) {
+  if (token && req.method !== 'OPTIONS') {
     req = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`

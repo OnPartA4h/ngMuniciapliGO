@@ -36,9 +36,18 @@ export class WhiteService {
   }
 
   async assignProblemColbleu(id: number, colBleuId: string) {
-    return await lastValueFrom(
-      this.http.post<any>(`${this.domain}/api/ColBlanc/${id}/assign-colbleu/${colBleuId}`, null)
+    let dto = {
+      problemId: id,
+      colBleuId: colBleuId
+    }
+
+    let res = await lastValueFrom(
+      this.http.post<any>(`${this.domain}/api/ColBlanc/assignColbleu`, dto)
     );
+
+    console.log(res);
+
+    return res
   }
 
   async getProblem(id: number): Promise<any> {
