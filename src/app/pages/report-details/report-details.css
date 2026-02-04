@@ -90,6 +90,7 @@
     box-shadow: var(--shadow-sm);
     opacity: 0.5;
     transition: opacity 0.2s;
+    margin: 0 10px
 }
 
 .details-carousel-btn:hover,
