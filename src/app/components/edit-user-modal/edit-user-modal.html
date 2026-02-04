@@ -89,6 +89,13 @@
       <!-- Roles Section with Radio Buttons -->
       <div class="roles-section">
         <h3>{{ 'EDIT_USER_MODAL.ROLES' | translate }}</h3>
+        
+        <!-- Success Message -->
+        <div class="success-message" *ngIf="successMessage">
+          <i class="fas fa-check-circle"></i>
+          <span>{{ successMessage }}</span>
+        </div>
+        
         <div class="roles-list">
           <div 
             class="role-item" 

@@ -1,12 +1,11 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxMaskPipe } from 'ngx-mask';
 import { User, RoleOption } from '../../models/user';
 import { AdminService } from '../../services/admin-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
-import { AuthService } from '../../services/auth-service';
 import { DeleteConfirmModal } from '../delete-confirm-modal/delete-confirm-modal';
 
 @Component({
@@ -26,12 +25,14 @@ export class EditUserModal implements OnInit, OnChanges {
   isLoading = false;
   showDeleteConfirm = false;
   currentUserId: string | null = null;
+  successMessage: string | null = null;
 
   constructor(
     private adminService: AdminService,
     private generalService: GeneralService,
     private languageService: LanguageService,
-    private authService: AuthService
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
@@ -57,6 +58,7 @@ export class EditUserModal implements OnInit, OnChanges {
   closeModal() {
     this.showDeleteConfirm = false;
     this.isLoading = false;
+    this.successMessage = null;
     this.close.emit();
   }
 
@@ -72,11 +74,25 @@ export class EditUserModal implements OnInit, OnChanges {
       
       // Update user roles with the response
       this.user.roles = response.roles;
+      
+      this.showSuccessMessage();
     } catch (error) {
       console.error('Error changing role:', error);
     } finally {
       this.isLoading = false;
     }
+  }
+
+  private showSuccessMessage() {
+    this.successMessage = this.translate.instant('EDIT_USER_MODAL.ROLE_CHANGED', {
+      firstName: this.user?.firstName,
+      lastName: this.user?.lastName
+    });
+
+    setTimeout(() => {
+      this.successMessage = null;
+      this.cdr.detectChanges();
+    }, 3000);
   }
 
   openDeleteConfirm() {

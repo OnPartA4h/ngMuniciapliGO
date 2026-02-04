@@ -361,6 +361,24 @@
   pointer-events: none;
 }
 
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-lg);
+  font-weight: var(--font-weight-medium);
+  animation: slideIn 0.3s ease;
+}
+
+.success-message i {
+  font-size: var(--font-size-lg);
+  flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
   .user-details {
     grid-template-columns: 1fr;

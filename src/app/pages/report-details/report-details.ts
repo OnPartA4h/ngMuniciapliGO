@@ -8,13 +8,14 @@ import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 import { WhiteService } from '../../services/white-service';
 import { UserService } from '../../services/user-service';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-report-details',
   templateUrl: './report-details.html',
   styleUrl: './report-details.css',
-  imports: [CommonModule, DaysAgoPipe, FormsModule, TranslateModule],
+  imports: [CommonModule, DaysAgoPipe, FormsModule, TranslateModule, MatSnackBarModule],
 })
 export class ReportDetails implements OnInit {
   problem: any = null;
@@ -30,6 +31,8 @@ export class ReportDetails implements OnInit {
     private languageService: LanguageService,
     private whiteService: WhiteService,
     private userService: UserService,
+    private snackbar: MatSnackBar,
+    private translate: TranslateService
   ) { }
 
   async ngOnInit() {
@@ -63,16 +66,18 @@ export class ReportDetails implements OnInit {
 
   async acceptProblem() {
     try {
-      await this.whiteService.acceptProblem(this.problem.id);
-      window.location.reload();
-    } catch (err) {
-      console.error(err);
+      this.problem = await this.whiteService.acceptProblem(this.problem.id);
+      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ACCEPTER_SUCCESS'), 'OK', { duration: 3000 });
+    }
+    catch (e) {
+      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
     }
   }
 
   async refuseProblem() {
     try {
       this.whiteService.refuseProblem(this.problem.id);
+      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.REFUSER_SUCCESS'), 'OK', { duration: 3000 });
       this.router.navigate(['/manage-reports']);
     } catch (err) {
       console.error(err);
@@ -81,19 +86,22 @@ export class ReportDetails implements OnInit {
 
   async assignCitoyen() {
     try {
-      this.whiteService.assignProblemCitoyen(this.problem.id);
-      window.location.reload();
-    } catch (err) {
-      console.error(err);
+      this.problem = await this.whiteService.assignProblemCitoyen(this.problem.id);
+      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ASSIGN_SUCCESS_CITOYEN'), 'OK', { duration: 3000 });
+    }
+    catch (e) {
+      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
     }
   }
 
   async assignColBleu(colBleuId: string) {
     try {
-      this.whiteService.assignProblemColbleu(this.problem.id, colBleuId);
-      window.location.reload();
-    } catch (err) {
-      console.error(err);
+      this.problem = await this.whiteService.assignProblemColbleu(this.problem.id, colBleuId);
+      let name = this.problem?.colBleuAssigne?.firstName + ' ' + this.problem?.colBleuAssigne?.lastName;
+      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ASSIGN_SUCCESS_COL_BLEU', { colbleu: name }), 'OK', { duration: 3000 });
+    }
+    catch (e) {
+      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
     }
   }
 
@@ -105,6 +113,11 @@ export class ReportDetails implements OnInit {
   nextPhoto() {
     if (!this.problem?.photos?.length) return;
     this.photoIndex.set((this.photoIndex() + 1) % this.problem.photos.length);
+  }
+
+  selectPhoto(index: number) {
+    if (!this.problem?.photos?.length) return;
+    this.photoIndex.set(index);
   }
 
   async getColBleus() {

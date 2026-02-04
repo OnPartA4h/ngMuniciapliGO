@@ -133,6 +133,7 @@
     "MUST_RESET_PASSWORD": "Must Reset Password",
     "ROLES": "Roles",
     "DELETE_USER": "Delete User",
+    "ROLE_CHANGED": "Role changed successfully for {{firstName}} {{lastName}}",
     "ADDRESS": "Address",
     "STREET_NUMBER": "Street Number",
     "STREET_NAME": "Street Name",
@@ -196,6 +197,8 @@
     "CATEGORY": "Category",
     "STATUS": "Status",
     "DATE": "Date",
+    "DATE_CREATION": "Date Reported",
+    "DEMANDEUR": "Reported by",
     "ASSIGNEE": "Assigned to",
     "UNASSIGNED": "Unassigned",
     "PAGE_INFO": "Page {{current}} of {{total}}",
@@ -205,7 +208,11 @@
     "ASSIGN_CITOYEN": "Assign to citizens",
     "NO_PROBLEM": "No problem found...",
     "ACCEPTER": "Accept",
-    "REFUSER": "Reject"
+    "REFUSER": "Reject",
+    "ASSIGN_SUCCESS_CITOYEN": "Successfully assigned to citizens.",
+    "ASSIGN_SUCCESS_COL_BLEU": "Successfully assigned to {{colbleu}}.",
+    "ACCEPTER_SUCCESS": "Successfully accepted the problem.",
+    "REFUSER_SUCCESS": "Successfully rejected the problem."
   },
   "LOGIN": {
     "SUBTITLE": "Sign in to your account",
