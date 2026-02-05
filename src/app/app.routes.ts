@@ -23,6 +23,6 @@ export const routes: Routes = [
   { path: 'report-details/:id', component: ReportDetails, canActivate: [authGuard]},
   { path: 'profile', component: Profile, canActivate: [authGuard]},
   { path: 'landing', component: Landing,},
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: '**', redirectTo: '/home' }
+  { path: '', redirectTo: '/manage-reports', pathMatch: 'full' },
+  { path: '**', redirectTo: '/manage-reports' }
 ];
