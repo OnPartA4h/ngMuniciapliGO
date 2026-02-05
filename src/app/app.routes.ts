@@ -15,7 +15,7 @@ import { Landing } from './pages/landing/landing';
 
 export const routes: Routes = [
   { path: 'hello', component: Hello },
-  { path: '', redirectTo: '/home', pathMatch: 'full'},
+  { path: '', redirectTo: '/landing', pathMatch: 'full'},
   { path: 'home', component: Home, canActivate: [authGuard]},
   { path: 'login', component: Login, canActivate: [loginGuard]},
   { path: 'manage-reports', component: ManageReports, canActivate: [authGuard, whiteGuard]},
