@@ -10,11 +10,6 @@
 
   <div class="form-card">
     <form [formGroup]="userForm" (ngSubmit)="createUser()">
-      <!-- Error Message -->
-      <div class="alert alert-error" *ngIf="errorMessage">
-        <i class="fas fa-exclamation-circle"></i>
-        <span>{{ errorMessage }}</span>
-      </div>
 
       <!-- Personal Information -->
       <div class="form-section">
@@ -155,13 +150,19 @@
             <label for="province">
               {{ 'CREATE_USER.PROVINCE' | translate }} <span class="required">*</span>
             </label>
-            <input
-              type="text"
+            <select
               id="province"
               formControlName="province"
-              [placeholder]="'CREATE_USER.PROVINCE_PLACEHOLDER' | translate"
               [class.error]="getError('province')"
-            />
+              required
+            >
+              <option value="" disabled selected hidden>
+                {{ 'CREATE_USER.PROVINCE_PLACEHOLDER' | translate }}
+              </option>
+              <option *ngFor="let prov of canadianProvinces" [value]="prov.label">
+                {{ prov.label }}
+              </option>
+            </select>
             <span class="error-text" *ngIf="getError('province')">
               {{ getError('province') }}
             </span>
@@ -176,7 +177,8 @@
               type="text"
               id="postalCode"
               formControlName="postalCode"
-              [placeholder]="'CREATE_USER.POSTAL_CODE_PLACEHOLDER' | translate"
+              mask="A0A 0A0"
+              placeholder="A1A 1A1"
               [class.error]="getError('postalCode')"
             />
             <span class="error-text" *ngIf="getError('postalCode')">
@@ -228,7 +230,7 @@
         <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="isLoading">
           {{ 'COMMON.CANCEL' | translate }}
         </button>
-        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading || userForm.invalid || !selectedRole">
           <i class="fas fa-save" *ngIf="!isLoading"></i>
           <span class="spinner" *ngIf="isLoading"></span>
           {{ isLoading ? ('COMMON.CREATING' | translate) : ('CREATE_USER.CREATE_BUTTON' | translate) }}

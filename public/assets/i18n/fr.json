@@ -168,7 +168,7 @@
     "CITY": "Ville",
     "CITY_PLACEHOLDER": "Montréal",
     "PROVINCE": "Province",
-    "PROVINCE_PLACEHOLDER": "Québec",
+    "PROVINCE_PLACEHOLDER": "Choisir une province",
     "POSTAL_CODE": "Code postal",
     "POSTAL_CODE_PLACEHOLDER": "H1A 0A1",
     "INVALID_POSTAL_CODE": "Format de code postal canadien invalide (ex: H1A 0A1)",
@@ -182,8 +182,7 @@
     "COPY_PASSWORD": "Copier",
     "PASSWORD_COPIED": "Mot de passe copié !",
     "MUST_CHANGE_PASSWORD": "L'utilisateur devra changer ce mot de passe lors de sa première connexion.",
-    "UNDERSTOOD": "Compris, retourner à la liste",
-    "ERROR_OCCURRED": "Une erreur est survenue lors de la création de l'utilisateur"
+    "UNDERSTOOD": "Compris, retourner à la liste"
   },
   "MANAGE_REPORTS": {
     "TITLE": "Gestion des problèmes",
@@ -231,5 +230,20 @@
     "SIGN_IN": "Se connecter",
     "SIGNING_IN": "Connexion en cours...",
     "ERROR_MESSAGE": "Identifiants invalides. Veuillez réessayer."
+  },
+  "PROVINCES": {
+    "ON": "Ontario",
+    "QC": "Québec",
+    "BC": "Colombie-Britannique",
+    "AB": "Alberta",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nouvelle-Écosse",
+    "NB": "Nouveau-Brunswick",
+    "NL": "Terre-Neuve-et-Labrador",
+    "PE": "Île-du-Prince-Édouard",
+    "NT": "Territoires du Nord-Ouest",
+    "YT": "Yukon",
+    "NU": "Nunavut"
   }
 }

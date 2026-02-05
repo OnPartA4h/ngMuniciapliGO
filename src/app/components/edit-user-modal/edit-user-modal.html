@@ -81,7 +81,7 @@
           
           <div class="detail-group">
             <label>{{ 'EDIT_USER_MODAL.POSTAL_CODE' | translate }}</label>
-            <p>{{ user.postalCode || '-' }}</p>
+            <p>{{ user.postalCode ? (user.postalCode | mask: 'A0A 0A0') : '-' }}</p>
           </div>
         </div>
       </div>

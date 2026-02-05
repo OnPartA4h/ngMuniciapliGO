@@ -168,7 +168,7 @@
     "CITY": "City",
     "CITY_PLACEHOLDER": "Montreal",
     "PROVINCE": "Province",
-    "PROVINCE_PLACEHOLDER": "Quebec",
+    "PROVINCE_PLACEHOLDER": "Choose a province",
     "POSTAL_CODE": "Postal Code",
     "POSTAL_CODE_PLACEHOLDER": "H1A 0A1",
     "INVALID_POSTAL_CODE": "Invalid Canadian postal code format (e.g., H1A 0A1)",
@@ -182,8 +182,7 @@
     "COPY_PASSWORD": "Copy",
     "PASSWORD_COPIED": "Password copied!",
     "MUST_CHANGE_PASSWORD": "The user must change this password on first login.",
-    "UNDERSTOOD": "Understood, return to list",
-    "ERROR_OCCURRED": "An error occurred while creating the user"
+    "UNDERSTOOD": "Understood, return to list"
   },
   "MANAGE_REPORTS": {
     "TITLE": "Problem Management",
@@ -231,5 +230,20 @@
     "SIGN_IN": "Sign in",
     "SIGNING_IN": "Signing in...",
     "ERROR_MESSAGE": "Invalid credentials. Please try again."
+  },
+  "PROVINCES": {
+    "ON": "Ontario",
+    "QC": "Quebec",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
   }
 }
