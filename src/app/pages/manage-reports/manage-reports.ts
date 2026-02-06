@@ -48,7 +48,7 @@ export class ManageReports implements OnInit {
   }
 
   async getAllReports() {
-    this.problems = await this.whiteService.getAllProblems()
+    //this.problems = await this.whiteService.getAllProblems()
 
     this.problems.sort((a, b) => {
       const dateA = new Date(a.dateCreation).getTime();

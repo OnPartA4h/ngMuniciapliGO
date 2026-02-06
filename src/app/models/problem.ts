@@ -29,6 +29,8 @@ export class Problem {
     public dateResolution: Date,
     public colBleuAssigne: User | null,
     public assigneA: number,
-    public photos: Photo[]
+    public photos: Photo[],
+    public latitude: number,
+    public longitude: number
   ) { }
 }

@@ -1,5 +1,7 @@
 import * as L from 'leaflet';
 import { AfterViewInit, Component } from '@angular/core';
+import { WhiteService } from '../../services/white-service';
+import { Problem } from '../../models/problem';
 
 @Component({
   selector: 'app-map',
@@ -13,8 +15,16 @@ export class Map implements AfterViewInit{
 
   map: L.Map | undefined;
 
-  ngAfterViewInit(): void {
+  problems: Problem[] = []
+
+  constructor(public whiteService: WhiteService) {}
+
+  async ngAfterViewInit() {
+    await this.getProblems()
+    console.log(this.problems);
+    
     this.initMap()
+    this.placeMarkers()
   }
 
   initMap() {
@@ -54,6 +64,19 @@ export class Map implements AfterViewInit{
    if (!this.map) return
     this.map.off(); 
     this.map.remove(); 
+  }
+
+  async getProblems() {
+    this.problems = (await this.whiteService.getAllProblems()).items
+  }
+
+  placeMarkers() {
+    for (let p of this.problems){
+      let marker = L.marker([p.latitude, p.longitude]).addTo(this.map!)
+      marker.on('click', () => {
+        alert(p.titre)
+      })
+    }
   }
 
 }
