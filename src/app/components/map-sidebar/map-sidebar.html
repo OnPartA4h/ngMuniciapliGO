@@ -7,15 +7,15 @@
   </div>
 
   <div class="sidebar-content" *ngIf="problem">
-    <!-- Problem Image 
-    <div class="problem-image-container" *ngIf="problem.photos[0].url">
+    <!-- Problem Image -->
+    <div class="problem-image-container" >
       <img [src]="problem.photos[0].url" [alt]="problem.titre" class="problem-image" />
     </div>
     <div class="no-image" *ngIf="!problem.photos[0].url">
       <i class="fas fa-image"></i>
       <p>{{ 'MAP_SIDEBAR.NO_IMAGE' | translate }}</p>
     </div>
--->
+
     <!-- Problem Title -->
     <div class="problem-header">
       <h3>{{ problem.titre }}</h3>

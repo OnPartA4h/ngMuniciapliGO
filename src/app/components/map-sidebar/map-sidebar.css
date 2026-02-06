@@ -3,14 +3,13 @@
   top: 70px;
   right: -420px;
   width: 400px;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 70px); /* ✅ FIX */
   background: var(--color-white);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
   transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .sidebar.open {
@@ -83,16 +82,16 @@
 /* Problem Image */
 .problem-image-container {
   width: 100%;
-  height: 200px;
   border-radius: var(--border-radius-lg);
-  overflow: hidden;
+  overflow: visible; /* Allow image to display at full size */
   box-shadow: var(--shadow-md);
 }
 
 .problem-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: auto; /* Natural width */
+  max-width: 100%; /* Don't exceed container width */
+  height: auto; /* Natural height */
+  display: block;
 }
 
 .no-image {

@@ -15,6 +15,7 @@ export class Map implements AfterViewInit{
   FALLBACK_COORDS: L.LatLngExpression = [45.5312, -73.5181];
 
   map: L.Map | undefined;
+  currentPosMarker: L.Marker | undefined
 
   problems: Problem[] = []
   
@@ -62,6 +63,20 @@ export class Map implements AfterViewInit{
         .bindPopup('Longueuil, QC')
         .openPopup();
     });
+
+    this.map.on('click', (event) => {
+      let redIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    
+      this.removeCurrentPosMarker()
+      this.currentPosMarker = L.marker(event.latlng, {icon: redIcon}).addTo(this.map!)
+    })
   }
 
   ngOnDestroy() {
@@ -90,5 +105,11 @@ export class Map implements AfterViewInit{
     this.isSidebarOpen = false;
     this.selectedProblem = null;
     this.cdr.detectChanges(); 
+  }
+
+  removeCurrentPosMarker() {
+    if (!this.currentPosMarker) return
+
+    this.currentPosMarker.remove()
   }
 }
