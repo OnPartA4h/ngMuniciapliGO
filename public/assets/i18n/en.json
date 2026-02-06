@@ -245,5 +245,19 @@
     "NT": "Northwest Territories",
     "YT": "Yukon",
     "NU": "Nunavut"
+  },
+  "MAP_SIDEBAR": {
+    "TITLE": "Report Details",
+    "NO_IMAGE": "No image available",
+    "CATEGORY": "Category",
+    "DESCRIPTION": "Description",
+    "LOCATION": "Location",
+    "COORDINATES": "Coordinates",
+    "REPORTED_DATE": "Reported Date",
+    "REPORTED_BY": "Reported By",
+    "VIEW_DETAILS": "View Full Details",
+    "GET_DIRECTIONS": "Get Directions",
+    "SELECT_MARKER": "Select a Marker",
+    "SELECT_MARKER_DESC": "Click on a map marker to view the report details"
   }
 }

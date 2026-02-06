@@ -245,5 +245,19 @@
     "NT": "Territoires du Nord-Ouest",
     "YT": "Yukon",
     "NU": "Nunavut"
+  },
+  "MAP_SIDEBAR": {
+    "TITLE": "Détails du signalement",
+    "NO_IMAGE": "Aucune image disponible",
+    "CATEGORY": "Catégorie",
+    "DESCRIPTION": "Description",
+    "LOCATION": "Localisation",
+    "COORDINATES": "Coordonnées",
+    "REPORTED_DATE": "Date de signalement",
+    "REPORTED_BY": "Signalé par",
+    "VIEW_DETAILS": "Voir les détails complets",
+    "GET_DIRECTIONS": "Obtenir l'itinéraire",
+    "SELECT_MARKER": "Sélectionnez un marqueur",
+    "SELECT_MARKER_DESC": "Cliquez sur un marqueur de la carte pour voir les détails du signalement"
   }
 }

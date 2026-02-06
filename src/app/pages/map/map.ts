@@ -1,11 +1,12 @@
 import * as L from 'leaflet';
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { WhiteService } from '../../services/white-service';
 import { Problem } from '../../models/problem';
+import { MapSidebar } from '../../components/map-sidebar/map-sidebar';
 
 @Component({
   selector: 'app-map',
-  imports: [],
+  imports: [MapSidebar],
   standalone: true,
   templateUrl: './map.html',
   styleUrl: './map.css',
@@ -16,8 +17,11 @@ export class Map implements AfterViewInit{
   map: L.Map | undefined;
 
   problems: Problem[] = []
+  
+  selectedProblem: Problem | null = null;
+  isSidebarOpen: boolean = false;
 
-  constructor(public whiteService: WhiteService) {}
+  constructor(public whiteService: WhiteService, private cdr: ChangeDetectorRef) {}
 
   async ngAfterViewInit() {
     await this.getProblems()
@@ -73,10 +77,18 @@ export class Map implements AfterViewInit{
   placeMarkers() {
     for (let p of this.problems){
       let marker = L.marker([p.latitude, p.longitude]).addTo(this.map!)
+
       marker.on('click', () => {
-        alert(p.titre)
+        this.selectedProblem = p;
+        this.isSidebarOpen = true;
+        this.cdr.detectChanges(); 
       })
     }
   }
 
+  closeSidebar() {
+    this.isSidebarOpen = false;
+    this.selectedProblem = null;
+    this.cdr.detectChanges(); 
+  }
 }

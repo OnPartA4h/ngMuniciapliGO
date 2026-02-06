@@ -1,3 +1,8 @@
 <div class="map-container">
   <div id="map"></div>
+  <app-map-sidebar 
+    [problem]="selectedProblem" 
+    [isOpen]="isSidebarOpen"
+    (close)="closeSidebar()">
+  </app-map-sidebar>
 </div>
