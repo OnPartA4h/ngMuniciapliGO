@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Problem } from '../models/problem';
+import { AssigneAOption, CategoryOption, Problem, StatusOption } from '../models/problem';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -12,9 +12,13 @@ export class WhiteService {
 
   constructor(public http: HttpClient) { }
 
-  async getAllProblems(): Promise<Problem[]> {
-    let x = await lastValueFrom(this.http.get<Problem[]>(`${this.apiUrl}/api/ColBlanc/problems`))
-    return x
+  async getAllProblems(options?: any): Promise<Problem[]> {
+    console.log(options);
+    let x = await lastValueFrom(this.http.get<Problem[]>(
+      `${this.apiUrl}/api/ColBlanc/problems`,
+      { params: options as any })
+    );
+    return x;
   }
 
   async acceptProblem(id: number): Promise<any> {
