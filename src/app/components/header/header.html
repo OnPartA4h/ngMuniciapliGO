@@ -4,9 +4,9 @@
   </a>
   
   <nav>
-    <!--<a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
       {{ 'HEADER.HOME' | translate }}
-    </a>-->
+    </a>
 
     <a *ngIf="userRoles().includes('ColBlanc') || userRoles().includes('Admin')" 
        routerLink="/manage-reports" 
@@ -29,12 +29,10 @@
     </button>
 
     <!-- Profile Avatar (when connected) -->
-    <!--
     <a *ngIf="isConnected()" routerLink="/profile" class="profile-avatar" routerLinkActive="active">
       <img *ngIf="authService.profilePictureUrl()" [src]="authService.profilePictureUrl()!" alt="Profile" />
       <i *ngIf="!authService.profilePictureUrl()" class="fas fa-user"></i>
     </a>
-    -->
 
     <!-- Login/Logout -->
     <a *ngIf="!isConnected()" routerLink="/login" class="btn-login">
