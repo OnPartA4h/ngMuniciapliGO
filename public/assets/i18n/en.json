@@ -259,5 +259,22 @@
     "GET_DIRECTIONS": "Get Directions",
     "SELECT_MARKER": "Select a Marker",
     "SELECT_MARKER_DESC": "Click on a map marker to view the report details"
+  },
+  "MAP_CONFIG": {
+    "TITLE": "Map Configuration",
+    "RADIUS": "Search Radius",
+    "RADIUS_HINT": "Show reports within X km radius of your location",
+    "STATUS_FILTER": "Filter by Status",
+    "CATEGORY_FILTER": "Filter by Category",
+    "DATE_RANGE": "Date Range",
+    "FROM": "From",
+    "TO": "To",
+    "DISPLAY_OPTIONS": "Display Options",
+    "SHOW_USER_LOCATION": "Show My Location",
+    "SHOW_USER_LOCATION_DESC": "Center the map on your current location",
+    "CLUSTER_MARKERS": "Cluster Markers",
+    "CLUSTER_MARKERS_DESC": "Group nearby markers for better readability",
+    "RESET": "Reset",
+    "APPLY": "Apply"
   }
 }

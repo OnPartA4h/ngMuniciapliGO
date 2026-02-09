@@ -14,4 +14,16 @@
   height: 100%;
   width: 100%;
   overflow: hidden;
+  z-index: 10;
+}
+
+button {
+    position: fixed;
+    z-index: 11;
+    bottom: 10px;
+    left: 10px;
+    width: 60px;
+    height: 60px;
+    background-color: aqua;
+    border-radius: 15px;
 }

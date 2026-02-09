@@ -80,7 +80,7 @@
 
     <!-- Actions -->
     <div class="sidebar-actions">
-      <button class="btn-primary">
+      <button class="btn-primary" [routerLink]="['/report-details', problem.id]">
         <i class="fas fa-eye"></i>
         {{ 'MAP_SIDEBAR.VIEW_DETAILS' | translate }}
       </button>

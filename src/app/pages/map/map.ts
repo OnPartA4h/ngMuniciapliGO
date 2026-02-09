@@ -3,10 +3,13 @@ import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { WhiteService } from '../../services/white-service';
 import { Problem } from '../../models/problem';
 import { MapSidebar } from '../../components/map-sidebar/map-sidebar';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MapConfigModal } from '../../components/map-config-modal/map-config-modal';
 
 @Component({
   selector: 'app-map',
-  imports: [MapSidebar],
+  imports: [MapSidebar, CommonModule, FormsModule, MapConfigModal],
   standalone: true,
   templateUrl: './map.html',
   styleUrl: './map.css',
@@ -21,6 +24,8 @@ export class Map implements AfterViewInit{
   
   selectedProblem: Problem | null = null;
   isSidebarOpen: boolean = false;
+
+  isConfigModalOpen: boolean = false
 
   constructor(public whiteService: WhiteService, private cdr: ChangeDetectorRef) {}
 
@@ -73,7 +78,7 @@ export class Map implements AfterViewInit{
         popupAnchor: [1, -34],
         shadowSize: [41, 41]
     });
-    
+
       this.removeCurrentPosMarker()
       this.currentPosMarker = L.marker(event.latlng, {icon: redIcon}).addTo(this.map!)
     })
@@ -111,5 +116,13 @@ export class Map implements AfterViewInit{
     if (!this.currentPosMarker) return
 
     this.currentPosMarker.remove()
+  }
+
+  openModal() {
+    this.isConfigModalOpen = true;
+  }
+
+  closeModal() {
+    this.isConfigModalOpen = false;
   }
 }

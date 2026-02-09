@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Problem } from '../../models/problem';
 import { GeneralService } from '../../services/general-service';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-map-sidebar',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, RouterLink],
   templateUrl: './map-sidebar.html',
   styleUrl: './map-sidebar.css',
 })
@@ -16,7 +17,9 @@ export class MapSidebar implements OnInit {
   @Input() isOpen: boolean = false;
   @Output() close = new EventEmitter<void>();
 
-  constructor(public generalService: GeneralService) {}
+  constructor(
+    public generalService: GeneralService,
+  ) {}
 
   async ngOnInit() {
     // Load categories and statuses when component initializes

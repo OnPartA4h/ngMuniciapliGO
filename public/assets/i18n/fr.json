@@ -259,5 +259,22 @@
     "GET_DIRECTIONS": "Obtenir l'itinéraire",
     "SELECT_MARKER": "Sélectionnez un marqueur",
     "SELECT_MARKER_DESC": "Cliquez sur un marqueur de la carte pour voir les détails du signalement"
+  },
+  "MAP_CONFIG": {
+    "TITLE": "Configuration de la carte",
+    "RADIUS": "Rayon de recherche",
+    "RADIUS_HINT": "Afficher les signalements dans un rayon de X km autour de votre position",
+    "STATUS_FILTER": "Filtrer par statut",
+    "CATEGORY_FILTER": "Filtrer par catégorie",
+    "DATE_RANGE": "Plage de dates",
+    "FROM": "De",
+    "TO": "À",
+    "DISPLAY_OPTIONS": "Options d'affichage",
+    "SHOW_USER_LOCATION": "Afficher ma position",
+    "SHOW_USER_LOCATION_DESC": "Centrer la carte sur votre position actuelle",
+    "CLUSTER_MARKERS": "Regrouper les marqueurs",
+    "CLUSTER_MARKERS_DESC": "Grouper les marqueurs proches pour une meilleure lisibilité",
+    "RESET": "Réinitialiser",
+    "APPLY": "Appliquer"
   }
 }

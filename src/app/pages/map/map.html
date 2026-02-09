@@ -5,4 +5,8 @@
     [isOpen]="isSidebarOpen"
     (close)="closeSidebar()">
   </app-map-sidebar>
+
+  <button (click)="openModal()">Settings</button>
 </div>
+
+<app-map-config-modal [isOpen]="isConfigModalOpen" (close)="closeModal()"></app-map-config-modal>
