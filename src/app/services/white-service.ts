@@ -13,7 +13,6 @@ export class WhiteService {
   constructor(public http: HttpClient) { }
 
   async getAllProblems(options?: any): Promise<Problem[]> {
-    console.log(options);
     let x = await lastValueFrom(this.http.get<Problem[]>(
       `${this.apiUrl}/api/ColBlanc/problems`,
       { params: options as any })

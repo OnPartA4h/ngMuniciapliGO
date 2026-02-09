@@ -56,17 +56,19 @@ export class ManageReports implements OnInit {
     const params: any = { page };
 
     if (this.currentCategory != null && this.currentCategory != undefined) {
-      params.categorie = this.currentCategory;
+      params.categorie = this.currentCategory - 1;
     }
     if (this.currentStatus != null && this.currentStatus != undefined) {
-      params.statut = this.currentStatus;
+      params.statut = this.currentStatus - 1;
     }
     if (this.currentAssigneA != null && this.currentAssigneA != undefined) {
-      params.assignation = this.currentAssigneA;
+      params.assignation = this.currentAssigneA - 1;
     }
     if (this.currentSearch && this.currentSearch.trim() !== '') {
       params.search = this.currentSearch.trim();
     }
+
+    console.log(this.currentCategory);
 
     let x: any = await this.whiteService.getAllProblems(params);
 

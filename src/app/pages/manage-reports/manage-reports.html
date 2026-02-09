@@ -7,13 +7,14 @@
   <div class="filters-bar">
     <div class="search-box">
       <i class="fas fa-search"></i>
-      <input type="text" [placeholder]="'MANAGE_REPORTS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="currentSearch" />
+      <input type="text" [placeholder]="'MANAGE_REPORTS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="currentSearch"
+        (keyup.enter)="getAllReports()" />
     </div>
     <div class="filter-group">
       <select [(ngModel)]="currentCategory" (change)="getAllReports()">
         <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_CATEGORIES' | translate }}</option>
         @for (c of this.generalService.categories(); track $index) {
-        <option [value]=$index>
+        <option [value]=$index+1>
           {{ c.label }}
         </option>
         }
@@ -22,12 +23,16 @@
         <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_STATUSES' | translate }}</option>
         @for (s of this.generalService.statuses(); track $index) {
         @if (s.key != "Refuse" && s.key != "Resolue"){
-        <option [value]=$index>
+        <option [value]=$index+1>
           {{ s.label }}
         </option>
         }
         }
       </select>
+      <button class="btn btn-secondary" (click)="getAllReports()">
+        <i class="fas fa-search"></i>
+        {{ 'COMMON.SEARCH' | translate }}
+      </button>
     </div>
   </div>
 

@@ -13,12 +13,8 @@
   <div class="filters-bar">
     <div class="search-box">
       <i class="fas fa-search"></i>
-      <input 
-        type="text" 
-        [placeholder]="'MANAGE_USERS.SEARCH_PLACEHOLDER' | translate"
-        [(ngModel)]="searchQuery"
-        (keyup.enter)="onSearch()"
-      />
+      <input type="text" [placeholder]="'MANAGE_USERS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()" />
     </div>
     <div class="filter-group">
       <select [(ngModel)]="selectedRole" (change)="onRoleFilterChange()">
@@ -91,9 +87,5 @@
   </div>
 </div>
 
-<app-edit-user-modal
-  [user]="selectedUser"
-  [isOpen]="showEditModal"
-  (close)="closeEditModal()"
-  (userDeleted)="onUserDeleted()"
-></app-edit-user-modal>
+<app-edit-user-modal [user]="selectedUser" [isOpen]="showEditModal" (close)="closeEditModal()"
+  (userDeleted)="onUserDeleted()"></app-edit-user-modal>
