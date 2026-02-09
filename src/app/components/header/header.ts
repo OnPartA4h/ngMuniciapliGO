@@ -4,10 +4,11 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { LanguageService } from '../../services/language-service';
 import { TranslateModule } from '@ngx-translate/core';
+import { NotificationBell } from '../notification-bell/notification-bell';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive, CommonModule, TranslateModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule, TranslateModule, NotificationBell],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })

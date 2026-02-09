@@ -28,6 +28,9 @@
       <span>{{ getCurrentLanguage() }}</span>
     </button>
 
+    <!-- Notification Bell (when connected) -->
+    <app-notification-bell *ngIf="isConnected()"></app-notification-bell>
+
     <!-- Profile Avatar (when connected) -->
     <a *ngIf="isConnected()" routerLink="/profile" class="profile-avatar" routerLinkActive="active">
       <img *ngIf="authService.profilePictureUrl()" [src]="authService.profilePictureUrl()!" alt="Profile" />
