@@ -14,9 +14,9 @@
 }
 
 .notifications-header h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #1f2937;
+  color: var(--color-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
   margin: 0;
 }
 
