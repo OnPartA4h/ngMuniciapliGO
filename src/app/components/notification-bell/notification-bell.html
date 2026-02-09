@@ -1,4 +1,4 @@
-<button class="notification-bell" (click)="goToNotifications()" [attr.aria-label]="'Notifications (' + unreadCount() + ' non lues)'">
+<button class="notification-bell" (click)="goToNotifications()" [attr.aria-label]="'Notifications (' + notificationService.unreadCount() + ' non lues)'">
   <i class="fas fa-bell"></i>
-  <span class="badge" *ngIf="unreadCount() > 0">{{ unreadCount() > 99 ? '99+' : unreadCount() }}</span>
+  <span class="badge" *ngIf="notificationService.unreadCount() > 0">{{ notificationService.unreadCount() > 99 ? '99+' : notificationService.unreadCount() }}</span>
 </button>

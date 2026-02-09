@@ -17,10 +17,6 @@ export class NotificationBell implements OnInit {
     private router: Router
   ) {}
 
-  get unreadCount() {
-    return this.notificationService.unreadCount();
-  }
-
   async ngOnInit(): Promise<void> {
     // Charger le compteur initial depuis l'API
     try {
