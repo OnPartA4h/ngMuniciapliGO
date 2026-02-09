@@ -4,28 +4,54 @@
     <p>{{ 'MANAGE_REPORTS.SUBTITLE' | translate }}</p>
   </div>
 
-  <div class="filters-bar">
-    <div class="search-box">
-      <i class="fas fa-search"></i>
-      <input type="text" [placeholder]="'MANAGE_REPORTS.SEARCH_PLACEHOLDER' | translate" />
+  <div class="search-div-top">
+    <div class="search-div">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" [placeholder]="'MANAGE_REPORTS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="currentSearch"
+          (keyup.enter)="getAllReports()" />
+      </div>
+      <button class="btn btn-secondary btn-toggle-filters" (click)="showFilters = !showFilters">
+        <i class="fa-solid fa-filter"></i>
+        <i class="fas" [ngClass]="showFilters ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+      </button>
     </div>
-    <div class="filter-group">
-      <select>
-        <option value="">{{ 'MANAGE_REPORTS.ALL_CATEGORIES' | translate }}</option>
-        <option *ngFor="let c of this.generalService.categories()" [value]="c.key">
+    <button class="btn btn-secondary" (click)="getAllReports()">
+      <i class="fas fa-search"></i>
+      {{ 'COMMON.SEARCH' | translate }}
+    </button>
+  </div>
+  <div class="search-div-top">
+    <div class="filter-group" *ngIf="showFilters">
+      <select [(ngModel)]="currentCategory" (change)="getAllReports()">
+        <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_CATEGORIES' | translate }}</option>
+        @for (c of this.generalService.categories(); track $index) {
+        <option [value]=$index+1>
           {{ c.label }}
         </option>
+        }
       </select>
-      <select>
-        <option value="">{{ 'MANAGE_REPORTS.ALL_STATUSES' | translate }}</option>
+      <select [(ngModel)]="currentStatus" (change)="getAllReports()">
+        <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_STATUSES' | translate }}</option>
         @for (s of this.generalService.statuses(); track $index) {
         @if (s.key != "Refuse" && s.key != "Resolue"){
-        <option [value]="s.key">
+        <option [value]=$index+1>
           {{ s.label }}
         </option>
         }
         }
       </select>
+      <select [(ngModel)]="currentAssigneA" (change)="getAllReports()">
+        <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_ASSIGNEA' | translate }}</option>
+        @for (s of this.generalService.assignees(); track $index) {
+        <option [value]=$index+1>
+          {{ s.label }}
+        </option>
+        }
+      </select>
+      <button class="btn btn-secondary btn-reset-filters" (click)="resetFilters()">
+        <i class="fa-solid fa-arrow-rotate-left"></i>
+      </button>
     </div>
   </div>
 
@@ -78,12 +104,15 @@
     </div>
 
     <div class="pagination" *ngIf="problems.length > 0">
-      <button class="pagination-btn" [disabled]="currentPage == 1">
+      <button class="pagination-btn" [disabled]="pagination?.currentPage == 1" (click)="prevPage()">
         <i class="fas fa-chevron-left"></i>
         {{ 'COMMON.PREVIOUS' | translate }}
       </button>
-      <span class="pagination-info">{{ 'MANAGE_REPORTS.PAGE_INFO' | translate: {current: 1, total: 3} }}</span>
-      <button class="pagination-btn" [disabled]="currentPage == lastPage">
+      <span class="pagination-info">
+        {{ 'MANAGE_REPORTS.PAGE_INFO' | translate: {current: pagination?.currentPage, total: pagination?.totalPages} }}
+      </span>
+      <button class="pagination-btn" [disabled]="pagination?.currentPage == pagination?.totalPages"
+        (click)="nextPage()">
         {{ 'COMMON.NEXT' | translate }}
         <i class="fas fa-chevron-right"></i>
       </button>
