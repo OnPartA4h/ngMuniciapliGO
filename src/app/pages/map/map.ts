@@ -16,10 +16,18 @@ import { MapConfigModal } from '../../components/map-config-modal/map-config-mod
   styleUrl: './map.css',
 })
 export class Map implements AfterViewInit{
-  FALLBACK_COORDS: L.LatLngExpression = [45.5312, -73.5181];
+  DEFAULT_LAT: number = 45.5312
+  DEFAULT_LNG: number = -73.5181
+  DEFAULT_RADIUS: number = 1000
+  FALLBACK_COORDS: L.LatLngExpression = [this.DEFAULT_LAT, this.DEFAULT_LNG];
 
   map: L.Map | undefined;
   currentPosMarker: L.Marker | undefined
+  markerClusterGroup: L.MarkerClusterGroup | undefined;
+
+  radius: number = -1
+  currentLat: number | null = null
+  currenctLng: number | null = null
 
   problems: Problem[] = []
   
@@ -31,11 +39,13 @@ export class Map implements AfterViewInit{
   constructor(public whiteService: WhiteService, private cdr: ChangeDetectorRef) {}
 
   async ngAfterViewInit() {
+    this.getRadius()
     await this.getProblems()
     console.log(this.problems);
     
     this.initMap()
     this.placeMarkers()
+    this.createCurrentPosMarker()
   }
 
   initMap() {
@@ -78,20 +88,6 @@ export class Map implements AfterViewInit{
         .bindPopup('Longueuil, QC')
         .openPopup();
     });
-
-    this.map.on('click', (event) => {
-      let redIcon = new L.Icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
-
-      this.removeCurrentPosMarker()
-      this.currentPosMarker = L.marker(event.latlng, {icon: redIcon}).addTo(this.map!)
-    })
   }
 
   ngOnDestroy() {
@@ -101,13 +97,23 @@ export class Map implements AfterViewInit{
   }
 
   async getProblems() {
-    this.problems = (await this.whiteService.getAllProblems()).items
+    if (!this.currenctLng || !this.currentLat){
+      this.problems = await this.whiteService.getMapProblems(this.radius, this.DEFAULT_LAT, this.DEFAULT_LNG)
+      return
+    } 
+
+    this.problems = await this.whiteService.getMapProblems(this.radius, this.currentLat, this.currenctLng)
+  }
+
+  getRadius() {
+    let radiusData = localStorage.getItem("radius")
+    this.radius = !radiusData ? this.DEFAULT_RADIUS : parseInt(radiusData)
   }
 
   placeMarkers() {
     if (!this.map) return
 
-    let markercluster = L.markerClusterGroup({
+    this.markerClusterGroup = L.markerClusterGroup({
       showCoverageOnHover: false,
       maxClusterRadius: 50
     });
@@ -121,16 +127,40 @@ export class Map implements AfterViewInit{
         this.cdr.detectChanges(); 
       })
 
-      markercluster.addLayer(marker)
+      this.markerClusterGroup.addLayer(marker)
     }
 
-    this.map?.addLayer(markercluster);
+    this.map?.addLayer(this.markerClusterGroup);
   }
 
   closeSidebar() {
     this.isSidebarOpen = false;
     this.selectedProblem = null;
     this.cdr.detectChanges(); 
+  }
+
+  createCurrentPosMarker() {
+    if (!this.map) return
+
+    this.map.on('click', (event) => {
+      let redIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+      this.removeCurrentPosMarker()
+      this.currentPosMarker = L.marker(event.latlng, {icon: redIcon}).addTo(this.map!)
+      this.currentPosMarker.on('click', () => this.removeCurrentPosMarker())
+
+      this.currentLat = event.latlng.lat
+      this.currenctLng = event.latlng.lng
+
+      this.reloadProblems()
+    })
   }
 
   removeCurrentPosMarker() {
@@ -145,5 +175,17 @@ export class Map implements AfterViewInit{
 
   closeModal() {
     this.isConfigModalOpen = false;
+  }
+
+  async reloadProblems() {
+    this.getRadius();
+    
+    if (this.markerClusterGroup && this.map) {
+      this.map.removeLayer(this.markerClusterGroup);
+      this.markerClusterGroup = undefined;
+    }
+    
+    await this.getProblems();  
+    this.placeMarkers();
   }
 }

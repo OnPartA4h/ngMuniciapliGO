@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -10,13 +10,15 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './map-config-modal.html',
   styleUrl: './map-config-modal.css',
 })
-export class MapConfigModal {
+export class MapConfigModal implements OnInit{
   @Input() isOpen: boolean = false;
   @Output() close = new EventEmitter<void>();
-  @Output() apply = new EventEmitter<any>();
+  @Output() apply = new EventEmitter<void>();
+
+  DEFAULT_RADIUS = 1000
 
   // Hardcoded filter values
-  radius: number = 5;
+  radius: number = this.DEFAULT_RADIUS;
   selectedStatuses: string[] = ['pending', 'in-progress'];
   selectedCategories: string[] = ['pothole', 'lighting'];
   dateFrom: string = '2024-01-01';
@@ -41,26 +43,23 @@ export class MapConfigModal {
     { id: 'other', label: 'Other', icon: 'fa-question-circle' }
   ];
 
+  ngOnInit() {
+    let radiusData = localStorage.getItem("radius")
+    this.radius = !radiusData ? this.DEFAULT_RADIUS : parseInt(radiusData)
+  }
+
   closeModal() {
     this.close.emit();
   }
 
   applyFilters() {
-    const config = {
-      radius: this.radius,
-      statuses: this.selectedStatuses,
-      categories: this.selectedCategories,
-      dateFrom: this.dateFrom,
-      dateTo: this.dateTo,
-      showUserLocation: this.showUserLocation,
-      clusterMarkers: this.clusterMarkers
-    };
-    this.apply.emit(config);
+    localStorage.setItem("radius", this.radius.toString());
+    this.apply.emit()
     this.closeModal();
   }
 
   resetFilters() {
-    this.radius = 5;
+    this.radius = 100;
     this.selectedStatuses = ['pending', 'in-progress', 'resolved', 'rejected'];
     this.selectedCategories = ['pothole', 'lighting', 'graffiti', 'waste', 'signage', 'other'];
     this.dateFrom = '';

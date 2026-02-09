@@ -24,14 +24,14 @@
             <input 
               type="range" 
               [(ngModel)]="radius" 
-              min="1" 
-              max="50" 
+              min="100" 
+              max="10000" 
               step="1"
               class="slider"
             />
             <div class="radius-value">
               <span class="value">{{ radius }}</span>
-              <span class="unit">km</span>
+              <span class="unit">m</span>
             </div>
           </div>
           <p class="hint">{{ 'MAP_CONFIG.RADIUS_HINT' | translate }}</p>

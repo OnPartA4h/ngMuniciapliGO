@@ -17,13 +17,35 @@
   z-index: 10;
 }
 
-button {
+.settings-button {
     position: fixed;
     z-index: 11;
-    bottom: 10px;
-    left: 10px;
-    width: 60px;
-    height: 60px;
-    background-color: aqua;
-    border-radius: 15px;
+    bottom: var(--spacing-2xl);
+    left: var(--spacing-2xl);
+    width: 56px;
+    height: 56px;
+    background: var(--color-primary);
+    border: none;
+    border-radius: var(--border-radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-primary-lg);
+    transition: all var(--transition-base);
+}
+
+.settings-button:hover {
+    background: var(--color-primary-dark);
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(21, 101, 192, 0.4);
+}
+
+.settings-button:active {
+    transform: scale(0.95);
+}
+
+.settings-button i {
+    font-size: 22px;
+    color: var(--color-white);
 }

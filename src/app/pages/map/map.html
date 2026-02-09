@@ -6,7 +6,9 @@
     (close)="closeSidebar()">
   </app-map-sidebar>
 
-  <button (click)="openModal()">Settings</button>
+  <button class="settings-button" (click)="openModal()">
+    <i class="fas fa-cog"></i>
+  </button>
 </div>
 
-<app-map-config-modal [isOpen]="isConfigModalOpen" (close)="closeModal()"></app-map-config-modal>
+<app-map-config-modal [isOpen]="isConfigModalOpen" (close)="closeModal()" (apply)="reloadProblems()"></app-map-config-modal>
