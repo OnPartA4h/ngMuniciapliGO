@@ -23,6 +23,7 @@ export class Map implements AfterViewInit{
 
   map: L.Map | undefined;
   currentPosMarker: L.Marker | undefined
+  circleRadius: L.Circle | undefined
   markerClusterGroup: L.MarkerClusterGroup | undefined;
 
   radius: number = -1
@@ -153,19 +154,34 @@ export class Map implements AfterViewInit{
     });
 
       this.removeCurrentPosMarker()
+      this.removeCircleRadius()
       this.currentPosMarker = L.marker(event.latlng, {icon: redIcon}).addTo(this.map!)
       this.currentPosMarker.on('click', () => this.removeCurrentPosMarker())
 
       this.currentLat = event.latlng.lat
       this.currenctLng = event.latlng.lng
 
+      this.addCircleRadius(event)
       this.reloadProblems()
     })
   }
 
+  addCircleRadius(event: any) {
+     this.circleRadius = L.circle(event.latlng, {
+        radius: this.radius,
+        color: 'blue',
+        fillColor: 'blue',
+        fillOpacity: 0.2
+      }).addTo(this.map!)
+  }
+
+  removeCircleRadius(){
+    if (!this.circleRadius) return
+    this.circleRadius.remove()
+  }
+
   removeCurrentPosMarker() {
     if (!this.currentPosMarker) return
-
     this.currentPosMarker.remove()
   }
 
@@ -179,6 +195,8 @@ export class Map implements AfterViewInit{
 
   async reloadProblems() {
     this.getRadius();
+
+    this.circleRadius?.setRadius(this.radius)
     
     if (this.markerClusterGroup && this.map) {
       this.map.removeLayer(this.markerClusterGroup);
