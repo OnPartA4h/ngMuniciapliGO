@@ -1,6 +1,6 @@
 .manage-reports-container {
   padding: var(--spacing-3xl);
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -64,6 +64,52 @@
 
 .filter-group select:focus {
   border-color: var(--border-color-focus);
+}
+
+.search-div {
+  display: flex;
+  flex-direction: row;
+}
+
+.search-div-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: var(--color-white);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  flex: 1;
+  max-width: 500px;
+  transition: border-color var(--transition-base);
+  gap: var(--spacing-md);
+}
+
+.search-box:focus-within {
+  border-color: var(--border-color-focus);
+}
+
+.search-box i {
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  font-size: var(--font-size-base);
+  width: 100%;
+  color: var(--color-text-primary);
+}
+
+.search-box input::placeholder {
+  color: var(--color-text-placeholder);
 }
 
 /* Reports List */
@@ -299,6 +345,15 @@
   font-size: var(--font-size-base);
   margin: 0;
   max-width: 400px;
+}
+
+.btn-toggle-filters {
+  margin-left: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.btn-reset-filters {
+  padding: var(--spacing-md) var(--spacing-lg);
 }
 
 /* Responsive */

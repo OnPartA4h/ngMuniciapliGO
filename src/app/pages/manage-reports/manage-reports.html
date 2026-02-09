@@ -4,13 +4,25 @@
     <p>{{ 'MANAGE_REPORTS.SUBTITLE' | translate }}</p>
   </div>
 
-  <div class="filters-bar">
-    <div class="search-box">
-      <i class="fas fa-search"></i>
-      <input type="text" [placeholder]="'MANAGE_REPORTS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="currentSearch"
-        (keyup.enter)="getAllReports()" />
+  <div class="search-div-top">
+    <div class="search-div">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" [placeholder]="'MANAGE_REPORTS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="currentSearch"
+          (keyup.enter)="getAllReports()" />
+      </div>
+      <button class="btn btn-secondary btn-toggle-filters" (click)="showFilters = !showFilters">
+        <i class="fa-solid fa-filter"></i>
+        <i class="fas" [ngClass]="showFilters ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+      </button>
     </div>
-    <div class="filter-group">
+    <button class="btn btn-secondary" (click)="getAllReports()">
+      <i class="fas fa-search"></i>
+      {{ 'COMMON.SEARCH' | translate }}
+    </button>
+  </div>
+  <div class="search-div-top">
+    <div class="filter-group" *ngIf="showFilters">
       <select [(ngModel)]="currentCategory" (change)="getAllReports()">
         <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_CATEGORIES' | translate }}</option>
         @for (c of this.generalService.categories(); track $index) {
@@ -37,9 +49,8 @@
         </option>
         }
       </select>
-      <button class="btn btn-secondary" (click)="getAllReports()">
-        <i class="fas fa-search"></i>
-        {{ 'COMMON.SEARCH' | translate }}
+      <button class="btn btn-secondary btn-reset-filters" (click)="resetFilters()">
+        <i class="fa-solid fa-arrow-rotate-left"></i>
       </button>
     </div>
   </div>

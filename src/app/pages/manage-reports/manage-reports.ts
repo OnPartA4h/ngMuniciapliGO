@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class ManageReports implements OnInit {
   loading = true;
+  showFilters = false;
 
   categories = signal<CategoryOption[]>([]);
   statuses = signal<StatusOption[]>([]);
@@ -78,6 +79,14 @@ export class ManageReports implements OnInit {
       const dateB = new Date(b.dateCreation).getTime();
       return dateA - dateB;
     });
+  }
+
+  resetFilters() {
+    this.currentCategory = null;
+    this.currentStatus = null;
+    this.currentAssigneA = null;
+    this.currentSearch = ""
+    this.getAllReports();
   }
 
   async nextPage() {
