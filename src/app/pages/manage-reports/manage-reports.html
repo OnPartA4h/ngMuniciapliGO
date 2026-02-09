@@ -23,6 +23,14 @@
   </div>
   <div class="search-div-top">
     <div class="filter-group" *ngIf="showFilters">
+      <select [(ngModel)]="currentAssigneA" (change)="getAllReports()">
+        <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_ASSIGNEA' | translate }}</option>
+        @for (s of this.generalService.assignees(); track $index) {
+        <option [value]=$index+1>
+          {{ s.label }}
+        </option>
+        }
+      </select>
       <select [(ngModel)]="currentCategory" (change)="getAllReports()">
         <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_CATEGORIES' | translate }}</option>
         @for (c of this.generalService.categories(); track $index) {
@@ -34,16 +42,6 @@
       <select [(ngModel)]="currentStatus" (change)="getAllReports()">
         <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_STATUSES' | translate }}</option>
         @for (s of this.generalService.statuses(); track $index) {
-        @if (s.key != "Refuse" && s.key != "Resolue"){
-        <option [value]=$index+1>
-          {{ s.label }}
-        </option>
-        }
-        }
-      </select>
-      <select [(ngModel)]="currentAssigneA" (change)="getAllReports()">
-        <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_ASSIGNEA' | translate }}</option>
-        @for (s of this.generalService.assignees(); track $index) {
         <option [value]=$index+1>
           {{ s.label }}
         </option>
