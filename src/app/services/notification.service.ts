@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Notification, PaginatedNotifications, UnreadCount } from '../models/notification';
 
@@ -9,9 +8,14 @@ import { Notification, PaginatedNotifications, UnreadCount } from '../models/not
   providedIn: 'root'
 })
 export class NotificationService {
-  private apiUrl = environment.apiUrl;
-  private unreadCountSubject = new BehaviorSubject<number>(0);
-  public unreadCount$ = this.unreadCountSubject.asObservable();
+  private apiUrl = `${environment.apiUrl}/api/Notification`;
+  
+  // Signal pour le compteur de notifications non lues
+  unreadCount = signal(0);
+  
+  // Subject pour émettre les nouvelles notifications en temps réel
+  private newNotificationSubject = new Subject<Notification>();
+  newNotification$ = this.newNotificationSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -22,39 +26,39 @@ export class NotificationService {
       params = params.set('estLue', estLue.toString());
     }
 
-    return this.http.get<PaginatedNotifications>(`${this.apiUrl}/notifications`, { params });
+    return this.http.get<PaginatedNotifications>(this.apiUrl, { params });
   }
 
   getUnreadCount(): Observable<UnreadCount> {
-    return this.http.get<UnreadCount>(`${this.apiUrl}/notifications/unread-count`).pipe(
-      tap(response => this.unreadCountSubject.next(response.unreadCount))
-    );
+    return this.http.get<UnreadCount>(`${this.apiUrl}/unread-count`);
   }
 
   markAsRead(id: number): Observable<Notification> {
-    return this.http.post<Notification>(`${this.apiUrl}/notifications/${id}/read`, {}).pipe(
-      tap(() => {
-        const currentCount = this.unreadCountSubject.value;
-        if (currentCount > 0) {
-          this.unreadCountSubject.next(currentCount - 1);
-        }
-      })
-    );
+    return this.http.post<Notification>(`${this.apiUrl}/${id}/read`, {});
   }
 
   markAllAsRead(): Observable<{ message: string; count: number }> {
-    return this.http.post<{ message: string; count: number }>(`${this.apiUrl}/notifications/read-all`, {}).pipe(
-      tap(() => this.unreadCountSubject.next(0))
-    );
+    return this.http.post<{ message: string; count: number }>(`${this.apiUrl}/read-all`, {});
   }
 
-  // Méthode pour mettre à jour le compteur depuis le hub
-  updateUnreadCount(count: number): void {
-    this.unreadCountSubject.next(count);
+  // Appelé par le hub SignalR quand une nouvelle notification arrive
+  addNotification(notification: Notification): void {
+    this.newNotificationSubject.next(notification);
+    this.unreadCount.update(count => count + 1);
   }
 
-  // Méthode pour incrémenter le compteur quand une nouvelle notification arrive
-  incrementUnreadCount(): void {
-    this.unreadCountSubject.next(this.unreadCountSubject.value + 1);
+  // Appelé quand on marque une notification comme lue
+  decrementUnreadCount(): void {
+    this.unreadCount.update(count => Math.max(0, count - 1));
+  }
+
+  // Appeler après markAllAsRead
+  resetUnreadCount(): void {
+    this.unreadCount.set(0);
+  }
+
+  // Setter pour initialiser le compteur depuis l'API
+  setUnreadCount(count: number): void {
+    this.unreadCount.set(count);
   }
 }

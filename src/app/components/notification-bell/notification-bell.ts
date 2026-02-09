@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
 
 @Component({
@@ -11,30 +11,24 @@ import { NotificationService } from '../../services/notification.service';
   templateUrl: './notification-bell.html',
   styleUrls: ['./notification-bell.css']
 })
-export class NotificationBell implements OnInit, OnDestroy {
-  unreadCount = 0;
-  private destroy$ = new Subject<void>();
-
+export class NotificationBell implements OnInit {
   constructor(
-    private notificationService: NotificationService,
+    public notificationService: NotificationService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    // S'abonner au compteur de notifications non lues
-    this.notificationService.unreadCount$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((count: number) => {
-        this.unreadCount = count;
-      });
-
-    // Charger le compteur initial
-    this.notificationService.getUnreadCount().subscribe();
+  get unreadCount() {
+    return this.notificationService.unreadCount();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  async ngOnInit(): Promise<void> {
+    // Charger le compteur initial depuis l'API
+    try {
+      const response = await lastValueFrom(this.notificationService.getUnreadCount());
+      this.notificationService.setUnreadCount(response.unreadCount);
+    } catch (error) {
+      console.error('Error loading unread count:', error);
+    }
   }
 
   goToNotifications(): void {

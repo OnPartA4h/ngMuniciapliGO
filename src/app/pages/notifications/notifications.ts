@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Subject, takeUntil } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
 import { NotificationHubService } from '../../services/notification-hub.service';
 import { Notification, PaginatedNotifications } from '../../models/notification';
@@ -22,7 +22,7 @@ export class Notifications implements OnInit, OnDestroy {
   pageSize = 20;
   loading = false;
   filterRead: boolean | undefined = undefined;
-  private destroy$ = new Subject<void>();
+  private newNotificationSubscription?: Subscription;
 
   constructor(
     private notificationService: NotificationService,
@@ -32,76 +32,66 @@ export class Notifications implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadNotifications();
-
-    // Écouter les nouvelles notifications en temps réel
-    this.notificationHubService.notificationReceived$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(notification => {
-        if (notification) {
-          // Ajouter la nouvelle notification en haut de la liste
-          this.notifications.unshift(notification);
-          this.totalCount++;
-        }
-      });
+    
+    // S'abonner aux nouvelles notifications en temps réel
+    this.newNotificationSubscription = this.notificationService.newNotification$.subscribe(
+      (notification: Notification) => {
+        this.notifications.unshift(notification);
+        this.totalCount++;
+      }
+    );
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    if (this.newNotificationSubscription) {
+      this.newNotificationSubscription.unsubscribe();
+    }
   }
 
-  loadNotifications(): void {
+  async loadNotifications(): Promise<void> {
     this.loading = true;
-    this.notificationService.getNotifications(this.currentPage, this.filterRead)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: PaginatedNotifications) => {
-          this.notifications = response.items;
-          this.totalPages = response.totalPages;
-          this.totalCount = response.totalCount;
-          this.pageSize = response.pageSize;
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Error loading notifications:', error);
-          this.loading = false;
-        }
-      });
+    try {
+      const response = await lastValueFrom(
+        this.notificationService.getNotifications(this.currentPage, this.filterRead)
+      );
+      this.notifications = response.items;
+      this.totalPages = response.totalPages;
+      this.totalCount = response.totalCount;
+      this.pageSize = response.pageSize;
+    } catch (error) {
+      console.error('Error loading notifications:', error);
+    } finally {
+      this.loading = false;
+    }
   }
 
-  markAsRead(notification: Notification): void {
+  async markAsRead(notification: Notification): Promise<void> {
     if (notification.estLue) return;
 
-    this.notificationService.markAsRead(notification.id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (updatedNotification) => {
-          // Mettre à jour la notification dans la liste
-          const index = this.notifications.findIndex(n => n.id === notification.id);
-          if (index !== -1) {
-            this.notifications[index] = updatedNotification;
-          }
-        },
-        error: (error) => {
-          console.error('Error marking notification as read:', error);
-        }
-      });
+    try {
+      const updatedNotification = await lastValueFrom(
+        this.notificationService.markAsRead(notification.id)
+      );
+      const index = this.notifications.findIndex(n => n.id === notification.id);
+      if (index !== -1) {
+        this.notifications[index] = updatedNotification;
+      }
+      this.notificationService.decrementUnreadCount();
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
   }
 
-  markAllAsRead(): void {
+  async markAllAsRead(): Promise<void> {
     if (this.notifications.length === 0) return;
 
-    this.notificationService.markAllAsRead()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          // Marquer toutes les notifications comme lues localement
-          this.notifications = this.notifications.map(n => ({ ...n, estLue: true }));
-        },
-        error: (error) => {
-          console.error('Error marking all as read:', error);
-        }
-      });
+    try {
+      await lastValueFrom(this.notificationService.markAllAsRead());
+      this.notifications = this.notifications.map(n => ({ ...n, estLue: true }));
+      this.notificationService.resetUnreadCount();
+    } catch (error) {
+      console.error('Error marking all as read:', error);
+    }
   }
 
   goToReport(notification: Notification): void {
