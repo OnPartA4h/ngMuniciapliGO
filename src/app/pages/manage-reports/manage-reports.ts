@@ -68,8 +68,6 @@ export class ManageReports implements OnInit {
       params.search = this.currentSearch.trim();
     }
 
-    console.log(this.currentCategory);
-
     let x: any = await this.whiteService.getAllProblems(params);
 
     this.pagination = x.pagination

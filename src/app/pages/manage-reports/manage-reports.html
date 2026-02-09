@@ -29,6 +29,14 @@
         }
         }
       </select>
+      <select [(ngModel)]="currentAssigneA" (change)="getAllReports()">
+        <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_ASSIGNEA' | translate }}</option>
+        @for (s of this.generalService.assignees(); track $index) {
+        <option [value]=$index+1>
+          {{ s.label }}
+        </option>
+        }
+      </select>
       <button class="btn btn-secondary" (click)="getAllReports()">
         <i class="fas fa-search"></i>
         {{ 'COMMON.SEARCH' | translate }}
