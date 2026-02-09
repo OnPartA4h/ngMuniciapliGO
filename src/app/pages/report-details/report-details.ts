@@ -97,7 +97,7 @@ export class ReportDetails implements OnInit {
   async assignColBleu(colBleuId: string) {
     try {
       this.problem = await this.whiteService.assignProblemColbleu(this.problem.id, colBleuId);
-      let name = this.problem?.colBleuAssigne?.firstName + ' ' + this.problem?.colBleuAssigne?.lastName;
+      let name = this.problem?.responsable?.firstName + ' ' + this.problem?.responsable?.lastName;
       this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ASSIGN_SUCCESS_COL_BLEU', { colbleu: name }), 'OK', { duration: 3000 });
     }
     catch (e) {

@@ -83,8 +83,8 @@
           </span>
           <span class="report-assignee">
             <i class="fas fa-user"></i>
-            @if(p.assigneA == 2 && p.colBleuAssigne){
-            {{p.colBleuAssigne.firstName + ' ' + p.colBleuAssigne.lastName}}
+            @if(p.assigneA == 2 && p.responsable){
+            {{p.responsable.firstName + ' ' + p.responsable.lastName}}
             } @else {
             {{this.generalService.assignees()[p.assigneA].label}}
             }

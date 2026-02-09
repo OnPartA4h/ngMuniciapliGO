@@ -199,7 +199,7 @@
     "DATE": "Date",
     "DATE_CREATION": "Date Reported",
     "DEMANDEUR": "Reported by",
-    "ASSIGNEE": "Assigned to",
+    "ASSIGNEE": "Assignee",
     "UNASSIGNED": "Unassigned",
     "PAGE_INFO": "Page {{current}} of {{total}}",
     "NO_PHOTO": "No photo",

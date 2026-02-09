@@ -70,7 +70,7 @@
                             {{"MANAGE_REPORTS.ASSIGNEE" | translate}}
                         </div>
                         @if(problem.assigneA == 2){
-                        {{problem.colBleuAssigne.firstName + ' ' + problem.colBleuAssigne.lastName}}
+                        {{problem.responsable.firstName + ' ' + problem.responsable.lastName}}
                         } @else {
                         {{this.generalService.assignees()[problem.assigneA].label}}
                         }

@@ -27,7 +27,7 @@ export class Problem {
     public categorie: number,
     public dateCreation: Date,
     public dateResolution: Date,
-    public colBleuAssigne: User | null,
+    public responsable: User | null,
     public assigneA: number,
     public photos: Photo[]
   ) { }
