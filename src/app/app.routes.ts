@@ -7,6 +7,7 @@ import { ManageUsers } from './pages/manage-users/manage-users';
 import { CreateUser } from './pages/create-user/create-user';
 import { ReportDetails } from './pages/report-details/report-details';
 import { Profile } from './pages/profile/profile';
+import { Notifications } from './pages/notifications/notifications';
 import { authGuard } from './guards/auth-guard';
 import { loginGuard } from './guards/login-guard';
 import { adminGuard } from './guards/admin-guard';
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'create-user', component: CreateUser, canActivate: [authGuard, adminGuard]},
   { path: 'report-details/:id', component: ReportDetails, canActivate: [authGuard]},
   { path: 'profile', component: Profile, canActivate: [authGuard]},
+  { path: 'notifications', component: Notifications, canActivate: [authGuard]},
   { path: 'landing', component: Landing,},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }

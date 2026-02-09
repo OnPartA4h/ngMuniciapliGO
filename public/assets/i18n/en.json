@@ -30,10 +30,21 @@
     "ERROR": "Error",
     "PREVIOUS": "Previous",
     "NEXT": "Next",
+    "PAGE": "Page",
     "EMAIL_CONFIRMED": "Email Confirmed",
     "EMAIL_NOT_CONFIRMED": "Email Not Confirmed",
     "MUST_RESET_PASSWORD": "Must Reset Password",
     "PASSWORD_OK": "Password OK"
+  },
+  "NOTIFICATIONS": {
+    "TITLE": "Notifications",
+    "MARK_ALL_READ": "Mark all as read",
+    "MARK_AS_READ": "Mark as read",
+    "ALL": "All",
+    "UNREAD": "Unread",
+    "READ": "Read",
+    "NO_NOTIFICATIONS": "No notifications",
+    "NO_NOTIFICATIONS_DESC": "You're all caught up! No new notifications at the moment."
   },
   "PROFILE": {
     "TITLE": "My Profile",

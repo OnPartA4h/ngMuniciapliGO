@@ -1,0 +1,93 @@
+<div class="notifications-container">
+  <div class="notifications-header">
+    <h1>{{ 'NOTIFICATIONS.TITLE' | translate }}</h1>
+    <button 
+      class="mark-all-btn" 
+      (click)="markAllAsRead()" 
+      [disabled]="notifications.length === 0 || areAllNotificationsRead()"
+      *ngIf="notifications.length > 0">
+      <i class="fas fa-check-double"></i>
+      {{ 'NOTIFICATIONS.MARK_ALL_READ' | translate }}
+    </button>
+  </div>
+
+  <div class="filter-tabs">
+    <button 
+      class="filter-tab" 
+      [class.active]="filterRead === undefined"
+      (click)="setFilter(undefined)">
+      {{ 'NOTIFICATIONS.ALL' | translate }}
+      <span class="count">{{ totalCount }}</span>
+    </button>
+    <button 
+      class="filter-tab" 
+      [class.active]="filterRead === false"
+      (click)="setFilter(false)">
+      {{ 'NOTIFICATIONS.UNREAD' | translate }}
+    </button>
+    <button 
+      class="filter-tab" 
+      [class.active]="filterRead === true"
+      (click)="setFilter(true)">
+      {{ 'NOTIFICATIONS.READ' | translate }}
+    </button>
+  </div>
+
+  <div class="notifications-list" *ngIf="!loading">
+    <div 
+      *ngFor="let notification of notifications" 
+      class="notification-item"
+      [class.unread]="!notification.estLue"
+      (click)="goToReport(notification)">
+      
+      <div class="notification-indicator" *ngIf="!notification.estLue"></div>
+      
+      <div class="notification-content">
+        <div class="notification-header">
+          <h3 class="notification-title">{{ notification.problemeTitre }}</h3>
+          <span class="notification-time">{{ getTimeAgo(notification.dateCreation) }}</span>
+        </div>
+        <p class="notification-message">{{ notification.message }}</p>
+      </div>
+
+      <button 
+        class="mark-read-btn" 
+        (click)="markAsRead(notification); $event.stopPropagation()"
+        *ngIf="!notification.estLue"
+        [attr.aria-label]="'NOTIFICATIONS.MARK_AS_READ' | translate">
+        <i class="fas fa-check"></i>
+      </button>
+    </div>
+
+    <div class="empty-state" *ngIf="notifications.length === 0">
+      <i class="fas fa-bell-slash"></i>
+      <h3>{{ 'NOTIFICATIONS.NO_NOTIFICATIONS' | translate }}</h3>
+      <p>{{ 'NOTIFICATIONS.NO_NOTIFICATIONS_DESC' | translate }}</p>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>{{ 'COMMON.LOADING' | translate }}</p>
+  </div>
+
+  <div class="pagination" *ngIf="totalPages > 1 && !loading">
+    <button 
+      class="pagination-btn" 
+      (click)="previousPage()" 
+      [disabled]="currentPage === 1">
+      <i class="fas fa-chevron-left"></i>
+      {{ 'COMMON.PREVIOUS' | translate }}
+    </button>
+    <span class="pagination-info">
+      {{ 'COMMON.PAGE' | translate }} {{ currentPage }} / {{ totalPages }}
+    </span>
+    <button 
+      class="pagination-btn" 
+      (click)="nextPage()" 
+      [disabled]="currentPage === totalPages">
+      {{ 'COMMON.NEXT' | translate }}
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</div>

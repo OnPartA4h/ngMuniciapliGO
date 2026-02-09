@@ -30,10 +30,21 @@
     "ERROR": "Erreur",
     "PREVIOUS": "Précédent",
     "NEXT": "Suivant",
+    "PAGE": "Page",
     "EMAIL_CONFIRMED": "Email confirmé",
     "EMAIL_NOT_CONFIRMED": "Email non confirmé",
     "MUST_RESET_PASSWORD": "Doit réinitialiser le mot de passe",
     "PASSWORD_OK": "Mot de passe OK"
+  },
+  "NOTIFICATIONS": {
+    "TITLE": "Notifications",
+    "MARK_ALL_READ": "Tout marquer comme lu",
+    "MARK_AS_READ": "Marquer comme lu",
+    "ALL": "Toutes",
+    "UNREAD": "Non lues",
+    "READ": "Lues",
+    "NO_NOTIFICATIONS": "Aucune notification",
+    "NO_NOTIFICATIONS_DESC": "Vous êtes à jour ! Aucune nouvelle notification pour le moment."
   },
   "PROFILE": {
     "TITLE": "Mon profil",
