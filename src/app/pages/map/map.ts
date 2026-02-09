@@ -1,4 +1,5 @@
 import * as L from 'leaflet';
+import 'leaflet.markercluster';
 import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { WhiteService } from '../../services/white-service';
 import { Problem } from '../../models/problem';
@@ -63,7 +64,16 @@ export class Map implements AfterViewInit{
     this.map.on('locationerror', () => {
       this.map!.setView(this.FALLBACK_COORDS, 13);
 
-      L.marker(this.FALLBACK_COORDS)
+      let greenIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      })
+
+      L.marker(this.FALLBACK_COORDS, {icon: greenIcon})
         .addTo(this.map!)
         .bindPopup('Longueuil, QC')
         .openPopup();
@@ -95,15 +105,26 @@ export class Map implements AfterViewInit{
   }
 
   placeMarkers() {
+    if (!this.map) return
+
+    let markercluster = L.markerClusterGroup({
+      showCoverageOnHover: false,
+      maxClusterRadius: 50
+    });
+
     for (let p of this.problems){
-      let marker = L.marker([p.latitude, p.longitude]).addTo(this.map!)
+      let marker = L.marker([p.latitude, p.longitude])
 
       marker.on('click', () => {
         this.selectedProblem = p;
         this.isSidebarOpen = true;
         this.cdr.detectChanges(); 
       })
+
+      markercluster.addLayer(marker)
     }
+
+    this.map?.addLayer(markercluster);
   }
 
   closeSidebar() {
