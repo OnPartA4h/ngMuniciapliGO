@@ -46,13 +46,13 @@ export class Login {
 
       // Check if user needs to reset password
       const loginResponse = this.authService.getLoginResponse();
-      /*if (loginResponse && loginResponse.user.mustResetPassword) {
+      if (loginResponse && loginResponse.user.mustResetPassword) {
         // Store the current password for the reset modal
         this.currentPassword = password;
         this.showResetPasswordModal = true;
         this.isLoading = false;
         return;
-      }*/
+      }
 
       if (roles.includes('Admin') && token){
         this.router.navigate(['/manage-users'])
