@@ -192,7 +192,7 @@
     "ALL_STATUSES": "Tous les statuts",
     "ALL_ASSIGNEA": "Tous les assignés",
     "NO_REPORTS": "Aucun problème trouvé",
-    "NO_REPORTS_DESC": "Aucun problème n'a été signalé pour le moment",
+    "NO_REPORTS_DESC": "Aucun problème n'a été trouvé avec ces filtres",
     "LOCATION": "Localisation",
     "CATEGORY": "Catégorie",
     "STATUS": "Statut",

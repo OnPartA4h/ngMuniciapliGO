@@ -192,7 +192,7 @@
     "ALL_STATUSES": "All statuses",
     "ALL_ASSIGNEA": "All assignees",
     "NO_REPORTS": "No problems found",
-    "NO_REPORTS_DESC": "No problems have been reported yet",
+    "NO_REPORTS_DESC": "No problems matching these filters",
     "LOCATION": "Location",
     "CATEGORY": "Category",
     "STATUS": "Status",
