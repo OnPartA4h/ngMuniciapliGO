@@ -1,18 +1,18 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { WhiteService } from '../../services/white-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { Problem, StatusOption, CategoryOption } from '../../models/problem';
 import { CommonModule } from '@angular/common';
-import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 import { Pagination } from '../../models/pagination';
 import { FormsModule } from '@angular/forms';
+import { PageHeaderComponent } from '../../components/ui';
+import { ReportListComponent } from '../../components/tables/report-list/report-list';
 
 @Component({
   selector: 'app-manage-reports',
-  imports: [RouterLink, CommonModule, DaysAgoPipe, TranslateModule, FormsModule],
+  imports: [CommonModule, TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent],
   templateUrl: './manage-reports.html',
   styleUrl: './manage-reports.css',
 })
@@ -97,5 +97,9 @@ export class ManageReports implements OnInit {
   async prevPage() {
     if (this.pagination && this.pagination.currentPage > 1)
       this.getAllReports(this.pagination?.currentPage - 1);
+  }
+
+  async onPageChange(page: number) {
+    this.getAllReports(page);
   }
 }

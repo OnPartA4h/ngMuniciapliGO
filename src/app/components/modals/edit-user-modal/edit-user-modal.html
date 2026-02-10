@@ -1,0 +1,157 @@
+@if (isOpen) {
+  <div class="modal-backdrop" (click)="handleBackdropClick($event)">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ 'EDIT_USER_MODAL.TITLE' | translate }}</h2>
+        <button class="close-btn" (click)="closeModal()" [disabled]="isLoading">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      @if (user) {
+        <div class="modal-body">
+          <!-- User Profile Picture -->
+          <div class="user-profile-section">
+            <div class="profile-picture-container">
+              @if (user.profilePictureUrl) {
+                <img [src]="user.profilePictureUrl" alt="Profile" class="profile-picture" />
+              } @else {
+                <div class="profile-picture-placeholder">
+                  <i class="fas fa-user"></i>
+                </div>
+              }
+            </div>
+            <div class="profile-info">
+              <h3>{{ user.firstName }} {{ user.lastName }}</h3>
+              <p class="email">{{ user.email }}</p>
+              <div class="status-badges">
+                <span class="badge" [class.badge-success]="user.emailConfirmed" [class.badge-warning]="!user.emailConfirmed">
+                  <i [class]="user.emailConfirmed ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'"></i>
+                  {{ (user.emailConfirmed ? 'COMMON.EMAIL_CONFIRMED' : 'COMMON.EMAIL_NOT_CONFIRMED') | translate }}
+                </span>
+                <span class="badge" [class.badge-warning]="user.mustResetPassword" [class.badge-success]="!user.mustResetPassword">
+                  <i [class]="user.mustResetPassword ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'"></i>
+                  {{ (user.mustResetPassword ? 'COMMON.MUST_RESET_PASSWORD' : 'COMMON.PASSWORD_OK') | translate }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Details -->
+          <div class="user-details">
+            <div class="detail-group">
+              <label>{{ 'EDIT_USER_MODAL.FIRST_NAME' | translate }}</label>
+              <p>{{ user.firstName }}</p>
+            </div>
+            
+            <div class="detail-group">
+              <label>{{ 'EDIT_USER_MODAL.LAST_NAME' | translate }}</label>
+              <p>{{ user.lastName }}</p>
+            </div>
+            
+            <div class="detail-group">
+              <label>{{ 'EDIT_USER_MODAL.EMAIL' | translate }}</label>
+              <p>{{ user.email }}</p>
+            </div>
+            
+            <div class="detail-group">
+              <label>{{ 'EDIT_USER_MODAL.PHONE' | translate }}</label>
+              <p>{{ user.phoneNumber | mask: '(000) 000-0000' }}</p>
+            </div>
+          </div>
+
+          <!-- Address Information -->
+          <div class="address-section">
+            <h3>{{ 'EDIT_USER_MODAL.ADDRESS' | translate }}</h3>
+            <div class="address-details">
+              <div class="detail-group">
+                <label>{{ 'EDIT_USER_MODAL.STREET_NUMBER' | translate }}</label>
+                <p>{{ user.streetNumber || '-' }}</p>
+              </div>
+              
+              <div class="detail-group">
+                <label>{{ 'EDIT_USER_MODAL.STREET_NAME' | translate }}</label>
+                <p>{{ user.streetName || '-' }}</p>
+              </div>
+              
+              <div class="detail-group">
+                <label>{{ 'EDIT_USER_MODAL.CITY' | translate }}</label>
+                <p>{{ user.city || '-' }}</p>
+              </div>
+              
+              <div class="detail-group">
+                <label>{{ 'EDIT_USER_MODAL.PROVINCE' | translate }}</label>
+                <p>{{ user.province || '-' }}</p>
+              </div>
+              
+              <div class="detail-group">
+                <label>{{ 'EDIT_USER_MODAL.POSTAL_CODE' | translate }}</label>
+                <p>{{ user.postalCode ? (user.postalCode | mask: 'A0A 0A0') : '-' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Roles Section with Radio Buttons -->
+          <div class="roles-section">
+            <h3>{{ 'EDIT_USER_MODAL.ROLES' | translate }}</h3>
+            
+            @if (successMessage) {
+              <div class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ successMessage }}</span>
+              </div>
+            }
+            
+            <div class="roles-list">
+              @for (role of roles; track role.key) {
+                <div 
+                  class="role-item" 
+                  [class.selected]="getCurrentRole() === role.key"
+                  [class.disabled]="isCurrentUser() || isLoading"
+                  (click)="changeRole(role)"
+                >
+                  <label class="radio-label">
+                    <input 
+                      type="radio" 
+                      name="userRole"
+                      [value]="role.key"
+                      [checked]="getCurrentRole() === role.key"
+                      [disabled]="isCurrentUser() || isLoading"
+                      (click)="$event.stopPropagation()"
+                    />
+                    <span class="radio-custom"></span>
+                    <span>{{ role.label }}</span>
+                  </label>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <div class="modal-footer">
+        <button 
+          class="btn btn-danger" 
+          (click)="openDeleteConfirm()" 
+          [disabled]="isLoading || isCurrentUser()"
+          [class.disabled]="isCurrentUser()"
+        >
+          <i class="fas fa-trash"></i>
+          {{ 'EDIT_USER_MODAL.DELETE_USER' | translate }}
+        </button>
+        <button class="btn btn-secondary" (click)="closeModal()" [disabled]="isLoading">
+          {{ 'COMMON.CLOSE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete Confirmation Modal -->
+<app-delete-confirm-modal
+  [user]="user"
+  [isOpen]="showDeleteConfirm"
+  [isLoading]="isLoading"
+  (confirm)="confirmDelete()"
+  (cancel)="cancelDelete()"
+></app-delete-confirm-modal>

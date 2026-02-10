@@ -30,10 +30,21 @@
     "ERROR": "Error",
     "PREVIOUS": "Previous",
     "NEXT": "Next",
+    "PAGE": "Page",
     "EMAIL_CONFIRMED": "Email Confirmed",
     "EMAIL_NOT_CONFIRMED": "Email Not Confirmed",
     "MUST_RESET_PASSWORD": "Must Reset Password",
     "PASSWORD_OK": "Password OK"
+  },
+  "NOTIFICATIONS": {
+    "TITLE": "Notifications",
+    "MARK_ALL_READ": "Mark all as read",
+    "MARK_AS_READ": "Mark as read",
+    "ALL": "All",
+    "UNREAD": "Unread",
+    "READ": "Read",
+    "NO_NOTIFICATIONS": "No notifications",
+    "NO_NOTIFICATIONS_DESC": "You're all caught up! No new notifications at the moment."
   },
   "PROFILE": {
     "TITLE": "My Profile",
@@ -253,5 +264,36 @@
     "NT": "Northwest Territories",
     "YT": "Yukon",
     "NU": "Nunavut"
+  },
+  "MAP_SIDEBAR": {
+    "TITLE": "Report Details",
+    "NO_IMAGE": "No image available",
+    "CATEGORY": "Category",
+    "DESCRIPTION": "Description",
+    "LOCATION": "Location",
+    "COORDINATES": "Coordinates",
+    "REPORTED_DATE": "Reported Date",
+    "REPORTED_BY": "Reported By",
+    "VIEW_DETAILS": "View Full Details",
+    "GET_DIRECTIONS": "Get Directions",
+    "SELECT_MARKER": "Select a Marker",
+    "SELECT_MARKER_DESC": "Click on a map marker to view the report details"
+  },
+  "MAP_CONFIG": {
+    "TITLE": "Map Configuration",
+    "RADIUS": "Search Radius",
+    "RADIUS_HINT": "Show reports within X m radius of your location",
+    "STATUS_FILTER": "Filter by Status",
+    "CATEGORY_FILTER": "Filter by Category",
+    "DATE_RANGE": "Date Range",
+    "FROM": "From",
+    "TO": "To",
+    "DISPLAY_OPTIONS": "Display Options",
+    "SHOW_USER_LOCATION": "Show My Location",
+    "SHOW_USER_LOCATION_DESC": "Center the map on your current location",
+    "CLUSTER_MARKERS": "Cluster Markers",
+    "CLUSTER_MARKERS_DESC": "Group nearby markers for better readability",
+    "RESET": "Reset",
+    "APPLY": "Apply"
   }
 }

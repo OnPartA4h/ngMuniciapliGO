@@ -4,8 +4,8 @@ import { AuthService } from '../../services/auth-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { ForceResetPasswordModal } from '../../components/force-reset-password-modal/force-reset-password-modal';
-import { ForgotPasswordModal } from '../../components/forgot-password-modal/forgot-password-modal';
+import { ForceResetPasswordModal } from '../../components/modals/force-reset-password-modal/force-reset-password-modal';
+import { ForgotPasswordModal } from '../../components/modals/forgot-password-modal/forgot-password-modal';
 
 @Component({
   selector: 'app-login',

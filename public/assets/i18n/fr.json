@@ -30,10 +30,21 @@
     "ERROR": "Erreur",
     "PREVIOUS": "Précédent",
     "NEXT": "Suivant",
+    "PAGE": "Page",
     "EMAIL_CONFIRMED": "Email confirmé",
     "EMAIL_NOT_CONFIRMED": "Email non confirmé",
     "MUST_RESET_PASSWORD": "Doit réinitialiser le mot de passe",
     "PASSWORD_OK": "Mot de passe OK"
+  },
+  "NOTIFICATIONS": {
+    "TITLE": "Notifications",
+    "MARK_ALL_READ": "Tout marquer comme lu",
+    "MARK_AS_READ": "Marquer comme lu",
+    "ALL": "Toutes",
+    "UNREAD": "Non lues",
+    "READ": "Lues",
+    "NO_NOTIFICATIONS": "Aucune notification",
+    "NO_NOTIFICATIONS_DESC": "Vous êtes à jour ! Aucune nouvelle notification pour le moment."
   },
   "PROFILE": {
     "TITLE": "Mon profil",
@@ -253,5 +264,36 @@
     "NT": "Territoires du Nord-Ouest",
     "YT": "Yukon",
     "NU": "Nunavut"
+  },
+  "MAP_SIDEBAR": {
+    "TITLE": "Détails du signalement",
+    "NO_IMAGE": "Aucune image disponible",
+    "CATEGORY": "Catégorie",
+    "DESCRIPTION": "Description",
+    "LOCATION": "Localisation",
+    "COORDINATES": "Coordonnées",
+    "REPORTED_DATE": "Date de signalement",
+    "REPORTED_BY": "Signalé par",
+    "VIEW_DETAILS": "Voir les détails complets",
+    "GET_DIRECTIONS": "Obtenir l'itinéraire",
+    "SELECT_MARKER": "Sélectionnez un marqueur",
+    "SELECT_MARKER_DESC": "Cliquez sur un marqueur de la carte pour voir les détails du signalement"
+  },
+  "MAP_CONFIG": {
+    "TITLE": "Configuration de la carte",
+    "RADIUS": "Rayon de recherche",
+    "RADIUS_HINT": "Afficher les signalements dans un rayon de X m autour de votre position",
+    "STATUS_FILTER": "Filtrer par statut",
+    "CATEGORY_FILTER": "Filtrer par catégorie",
+    "DATE_RANGE": "Plage de dates",
+    "FROM": "De",
+    "TO": "À",
+    "DISPLAY_OPTIONS": "Options d'affichage",
+    "SHOW_USER_LOCATION": "Afficher ma position",
+    "SHOW_USER_LOCATION_DESC": "Centrer la carte sur votre position actuelle",
+    "CLUSTER_MARKERS": "Regrouper les marqueurs",
+    "CLUSTER_MARKERS_DESC": "Grouper les marqueurs proches pour une meilleure lisibilité",
+    "RESET": "Réinitialiser",
+    "APPLY": "Appliquer"
   }
 }

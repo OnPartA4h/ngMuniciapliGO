@@ -1,11 +1,15 @@
 <header>
   <a routerLink="/home" class="logo">
-    <img src="/assets/images/Logo.png" style="width: 50px;"> <span>MunicipaliGO</span>
+    <img src="/assets/images/Logo.png" class="logo-img"> <span>MunicipaliGO</span>
   </a>
   
   <nav>
     <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
       {{ 'HEADER.HOME' | translate }}
+    </a>
+
+    <a routerLink="/map" routerLinkActive="active">
+      Map
     </a>
 
     <a *ngIf="userRoles().includes('ColBlanc') || userRoles().includes('Admin')" 
@@ -28,11 +32,15 @@
       <span>{{ getCurrentLanguage() }}</span>
     </button>
 
+    <!-- Notification Bell (when connected) -->
+    <app-notification-bell *ngIf="isConnected()"></app-notification-bell>
+
     <!-- Profile Avatar (when connected) -->
     <a *ngIf="isConnected()" routerLink="/profile" class="profile-avatar" routerLinkActive="active">
       <img *ngIf="authService.profilePictureUrl()" [src]="authService.profilePictureUrl()!" alt="Profile" />
       <i *ngIf="!authService.profilePictureUrl()" class="fas fa-user"></i>
     </a>
+    
 
     <!-- Login/Logout -->
     <a *ngIf="!isConnected()" routerLink="/login" class="btn-login">

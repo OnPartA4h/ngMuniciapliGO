@@ -26,6 +26,11 @@ header {
   transform: scale(1.03);
 }
 
+.logo-img {
+  width: 50px;
+  height: auto;
+}
+
 .logo span {
   background: var(--color-bg-gradient-primary);
   -webkit-background-clip: text;
@@ -49,7 +54,7 @@ nav a {
 }
 
 nav a:hover {
-  background-color: #e8f4f8;
+  background-color: var(--color-primary-light);
   color: var(--color-primary);
 }
 
