@@ -1,12 +1,12 @@
 import { Component, Input, OnInit, input, output, SimpleChange, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-map-config-modal',
   standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule],
+  imports: [TranslateModule, FormsModule],
   templateUrl: './map-config-modal.html',
   styleUrl: './map-config-modal.css',
 })
