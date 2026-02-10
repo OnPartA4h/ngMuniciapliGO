@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -6,16 +6,16 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [TranslateModule],
   template: `
-    @if (totalPages > 1) {
+    @if (totalPages() > 1) {
       <div class="pagination">
-        <button class="pagination-btn" (click)="onPrevious()" [disabled]="currentPage === 1">
+        <button class="pagination-btn" (click)="onPrevious()" [disabled]="currentPage() === 1">
           <i class="fas fa-chevron-left"></i>
           {{ 'COMMON.PREVIOUS' | translate }}
         </button>
         <span class="pagination__info">
-          {{ 'COMMON.PAGE' | translate }} {{ currentPage }} / {{ totalPages }}
+          {{ 'COMMON.PAGE' | translate }} {{ currentPage() }} / {{ totalPages() }}
         </span>
-        <button class="pagination-btn" (click)="onNext()" [disabled]="currentPage === totalPages">
+        <button class="pagination-btn" (click)="onNext()" [disabled]="currentPage() === totalPages()">
           {{ 'COMMON.NEXT' | translate }}
           <i class="fas fa-chevron-right"></i>
         </button>
@@ -24,19 +24,19 @@ import { TranslateModule } from '@ngx-translate/core';
   `
 })
 export class PaginationComponent {
-  @Input() currentPage = 1;
-  @Input() totalPages = 1;
+  readonly currentPage = input(1);
+  readonly totalPages = input(1);
   @Output() pageChange = new EventEmitter<number>();
 
   onPrevious(): void {
-    if (this.currentPage > 1) {
-      this.pageChange.emit(this.currentPage - 1);
+    if (this.currentPage() > 1) {
+      this.pageChange.emit(this.currentPage() - 1);
     }
   }
 
   onNext(): void {
-    if (this.currentPage < this.totalPages) {
-      this.pageChange.emit(this.currentPage + 1);
+    if (this.currentPage() < this.totalPages()) {
+      this.pageChange.emit(this.currentPage() + 1);
     }
   }
 }

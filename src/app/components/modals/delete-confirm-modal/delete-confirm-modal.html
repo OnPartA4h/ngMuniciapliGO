@@ -1,26 +1,26 @@
-@if (isOpen) {
+@if (isOpen()) {
   <div class="modal-backdrop" (click)="handleBackdropClick($event)">
     <div class="modal-container" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <i class="fas fa-exclamation-triangle icon-warning"></i>
         <h2>{{ 'DELETE_CONFIRM_MODAL.TITLE' | translate }}</h2>
       </div>
-      @if (user) {
+      @if (user(); as u) {
         <div class="modal-body">
-          <p [innerHTML]="'DELETE_CONFIRM_MODAL.MESSAGE' | translate: {firstName: user.firstName, lastName: user.lastName}"></p>
+          <p [innerHTML]="'DELETE_CONFIRM_MODAL.MESSAGE' | translate: {firstName: u.firstName, lastName: u.lastName}"></p>
           <p class="warning-text">{{ 'DELETE_CONFIRM_MODAL.WARNING' | translate }}</p>
         </div>
       }
       <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="onCancel()" [disabled]="isLoading">
+        <button class="btn btn-secondary" (click)="onCancel()" [disabled]="isLoading()">
           {{ 'COMMON.CANCEL' | translate }}
         </button>
-        <button class="btn btn-danger" (click)="onConfirm()" [disabled]="isLoading">
+        <button class="btn btn-danger" (click)="onConfirm()" [disabled]="isLoading()">
           <i class="fas fa-trash"></i>
-          @if (!isLoading) {
+          @if (!isLoading()) {
             <span>{{ 'COMMON.DELETE' | translate }}</span>
           }
-          @if (isLoading) {
+          @if (isLoading()) {
             <span>{{ 'COMMON.DELETING' | translate }}</span>
           }
         </button>

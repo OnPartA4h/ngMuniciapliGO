@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { User } from '../../../models/user';
@@ -11,9 +11,9 @@ import { User } from '../../../models/user';
   styleUrl: './delete-confirm-modal.css',
 })
 export class DeleteConfirmModal {
-  @Input() user: User | null = null;
-  @Input() isOpen: boolean = false;
-  @Input() isLoading: boolean = false;
+  readonly user = input<User | null>(null);
+  readonly isOpen = input<boolean>(false);
+  readonly isLoading = input<boolean>(false);
   @Output() confirm = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 

@@ -1,4 +1,4 @@
-<div class="sidebar" [class.open]="isOpen">
+<div class="sidebar" [class.open]="isOpen()">
   <div class="sidebar-header">
     <h2>{{ 'MAP_SIDEBAR.TITLE' | translate }}</h2>
     <button class="close-btn" (click)="closeSidebar()">
@@ -6,13 +6,13 @@
     </button>
   </div>
 
-  @if (problem) {
+  @if (problem(); as p) {
     <div class="sidebar-content">
       <!-- Problem Image -->
       <div class="problem-image-container" >
-        <img [src]="problem.photos[0].url" [alt]="problem.titre" class="problem-image" />
+        <img [src]="p.photos[0].url" [alt]="p.titre" class="problem-image" />
       </div>
-      @if (!problem.photos[0].url) {
+      @if (!p.photos[0].url) {
         <div class="no-image">
           <i class="fas fa-image"></i>
           <p>{{ 'MAP_SIDEBAR.NO_IMAGE' | translate }}</p>
@@ -20,9 +20,9 @@
       }
       <!-- Problem Title -->
       <div class="problem-header">
-        <h3>{{ problem.titre }}</h3>
+        <h3>{{ p.titre }}</h3>
         <span class="status-badge">
-          {{ this.generalService.getStatusLabel(problem.statut) }}
+          {{ this.generalService.getStatusLabel(p.statut) }}
         </span>
       </div>
       <!-- Category -->
@@ -31,14 +31,14 @@
           <i class="fas"></i>
           <div class="info-content">
             <label>{{ 'MAP_SIDEBAR.CATEGORY' | translate }}</label>
-            <p>{{ this.generalService.getCategoryLabel(problem.categorie) }}</p>
+            <p>{{ this.generalService.getCategoryLabel(p.categorie) }}</p>
           </div>
         </div>
       </div>
       <!-- Description -->
       <div class="info-card">
         <label>{{ 'MAP_SIDEBAR.DESCRIPTION' | translate }}</label>
-        <p class="description">{{ problem.description }}</p>
+        <p class="description">{{ p.description }}</p>
       </div>
       <!-- Location -->
       <div class="info-card">
@@ -46,10 +46,10 @@
           <i class="fas fa-map-marker-alt"></i>
           <div class="info-content">
             <label>{{ 'MAP_SIDEBAR.LOCATION' | translate }}</label>
-            <p>{{ problem.address }}</p>
+            <p>{{ p.address }}</p>
             <p class="coordinates">
               {{ 'MAP_SIDEBAR.COORDINATES' | translate }}:
-              {{ problem.latitude | number:'1.6-6' }}, {{ problem.longitude | number:'1.6-6' }}
+              {{ p.latitude | number:'1.6-6' }}, {{ p.longitude | number:'1.6-6' }}
             </p>
           </div>
         </div>
@@ -60,7 +60,7 @@
           <i class="fas fa-calendar"></i>
           <div class="info-content">
             <label>{{ 'MAP_SIDEBAR.REPORTED_DATE' | translate }}</label>
-            <p>{{ problem.dateCreation | date:'medium' }}</p>
+            <p>{{ p.dateCreation | date:'medium' }}</p>
           </div>
         </div>
       </div>
@@ -76,7 +76,7 @@
       </div>-->
       <!-- Actions -->
       <div class="sidebar-actions">
-        <button class="btn-primary" [routerLink]="['/report-details', problem.id]">
+        <button class="btn-primary" [routerLink]="['/report-details', p.id]">
           <i class="fas fa-eye"></i>
           {{ 'MAP_SIDEBAR.VIEW_DETAILS' | translate }}
         </button>
@@ -89,7 +89,7 @@
   }
 
   <!-- Empty State -->
-  @if (!problem && isOpen) {
+  @if (!problem() && isOpen()) {
     <div class="empty-state">
       <i class="fas fa-map-marked-alt"></i>
       <h3>{{ 'MAP_SIDEBAR.SELECT_MARKER' | translate }}</h3>

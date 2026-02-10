@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
@@ -11,8 +11,8 @@ import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
   styleUrl: './image-cropper-modal.css',
 })
 export class ImageCropperModal {
-  @Input() imageChangedEvent: Event | null = null;
-  @Input() isUploading = false;
+  readonly imageChangedEvent = input<Event | null>(null);
+  readonly isUploading = input(false);
   
   @Output() cropCancelled = new EventEmitter<void>();
   @Output() imageUploaded = new EventEmitter<Blob>();
@@ -45,7 +45,7 @@ export class ImageCropperModal {
 
   cancel() {
     // Ne pas permettre l'annulation pendant le téléchargement
-    if (!this.isUploading) {
+    if (!this.isUploading()) {
       this.cropCancelled.emit();
     }
   }

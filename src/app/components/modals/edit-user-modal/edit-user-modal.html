@@ -1,4 +1,4 @@
-@if (isOpen) {
+@if (isOpen()) {
   <div class="modal-backdrop" (click)="handleBackdropClick($event)">
     <div class="modal-container" (click)="$event.stopPropagation()">
       <div class="modal-header">
@@ -8,13 +8,13 @@
         </button>
       </div>
 
-      @if (user) {
+      @if (user(); as u) {
         <div class="modal-body">
           <!-- User Profile Picture -->
           <div class="user-profile-section">
             <div class="profile-picture-container">
-              @if (user.profilePictureUrl) {
-                <img [src]="user.profilePictureUrl" alt="Profile" class="profile-picture" />
+              @if (u.profilePictureUrl) {
+                <img [src]="u.profilePictureUrl" alt="Profile" class="profile-picture" />
               } @else {
                 <div class="profile-picture-placeholder">
                   <i class="fas fa-user"></i>
@@ -22,16 +22,16 @@
               }
             </div>
             <div class="profile-info">
-              <h3>{{ user.firstName }} {{ user.lastName }}</h3>
-              <p class="email">{{ user.email }}</p>
+              <h3>{{ u.firstName }} {{ u.lastName }}</h3>
+              <p class="email">{{ u.email }}</p>
               <div class="status-badges">
-                <span class="badge" [class.badge-success]="user.emailConfirmed" [class.badge-warning]="!user.emailConfirmed">
-                  <i [class]="user.emailConfirmed ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'"></i>
-                  {{ (user.emailConfirmed ? 'COMMON.EMAIL_CONFIRMED' : 'COMMON.EMAIL_NOT_CONFIRMED') | translate }}
+                <span class="badge" [class.badge-success]="u.emailConfirmed" [class.badge-warning]="!u.emailConfirmed">
+                  <i [class]="u.emailConfirmed ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'"></i>
+                  {{ (u.emailConfirmed ? 'COMMON.EMAIL_CONFIRMED' : 'COMMON.EMAIL_NOT_CONFIRMED') | translate }}
                 </span>
-                <span class="badge" [class.badge-warning]="user.mustResetPassword" [class.badge-success]="!user.mustResetPassword">
-                  <i [class]="user.mustResetPassword ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'"></i>
-                  {{ (user.mustResetPassword ? 'COMMON.MUST_RESET_PASSWORD' : 'COMMON.PASSWORD_OK') | translate }}
+                <span class="badge" [class.badge-warning]="u.mustResetPassword" [class.badge-success]="!u.mustResetPassword">
+                  <i [class]="u.mustResetPassword ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'"></i>
+                  {{ (u.mustResetPassword ? 'COMMON.MUST_RESET_PASSWORD' : 'COMMON.PASSWORD_OK') | translate }}
                 </span>
               </div>
             </div>
@@ -41,22 +41,22 @@
           <div class="user-details">
             <div class="detail-group">
               <label>{{ 'EDIT_USER_MODAL.FIRST_NAME' | translate }}</label>
-              <p>{{ user.firstName }}</p>
+              <p>{{ u.firstName }}</p>
             </div>
             
             <div class="detail-group">
               <label>{{ 'EDIT_USER_MODAL.LAST_NAME' | translate }}</label>
-              <p>{{ user.lastName }}</p>
+              <p>{{ u.lastName }}</p>
             </div>
             
             <div class="detail-group">
               <label>{{ 'EDIT_USER_MODAL.EMAIL' | translate }}</label>
-              <p>{{ user.email }}</p>
+              <p>{{ u.email }}</p>
             </div>
             
             <div class="detail-group">
               <label>{{ 'EDIT_USER_MODAL.PHONE' | translate }}</label>
-              <p>{{ user.phoneNumber | mask: '(000) 000-0000' }}</p>
+              <p>{{ u.phoneNumber | mask: '(000) 000-0000' }}</p>
             </div>
           </div>
 
@@ -66,27 +66,27 @@
             <div class="address-details">
               <div class="detail-group">
                 <label>{{ 'EDIT_USER_MODAL.STREET_NUMBER' | translate }}</label>
-                <p>{{ user.streetNumber || '-' }}</p>
+                <p>{{ u.streetNumber || '-' }}</p>
               </div>
               
               <div class="detail-group">
                 <label>{{ 'EDIT_USER_MODAL.STREET_NAME' | translate }}</label>
-                <p>{{ user.streetName || '-' }}</p>
+                <p>{{ u.streetName || '-' }}</p>
               </div>
               
               <div class="detail-group">
                 <label>{{ 'EDIT_USER_MODAL.CITY' | translate }}</label>
-                <p>{{ user.city || '-' }}</p>
+                <p>{{ u.city || '-' }}</p>
               </div>
               
               <div class="detail-group">
                 <label>{{ 'EDIT_USER_MODAL.PROVINCE' | translate }}</label>
-                <p>{{ user.province || '-' }}</p>
+                <p>{{ u.province || '-' }}</p>
               </div>
               
               <div class="detail-group">
                 <label>{{ 'EDIT_USER_MODAL.POSTAL_CODE' | translate }}</label>
-                <p>{{ user.postalCode ? (user.postalCode | mask: 'A0A 0A0') : '-' }}</p>
+                <p>{{ u.postalCode ? (u.postalCode | mask: 'A0A 0A0') : '-' }}</p>
               </div>
             </div>
           </div>
@@ -149,7 +149,7 @@
 
 <!-- Delete Confirmation Modal -->
 <app-delete-confirm-modal
-  [user]="user"
+  [user]="user()"
   [isOpen]="showDeleteConfirm"
   [isLoading]="isLoading"
   (confirm)="confirmDelete()"

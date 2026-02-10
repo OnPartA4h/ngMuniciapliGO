@@ -1,4 +1,4 @@
-@if (isOpen) {
+@if (isOpen()) {
   <div class="modal-backdrop" (click)="handleBackdropClick($event)">
     <div class="modal-container" (click)="$event.stopPropagation()">
       <!-- Header -->

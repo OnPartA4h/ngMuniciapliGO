@@ -1,5 +1,5 @@
 <div class="reports-list">
-  @for (p of problems; track p.id) {
+  @for (p of problems(); track p.id) {
     <div class="report-card list-card" routerLink="/report-details/{{p.id}}">
       <div class="report-thumbnail">
         @if (p.photos && p.photos.length > 0) {
@@ -42,7 +42,7 @@
     </div>
   }
 
-  @if (problems.length === 0 && !loading) {
+  @if (problems().length === 0 && !loading()) {
     <app-empty-state
       iconClass="fas fa-clipboard-list"
       [title]="'MANAGE_REPORTS.NO_REPORTS' | translate"
@@ -50,10 +50,10 @@
     </app-empty-state>
   }
 
-  @if (problems.length > 0 && pagination) {
+  @if (problems().length > 0 && pagination(); as pg) {
     <app-pagination
-      [currentPage]="pagination.currentPage"
-      [totalPages]="pagination.totalPages"
+      [currentPage]="pg.currentPage"
+      [totalPages]="pg.totalPages"
       (pageChange)="onPageChange($event)">
     </app-pagination>
   }

@@ -3,13 +3,13 @@
   <p class="form-description">{{ 'PROFILE.PERSONAL_INFO_DESC' | translate }}</p>
 
   <!-- Info Messages -->
-  @if (successMessage) {
+  @if (successMessage()) {
     <div class="form-alert form-alert--success">
-      <i class="fas fa-check-circle"></i> {{ successMessage }}
+      <i class="fas fa-check-circle"></i> {{ successMessage() }}
     </div>
   }
-  @if (errorMessage) {
-    <div class="form-alert form-alert--error">{{ errorMessage }}</div>
+  @if (errorMessage()) {
+    <div class="form-alert form-alert--error">{{ errorMessage() }}</div>
   }
 
   <form [formGroup]="profileForm">
@@ -19,10 +19,10 @@
     <div class="spacer-md"></div>
 
     <div class="form-actions">
-      <button type="button" class="btn btn-primary" [disabled]="isSaving" (click)="submitForm()">
-        @if (!isSaving) { <i class="fas fa-save"></i> }
-        @if (isSaving) { <i class="fas fa-spinner fa-spin"></i> }
-        {{ (isSaving ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
+      <button type="button" class="btn btn-primary" [disabled]="isSaving()" (click)="submitForm()">
+        @if (!isSaving()) { <i class="fas fa-save"></i> }
+        @if (isSaving()) { <i class="fas fa-spinner fa-spin"></i> }
+        {{ (isSaving() ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
       </button>
     </div>
   </form>

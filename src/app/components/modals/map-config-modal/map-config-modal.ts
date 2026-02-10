@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './map-config-modal.css',
 })
 export class MapConfigModal implements OnInit{
-  @Input() isOpen: boolean = false;
+  readonly isOpen = input<boolean>(false);
   @Output() close = new EventEmitter<void>();
   @Output() apply = new EventEmitter<void>();
 

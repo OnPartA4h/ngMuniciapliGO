@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Output, EventEmitter, inject, input } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -14,9 +14,9 @@ export class ProfilePasswordFormComponent {
   private fb = inject(FormBuilder);
   private translateService = inject(TranslateService);
 
-  @Input() isSaving = false;
-  @Input() successMessage: string | null = null;
-  @Input() errorMessage: string | null = null;
+  readonly isSaving = input(false);
+  readonly successMessage = input<string | null>(null);
+  readonly errorMessage = input<string | null>(null);
 
   @Output() formSubmit = new EventEmitter<ChangePasswordDto>();
 

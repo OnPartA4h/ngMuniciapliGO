@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, OnInit, inject } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, inject, input } from '@angular/core';
 
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -16,7 +16,7 @@ export class ChangeEmailModal implements OnInit {
   private userService = inject(UserService);
   private translateService = inject(TranslateService);
 
-  @Input() newEmail: string | null = null;
+  readonly newEmail = input<string | null>(null);
   @Output() close = new EventEmitter<void>();
   @Output() emailVerified = new EventEmitter<string>();
 
@@ -37,7 +37,8 @@ export class ChangeEmailModal implements OnInit {
   }
 
   async submitVerification() {
-    if (this.verificationForm.invalid || !this.newEmail) return;
+    const newEmail = this.newEmail();
+    if (this.verificationForm.invalid || !newEmail) return;
 
     this.isLoading = true;
     this.errorMessage = null;
@@ -45,12 +46,12 @@ export class ChangeEmailModal implements OnInit {
 
     try {
       const code = this.verificationForm.get('code')?.value;
-      await this.userService.verifyEmailChange({ newEmail: this.newEmail, code });
+      await this.userService.verifyEmailChange({ newEmail: newEmail, code });
 
       this.successMessage = this.translateService.instant('PROFILE.EMAIL_CHANGED_SUCCESS');
       
       // Emit the new email to parent component
-      this.emailVerified.emit(this.newEmail);
+      this.emailVerified.emit(newEmail);
       
       // Close modal after 2 seconds
       setTimeout(() => {

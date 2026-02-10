@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, input } from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { EmptyStateComponent } from '../../ui';
@@ -11,12 +11,12 @@ import { RoleOption, User } from '../../../models/user';
   templateUrl: './users-table.html',
 })
 export class UsersTableComponent {
-  @Input({ required: true }) users: User[] = [];
-  @Input() roles: RoleOption[] = [];
+  readonly users = input.required<User[]>();
+  readonly roles = input<RoleOption[]>([]);
   @Output() editUser = new EventEmitter<User>();
 
   getRoleLabel(roleKey: string): string {
-    const role = this.roles.find(r => r.key === roleKey);
+    const role = this.roles().find(r => r.key === roleKey);
     return role ? role.label : roleKey;
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { Component, Output, EventEmitter, OnChanges, SimpleChanges, inject, input } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -14,10 +14,10 @@ import { UserFormComponent } from '../user-form/user-form';
 export class ProfileInfoFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
 
-  @Input() profile: User | null = null;
-  @Input() isSaving = false;
-  @Input() successMessage: string | null = null;
-  @Input() errorMessage: string | null = null;
+  readonly profile = input<User | null>(null);
+  readonly isSaving = input(false);
+  readonly successMessage = input<string | null>(null);
+  readonly errorMessage = input<string | null>(null);
 
   @Output() formSubmit = new EventEmitter<UpdateUserDto>();
 
@@ -37,16 +37,17 @@ export class ProfileInfoFormComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['profile'] && this.profile) {
+    const profile = this.profile();
+    if (changes['profile'] && profile) {
       this.profileForm.patchValue({
-        firstName: this.profile.firstName,
-        lastName: this.profile.lastName,
-        phoneNumber: this.profile.phoneNumber,
-        streetNumber: this.profile.streetNumber,
-        streetName: this.profile.streetName,
-        city: this.profile.city,
-        province: this.profile.province,
-        postalCode: this.profile.postalCode
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        phoneNumber: profile.phoneNumber,
+        streetNumber: profile.streetNumber,
+        streetName: profile.streetName,
+        city: profile.city,
+        province: profile.province,
+        postalCode: profile.postalCode
       });
     }
   }

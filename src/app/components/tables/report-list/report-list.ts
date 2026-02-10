@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Output, EventEmitter, inject, input } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,9 +18,9 @@ import { Pagination } from '../../../models/pagination';
 export class ReportListComponent {
   generalService = inject(GeneralService);
 
-  @Input({ required: true }) problems: Problem[] = [];
-  @Input() pagination: Pagination | null = null;
-  @Input() loading = false;
+  readonly problems = input.required<Problem[]>();
+  readonly pagination = input<Pagination | null>(null);
+  readonly loading = input(false);
   @Output() pageChange = new EventEmitter<number>();
 
   onPageChange(page: number): void {

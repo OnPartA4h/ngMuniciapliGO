@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Problem } from '../../models/problem';
@@ -15,8 +15,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 export class MapSidebar implements OnInit {
   generalService = inject(GeneralService);
 
-  @Input() problem: Problem | null = null;
-  @Input() isOpen: boolean = false;
+  readonly problem = input<Problem | null>(null);
+  readonly isOpen = input<boolean>(false);
   @Output() close = new EventEmitter<void>();
 
   async ngOnInit() {

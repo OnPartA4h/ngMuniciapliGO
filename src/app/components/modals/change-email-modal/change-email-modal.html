@@ -26,7 +26,7 @@
 
       <!-- Verification Code Form -->
       <p class="modal-description">
-        {{ 'PROFILE.VERIFICATION_CODE_DESC' | translate: {email: newEmail} }}
+        {{ 'PROFILE.VERIFICATION_CODE_DESC' | translate: {email: newEmail()} }}
       </p>
 
       <form [formGroup]="verificationForm" (ngSubmit)="submitVerification()">

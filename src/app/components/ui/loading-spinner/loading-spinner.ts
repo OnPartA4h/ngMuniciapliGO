@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -7,16 +7,16 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [TranslateModule],
   template: `
     <div class="loading-state">
-      @if (useIcon) {
+      @if (useIcon()) {
         <i class="fas fa-spinner fa-spin loading-state__icon"></i>
       } @else {
         <div class="spinner"></div>
       }
-      <p class="loading-state__text">{{ message || ('COMMON.LOADING' | translate) }}</p>
+      <p class="loading-state__text">{{ message() || ('COMMON.LOADING' | translate) }}</p>
     </div>
   `
 })
 export class LoadingSpinnerComponent {
-  @Input() message = '';
-  @Input() useIcon = true;
+  readonly message = input('');
+  readonly useIcon = input(true);
 }

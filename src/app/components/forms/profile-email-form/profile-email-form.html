@@ -1,13 +1,13 @@
 <div class="form-card">
   <h2>{{ 'PROFILE.EMAIL' | translate }}</h2>
 
-  @if (successMessage) {
+  @if (successMessage()) {
     <div class="form-alert form-alert--success">
-      <i class="fas fa-check-circle"></i> {{ successMessage }}
+      <i class="fas fa-check-circle"></i> {{ successMessage() }}
     </div>
   }
-  @if (errorMessage) {
-    <div class="form-alert form-alert--error">{{ errorMessage }}</div>
+  @if (errorMessage()) {
+    <div class="form-alert form-alert--error">{{ errorMessage() }}</div>
   }
 
   <form [formGroup]="emailForm">
@@ -29,10 +29,10 @@
     <div class="spacer-md"></div>
 
     <div class="form-actions">
-      <button type="button" class="btn btn-primary" [disabled]="isSaving" (click)="submitForm()">
-        @if (!isSaving) { <i class="fas fa-envelope"></i> }
-        @if (isSaving) { <i class="fas fa-spinner fa-spin"></i> }
-        {{ (isSaving ? 'COMMON.SAVING' : 'PROFILE.SEND_VERIFICATION_CODE') | translate }}
+      <button type="button" class="btn btn-primary" [disabled]="isSaving()" (click)="submitForm()">
+        @if (!isSaving()) { <i class="fas fa-envelope"></i> }
+        @if (isSaving()) { <i class="fas fa-spinner fa-spin"></i> }
+        {{ (isSaving() ? 'COMMON.SAVING' : 'PROFILE.SEND_VERIFICATION_CODE') | translate }}
       </button>
     </div>
   </form>

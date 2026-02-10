@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Output, inject, input } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -17,7 +17,7 @@ export class ForceResetPasswordModal {
   private userService = inject(UserService);
   private translateService = inject(TranslateService);
 
-  @Input() currentPassword: string = '';
+  readonly currentPassword = input<string>('');
   
   @Output() passwordReset = new EventEmitter<void>();
   @Output() resetError = new EventEmitter<string | undefined>();
@@ -56,7 +56,7 @@ export class ForceResetPasswordModal {
 
     try {
       const dto: ChangePasswordDto = {
-        currentPassword: this.currentPassword,
+        currentPassword: this.currentPassword(),
         newPassword: newPassword
       };
 

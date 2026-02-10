@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { Component, Output, EventEmitter, OnChanges, SimpleChanges, inject, input } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -12,10 +12,10 @@ import { TranslateModule } from '@ngx-translate/core';
 export class ProfileEmailFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
 
-  @Input() currentEmail: string | null = null;
-  @Input() isSaving = false;
-  @Input() successMessage: string | null = null;
-  @Input() errorMessage: string | null = null;
+  readonly currentEmail = input<string | null>(null);
+  readonly isSaving = input(false);
+  readonly successMessage = input<string | null>(null);
+  readonly errorMessage = input<string | null>(null);
 
   @Output() formSubmit = new EventEmitter<{ newEmail: string }>();
 
@@ -28,8 +28,9 @@ export class ProfileEmailFormComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['currentEmail'] && this.currentEmail) {
-      this.emailForm.patchValue({ newEmail: this.currentEmail });
+    const currentEmail = this.currentEmail();
+    if (changes['currentEmail'] && currentEmail) {
+      this.emailForm.patchValue({ newEmail: currentEmail });
     }
   }
 

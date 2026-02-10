@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef, inject, input } from '@angular/core';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxMaskPipe } from 'ngx-mask';
@@ -22,8 +22,8 @@ export class EditUserModal implements OnInit, OnChanges {
   private translate = inject(TranslateService);
   private cdr = inject(ChangeDetectorRef);
 
-  @Input() user: User | null = null;
-  @Input() isOpen: boolean = false;
+  readonly user = input<User | null>(null);
+  readonly isOpen = input<boolean>(false);
   @Output() close = new EventEmitter<void>();
   @Output() userDeleted = new EventEmitter<void>();
 
@@ -61,17 +61,18 @@ export class EditUserModal implements OnInit, OnChanges {
   }
 
   async changeRole(role: RoleOption) {
-    if (!this.user || this.isLoading || this.isCurrentUser()) return;
+    const user = this.user();
+    if (!user || this.isLoading || this.isCurrentUser()) return;
 
     // If already has this role, do nothing
-    if (this.user.roles.includes(role.key)) return;
+    if (user.roles.includes(role.key)) return;
 
     try {
       this.isLoading = true;
-      const response = await this.adminService.changeRole(this.user.id, role.key);
+      const response = await this.adminService.changeRole(user.id, role.key);
       
       // Update user roles with the response
-      this.user.roles = response.roles;
+      user.roles = response.roles;
       
       this.showSuccessMessage();
     } catch (error) {
@@ -82,9 +83,10 @@ export class EditUserModal implements OnInit, OnChanges {
   }
 
   private showSuccessMessage() {
+    const user = this.user();
     this.successMessage = this.translate.instant('EDIT_USER_MODAL.ROLE_CHANGED', {
-      firstName: this.user?.firstName,
-      lastName: this.user?.lastName
+      firstName: user?.firstName,
+      lastName: user?.lastName
     });
 
     setTimeout(() => {
@@ -103,11 +105,12 @@ export class EditUserModal implements OnInit, OnChanges {
   }
 
   async confirmDelete() {
-    if (!this.user || this.isLoading || this.isCurrentUser()) return;
+    const user = this.user();
+    if (!user || this.isLoading || this.isCurrentUser()) return;
 
     try {
       this.isLoading = true;
-      await this.adminService.deleteUser(this.user.id);
+      await this.adminService.deleteUser(user.id);
       this.showDeleteConfirm = false;
       this.isLoading = false;
       this.userDeleted.emit();
@@ -119,11 +122,11 @@ export class EditUserModal implements OnInit, OnChanges {
   }
 
   getCurrentRole(): string {
-    return this.user?.roles[0] || '';
+    return this.user()?.roles[0] || '';
   }
 
   isCurrentUser(): boolean {
-    return this.user?.id === this.currentUserId;
+    return this.user()?.id === this.currentUserId;
   }
 
   handleBackdropClick(event: MouseEvent) {
