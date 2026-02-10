@@ -1,8 +1,8 @@
-<div class="manage-reports-container">
-  <div class="page-header">
-    <h1>{{ 'MANAGE_REPORTS.TITLE' | translate }}</h1>
-    <p>{{ 'MANAGE_REPORTS.SUBTITLE' | translate }}</p>
-  </div>
+<div class="page-container">
+  <app-page-header
+    [title]="'MANAGE_REPORTS.TITLE' | translate"
+    [subtitle]="'MANAGE_REPORTS.SUBTITLE' | translate">
+  </app-page-header>
 
   <div class="search-div-top">
     <div class="search-div">
@@ -55,14 +55,14 @@
 
   <div class="reports-list">
     <!-- Report Item -->
-    <div class="report-card" routerLink="/report-details/{{p.id}}" *ngFor="let p of problems">
+    <div class="report-card list-card" routerLink="/report-details/{{p.id}}" *ngFor="let p of problems">
       <div class="report-thumbnail">
         <img [src]="p.photos[0].url" alt="Photo du problème" *ngIf="p.photos && p.photos.length > 0" />
       </div>
       <div class="report-info">
         <div class="report-header">
           <h3 class="report-title">{{p.titre}}</h3>
-          <span class="report-status status-nouveau">{{ this.generalService.getStatusLabel(p.statut) }}</span>
+          <span class="badge badge-info">{{ this.generalService.getStatusLabel(p.statut) }}</span>
         </div>
         <div class="report-details">
           <span class="report-location">
@@ -95,25 +95,18 @@
     </div>
 
     <!-- Empty State -->
-    <div class="empty-state" *ngIf="problems.length === 0 && !loading">
-      <i class="fas fa-clipboard-list icon-large"></i>
-      <h3>{{ 'MANAGE_REPORTS.NO_REPORTS' | translate }}</h3>
-      <p>{{ 'MANAGE_REPORTS.NO_REPORTS_DESC' | translate }}</p>
-    </div>
+    <app-empty-state
+      *ngIf="problems.length === 0 && !loading"
+      iconClass="fas fa-clipboard-list"
+      [title]="'MANAGE_REPORTS.NO_REPORTS' | translate"
+      [description]="'MANAGE_REPORTS.NO_REPORTS_DESC' | translate">
+    </app-empty-state>
 
-    <div class="pagination" *ngIf="problems.length > 0">
-      <button class="pagination-btn" [disabled]="pagination?.currentPage == 1" (click)="prevPage()">
-        <i class="fas fa-chevron-left"></i>
-        {{ 'COMMON.PREVIOUS' | translate }}
-      </button>
-      <span class="pagination-info">
-        {{ 'MANAGE_REPORTS.PAGE_INFO' | translate: {current: pagination?.currentPage, total: pagination?.totalPages} }}
-      </span>
-      <button class="pagination-btn" [disabled]="pagination?.currentPage == pagination?.totalPages"
-        (click)="nextPage()">
-        {{ 'COMMON.NEXT' | translate }}
-        <i class="fas fa-chevron-right"></i>
-      </button>
-    </div>
+    <app-pagination
+      *ngIf="problems.length > 0"
+      [currentPage]="pagination?.currentPage ?? 1"
+      [totalPages]="pagination?.totalPages ?? 1"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
   </div>
 </div>
