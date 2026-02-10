@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NgxMaskDirective } from 'ngx-mask';
 import { AuthService } from '../../services/auth-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
@@ -11,10 +10,12 @@ import { RoleOption, UpdateUserDto, ChangePasswordDto, User } from '../../models
 import { ImageCropperModal } from '../../components/image-cropper-modal/image-cropper-modal';
 import { ChangeEmailModal } from '../../components/change-email-modal/change-email-modal';
 import { UserService } from '../../services/user-service';
+import { LoadingSpinnerComponent, PageHeaderComponent } from '../../components/ui';
+import { UserFormComponent } from '../../components/user-form/user-form';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, NgxMaskDirective, ImageCropperModal, ChangeEmailModal],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, ImageCropperModal, ChangeEmailModal, LoadingSpinnerComponent, PageHeaderComponent, UserFormComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
