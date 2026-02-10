@@ -1,12 +1,17 @@
 <div class="manage-reports-container">
-    <div class="page-header" *ngIf="!isLoading && problem">
+    @if (!isLoading && problem) {
+    <div class="page-header">
         <h1>{{ problem?.titre }}</h1>
         <p>{{ problem.description }}</p>
     </div>
-
-    <div *ngIf="isLoading" style="text-align: center; padding: 40px;">
-        {{ 'COMMON.LOADING' | translate }}</div>
-    <div *ngIf="!isLoading && problem" class="details-grid">
+    }
+    @if(isLoading){
+    <div style="text-align: center; padding: 40px;">
+        {{ 'COMMON.LOADING' | translate }}
+    </div>
+    }
+    @else if (!isLoading && problem) {
+    <div class="details-grid">
         <div class="details-main">
             <div class="details-carousel">
                 <div class="details-carousel-img">
@@ -69,9 +74,10 @@
                             <i class="fas fa-user"></i>
                             {{"MANAGE_REPORTS.ASSIGNEE" | translate}}
                         </div>
-                        @if(problem.assigneA == 2){
-                        {{problem.colBleuAssigne.firstName + ' ' + problem.colBleuAssigne.lastName}}
-                        } @else {
+                        @if(problem.assigneA == 2) {
+                        {{problem.responsable.firstName + ' ' + problem.responsable.lastName}}
+                        }
+                        @else {
                         {{this.generalService.assignees()[problem.assigneA].label}}
                         }
                     </span>
@@ -117,8 +123,11 @@
             </div>
         </div>
     </div>
+    }
 
-    <div *ngIf="!isLoading && !problem" style="text-align: center; padding: 40px;">
+    @if (!isLoading && !problem) {
+    <div style="text-align: center; padding: 40px;">
         {{"MANAGE_REPORTS.NO_PROBLEM" | translate}}
     </div>
+    }
 </div>
