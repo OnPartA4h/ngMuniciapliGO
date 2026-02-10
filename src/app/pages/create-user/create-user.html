@@ -7,104 +7,16 @@
   </app-page-header>
 
   <div class="form-card">
-    <form [formGroup]="userForm" (ngSubmit)="createUser()">
-
-      <!-- Shared User Form Fields -->
-      <app-user-form
-        [form]="userForm"
-        [showEmail]="true"
-        [emailPlaceholder]="('CREATE_USER.EMAIL_PLACEHOLDER' | translate)"
-        [showProvinceDropdown]="true"
-        [provinces]="canadianProvinces">
-      </app-user-form>
-
-      <!-- Roles Section -->
-      <div class="form-section">
-        <h2 class="section-title">
-          {{ 'CREATE_USER.ROLES_SECTION' | translate }} <span class="required">*</span>
-        </h2>
-        <p class="section-description">{{ 'CREATE_USER.ROLES_DESC_SINGLE' | translate }}</p>
-        
-        <div class="roles-grid">
-          @for (role of availableRoles; track role.key) {
-            <div 
-              class="role-card" 
-              [class.selected]="isRoleSelected(role.key)"
-              (click)="selectRole(role.key)"
-            >
-              <div class="role-radio">
-                <input 
-                  type="radio" 
-                  name="userRole"
-                  [id]="'role-' + role.key"
-                  [value]="role.key"
-                  [checked]="isRoleSelected(role.key)"
-                  (click)="$event.stopPropagation()"
-                  (change)="selectRole(role.key)"
-                />
-                <span class="radio-custom"></span>
-              </div>
-              <div class="role-info">
-                <h3>{{ role.label }}</h3>
-              </div>
-            </div>
-          }
-        </div>
-        
-        @if (rolesFormArray.length === 0 && userForm.touched) {
-          <span class="form-error">{{ 'CREATE_USER.SELECT_ONE_ROLE' | translate }}</span>
-        }
-      </div>
-
-      <!-- Form Actions -->
-      <div class="form-actions">
-        <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="isLoading">
-          {{ 'COMMON.CANCEL' | translate }}
-        </button>
-        <button type="submit" class="btn btn-primary" [disabled]="isLoading || userForm.invalid || !selectedRole">
-          @if (!isLoading) {
-            <i class="fas fa-save"></i>
-          }
-          @if (isLoading) {
-            <span class="spinner spinner--sm spinner--white"></span>
-          }
-          {{ isLoading ? ('COMMON.CREATING' | translate) : ('CREATE_USER.CREATE_BUTTON' | translate) }}
-        </button>
-      </div>
-    </form>
+    <app-create-user-form
+      (formSubmit)="onFormSubmit($event)"
+      (cancel)="cancel()">
+    </app-create-user-form>
   </div>
 </div>
 
-<!-- Password Modal -->
-@if (showPasswordModal) {
-  <div class="modal-backdrop" (click)="closePasswordModal()">
-    <div class="password-modal" (click)="$event.stopPropagation()">
-      <div class="modal-icon">
-        <i class="fas fa-check-circle"></i>
-      </div>
-      
-      <h2>{{ 'CREATE_USER.SUCCESS_TITLE' | translate }}</h2>
-      <p class="modal-message">{{ 'CREATE_USER.SUCCESS_MESSAGE' | translate }}</p>
-      
-      <div class="password-display">
-        <span class="password-label">{{ 'CREATE_USER.TEMPORARY_PASSWORD' | translate }}:</span>
-        <div class="password-box">
-          <code>{{ generatedPassword }}</code>
-          <button type="button" class="copy-btn" (click)="copyPassword()">
-            <i class="fas fa-copy"></i>
-            {{ 'CREATE_USER.COPY_PASSWORD' | translate }}
-          </button>
-        </div>
-      </div>
-      
-      <div class="modal-warning">
-        <i class="fas fa-exclamation-triangle"></i>
-        <span>{{ 'CREATE_USER.MUST_CHANGE_PASSWORD' | translate }}</span>
-      </div>
-      
-      <button type="button" class="btn btn-primary btn-full" (click)="closePasswordModal()">
-        {{ 'CREATE_USER.UNDERSTOOD' | translate }}
-      </button>
-    </div>
-  </div>
-}
+<!-- Password Success Modal -->
+<app-password-success-modal
+  [isOpen]="showPasswordModal"
+  [generatedPassword]="generatedPassword"
+  (close)="closePasswordModal()">
+</app-password-success-modal>
