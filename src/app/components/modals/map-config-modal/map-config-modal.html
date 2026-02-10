@@ -26,8 +26,9 @@
               [(ngModel)]="radius" 
               min="100" 
               max="10000" 
-              step="1"
+              step="100"
               class="slider"
+              (input)="onRadiusChange()"
             />
             <div class="radius-value">
               <span class="value">{{ radius }}</span>
@@ -37,101 +38,6 @@
           <p class="hint">{{ 'MAP_CONFIG.RADIUS_HINT' | translate }}</p>
         </div>
       </div>
-
-      <!-- Status Filter -->
-      <div class="config-section">
-        <div class="section-header">
-          <i class="fas fa-tasks"></i>
-          <h3>{{ 'MAP_CONFIG.STATUS_FILTER' | translate }}</h3>
-        </div>
-        <div class="filter-grid">
-          <div 
-            *ngFor="let status of statuses" 
-            class="filter-chip"
-            [class.active]="isStatusSelected(status.id)"
-            (click)="toggleStatus(status.id)"
-          >
-            <div class="chip-indicator" [style.background-color]="status.color"></div>
-            <span>{{ status.label }}</span>
-            <i class="fas fa-check" *ngIf="isStatusSelected(status.id)"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- Category Filter -->
-      <div class="config-section">
-        <div class="section-header">
-          <i class="fas fa-th-large"></i>
-          <h3>{{ 'MAP_CONFIG.CATEGORY_FILTER' | translate }}</h3>
-        </div>
-        <div class="filter-grid">
-          <div 
-            *ngFor="let category of categories" 
-            class="filter-chip"
-            [class.active]="isCategorySelected(category.id)"
-            (click)="toggleCategory(category.id)"
-          >
-            <i class="fas" [ngClass]="category.icon"></i>
-            <span>{{ category.label }}</span>
-            <i class="fas fa-check check-icon" *ngIf="isCategorySelected(category.id)"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- Date Range -->
-      <div class="config-section">
-        <div class="section-header">
-          <i class="fas fa-calendar-alt"></i>
-          <h3>{{ 'MAP_CONFIG.DATE_RANGE' | translate }}</h3>
-        </div>
-        <div class="date-inputs">
-          <div class="form-group">
-            <label>{{ 'MAP_CONFIG.FROM' | translate }}</label>
-            <input type="date" [(ngModel)]="dateFrom" class="date-input" />
-          </div>
-          <div class="form-group">
-            <label>{{ 'MAP_CONFIG.TO' | translate }}</label>
-            <input type="date" [(ngModel)]="dateTo" class="date-input" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Display Options -->
-      <div class="config-section">
-        <div class="section-header">
-          <i class="fas fa-eye"></i>
-          <h3>{{ 'MAP_CONFIG.DISPLAY_OPTIONS' | translate }}</h3>
-        </div>
-        <div class="options-list">
-          <div class="option-item">
-            <div class="option-info">
-              <i class="fas fa-map-marker-alt"></i>
-              <div>
-                <strong>{{ 'MAP_CONFIG.SHOW_USER_LOCATION' | translate }}</strong>
-                <p>{{ 'MAP_CONFIG.SHOW_USER_LOCATION_DESC' | translate }}</p>
-              </div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" [(ngModel)]="showUserLocation" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="option-item">
-            <div class="option-info">
-              <i class="fas fa-layer-group"></i>
-              <div>
-                <strong>{{ 'MAP_CONFIG.CLUSTER_MARKERS' | translate }}</strong>
-                <p>{{ 'MAP_CONFIG.CLUSTER_MARKERS_DESC' | translate }}</p>
-              </div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" [(ngModel)]="clusterMarkers" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Footer -->
     <div class="modal-footer">

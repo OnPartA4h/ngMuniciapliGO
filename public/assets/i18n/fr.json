@@ -275,7 +275,7 @@
   "MAP_CONFIG": {
     "TITLE": "Configuration de la carte",
     "RADIUS": "Rayon de recherche",
-    "RADIUS_HINT": "Afficher les signalements dans un rayon de X km autour de votre position",
+    "RADIUS_HINT": "Afficher les signalements dans un rayon de X m autour de votre position",
     "STATUS_FILTER": "Filtrer par statut",
     "CATEGORY_FILTER": "Filtrer par catégorie",
     "DATE_RANGE": "Plage de dates",
