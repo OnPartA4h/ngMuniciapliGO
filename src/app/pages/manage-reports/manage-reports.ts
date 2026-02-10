@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { Pagination } from '../../models/pagination';
 import { FormsModule } from '@angular/forms';
 import { PageHeaderComponent } from '../../components/ui';
-import { ReportListComponent } from '../../components/report-list/report-list';
+import { ReportListComponent } from '../../components/tables/report-list/report-list';
 
 @Component({
   selector: 'app-manage-reports',

@@ -7,10 +7,9 @@ import { AdminService } from '../../services/admin-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { User, RoleOption } from '../../models/user';
-import { EditUserModal } from '../../components/edit-user-modal/edit-user-modal';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { EditUserModal } from '../../components/modals/edit-user-modal/edit-user-modal';
 import { PaginationComponent, LoadingSpinnerComponent, PageHeaderComponent } from '../../components/ui';
-import { UsersTableComponent } from '../../components/users-table/users-table';
+import { UsersTableComponent } from '../../components/tables/users-table/users-table';
 
 @Component({
   selector: 'app-manage-users',

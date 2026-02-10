@@ -6,13 +6,13 @@ import { AuthService } from '../../services/auth-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { RoleOption, UpdateUserDto, ChangePasswordDto, User } from '../../models/user';
-import { ImageCropperModal } from '../../components/image-cropper-modal/image-cropper-modal';
-import { ChangeEmailModal } from '../../components/change-email-modal/change-email-modal';
+import { ImageCropperModal } from '../../components/modals/image-cropper-modal/image-cropper-modal';
+import { ChangeEmailModal } from '../../components/modals/change-email-modal/change-email-modal';
 import { UserService } from '../../services/user-service';
 import { LoadingSpinnerComponent, PageHeaderComponent } from '../../components/ui';
-import { ProfileInfoFormComponent } from '../../components/profile-info-form/profile-info-form';
-import { ProfileEmailFormComponent } from '../../components/profile-email-form/profile-email-form';
-import { ProfilePasswordFormComponent } from '../../components/profile-password-form/profile-password-form';
+import { ProfileInfoFormComponent } from '../../components/forms/profile-info-form/profile-info-form';
+import { ProfileEmailFormComponent } from '../../components/forms/profile-email-form/profile-email-form';
+import { ProfilePasswordFormComponent } from '../../components/forms/profile-password-form/profile-password-form';
 
 @Component({
   selector: 'app-profile',

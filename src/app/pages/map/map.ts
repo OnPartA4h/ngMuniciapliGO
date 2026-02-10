@@ -6,7 +6,7 @@ import { Problem } from '../../models/problem';
 import { MapSidebar } from '../../components/map-sidebar/map-sidebar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MapConfigModal } from '../../components/map-config-modal/map-config-modal';
+import { MapConfigModal } from '../../components/modals/map-config-modal/map-config-modal';
 
 @Component({
   selector: 'app-map',

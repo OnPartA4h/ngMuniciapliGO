@@ -5,8 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../services/admin-service';
 import { CreateUserDto, CreateUserResponseDto } from '../../models/user';
 import { PageHeaderComponent } from '../../components/ui';
-import { CreateUserFormComponent } from '../../components/create-user-form/create-user-form';
-import { PasswordSuccessModalComponent } from '../../components/password-success-modal/password-success-modal';
+import { CreateUserFormComponent } from '../../components/forms/create-user-form/create-user-form';
+import { PasswordSuccessModalComponent } from '../../components/modals/password-success-modal/password-success-modal';
 
 @Component({
   selector: 'app-create-user',
