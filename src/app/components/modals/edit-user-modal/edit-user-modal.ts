@@ -2,10 +2,10 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxMaskPipe } from 'ngx-mask';
-import { User, RoleOption } from '../../models/user';
-import { AdminService } from '../../services/admin-service';
-import { GeneralService } from '../../services/general-service';
-import { LanguageService } from '../../services/language-service';
+import { User, RoleOption } from '../../../models/user';
+import { AdminService } from '../../../services/admin-service';
+import { GeneralService } from '../../../services/general-service';
+import { LanguageService } from '../../../services/language-service';
 import { DeleteConfirmModal } from '../delete-confirm-modal/delete-confirm-modal';
 
 @Component({

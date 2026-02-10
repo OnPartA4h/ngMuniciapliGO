@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { UserService } from '../../services/user-service';
+import { UserService } from '../../../services/user-service';
 
 @Component({
   selector: 'app-change-email-modal',

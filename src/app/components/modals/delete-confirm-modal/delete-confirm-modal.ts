@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { User } from '../../models/user';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'app-delete-confirm-modal',
