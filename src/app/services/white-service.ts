@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
+import { CategoryOption, Problem } from '../models/problem';
 import { AssigneAOption, CategoryOption, Problem, StatusOption } from '../models/problem';
 import { environment } from '../../environments/environment';
+import { PaginatedProblems } from '../models/paginatedProblems';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,16 @@ export class WhiteService {
       { params: options as any })
     );
     return x;
+  }
+
+  async getMapProblems(radius: number, latitude: number, longitude: number): Promise<Problem[]> {
+    let params = new HttpParams().set('radius', radius).set('latitude', latitude).set('longitude', longitude)
+    console.log(params);
+
+    let res = await lastValueFrom(this.http.get<Problem[]>(`${this.apiUrl}/api/ColBlanc/map-problems`, {params}))
+    console.log(res);
+    
+    return res
   }
 
   async acceptProblem(id: number): Promise<any> {
