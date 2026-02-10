@@ -74,154 +74,31 @@
 
         <!-- Right Column: Editable Form -->
         <div class="profile-main">
-          <!-- Personal Information Card -->
-          <div class="form-card">
-            <h2>{{ 'PROFILE.PERSONAL_INFO_CARD' | translate }}</h2>
-            <p class="form-description">{{ 'PROFILE.PERSONAL_INFO_DESC' | translate }}</p>
+          <!-- Personal Information Form Component -->
+          <app-profile-info-form
+            [profile]="profile"
+            [isSaving]="isSavingInfo"
+            [successMessage]="infoSuccessMessage"
+            [errorMessage]="infoErrorMessage"
+            (formSubmit)="onSavePersonalInfo($event)">
+          </app-profile-info-form>
 
-            <!-- Info Messages -->
-            @if (infoSuccessMessage) {
-              <div class="form-alert form-alert--success">
-                <i class="fas fa-check-circle"></i> {{ infoSuccessMessage }}
-              </div>
-            }
-            @if (infoErrorMessage) {
-              <div class="form-alert form-alert--error">{{ infoErrorMessage }}</div>
-            }
+          <!-- Email Change Form Component -->
+          <app-profile-email-form
+            [currentEmail]="profile!.email"
+            [isSaving]="isSavingEmail"
+            [successMessage]="emailSuccessMessage"
+            [errorMessage]="emailErrorMessage"
+            (formSubmit)="onRequestEmailChange($event)">
+          </app-profile-email-form>
 
-            <form [formGroup]="profileForm">
-              <!-- Shared User Form Fields -->
-              <app-user-form [form]="profileForm"></app-user-form>
-
-              <div class="spacer-md"></div>
-
-              <div class="form-actions">
-                <button type="button" class="btn btn-primary" [disabled]="isSavingInfo" (click)="savePersonalInfo()">
-                  @if (!isSavingInfo) { <i class="fas fa-save"></i> }
-                  @if (isSavingInfo) { <i class="fas fa-spinner fa-spin"></i> }
-                  {{ (isSavingInfo ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <!-- Email Change Card -->
-          <div class="form-card">
-            <h2>{{ 'PROFILE.EMAIL' | translate }}</h2>
-
-            @if (emailSuccessMessage) {
-              <div class="form-alert form-alert--success">
-                <i class="fas fa-check-circle"></i> {{ emailSuccessMessage }}
-              </div>
-            }
-            @if (emailErrorMessage) {
-              <div class="form-alert form-alert--error">{{ emailErrorMessage }}</div>
-            }
-
-            <form [formGroup]="emailForm">
-              <div class="form-group">
-                <input
-                  type="email"
-                  id="newEmail"
-                  formControlName="newEmail"
-                  placeholder="your.email@example.com"
-                />
-                @if (emailForm.get('newEmail')?.hasError('required') && emailForm.get('newEmail')?.touched) {
-                  <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
-                }
-                @if (emailForm.get('newEmail')?.hasError('email') && emailForm.get('newEmail')?.touched) {
-                  <div class="form-error">{{ 'COMMON.INVALID_EMAIL' | translate }}</div>
-                }
-              </div>
-
-              <div class="spacer-md"></div>
-
-              <div class="form-actions">
-                <button type="button" class="btn btn-primary" [disabled]="isSavingEmail" (click)="requestEmailChange()">
-                  @if (!isSavingEmail) { <i class="fas fa-envelope"></i> }
-                  @if (isSavingEmail) { <i class="fas fa-spinner fa-spin"></i> }
-                  {{ (isSavingEmail ? 'COMMON.SAVING' : 'PROFILE.SEND_VERIFICATION_CODE') | translate }}
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <!-- Password Change Card -->
-          <div class="form-card">
-            <h2>{{ 'PROFILE.CHANGE_PASSWORD' | translate }}</h2>
-            <p class="form-description">{{ 'PROFILE.CHANGE_PASSWORD_DESC' | translate }}</p>
-
-            @if (passwordSuccessMessage) {
-              <div class="form-alert form-alert--success">
-                <i class="fas fa-check-circle"></i> {{ passwordSuccessMessage }}
-              </div>
-            }
-            @if (passwordErrorMessage) {
-              <div class="form-alert form-alert--error">{{ passwordErrorMessage }}</div>
-            }
-
-            <form [formGroup]="passwordForm">
-              <div class="form-group">
-                <label for="currentPassword">{{ 'PROFILE.CURRENT_PASSWORD' | translate }}</label>
-                <input
-                  type="password"
-                  id="currentPassword"
-                  formControlName="currentPassword"
-                  placeholder="••••••••"
-                />
-                @if (passwordForm.get('currentPassword')?.hasError('required') && passwordForm.get('currentPassword')?.touched) {
-                  <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
-                }
-              </div>
-
-              <div class="form-grid">
-                <div class="form-group">
-                  <label for="newPassword">{{ 'PROFILE.NEW_PASSWORD' | translate }}</label>
-                  <input
-                    type="password"
-                    id="newPassword"
-                    formControlName="newPassword"
-                    placeholder="••••••••"
-                  />
-                  @if (passwordForm.get('newPassword')?.hasError('required') && passwordForm.get('newPassword')?.touched) {
-                    <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
-                  }
-                  @if (passwordForm.get('newPassword')?.hasError('minlength') && passwordForm.get('newPassword')?.touched) {
-                    <div class="form-error">{{ 'PROFILE.PASSWORD_MIN_LENGTH' | translate }}</div>
-                  }
-                  @if (passwordForm.get('newPassword')?.hasError('pattern') && passwordForm.get('newPassword')?.touched && !passwordForm.get('newPassword')?.hasError('minlength')) {
-                    <div class="form-error">{{ 'PROFILE.PASSWORD_PATTERN' | translate }}</div>
-                  }
-                </div>
-
-                <div class="form-group">
-                  <label for="confirmPassword">{{ 'PROFILE.CONFIRM_PASSWORD' | translate }}</label>
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    formControlName="confirmPassword"
-                    placeholder="••••••••"
-                  />
-                  @if (passwordForm.get('confirmPassword')?.hasError('required') && passwordForm.get('confirmPassword')?.touched) {
-                    <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
-                  }
-                  @if (passwordForm.get('confirmPassword')?.touched && passwordForm.get('newPassword')?.touched && passwordForm.value.newPassword && passwordForm.value.confirmPassword && passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
-                    <div class="form-error">{{ 'PROFILE.PASSWORD_MISMATCH' | translate }}</div>
-                  }
-                </div>
-              </div>
-
-              <div class="password-form-spacing"></div>
-
-              <div class="form-actions">
-                <button type="button" class="btn btn-primary" [disabled]="isSavingPassword" (click)="savePassword()">
-                  @if (!isSavingPassword) { <i class="fas fa-key"></i> }
-                  @if (isSavingPassword) { <i class="fas fa-spinner fa-spin"></i> }
-                  {{ (isSavingPassword ? 'COMMON.SAVING' : 'PROFILE.UPDATE_PASSWORD') | translate }}
-                </button>
-              </div>
-            </form>
-          </div>
+          <!-- Password Change Form Component -->
+          <app-profile-password-form
+            [isSaving]="isSavingPassword"
+            [successMessage]="passwordSuccessMessage"
+            [errorMessage]="passwordErrorMessage"
+            (formSubmit)="onSavePassword($event)">
+          </app-profile-password-form>
         </div>
       </div>
     </div>
