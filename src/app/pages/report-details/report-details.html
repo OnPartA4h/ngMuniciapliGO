@@ -113,9 +113,11 @@
                         </div>
                         {{problem.citoyenDemandeur.firstName + ' ' + problem.citoyenDemandeur.lastName}}
                     </span>
-                    <span class="badge badge-info">
-                        {{ this.generalService.getStatusLabel(problem.statut) }}
-                    </span>
+                    <div class="report-header">
+                        <span class="badge badge-info">
+                            {{ this.generalService.getStatusLabel(problem.statut) }}
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="details-actions">

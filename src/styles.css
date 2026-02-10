@@ -372,7 +372,8 @@ textarea::placeholder {
   margin: 0 0 var(--spacing-xl) 0;
 }
 
-.form-section__divider {
+.form-section__divider,
+.divider {
   margin-top: var(--spacing-2xl);
   padding-top: var(--spacing-xl);
   border-top: 1px solid var(--color-gray-200);
@@ -511,10 +512,21 @@ textarea::placeholder {
 }
 
 /* Spacing Utility */
-.spacer-sm { height: var(--spacing-sm); }
-.spacer-md { height: var(--spacing-md); }
-.spacer-lg { height: var(--spacing-lg); }
-.spacer-xl { height: var(--spacing-xl); }
+.spacer-sm {
+  height: var(--spacing-sm);
+}
+
+.spacer-md {
+  height: var(--spacing-md);
+}
+
+.spacer-lg {
+  height: var(--spacing-lg);
+}
+
+.spacer-xl {
+  height: var(--spacing-xl);
+}
 
 /* Search Box */
 .search-box {
@@ -814,6 +826,7 @@ textarea::placeholder {
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
