@@ -18,9 +18,9 @@
     <div class="filter-group">
       <select [(ngModel)]="selectedRole" (change)="onRoleFilterChange()">
         <option value="">{{ 'MANAGE_USERS.FILTER_ALL' | translate }}</option>
-        <option *ngFor="let role of availableRoles" [value]="role.key">
-          {{ role.label }}
-        </option>
+        @for (role of availableRoles; track role.key) {
+          <option [value]="role.key">{{ role.label }}</option>
+        }
       </select>
       <button class="btn btn-secondary" (click)="onSearch()">
         <i class="fas fa-search"></i>
@@ -29,52 +29,25 @@
     </div>
   </div>
 
-  <div class="data-table-container" *ngIf="!isLoading">
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>{{ 'MANAGE_USERS.FIRST_NAME' | translate }}</th>
-          <th>{{ 'MANAGE_USERS.LAST_NAME' | translate }}</th>
-          <th>{{ 'MANAGE_USERS.ROLES' | translate }}</th>
-          <th>{{ 'MANAGE_USERS.ACTIONS' | translate }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of users" (click)="openEditModal(user)" class="clickable-row">
-          <td>{{ user.firstName }}</td>
-          <td>{{ user.lastName }}</td>
-          <td>
-            <div class="badges-list">
-              <span class="badge badge-info" *ngFor="let role of user.roles">
-                {{ getRoleLabel(role) }}
-              </span>
-            </div>
-          </td>
-          <td>
-            <button class="btn-icon" (click)="openEditModal(user); $event.stopPropagation()">
-              <i class="fas fa-edit"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  @if (!isLoading) {
+    <app-users-table
+      [users]="users"
+      [roles]="availableRoles"
+      (editUser)="openEditModal($event)">
+    </app-users-table>
+  }
 
-    <app-empty-state
-      *ngIf="users.length === 0"
-      iconClass="fas fa-users"
-      [title]="'MANAGE_USERS.NO_USERS' | translate"
-      [description]="'MANAGE_USERS.NO_USERS_DESC' | translate">
-    </app-empty-state>
-  </div>
+  @if (isLoading) {
+    <app-loading-spinner></app-loading-spinner>
+  }
 
-  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-
-  <app-pagination
-    *ngIf="!isLoading && users.length > 0"
-    [currentPage]="currentPage"
-    [totalPages]="totalPages"
-    (pageChange)="onPageChange($event)">
-  </app-pagination>
+  @if (!isLoading && users.length > 0) {
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
+  }
 </div>
 
 <app-edit-user-modal [user]="selectedUser" [isOpen]="showEditModal" (close)="closeEditModal()"
