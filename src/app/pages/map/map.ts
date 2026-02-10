@@ -53,7 +53,7 @@ export class Map implements AfterViewInit{
     this.initMap()
     await this.getProblems()
     this.placeMarkers()
-    this.CurrentPosMarkerEvent()
+    this.currentPosMarkerEvent()
   }
 
   initMap() {
@@ -77,7 +77,7 @@ export class Map implements AfterViewInit{
       point = L.latLng(this.FALLBACK_COORDS)
     } 
 
-    this.map!.setView(point, 13);
+    this.map!.setView(point, 14);
     this.createCurrentPosMarker(point)
   }
 
@@ -136,7 +136,7 @@ export class Map implements AfterViewInit{
     this.cdr.detectChanges(); 
   }
 
-  CurrentPosMarkerEvent() {
+  currentPosMarkerEvent() {
     if (!this.map) return
 
     this.map.on('click', (event) => {
@@ -203,5 +203,10 @@ export class Map implements AfterViewInit{
     
     await this.getProblems();  
     this.placeMarkers();
+  }
+
+  resetView() {
+    if (!this.map || !this.currenctLng || !this.currentLat) return
+    this.map.setView([this.currentLat, this.currenctLng])
   }
 }
