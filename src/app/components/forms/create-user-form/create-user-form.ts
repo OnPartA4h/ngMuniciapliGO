@@ -2,9 +2,9 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { GeneralService } from '../../services/general-service';
-import { LanguageService } from '../../services/language-service';
-import { CreateUserDto, RoleOption } from '../../models/user';
+import { GeneralService } from '../../../services/general-service';
+import { LanguageService } from '../../../services/language-service';
+import { CreateUserDto, RoleOption } from '../../../models/user';
 import { UserFormComponent } from '../user-form/user-form';
 
 @Component({

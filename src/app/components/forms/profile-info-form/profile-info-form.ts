@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { UpdateUserDto, User } from '../../models/user';
+import { UpdateUserDto, User } from '../../../models/user';
 import { UserFormComponent } from '../user-form/user-form';
 
 @Component({

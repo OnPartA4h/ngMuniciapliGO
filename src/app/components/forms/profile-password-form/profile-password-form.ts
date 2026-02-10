@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ChangePasswordDto } from '../../models/user';
+import { ChangePasswordDto } from '../../../models/user';
 
 @Component({
   selector: 'app-profile-password-form',
