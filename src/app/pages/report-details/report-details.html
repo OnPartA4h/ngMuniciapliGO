@@ -1,8 +1,8 @@
 <div class="manage-reports-container">
     @if (!isLoading && problem) {
     <div class="page-header">
-        <h1>Détails du problème</h1>
-        <p>Toutes les informations du problème</p>
+        <h1>{{ 'MANAGE_REPORTS.TITLE_DETAIL' | translate }}</h1>
+        <p>{{ 'MANAGE_REPORTS.SUBTITLE_DETAIL' | translate }}</p>
     </div>
     }
     @if(isLoading){
@@ -47,6 +47,25 @@
                     <h2>{{ problem?.titre }}</h2>
                     <p>{{ problem.description }}</p>
                 </div>
+                @if (problem.statut === 5) {
+                <div class="divider"></div>
+                <div class="page-header">
+                    <h2>{{ 'MANAGE_REPORTS.MESSAGE_HEADER' | translate }}</h2>
+                    @if (problem.resolutionDescription){
+                    <p>{{ problem.resolutionDescription }}</p>
+                    }
+                    @else {
+                    <p>{{ 'MANAGE_REPORTS.NO_MESSAGE' | translate }}</p>
+                    }
+                </div>
+                @if (problem.resolutionPhotos && problem.resolutionPhotos.length > 0) {
+                <div class="resolution-photos-grid">
+                    @for (photo of problem.resolutionPhotos; track $index) {
+                    <img [src]="photo.url" class="resolution-photo" (click)="openPhotoModal($index)">
+                    }
+                </div>
+                }
+                }
             </div>
         </div>
         <!-- Information -->
@@ -153,6 +172,29 @@
     @if (!isLoading && !problem) {
     <div style="text-align: center; padding: 40px;">
         {{"MANAGE_REPORTS.NO_PROBLEM" | translate}}
+    </div>
+    }
+
+    @if (showPhotoModal()) {
+    <div class="photo-modal-backdrop" (click)="closePhotoModal()">
+        <div class="photo-modal" (click)="$event.stopPropagation()">
+            <button class="photo-modal-close" (click)="closePhotoModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="photo-modal-content">
+                <button class="photo-modal-nav" (click)="prevResolutionPhoto()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <img [src]="problem.resolutionPhotos[resolutionPhotoIndex()]?.url" alt="Photo de résolution"
+                    class="photo-modal-img">
+                <button class="photo-modal-nav" (click)="nextResolutionPhoto()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="photo-modal-info">
+                {{ resolutionPhotoIndex() + 1 }} / {{ problem.resolutionPhotos.length }}
+            </div>
+        </div>
     </div>
     }
 </div>

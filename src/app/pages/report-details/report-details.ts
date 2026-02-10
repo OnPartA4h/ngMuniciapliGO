@@ -21,6 +21,8 @@ export class ReportDetails implements OnInit {
   problem: any = null;
   isLoading = true;
   photoIndex = signal<number>(0);
+  resolutionPhotoIndex = signal<number>(0);
+  showPhotoModal = signal<boolean>(false);
   colBleus: any[] = [];
   search = "";
   message_refus = ""
@@ -72,29 +74,41 @@ export class ReportDetails implements OnInit {
     }
     catch (e) {
       this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
+      console.error(e);
     }
   }
 
   async refuseProblem() {
     try {
-      this.whiteService.refuseProblem(this.problem.id);
+      await this.whiteService.refuseProblem(this.problem.id);
       this.snackbar.open(this.translate.instant('MANAGE_REPORTS.REFUSER_SUCCESS'), 'OK', { duration: 3000 });
       this.router.navigate(['/manage-reports']);
     } catch (err) {
+      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
       console.error(err);
     }
   }
 
   async acceptFix() {
-
+    try {
+      await this.whiteService.acceptFix(this.problem.id);
+      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ACCEPTER_FIX_SUCCESS'), 'OK', { duration: 3000 });
+      this.router.navigate(['/manage-reports']);
+    } catch (err) {
+      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
+      console.error(err);
+    }
   }
 
   async refuseFix() {
-
-  }
-
-  async swapPhotos() {
-
+    try {
+      await this.whiteService.refuseFix(this.problem.id, this.message_refus);
+      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.REFUSER_FIX_SUCCESS'), 'OK', { duration: 3000 });
+      this.router.navigate(['/manage-reports']);
+    } catch (err: any) {
+      this.snackbar.open(err.error.errors.Reason[0], 'OK', { duration: 3000 });
+      console.error(err);
+    }
   }
 
   async assignCitoyen() {
@@ -138,5 +152,24 @@ export class ReportDetails implements OnInit {
       this.colBleus = [];
     else
       this.colBleus = await this.userService.getColBleus(this.search);
+  }
+
+  openPhotoModal(index: number) {
+    this.resolutionPhotoIndex.set(index);
+    this.showPhotoModal.set(true);
+  }
+
+  closePhotoModal() {
+    this.showPhotoModal.set(false);
+  }
+
+  nextResolutionPhoto() {
+    if (!this.problem?.resolutionPhotos?.length) return;
+    this.resolutionPhotoIndex.set((this.resolutionPhotoIndex() + 1) % this.problem.resolutionPhotos.length);
+  }
+
+  prevResolutionPhoto() {
+    if (!this.problem?.resolutionPhotos?.length) return;
+    this.resolutionPhotoIndex.set((this.resolutionPhotoIndex() - 1 + this.problem.resolutionPhotos.length) % this.problem.resolutionPhotos.length);
   }
 }
