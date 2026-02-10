@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth-service';
@@ -17,11 +17,15 @@ import { ProfilePasswordFormComponent } from '../../components/forms/profile-pas
 @Component({
   selector: 'app-profile',
   imports: [
-    CommonModule, TranslateModule,
-    ImageCropperModal, ChangeEmailModal,
-    LoadingSpinnerComponent, PageHeaderComponent,
-    ProfileInfoFormComponent, ProfileEmailFormComponent, ProfilePasswordFormComponent
-  ],
+    TranslateModule,
+    ImageCropperModal,
+    ChangeEmailModal,
+    LoadingSpinnerComponent,
+    PageHeaderComponent,
+    ProfileInfoFormComponent,
+    ProfileEmailFormComponent,
+    ProfilePasswordFormComponent
+],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

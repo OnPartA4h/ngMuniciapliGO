@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../services/auth-service';
@@ -7,7 +7,7 @@ import { AuthService } from '../../../services/auth-service';
 @Component({
   selector: 'app-forgot-password-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [FormsModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './forgot-password-modal.html',
   styleUrl: './forgot-password-modal.css',
 })

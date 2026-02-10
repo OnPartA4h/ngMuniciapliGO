@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../services/admin-service';
@@ -10,7 +10,7 @@ import { PasswordSuccessModalComponent } from '../../components/modals/password-
 
 @Component({
   selector: 'app-create-user',
-  imports: [CommonModule, TranslateModule, PageHeaderComponent, CreateUserFormComponent, PasswordSuccessModalComponent],
+  imports: [TranslateModule, PageHeaderComponent, CreateUserFormComponent, PasswordSuccessModalComponent],
   templateUrl: './create-user.html',
   styleUrl: './create-user.css',
 })

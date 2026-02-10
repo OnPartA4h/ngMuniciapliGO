@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserService } from '../../../services/user-service';
@@ -8,7 +8,7 @@ import { ChangePasswordDto } from '../../../models/user';
 @Component({
   selector: 'app-force-reset-password-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [ReactiveFormsModule, TranslateModule],
   templateUrl: './force-reset-password-modal.html',
   styleUrl: './force-reset-password-modal.css',
 })

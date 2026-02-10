@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Problem } from '../../../models/problem';
@@ -11,7 +11,7 @@ import { Pagination } from '../../../models/pagination';
 @Component({
   selector: 'app-report-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, DaysAgoPipe, EmptyStateComponent, PaginationComponent],
+  imports: [RouterLink, TranslateModule, DaysAgoPipe, EmptyStateComponent, PaginationComponent],
   templateUrl: './report-list.html',
   styleUrl: './report-list.css',
 })

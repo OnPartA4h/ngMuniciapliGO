@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 
 @Component({
   selector: 'app-image-cropper-modal',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ImageCropperComponent],
+  imports: [TranslateModule, ImageCropperComponent],
   templateUrl: './image-cropper-modal.html',
   styleUrl: './image-cropper-modal.css',
 })

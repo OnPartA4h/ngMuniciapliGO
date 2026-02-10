@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxMaskPipe } from 'ngx-mask';
 import { User, RoleOption } from '../../../models/user';
@@ -11,7 +11,7 @@ import { DeleteConfirmModal } from '../delete-confirm-modal/delete-confirm-modal
 @Component({
   selector: 'app-edit-user-modal',
   standalone: true,
-  imports: [CommonModule, TranslateModule, DeleteConfirmModal, NgxMaskPipe],
+  imports: [TranslateModule, DeleteConfirmModal, NgxMaskPipe],
   templateUrl: './edit-user-modal.html',
   styleUrl: './edit-user-modal.css',
 })

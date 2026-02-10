@@ -109,31 +109,33 @@
   <section class="before-after" id="before-after">
     <h2>Histoires de succès</h2>
     <p class="section-subtitle">Découvrez comment MunicipalGO transforme notre ville</p>
-    
+
     <div class="before-after-slider">
-      <div class="before-after-card" *ngFor="let story of successStories">
-        <div class="comparison">
-          <div class="before">
-            <span class="label">Avant</span>
-            <img [src]="story.beforeImage" alt="Avant">
+      @for (story of successStories; track story) {
+        <div class="before-after-card">
+          <div class="comparison">
+            <div class="before">
+              <span class="label">Avant</span>
+              <img [src]="story.beforeImage" alt="Avant">
+            </div>
+            <div class="after">
+              <span class="label">Après</span>
+              <img [src]="story.afterImage" alt="Après">
+            </div>
           </div>
-          <div class="after">
-            <span class="label">Après</span>
-            <img [src]="story.afterImage" alt="Après">
+          <div class="story-info">
+            <h4>{{story.title}}</h4>
+            <p>{{story.description}}</p>
+            <span class="resolution-time">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              Résolu en {{story.resolutionDays}} jours
+            </span>
           </div>
         </div>
-        <div class="story-info">
-          <h4>{{story.title}}</h4>
-          <p>{{story.description}}</p>
-          <span class="resolution-time">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-            Résolu en {{story.resolutionDays}} jours
-          </span>
-        </div>
-      </div>
+      }
     </div>
   </section>
 
@@ -141,21 +143,23 @@
   <section class="testimonials" id="testimonials">
     <h2>Ce que disent nos citoyens</h2>
     <div class="testimonials-grid">
-      <div class="testimonial-card" *ngFor="let testimonial of testimonials">
-        <div class="testimonial-content">
-          <svg class="quote-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-          </svg>
-          <p>{{testimonial.content}}</p>
-        </div>
-        <div class="testimonial-author">
-          <img [src]="testimonial.avatar" alt="{{testimonial.name}}">
-          <div>
-            <strong>{{testimonial.name}}</strong>
-            <span>{{testimonial.neighborhood}}</span>
+      @for (testimonial of testimonials; track testimonial) {
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <svg class="quote-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+            </svg>
+            <p>{{testimonial.content}}</p>
+          </div>
+          <div class="testimonial-author">
+            <img [src]="testimonial.avatar" alt="{{testimonial.name}}">
+            <div>
+              <strong>{{testimonial.name}}</strong>
+              <span>{{testimonial.neighborhood}}</span>
+            </div>
           </div>
         </div>
-      </div>
+      }
     </div>
   </section>
 
@@ -163,7 +167,7 @@
   <section class="map-section" id="map">
     <h2>Carte des problèmes signalés</h2>
     <p class="section-subtitle">Consultez les problèmes signalés dans votre quartier</p>
-    
+
     <div class="map-container">
       <div class="map-placeholder">
         <img src="https://placehold.co/1200x500/e8f4f8/1565c0?text=Carte+Interactive" alt="Carte des problèmes">
@@ -171,7 +175,7 @@
           <p>Carte interactive des problèmes signalés</p>
         </div>
       </div>
-      
+
       <div class="map-legend">
         <h4>Légende</h4>
         <div class="legend-item">
@@ -193,22 +197,24 @@
     <div class="recent-problems">
       <h3>Problèmes récents</h3>
       <div class="problems-grid">
-        <div class="problem-card-mini" *ngFor="let problem of recentProblems">
-          <img [src]="problem.imageUrl" alt="{{problem.title}}">
-          <div class="problem-info">
-            <h5>{{problem.title}}</h5>
-            <span class="problem-location">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg>
-              {{problem.location}}
-            </span>
-            <span class="problem-status" [ngClass]="'status-' + problem.status">
-              {{problem.statusLabel}}
-            </span>
+        @for (problem of recentProblems; track problem) {
+          <div class="problem-card-mini">
+            <img [src]="problem.imageUrl" alt="{{problem.title}}">
+            <div class="problem-info">
+              <h5>{{problem.title}}</h5>
+              <span class="problem-location">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                {{problem.location}}
+              </span>
+              <span class="problem-status" [ngClass]="'status-' + problem.status">
+                {{problem.statusLabel}}
+              </span>
+            </div>
           </div>
-        </div>
+        }
       </div>
     </div>
   </section>

@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { GeneralService } from '../../../services/general-service';
@@ -10,7 +10,7 @@ import { UserFormComponent } from '../user-form/user-form';
 @Component({
   selector: 'app-create-user-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, UserFormComponent],
+  imports: [ReactiveFormsModule, TranslateModule, UserFormComponent],
   templateUrl: './create-user-form.html',
   styleUrl: './create-user-form.css',
 })

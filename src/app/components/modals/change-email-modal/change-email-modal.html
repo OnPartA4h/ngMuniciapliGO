@@ -9,16 +9,20 @@
 
     <div class="modal-body">
       <!-- Success Message -->
-      <div class="alert alert-success" *ngIf="successMessage">
-        <i class="fas fa-check-circle"></i>
-        <span>{{ successMessage }}</span>
-      </div>
+      @if (successMessage) {
+        <div class="alert alert-success">
+          <i class="fas fa-check-circle"></i>
+          <span>{{ successMessage }}</span>
+        </div>
+      }
 
       <!-- Error Message -->
-      <div class="alert alert-error" *ngIf="errorMessage">
-        <i class="fas fa-exclamation-circle"></i>
-        <span>{{ errorMessage }}</span>
-      </div>
+      @if (errorMessage) {
+        <div class="alert alert-error">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
 
       <!-- Verification Code Form -->
       <p class="modal-description">
@@ -37,42 +41,48 @@
             [placeholder]="'PROFILE.VERIFICATION_CODE_PLACEHOLDER' | translate"
             [class.error]="verificationForm.get('code')?.invalid && verificationForm.get('code')?.touched"
             maxlength="6"
-          />
-          <span class="error-text" *ngIf="verificationForm.get('code')?.hasError('required') && verificationForm.get('code')?.touched">
-            {{ 'COMMON.REQUIRED_FIELD' | translate }}
-          </span>
-          <span class="error-text" *ngIf="verificationForm.get('code')?.hasError('minlength') && verificationForm.get('code')?.touched">
-            {{ 'PROFILE.VERIFICATION_CODE_INVALID' | translate }}
-          </span>
-        </div>
+            />
+            @if (verificationForm.get('code')?.hasError('required') && verificationForm.get('code')?.touched) {
+              <span class="error-text">
+                {{ 'COMMON.REQUIRED_FIELD' | translate }}
+              </span>
+            }
+            @if (verificationForm.get('code')?.hasError('minlength') && verificationForm.get('code')?.touched) {
+              <span class="error-text">
+                {{ 'PROFILE.VERIFICATION_CODE_INVALID' | translate }}
+              </span>
+            }
+          </div>
 
-        <button type="button" class="btn-link" (click)="resendCode()" [style.pointer-events]="isLoading ? 'none' : 'auto'" [style.opacity]="isLoading ? '0.6' : '1'">
-          <i class="fas fa-redo"></i>
-          {{ 'PROFILE.RESEND_CODE' | translate }}
+          <button type="button" class="btn-link" (click)="resendCode()" [style.pointer-events]="isLoading ? 'none' : 'auto'" [style.opacity]="isLoading ? '0.6' : '1'">
+            <i class="fas fa-redo"></i>
+            {{ 'PROFILE.RESEND_CODE' | translate }}
+          </button>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeModal()"
+          [style.pointer-events]="isLoading ? 'none' : 'auto'"
+          [style.opacity]="isLoading ? '0.6' : '1'"
+          >
+          {{ 'COMMON.CANCEL' | translate }}
         </button>
-      </form>
-    </div>
-
-    <div class="modal-footer">
-      <button 
-        type="button" 
-        class="btn btn-secondary" 
-        (click)="closeModal()" 
-        [style.pointer-events]="isLoading ? 'none' : 'auto'" 
-        [style.opacity]="isLoading ? '0.6' : '1'"
-      >
-        {{ 'COMMON.CANCEL' | translate }}
-      </button>
-      <button 
-        type="submit" 
-        class="btn btn-primary" 
-        (click)="submitVerification()"
-        [style.pointer-events]="(verificationForm.invalid || isLoading) ? 'none' : 'auto'" 
-        [style.opacity]="(verificationForm.invalid || isLoading) ? '0.6' : '1'"
-      >
-        <span class="spinner" *ngIf="isLoading"></span>
-        {{ isLoading ? ('COMMON.LOADING' | translate) : 'PROFILE.VERIFY_CODE' | translate }}
-      </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          (click)="submitVerification()"
+          [style.pointer-events]="(verificationForm.invalid || isLoading) ? 'none' : 'auto'"
+          [style.opacity]="(verificationForm.invalid || isLoading) ? '0.6' : '1'"
+          >
+          @if (isLoading) {
+            <span class="spinner"></span>
+          }
+          {{ isLoading ? ('COMMON.LOADING' | translate) : 'PROFILE.VERIFY_CODE' | translate }}
+        </button>
+      </div>
     </div>
   </div>
-</div>

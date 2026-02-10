@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
@@ -8,7 +8,7 @@ import { NotificationBell } from '../notification-bell/notification-bell';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive, CommonModule, TranslateModule, NotificationBell],
+  imports: [RouterLink, RouterLinkActive, TranslateModule, NotificationBell],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })

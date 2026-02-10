@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
 import { ForceResetPasswordModal } from '../../components/modals/force-reset-password-modal/force-reset-password-modal';
 import { ForgotPasswordModal } from '../../components/modals/forgot-password-modal/forgot-password-modal';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TranslateModule, ForceResetPasswordModal, ForgotPasswordModal],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, TranslateModule, ForceResetPasswordModal, ForgotPasswordModal],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
@@ -7,7 +7,7 @@ import { NotificationService } from '../../services/notification.service';
 @Component({
   selector: 'app-notification-bell',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './notification-bell.html',
   styleUrls: ['./notification-bell.css']
 })

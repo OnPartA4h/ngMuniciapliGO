@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
 import { User } from '../../../models/user';
 
 @Component({
   selector: 'app-delete-confirm-modal',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   templateUrl: './delete-confirm-modal.html',
   styleUrl: './delete-confirm-modal.css',
 })

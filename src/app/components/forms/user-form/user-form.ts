@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaskDirective } from 'ngx-mask';
@@ -7,7 +7,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 @Component({
   selector: 'app-user-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, NgxMaskDirective],
+  imports: [ReactiveFormsModule, TranslateModule, NgxMaskDirective],
   templateUrl: './user-form.html',
 })
 export class UserFormComponent {

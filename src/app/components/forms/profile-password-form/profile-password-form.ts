@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ChangePasswordDto } from '../../../models/user';
@@ -7,7 +7,7 @@ import { ChangePasswordDto } from '../../../models/user';
 @Component({
   selector: 'app-profile-password-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [ReactiveFormsModule, TranslateModule],
   templateUrl: './profile-password-form.html',
 })
 export class ProfilePasswordFormComponent {

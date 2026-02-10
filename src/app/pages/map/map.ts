@@ -4,13 +4,13 @@ import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { WhiteService } from '../../services/white-service';
 import { Problem } from '../../models/problem';
 import { MapSidebar } from '../../components/map-sidebar/map-sidebar';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MapConfigModal } from '../../components/modals/map-config-modal/map-config-modal';
 
 @Component({
   selector: 'app-map',
-  imports: [MapSidebar, CommonModule, FormsModule, MapConfigModal],
+  imports: [MapSidebar, FormsModule, MapConfigModal],
   standalone: true,
   templateUrl: './map.html',
   styleUrl: './map.css',

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { StatusOption, CategoryOption, AssigneAOption } from '../../models/problem';
-import { CommonModule } from '@angular/common';
+
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 import { WhiteService } from '../../services/white-service';
 import { UserService } from '../../services/user-service';
@@ -15,7 +15,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   selector: 'app-report-details',
   templateUrl: './report-details.html',
   styleUrl: './report-details.css',
-  imports: [CommonModule, DaysAgoPipe, FormsModule, TranslateModule, MatSnackBarModule],
+  imports: [DaysAgoPipe, FormsModule, TranslateModule, MatSnackBarModule],
 })
 export class ReportDetails implements OnInit {
   problem: any = null;

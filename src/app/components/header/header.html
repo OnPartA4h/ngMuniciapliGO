@@ -2,7 +2,7 @@
   <a routerLink="/home" class="logo">
     <img src="/assets/images/Logo.png" class="logo-img"> <span>MunicipaliGO</span>
   </a>
-  
+
   <nav>
     <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
       {{ 'HEADER.HOME' | translate }}
@@ -12,17 +12,21 @@
       Map
     </a>
 
-    <a *ngIf="userRoles().includes('ColBlanc') || userRoles().includes('Admin')" 
-       routerLink="/manage-reports" 
-       routerLinkActive="active">
-      {{ 'HEADER.MANAGE_REPORTS' | translate }}
-    </a>
-    
-    <a *ngIf="userRoles().includes('Admin')" 
-       routerLink="/manage-users" 
-       routerLinkActive="active">
-      {{ 'HEADER.MANAGE_USERS' | translate }}
-    </a>
+    @if (userRoles().includes('ColBlanc') || userRoles().includes('Admin')) {
+      <a
+        routerLink="/manage-reports"
+        routerLinkActive="active">
+        {{ 'HEADER.MANAGE_REPORTS' | translate }}
+      </a>
+    }
+
+    @if (userRoles().includes('Admin')) {
+      <a
+        routerLink="/manage-users"
+        routerLinkActive="active">
+        {{ 'HEADER.MANAGE_USERS' | translate }}
+      </a>
+    }
   </nav>
 
   <div class="header-actions">
@@ -33,23 +37,35 @@
     </button>
 
     <!-- Notification Bell (when connected) -->
-    <app-notification-bell *ngIf="isConnected()"></app-notification-bell>
+    @if (isConnected()) {
+      <app-notification-bell></app-notification-bell>
+    }
 
     <!-- Profile Avatar (when connected) -->
-    <a *ngIf="isConnected()" routerLink="/profile" class="profile-avatar" routerLinkActive="active">
-      <img *ngIf="authService.profilePictureUrl()" [src]="authService.profilePictureUrl()!" alt="Profile" />
-      <i *ngIf="!authService.profilePictureUrl()" class="fas fa-user"></i>
-    </a>
-    
+    @if (isConnected()) {
+      <a routerLink="/profile" class="profile-avatar" routerLinkActive="active">
+        @if (authService.profilePictureUrl()) {
+          <img [src]="authService.profilePictureUrl()!" alt="Profile" />
+        }
+        @if (!authService.profilePictureUrl()) {
+          <i class="fas fa-user"></i>
+        }
+      </a>
+    }
+
 
     <!-- Login/Logout -->
-    <a *ngIf="!isConnected()" routerLink="/login" class="btn-login">
-      {{ 'HEADER.LOGIN' | translate }}
-    </a>
+    @if (!isConnected()) {
+      <a routerLink="/login" class="btn-login">
+        {{ 'HEADER.LOGIN' | translate }}
+      </a>
+    }
 
-    <button *ngIf="isConnected()" class="btn-login" (click)="logout()">
-      <i class="fas fa-sign-out-alt"></i>
-      {{ 'HEADER.LOGOUT' | translate }}
-    </button>
+    @if (isConnected()) {
+      <button class="btn-login" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        {{ 'HEADER.LOGOUT' | translate }}
+      </button>
+    }
   </div>
 </header>

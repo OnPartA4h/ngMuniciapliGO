@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { lastValueFrom, Subscription } from 'rxjs';
@@ -11,7 +11,7 @@ import { PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent } fro
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, TranslateModule, PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent],
+  imports: [TranslateModule, PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent],
   templateUrl: './notifications.html',
   styleUrls: ['./notifications.css']
 })

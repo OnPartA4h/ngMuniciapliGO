@@ -6,95 +6,94 @@
     </button>
   </div>
 
-  <div class="sidebar-content" *ngIf="problem">
-    <!-- Problem Image -->
-    <div class="problem-image-container" >
-      <img [src]="problem.photos[0].url" [alt]="problem.titre" class="problem-image" />
-    </div>
-    <div class="no-image" *ngIf="!problem.photos[0].url">
-      <i class="fas fa-image"></i>
-      <p>{{ 'MAP_SIDEBAR.NO_IMAGE' | translate }}</p>
-    </div>
-
-    <!-- Problem Title -->
-    <div class="problem-header">
-      <h3>{{ problem.titre }}</h3>
-      <span class="status-badge">
-        {{ this.generalService.getStatusLabel(problem.statut) }}
-      </span>
-    </div>
-
-    <!-- Category -->
-    <div class="info-card">
-      <div class="info-item">
-        <i class="fas"></i>
-        <div class="info-content">
-          <label>{{ 'MAP_SIDEBAR.CATEGORY' | translate }}</label>
-          <p>{{ this.generalService.getCategoryLabel(problem.categorie) }}</p>
+  @if (problem) {
+    <div class="sidebar-content">
+      <!-- Problem Image -->
+      <div class="problem-image-container" >
+        <img [src]="problem.photos[0].url" [alt]="problem.titre" class="problem-image" />
+      </div>
+      @if (!problem.photos[0].url) {
+        <div class="no-image">
+          <i class="fas fa-image"></i>
+          <p>{{ 'MAP_SIDEBAR.NO_IMAGE' | translate }}</p>
+        </div>
+      }
+      <!-- Problem Title -->
+      <div class="problem-header">
+        <h3>{{ problem.titre }}</h3>
+        <span class="status-badge">
+          {{ this.generalService.getStatusLabel(problem.statut) }}
+        </span>
+      </div>
+      <!-- Category -->
+      <div class="info-card">
+        <div class="info-item">
+          <i class="fas"></i>
+          <div class="info-content">
+            <label>{{ 'MAP_SIDEBAR.CATEGORY' | translate }}</label>
+            <p>{{ this.generalService.getCategoryLabel(problem.categorie) }}</p>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- Description -->
-    <div class="info-card">
-      <label>{{ 'MAP_SIDEBAR.DESCRIPTION' | translate }}</label>
-      <p class="description">{{ problem.description }}</p>
-    </div>
-
-    <!-- Location -->
-    <div class="info-card">
-      <div class="info-item">
-        <i class="fas fa-map-marker-alt"></i>
-        <div class="info-content">
-          <label>{{ 'MAP_SIDEBAR.LOCATION' | translate }}</label>
-          <p>{{ problem.address }}</p>
-          <p class="coordinates">
-            {{ 'MAP_SIDEBAR.COORDINATES' | translate }}: 
-            {{ problem.latitude | number:'1.6-6' }}, {{ problem.longitude | number:'1.6-6' }}
-          </p>
+      <!-- Description -->
+      <div class="info-card">
+        <label>{{ 'MAP_SIDEBAR.DESCRIPTION' | translate }}</label>
+        <p class="description">{{ problem.description }}</p>
+      </div>
+      <!-- Location -->
+      <div class="info-card">
+        <div class="info-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <div class="info-content">
+            <label>{{ 'MAP_SIDEBAR.LOCATION' | translate }}</label>
+            <p>{{ problem.address }}</p>
+            <p class="coordinates">
+              {{ 'MAP_SIDEBAR.COORDINATES' | translate }}:
+              {{ problem.latitude | number:'1.6-6' }}, {{ problem.longitude | number:'1.6-6' }}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- Date Reported -->
-    <div class="info-card">
-      <div class="info-item">
-        <i class="fas fa-calendar"></i>
-        <div class="info-content">
-          <label>{{ 'MAP_SIDEBAR.REPORTED_DATE' | translate }}</label>
-          <p>{{ problem.dateCreation | date:'medium' }}</p>
+      <!-- Date Reported -->
+      <div class="info-card">
+        <div class="info-item">
+          <i class="fas fa-calendar"></i>
+          <div class="info-content">
+            <label>{{ 'MAP_SIDEBAR.REPORTED_DATE' | translate }}</label>
+            <p>{{ problem.dateCreation | date:'medium' }}</p>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- Reporter Info 
-    <div class="info-card" *ngIf="problem.prenom && problem.nom">
-      <div class="info-item">
-        <i class="fas fa-user"></i>
-        <div class="info-content">
-          <label>{{ 'MAP_SIDEBAR.REPORTED_BY' | translate }}</label>
-          <p>{{ problem.prenom }} {{ problem.nom }}</p>
+      <!-- Reporter Info
+      <div class="info-card" *ngIf="problem.prenom && problem.nom">
+        <div class="info-item">
+          <i class="fas fa-user"></i>
+          <div class="info-content">
+            <label>{{ 'MAP_SIDEBAR.REPORTED_BY' | translate }}</label>
+            <p>{{ problem.prenom }} {{ problem.nom }}</p>
+          </div>
         </div>
+      </div>-->
+      <!-- Actions -->
+      <div class="sidebar-actions">
+        <button class="btn-primary" [routerLink]="['/report-details', problem.id]">
+          <i class="fas fa-eye"></i>
+          {{ 'MAP_SIDEBAR.VIEW_DETAILS' | translate }}
+        </button>
+        <button class="btn-secondary">
+          <i class="fas fa-directions"></i>
+          {{ 'MAP_SIDEBAR.GET_DIRECTIONS' | translate }}
+        </button>
       </div>
-    </div>-->
-
-    <!-- Actions -->
-    <div class="sidebar-actions">
-      <button class="btn-primary" [routerLink]="['/report-details', problem.id]">
-        <i class="fas fa-eye"></i>
-        {{ 'MAP_SIDEBAR.VIEW_DETAILS' | translate }}
-      </button>
-      <button class="btn-secondary">
-        <i class="fas fa-directions"></i>
-        {{ 'MAP_SIDEBAR.GET_DIRECTIONS' | translate }}
-      </button>
     </div>
-  </div>
+  }
 
   <!-- Empty State -->
-  <div class="empty-state" *ngIf="!problem && isOpen">
-    <i class="fas fa-map-marked-alt"></i>
-    <h3>{{ 'MAP_SIDEBAR.SELECT_MARKER' | translate }}</h3>
-    <p>{{ 'MAP_SIDEBAR.SELECT_MARKER_DESC' | translate }}</p>
-  </div>
+  @if (!problem && isOpen) {
+    <div class="empty-state">
+      <i class="fas fa-map-marked-alt"></i>
+      <h3>{{ 'MAP_SIDEBAR.SELECT_MARKER' | translate }}</h3>
+      <p>{{ 'MAP_SIDEBAR.SELECT_MARKER_DESC' | translate }}</p>
+    </div>
+  }
 </div>

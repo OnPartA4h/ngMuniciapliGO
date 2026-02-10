@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -13,7 +13,7 @@ import { UsersTableComponent } from '../../components/tables/users-table/users-t
 
 @Component({
   selector: 'app-manage-users',
-  imports: [CommonModule, FormsModule, RouterLink, EditUserModal, TranslateModule, PaginationComponent, LoadingSpinnerComponent, PageHeaderComponent, UsersTableComponent],
+  imports: [FormsModule, RouterLink, EditUserModal, TranslateModule, PaginationComponent, LoadingSpinnerComponent, PageHeaderComponent, UsersTableComponent],
   templateUrl: './manage-users.html',
   styleUrl: './manage-users.css',
 })

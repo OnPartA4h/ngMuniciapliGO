@@ -2,63 +2,71 @@
   <a routerLink="/home" class="logo-link">
     <div class="logo"><img src="/assets/images/Logo.png" class="login-logo-img"> MunicipaliGO</div>
   </a>
-  
+
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">
-        <img src="/assets/images/LogoText.png" class="login-logo-text">  
+        <img src="/assets/images/LogoText.png" class="login-logo-text">
         <p>{{ 'LOGIN.SUBTITLE' | translate }}</p>
       </div>
 
-      <div *ngIf="authService.errorMessage != ''" class="form-alert form-alert--error login-error-message">{{ 'LOGIN.ERROR_MESSAGE' | translate }}</div>
-      
+      @if (authService.errorMessage != '') {
+        <div class="form-alert form-alert--error login-error-message">{{ 'LOGIN.ERROR_MESSAGE' | translate }}</div>
+      }
+
       <form [formGroup]="formGroup" class="login-form">
         <div class="form-group">
           <label for="email">{{ 'LOGIN.EMAIL' | translate }}</label>
           <input  type="email" id="email" [placeholder]="'LOGIN.EMAIL_PLACEHOLDER' | translate" name="email" formControlName="email"/>
           @if(formGroup.get('email')?.hasError('required') && formGroup.get('email')?.touched) {
             <div class="form-error">{{ 'LOGIN.EMAIL_REQUIRED' | translate }}</div>
-            }
+          }
 
-            @if(formGroup.get('email')?.hasError('email') && formGroup.get('email')?.touched) {
+          @if(formGroup.get('email')?.hasError('email') && formGroup.get('email')?.touched) {
             <div class="form-error">{{ 'LOGIN.EMAIL_INVALID' | translate }}</div>
-            }
+          }
         </div>
-        
+
         <div class="form-group">
           <label for="password">{{ 'LOGIN.PASSWORD' | translate }}</label>
           <input type="password" id="password" placeholder="••••••••" name="password" formControlName="password"/>
           @if(formGroup.get('password')?.hasError('required') && formGroup.get('password')?.touched) {
             <div class="form-error">{{ 'LOGIN.PASSWORD_REQUIRED' | translate }}</div>
-            }
+          }
         </div>
-        
+
         <div class="form-options">
           <a href="javascript:void(0)" class="forgot-password" (click)="openForgotPasswordModal()">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
         </div>
-        
+
         <button type="submit" [disabled]="!formGroup.valid || isLoading" class="btn-login" (click)="login()">
-          <span *ngIf="!isLoading">{{ 'LOGIN.SIGN_IN' | translate }}</span>
-          <div *ngIf="isLoading" class="loading-spinner">
-            <div class="spinner"></div>
-            <span class="loading-text">{{ 'LOGIN.SIGNING_IN' | translate }}</span>
-          </div>
+          @if (!isLoading) {
+            <span>{{ 'LOGIN.SIGN_IN' | translate }}</span>
+          }
+          @if (isLoading) {
+            <div class="loading-spinner">
+              <div class="spinner"></div>
+              <span class="loading-text">{{ 'LOGIN.SIGNING_IN' | translate }}</span>
+            </div>
+          }
         </button>
-      </form>  
+      </form>
     </div>
   </div>
 
   <!-- Force Reset Password Modal -->
-  <app-force-reset-password-modal
-    *ngIf="showResetPasswordModal"
-    [currentPassword]="currentPassword"
-    (passwordReset)="onPasswordReset()"
-    (resetError)="onResetError($event)"
-  ></app-force-reset-password-modal>
+  @if (showResetPasswordModal) {
+    <app-force-reset-password-modal
+      [currentPassword]="currentPassword"
+      (passwordReset)="onPasswordReset()"
+      (resetError)="onResetError($event)"
+    ></app-force-reset-password-modal>
+  }
 
   <!-- Forgot Password Modal -->
-  <app-forgot-password-modal
-    *ngIf="showForgotPasswordModal"
-    (close)="closeForgotPasswordModal()"
-  ></app-forgot-password-modal>
+  @if (showForgotPasswordModal) {
+    <app-forgot-password-modal
+      (close)="closeForgotPasswordModal()"
+    ></app-forgot-password-modal>
+  }
 </div>

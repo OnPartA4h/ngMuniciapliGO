@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { UpdateUserDto, User } from '../../../models/user';
@@ -8,7 +8,7 @@ import { UserFormComponent } from '../user-form/user-form';
 @Component({
   selector: 'app-profile-info-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, UserFormComponent],
+  imports: [ReactiveFormsModule, TranslateModule, UserFormComponent],
   templateUrl: './profile-info-form.html',
 })
 export class ProfileInfoFormComponent implements OnChanges {

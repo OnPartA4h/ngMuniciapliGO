@@ -4,7 +4,7 @@
     <div class="cropper-header">
       <h2>{{ 'PROFILE.CROP_PHOTO' | translate }}</h2>
     </div>
-    
+
     <div class="cropper-content">
       <image-cropper
         [imageChangedEvent]="imageChangedEvent"
@@ -20,14 +20,18 @@
         (loadImageFailed)="loadImageFailed()"
       ></image-cropper>
     </div>
-    
+
     <div class="cropper-actions">
       <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="isUploading">
         {{ 'COMMON.CANCEL' | translate }}
       </button>
       <button type="button" class="btn btn-primary" [disabled]="isUploading" (click)="upload()">
-        <i class="fas fa-upload" *ngIf="!isUploading"></i>
-        <i class="fas fa-spinner fa-spin" *ngIf="isUploading"></i>
+        @if (!isUploading) {
+          <i class="fas fa-upload"></i>
+        }
+        @if (isUploading) {
+          <i class="fas fa-spinner fa-spin"></i>
+        }
         {{ (isUploading ? 'COMMON.SAVING' : 'PROFILE.UPLOAD_PHOTO') | translate }}
       </button>
     </div>
