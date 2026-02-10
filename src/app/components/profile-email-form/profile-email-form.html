@@ -1,0 +1,39 @@
+<div class="form-card">
+  <h2>{{ 'PROFILE.EMAIL' | translate }}</h2>
+
+  @if (successMessage) {
+    <div class="form-alert form-alert--success">
+      <i class="fas fa-check-circle"></i> {{ successMessage }}
+    </div>
+  }
+  @if (errorMessage) {
+    <div class="form-alert form-alert--error">{{ errorMessage }}</div>
+  }
+
+  <form [formGroup]="emailForm">
+    <div class="form-group">
+      <input
+        type="email"
+        id="newEmail"
+        formControlName="newEmail"
+        placeholder="your.email@example.com"
+      />
+      @if (emailForm.get('newEmail')?.hasError('required') && emailForm.get('newEmail')?.touched) {
+        <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+      }
+      @if (emailForm.get('newEmail')?.hasError('email') && emailForm.get('newEmail')?.touched) {
+        <div class="form-error">{{ 'COMMON.INVALID_EMAIL' | translate }}</div>
+      }
+    </div>
+
+    <div class="spacer-md"></div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-primary" [disabled]="isSaving" (click)="submitForm()">
+        @if (!isSaving) { <i class="fas fa-envelope"></i> }
+        @if (isSaving) { <i class="fas fa-spinner fa-spin"></i> }
+        {{ (isSaving ? 'COMMON.SAVING' : 'PROFILE.SEND_VERIFICATION_CODE') | translate }}
+      </button>
+    </div>
+  </form>
+</div>
