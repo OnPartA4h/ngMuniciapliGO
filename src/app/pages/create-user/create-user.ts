@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,13 +18,13 @@ export class CreateUser {
   private adminService = inject(AdminService);
   private router = inject(Router);
 
-  @ViewChild(CreateUserFormComponent) createUserForm!: CreateUserFormComponent;
+  readonly createUserForm = viewChild.required(CreateUserFormComponent);
 
   generatedPassword: string | null = null;
   showPasswordModal = false;
 
   async onFormSubmit(userData: CreateUserDto) {
-    this.createUserForm.setLoading(true);
+    this.createUserForm().setLoading(true);
 
     try {
       const response: CreateUserResponseDto = await this.adminService.createUser(userData);
@@ -33,11 +33,11 @@ export class CreateUser {
       this.showPasswordModal = true;
 
       // Reset the form after success
-      this.createUserForm.resetForm();
+      this.createUserForm().resetForm();
     } catch (error: any) {
       console.error('Error creating user:', error);
     } finally {
-      this.createUserForm.setLoading(false);
+      this.createUserForm().setLoading(false);
     }
   }
 

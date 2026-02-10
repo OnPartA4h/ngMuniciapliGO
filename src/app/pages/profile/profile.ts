@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject, viewChild } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -38,8 +38,8 @@ export class Profile implements OnInit {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
-  @ViewChild(ProfileEmailFormComponent) emailFormComponent!: ProfileEmailFormComponent;
-  @ViewChild(ProfilePasswordFormComponent) passwordFormComponent!: ProfilePasswordFormComponent;
+  readonly emailFormComponent = viewChild.required(ProfileEmailFormComponent);
+  readonly passwordFormComponent = viewChild.required(ProfilePasswordFormComponent);
 
   profile: User | null = null;
   roles: RoleOption[] = [];
@@ -133,7 +133,7 @@ export class Profile implements OnInit {
     try {
       const response = await this.userService.changePassword(dto);
       this.passwordSuccessMessage = response.message || this.translateService.instant('PROFILE.PASSWORD_SUCCESS');
-      this.passwordFormComponent.resetForm();
+      this.passwordFormComponent().resetForm();
     } catch (error: any) {
       console.error('Error changing password:', error);
       this.passwordErrorMessage = error?.error?.message || this.translateService.instant('PROFILE.PASSWORD_ERROR');
@@ -153,7 +153,7 @@ export class Profile implements OnInit {
       await this.userService.requestEmailChange({ newEmail: data.newEmail });
       this.pendingEmail = data.newEmail;
       this.showEmailVerificationModal = true;
-      this.emailFormComponent.resetForm();
+      this.emailFormComponent().resetForm();
       this.cdr.detectChanges();
     } catch (error: any) {
       console.error('Error requesting email change:', error);
