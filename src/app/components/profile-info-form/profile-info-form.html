@@ -1,0 +1,29 @@
+<div class="form-card">
+  <h2>{{ 'PROFILE.PERSONAL_INFO_CARD' | translate }}</h2>
+  <p class="form-description">{{ 'PROFILE.PERSONAL_INFO_DESC' | translate }}</p>
+
+  <!-- Info Messages -->
+  @if (successMessage) {
+    <div class="form-alert form-alert--success">
+      <i class="fas fa-check-circle"></i> {{ successMessage }}
+    </div>
+  }
+  @if (errorMessage) {
+    <div class="form-alert form-alert--error">{{ errorMessage }}</div>
+  }
+
+  <form [formGroup]="profileForm">
+    <!-- Shared User Form Fields -->
+    <app-user-form [form]="profileForm"></app-user-form>
+
+    <div class="spacer-md"></div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-primary" [disabled]="isSaving" (click)="submitForm()">
+        @if (!isSaving) { <i class="fas fa-save"></i> }
+        @if (isSaving) { <i class="fas fa-spinner fa-spin"></i> }
+        {{ (isSaving ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
+      </button>
+    </div>
+  </form>
+</div>
