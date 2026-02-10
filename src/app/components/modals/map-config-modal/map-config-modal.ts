@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, OnInit, input, output, SimpleChange, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, input, output, SimpleChange, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ export class MapConfigModal implements OnChanges {
   readonly isOpen = input<boolean>(false);
   readonly close = output<void>();
   readonly apply = output<void>();
-  @Output() radiusChange = new EventEmitter<number>()
+  readonly radiusChange = output<number>();
 
   DEFAULT_RADIUS = 1000
 
