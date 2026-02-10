@@ -17,11 +17,12 @@
   z-index: 10;
 }
 
-.settings-button {
+/* Styles communs pour les boutons flottants */
+.settings-button,
+.center-button {
     position: fixed;
     z-index: 11;
     bottom: var(--spacing-2xl);
-    left: var(--spacing-2xl);
     width: 56px;
     height: 56px;
     background: var(--color-primary);
@@ -35,17 +36,45 @@
     transition: all var(--transition-base);
 }
 
-.settings-button:hover {
+.settings-button:hover,
+.center-button:hover {
     background: var(--color-primary-dark);
     transform: scale(1.05);
     box-shadow: 0 8px 25px rgba(21, 101, 192, 0.4);
 }
 
-.settings-button:active {
+.settings-button:active,
+.center-button:active {
     transform: scale(0.95);
 }
 
-.settings-button i {
+.settings-button i,
+.center-button i {
     font-size: 22px;
     color: var(--color-white);
+}
+
+/* Positionnement spécifique */
+.settings-button {
+    left: var(--spacing-2xl);
+}
+
+.center-button {
+    left: calc(var(--spacing-2xl) + 56px + var(--spacing-md));
+}
+
+/* Styles pour les marqueurs SVG personnalisés */
+::ng-deep .custom-marker-icon {
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+::ng-deep .custom-marker-icon:hover {
+    transform: scale(1.1);
+}
+
+::ng-deep .custom-marker-icon svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, input, output } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit, input, output, SimpleChange, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -10,42 +10,21 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './map-config-modal.html',
   styleUrl: './map-config-modal.css',
 })
-export class MapConfigModal implements OnInit{
+export class MapConfigModal implements OnChanges {
   readonly isOpen = input<boolean>(false);
   readonly close = output<void>();
   readonly apply = output<void>();
+  @Output() radiusChange = new EventEmitter<number>()
 
   DEFAULT_RADIUS = 1000
 
-  // Hardcoded filter values
   radius: number = this.DEFAULT_RADIUS;
-  selectedStatuses: string[] = ['pending', 'in-progress'];
-  selectedCategories: string[] = ['pothole', 'lighting'];
-  dateFrom: string = '2024-01-01';
-  dateTo: string = '2024-12-31';
-  showUserLocation: boolean = true;
-  clusterMarkers: boolean = true;
 
-  // Hardcoded options
-  statuses = [
-    { id: 'pending', label: 'Pending', color: '#FEF3C7' },
-    { id: 'in-progress', label: 'In Progress', color: '#DBEAFE' },
-    { id: 'resolved', label: 'Resolved', color: '#D1FAE5' },
-    { id: 'rejected', label: 'Rejected', color: '#FEE2E2' }
-  ];
-
-  categories = [
-    { id: 'pothole', label: 'Pothole', icon: 'fa-road' },
-    { id: 'lighting', label: 'Lighting', icon: 'fa-lightbulb' },
-    { id: 'graffiti', label: 'Graffiti', icon: 'fa-spray-can' },
-    { id: 'waste', label: 'Waste', icon: 'fa-trash' },
-    { id: 'signage', label: 'Signage', icon: 'fa-sign' },
-    { id: 'other', label: 'Other', icon: 'fa-question-circle' }
-  ];
-
-  ngOnInit() {
-    let radiusData = localStorage.getItem("radius")
-    this.radius = !radiusData ? this.DEFAULT_RADIUS : parseInt(radiusData)
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['isOpen'] && changes['isOpen'].currentValue === true) {
+      let radiusData = localStorage.getItem("radius");
+      this.radius = !radiusData ? this.DEFAULT_RADIUS : parseInt(radiusData);
+    }
   }
 
   closeModal() {
@@ -54,49 +33,21 @@ export class MapConfigModal implements OnInit{
 
   applyFilters() {
     localStorage.setItem("radius", this.radius.toString());
-    this.apply.emit(undefined);
-    this.closeModal();
+    this.apply.emit(undefined);;
+    this.close.emit();
   }
 
   resetFilters() {
-    this.radius = 100;
-    this.selectedStatuses = ['pending', 'in-progress', 'resolved', 'rejected'];
-    this.selectedCategories = ['pothole', 'lighting', 'graffiti', 'waste', 'signage', 'other'];
-    this.dateFrom = '';
-    this.dateTo = '';
-    this.showUserLocation = true;
-    this.clusterMarkers = true;
-  }
-
-  toggleStatus(statusId: string) {
-    const index = this.selectedStatuses.indexOf(statusId);
-    if (index > -1) {
-      this.selectedStatuses.splice(index, 1);
-    } else {
-      this.selectedStatuses.push(statusId);
-    }
-  }
-
-  toggleCategory(categoryId: string) {
-    const index = this.selectedCategories.indexOf(categoryId);
-    if (index > -1) {
-      this.selectedCategories.splice(index, 1);
-    } else {
-      this.selectedCategories.push(categoryId);
-    }
-  }
-
-  isStatusSelected(statusId: string): boolean {
-    return this.selectedStatuses.includes(statusId);
-  }
-
-  isCategorySelected(categoryId: string): boolean {
-    return this.selectedCategories.includes(categoryId);
+    this.radius = this.DEFAULT_RADIUS;
   }
 
   handleBackdropClick(event: MouseEvent) {
     if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {
       this.closeModal();
     }
+  }
+
+  onRadiusChange() {
+    this.radiusChange.emit(this.radius)
   }
 }

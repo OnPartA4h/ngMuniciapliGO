@@ -275,7 +275,7 @@
   "MAP_CONFIG": {
     "TITLE": "Map Configuration",
     "RADIUS": "Search Radius",
-    "RADIUS_HINT": "Show reports within X km radius of your location",
+    "RADIUS_HINT": "Show reports within X m radius of your location",
     "STATUS_FILTER": "Filter by Status",
     "CATEGORY_FILTER": "Filter by Category",
     "DATE_RANGE": "Date Range",
