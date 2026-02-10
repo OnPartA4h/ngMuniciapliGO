@@ -43,6 +43,18 @@ export class WhiteService {
     );
   }
 
+  async acceptFix(id: number): Promise<any> {
+    return await lastValueFrom(
+      this.http.post<any>(`${this.apiUrl}/api/ColBlanc/${id}/accepter-resolution`, null)
+    );
+  }
+
+  async refuseFix(id: number, reason: string): Promise<any> {
+    return await lastValueFrom(
+      this.http.post<any>(`${this.apiUrl}/api/ColBlanc/${id}/refuser-resolution`, { reason: reason })
+    );
+  }
+
   async assignProblemCitoyen(id: number): Promise<any> {
     return await lastValueFrom(
       this.http.post<any>(`${this.apiUrl}/api/ColBlanc/${id}/assign-citoyens`, null)

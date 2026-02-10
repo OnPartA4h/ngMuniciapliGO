@@ -1,8 +1,8 @@
 <div class="manage-reports-container">
     @if (!isLoading && problem) {
     <div class="page-header">
-        <h1>{{ problem?.titre }}</h1>
-        <p>{{ problem.description }}</p>
+        <h1>{{ 'MANAGE_REPORTS.TITLE_DETAIL' | translate }}</h1>
+        <p>{{ 'MANAGE_REPORTS.SUBTITLE_DETAIL' | translate }}</p>
     </div>
     }
     @if(isLoading){
@@ -11,7 +11,7 @@
     </div>
     }
     @else if (!isLoading && problem) {
-    <div class="details-grid">
+    <div class="details-row">
         <div class="details-main">
             <div class="details-carousel">
                 <div class="details-carousel-img">
@@ -42,9 +42,34 @@
                     </button>
                 </div>
             </div>
+            <div class="details-box">
+                <div class="page-header">
+                    <h2>{{ problem?.titre }}</h2>
+                    <p>{{ problem.description }}</p>
+                </div>
+                @if (problem.statut === 5) {
+                <div class="divider"></div>
+                <div class="page-header">
+                    <h2>{{ 'MANAGE_REPORTS.MESSAGE_HEADER' | translate }}</h2>
+                    @if (problem.resolutionDescription){
+                    <p>{{ problem.resolutionDescription }}</p>
+                    }
+                    @else {
+                    <p>{{ 'MANAGE_REPORTS.NO_MESSAGE' | translate }}</p>
+                    }
+                </div>
+                @if (problem.resolutionPhotos && problem.resolutionPhotos.length > 0) {
+                <div class="resolution-photos-grid">
+                    @for (photo of problem.resolutionPhotos; track $index) {
+                    <img [src]="photo.url" class="resolution-photo" (click)="openPhotoModal($index)">
+                    }
+                </div>
+                }
+                }
+            </div>
         </div>
-
-        <div>
+        <!-- Information -->
+        <div class="details-side">
             <div class="details-box" style="margin-bottom: 24px; display: flex;">
                 <div class="details-badges">
                     <h2>Information</h2>
@@ -88,23 +113,43 @@
                         </div>
                         {{problem.citoyenDemandeur.firstName + ' ' + problem.citoyenDemandeur.lastName}}
                     </span>
-                    <span class="badge badge-info">
-                        {{ this.generalService.getStatusLabel(problem.statut) }}
-                    </span>
+                    <div class="report-header">
+                        <span class="badge badge-info">
+                            {{ this.generalService.getStatusLabel(problem.statut) }}
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="details-actions">
+                <!-- Accepter -->
                 @if (problem.statut === 0) {
-                <button class="btn btn-primary details-btn-accept" (click)="acceptProblem()">
-                    <i class="fas fa-check" style="margin-right: 8px;"></i>
-                    {{ 'MANAGE_REPORTS.ACCEPTER' | translate }}
-                </button>
                 <button class="btn btn-primary details-btn-refuse" (click)="refuseProblem()">
                     <i class="fas fa-times" style="margin-right: 8px;"></i>
                     {{ 'MANAGE_REPORTS.REFUSER' | translate }}
                 </button>
+                <button class="btn btn-primary details-btn-accept" (click)="acceptProblem()">
+                    <i class="fas fa-check" style="margin-right: 8px;"></i>
+                    {{ 'MANAGE_REPORTS.ACCEPTER' | translate }}
+                </button>
                 <div class="divider"></div>
                 }
+                <!-- Accepter un fix -->
+                @if (problem.statut === 5) {
+                <div class="search-box">
+                    <input type="text" [placeholder]="'MANAGE_REPORTS.MESSAGE_REFUS' | translate"
+                        [(ngModel)]="message_refus" (ngModelChange)="getColBleus()" />
+                </div>
+                <button class="btn btn-primary details-btn-refuse" (click)="refuseFix()">
+                    <i class="fas fa-times" style="margin-right: 8px;"></i>
+                    {{ 'MANAGE_REPORTS.REFUSER' | translate }}
+                </button>
+                <button class="btn btn-primary details-btn-accept" (click)="acceptFix()">
+                    <i class="fas fa-check" style="margin-right: 8px;"></i>
+                    {{ 'MANAGE_REPORTS.ACCEPTER' | translate }}
+                </button>
+                }
+                <!-- Assign -->
+                @if ([0, 1, 3].includes(problem.statut)){
                 <div class="search-box">
                     <i class="fas fa-search"></i>
                     <input type="text" [placeholder]="'MANAGE_REPORTS.ASSIGN_COL_BLEU' | translate" [(ngModel)]="search"
@@ -120,6 +165,7 @@
                     <i class="fas fa-user" style="margin-right: 8px;"></i>
                     {{"MANAGE_REPORTS.ASSIGN_CITOYEN" | translate}}
                 </button>
+                }
             </div>
         </div>
     </div>
@@ -128,6 +174,29 @@
     @if (!isLoading && !problem) {
     <div style="text-align: center; padding: 40px;">
         {{"MANAGE_REPORTS.NO_PROBLEM" | translate}}
+    </div>
+    }
+
+    @if (showPhotoModal()) {
+    <div class="photo-modal-backdrop" (click)="closePhotoModal()">
+        <div class="photo-modal" (click)="$event.stopPropagation()">
+            <button class="photo-modal-close" (click)="closePhotoModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="photo-modal-content">
+                <button class="photo-modal-nav" (click)="prevResolutionPhoto()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <img [src]="problem.resolutionPhotos[resolutionPhotoIndex()]?.url" alt="Photo de résolution"
+                    class="photo-modal-img">
+                <button class="photo-modal-nav" (click)="nextResolutionPhoto()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="photo-modal-info">
+                {{ resolutionPhotoIndex() + 1 }} / {{ problem.resolutionPhotos.length }}
+            </div>
+        </div>
     </div>
     }
 </div>

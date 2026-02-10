@@ -198,6 +198,8 @@
   "MANAGE_REPORTS": {
     "TITLE": "Problem Management",
     "SUBTITLE": "List of all reported problems",
+    "TITLE_DETAIL": "Problem details",
+    "SUBTITLE_DETAIL": "All of the problem informations",
     "SEARCH_PLACEHOLDER": "Search for a problem...",
     "ALL_CATEGORIES": "All categories",
     "ALL_STATUSES": "All statuses",
@@ -220,10 +222,15 @@
     "NO_PROBLEM": "No problem found...",
     "ACCEPTER": "Accept",
     "REFUSER": "Reject",
+    "NO_MESSAGE": "No message provided.",
+    "MESSAGE_HEADER": "Message from assignee",
     "ASSIGN_SUCCESS_CITOYEN": "Successfully assigned to citizens.",
     "ASSIGN_SUCCESS_COL_BLEU": "Successfully assigned to {{colbleu}}.",
     "ACCEPTER_SUCCESS": "Successfully accepted the problem.",
-    "REFUSER_SUCCESS": "Successfully rejected the problem."
+    "REFUSER_SUCCESS": "Successfully rejected the problem.",
+    "ACCEPTER_FIX_SUCCESS": "Successfully accepted the resolution.",
+    "REFUSER_FIX_SUCCESS": "Successfully rejected the resolution.",
+    "MESSAGE_REFUS": "Enter a rejection message..."
   },
   "LOGIN": {
     "SUBTITLE": "Sign in to your account",
