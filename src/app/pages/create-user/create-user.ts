@@ -3,15 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NgxMaskDirective } from 'ngx-mask';
 import { AdminService } from '../../services/admin-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { CreateUserDto, RoleOption, CreateUserResponseDto } from '../../models/user';
+import { PageHeaderComponent } from '../../components/ui';
+import { UserFormComponent } from '../../components/user-form/user-form';
 
 @Component({
   selector: 'app-create-user',
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, PageHeaderComponent, UserFormComponent],
   templateUrl: './create-user.html',
   styleUrl: './create-user.css',
 })

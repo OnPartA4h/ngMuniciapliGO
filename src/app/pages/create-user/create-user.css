@@ -1,58 +1,6 @@
-.create-user-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: var(--spacing-3xl);
-}
-
-/* Page Header */
-.page-header {
-  margin-bottom: var(--spacing-3xl);
-}
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: transparent;
-  border: none;
-  color: var(--color-primary);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  border-radius: var(--border-radius-sm);
-  transition: all var(--transition-fast);
-  margin-bottom: var(--spacing-lg);
-}
-
-.back-btn:hover {
-  background-color: var(--color-primary-light);
-}
-
-.back-btn i {
-  font-size: 16px;
-}
-
-.page-header h1 {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  margin: 0 0 var(--spacing-sm) 0;
-}
-
-.subtitle {
-  font-size: var(--font-size-md);
-  color: var(--color-text-secondary);
-  margin: 0;
-}
-
-/* Form Card */
-.form-card {
-  background: var(--color-white);
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--shadow-md);
-  padding: var(--spacing-3xl);
-}
+/* create-user: Page-specific styles only.
+   Shared styles (page-header, btn, form-group, form-grid, form-card, form-actions, form-error, modal-backdrop, etc.)
+   are provided by global styles.css */
 
 /* Form Sections */
 .form-section {
@@ -70,89 +18,6 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   margin: 0 0 var(--spacing-xl) 0;
-}
-
-.required {
-  color: var(--color-error);
-}
-
-/* Form Grid */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-xl);
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.form-group label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-}
-
-.form-group input {
-  padding: var(--spacing-md) var(--spacing-lg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-base);
-  color: var(--color-text-primary);
-  transition: all var(--transition-fast);
-  font-family: var(--font-family);
-}
-
-.form-group select {
-  padding: var(--spacing-md) var(--spacing-lg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-base);
-  color: var(--color-text-primary);
-  transition: all var(--transition-fast);
-  font-family: var(--font-family);
-  background-color: var(--color-white);
-  cursor: pointer;
-}
-
-.form-group select:focus {
-  outline: none;
-  border-color: var(--border-color-focus);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
-}
-
-.form-group select.error {
-  border-color: var(--color-error);
-}
-
-.form-group select:invalid {
-  color: #aaa;
-}
-
-.form-group select option {
-  color: var(--color-text-primary);
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: var(--border-color-focus);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
-}
-
-.form-group input::placeholder {
-  color: var(--color-text-placeholder);
-}
-
-.form-group input.error {
-  border-color: var(--color-error);
-}
-
-.error-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-error);
-  margin-top: var(--spacing-xs);
 }
 
 /* Roles Grid */
@@ -230,95 +95,7 @@
   background-color: var(--color-primary);
 }
 
-/* Form Actions */
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--spacing-md);
-  padding-top: var(--spacing-2xl);
-  border-top: 1px solid var(--color-gray-200);
-}
-
-.btn {
-  padding: var(--spacing-md) var(--spacing-3xl);
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  font-family: var(--font-family);
-}
-
-.btn i {
-  font-size: 16px;
-}
-
-.btn-primary {
-  background: var(--color-bg-gradient-primary);
-  color: var(--color-white);
-  box-shadow: var(--shadow-primary);
-}
-
-.btn-primary:hover:not(:disabled) {
-  box-shadow: var(--shadow-primary-lg);
-  transform: translateY(-2px);
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background: var(--color-white);
-  color: var(--color-text-primary);
-  border: 1px solid var(--border-color);
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: var(--color-gray-100);
-}
-
-.btn-secondary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Spinner */
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--color-white);
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Password Modal */
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  padding: var(--spacing-xl);
-}
-
+/* Password Modal (page-specific) */
 .password-modal {
   background: var(--color-white);
   border-radius: var(--border-radius-xl);
@@ -327,17 +104,6 @@
   padding: var(--spacing-4xl);
   box-shadow: var(--shadow-xl);
   animation: modalSlideIn 0.3s ease;
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
 }
 
 .modal-icon {
@@ -422,10 +188,6 @@
   background: var(--color-primary-dark);
 }
 
-.copy-btn i {
-  font-size: 14px;
-}
-
 .modal-warning {
   display: flex;
   align-items: center;
@@ -448,33 +210,10 @@
   line-height: 1.5;
 }
 
-.btn-full {
-  width: 100%;
-  justify-content: center;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
-  .create-user-container {
-    padding: var(--spacing-xl);
-  }
-
-  .form-card {
-    padding: var(--spacing-xl);
-  }
-
-  .form-grid,
   .roles-grid {
     grid-template-columns: 1fr;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-    justify-content: center;
   }
 
   .password-modal {
