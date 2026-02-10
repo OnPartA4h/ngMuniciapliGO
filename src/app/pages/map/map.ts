@@ -37,6 +37,15 @@ export class Map implements AfterViewInit{
 
   isConfigModalOpen: boolean = false
 
+  redIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
   constructor(public whiteService: WhiteService, private cdr: ChangeDetectorRef) {}
 
   async ngAfterViewInit() {
@@ -46,7 +55,7 @@ export class Map implements AfterViewInit{
     
     this.initMap()
     this.placeMarkers()
-    this.createCurrentPosMarker()
+    this.CurrentPosMarkerEvent()
   }
 
   initMap() {
@@ -63,32 +72,11 @@ export class Map implements AfterViewInit{
       timeout: 5000
     })
 
-    this.map.on('locationfound', (e: L.LocationEvent) => {
-      this.map!.setView(e.latlng, 15);
-
-      L.marker(e.latlng)
-        .addTo(this.map!)
-        .bindPopup('You are here')
-        .openPopup();
-    });
-
-    this.map.on('locationerror', () => {
+    if (!this.currenctLng || !this.currentLat){
       this.map!.setView(this.FALLBACK_COORDS, 13);
 
-      let greenIcon = new L.Icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-      })
-
-      L.marker(this.FALLBACK_COORDS, {icon: greenIcon})
-        .addTo(this.map!)
-        .bindPopup('Longueuil, QC')
-        .openPopup();
-    });
+      this.createCurrentPosMarker(this.FALLBACK_COORDS)
+    } 
   }
 
   ngOnDestroy() {
@@ -134,40 +122,32 @@ export class Map implements AfterViewInit{
     this.map?.addLayer(this.markerClusterGroup);
   }
 
+  removeMarkers() {
+    this.map!.removeLayer(this.markerClusterGroup!)
+    this.problems = []
+    this.markerClusterGroup = undefined
+  }
+
   closeSidebar() {
     this.isSidebarOpen = false;
     this.selectedProblem = null;
     this.cdr.detectChanges(); 
   }
 
-  createCurrentPosMarker() {
+  CurrentPosMarkerEvent() {
     if (!this.map) return
 
     this.map.on('click', (event) => {
-      let redIcon = new L.Icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
 
       this.removeCurrentPosMarker()
       this.removeCircleRadius()
-      this.currentPosMarker = L.marker(event.latlng, {icon: redIcon}).addTo(this.map!)
-      this.currentPosMarker.on('click', () => this.removeCurrentPosMarker())
-
-      this.currentLat = event.latlng.lat
-      this.currenctLng = event.latlng.lng
-
-      this.addCircleRadius(event)
+      this.createCurrentPosMarker(event.latlng)
       this.reloadProblems()
     })
   }
 
-  addCircleRadius(event: any) {
-     this.circleRadius = L.circle(event.latlng, {
+  addCircleRadius(latlng: L.LatLng) {
+     this.circleRadius = L.circle(latlng, {
         radius: this.radius,
         color: 'blue',
         fillColor: 'blue',
@@ -183,6 +163,22 @@ export class Map implements AfterViewInit{
   removeCurrentPosMarker() {
     if (!this.currentPosMarker) return
     this.currentPosMarker.remove()
+  }
+
+  createCurrentPosMarker(latlng: L.LatLngExpression) {
+    let point = L.latLng(latlng)
+    this.currentPosMarker = L.marker(latlng, {icon: this.redIcon}).addTo(this.map!)
+
+      this.currentPosMarker.on('click', () => {
+        this.removeCurrentPosMarker()
+        this.removeCircleRadius()
+        this.removeMarkers()
+      })
+
+      this.currentLat = point.lat
+      this.currenctLng = point.lng
+
+      this.addCircleRadius(point)
   }
 
   openModal() {
