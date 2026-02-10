@@ -143,23 +143,23 @@
 }
 
 .status-pending {
-  background: #FEF3C7;
-  color: #92400E;
+  background: var(--color-warning-light);
+  color: var(--color-warning);
 }
 
 .status-in-progress {
-  background: #DBEAFE;
-  color: #1E40AF;
+  background: var(--color-info-light);
+  color: var(--color-info);
 }
 
 .status-resolved {
-  background: #D1FAE5;
-  color: #065F46;
+  background: var(--color-success-light);
+  color: var(--color-success);
 }
 
 .status-rejected {
-  background: #FEE2E2;
-  color: #991B1B;
+  background: var(--color-error-light);
+  color: var(--color-error);
 }
 
 /* Info Cards */
