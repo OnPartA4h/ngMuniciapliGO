@@ -30,25 +30,21 @@
   </div>
 
   @if (!isLoading) {
-    <app-users-table
-      [users]="users"
+    <app-users-table [users]="users"
       [roles]="availableRoles"
-      (editUser)="openEditModal($event)">
-    </app-users-table>
+      (editUser)="openEditModal($event)" />
   }
 
   @if (isLoading) {
-    <app-loading-spinner></app-loading-spinner>
+    <app-loading-spinner />
   }
 
   @if (!isLoading && users.length > 0) {
-    <app-pagination
-      [currentPage]="currentPage"
+    <app-pagination [currentPage]="currentPage"
       [totalPages]="totalPages"
-      (pageChange)="onPageChange($event)">
-    </app-pagination>
+      (pageChange)="onPageChange($event)" />
   }
 </div>
 
 <app-edit-user-modal [user]="selectedUser" [isOpen]="showEditModal" (close)="closeEditModal()"
-  (userDeleted)="onUserDeleted()"></app-edit-user-modal>
+  (userDeleted)="onUserDeleted()" />

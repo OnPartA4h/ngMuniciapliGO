@@ -66,24 +66,20 @@
       }
 
       @if (notifications.length === 0) {
-        <app-empty-state
-          iconClass="fas fa-bell-slash"
+        <app-empty-state iconClass="fas fa-bell-slash"
           [title]="'NOTIFICATIONS.NO_NOTIFICATIONS' | translate"
-          [description]="'NOTIFICATIONS.NO_NOTIFICATIONS_DESC' | translate">
-        </app-empty-state>
+          [description]="'NOTIFICATIONS.NO_NOTIFICATIONS_DESC' | translate" />
       }
     </div>
   }
 
   @if (loading) {
-    <app-loading-spinner></app-loading-spinner>
+    <app-loading-spinner />
   }
 
   @if (totalPages > 1 && !loading) {
-    <app-pagination
-      [currentPage]="currentPage"
+    <app-pagination [currentPage]="currentPage"
       [totalPages]="totalPages"
-      (pageChange)="onPageChange($event)">
-    </app-pagination>
+      (pageChange)="onPageChange($event)" />
   }
 </div>

@@ -1,13 +1,11 @@
 <form [formGroup]="userForm" (ngSubmit)="submitForm()">
 
   <!-- Shared User Form Fields -->
-  <app-user-form
-    [form]="userForm"
+  <app-user-form [form]="userForm"
     [showEmail]="true"
     [emailPlaceholder]="('CREATE_USER.EMAIL_PLACEHOLDER' | translate)"
     [showProvinceDropdown]="true"
-    [provinces]="canadianProvinces">
-  </app-user-form>
+    [provinces]="canadianProvinces" />
 
   <!-- Roles Section -->
   <div class="form-section">

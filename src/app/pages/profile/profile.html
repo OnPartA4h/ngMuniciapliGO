@@ -1,19 +1,17 @@
 <div class="profile-container">
   <!-- Loading State -->
   @if (isLoading) {
-    <app-loading-spinner></app-loading-spinner>
+    <app-loading-spinner />
   }
 
   <!-- Profile Content -->
   @if (!isLoading && profile) {
     <div class="profile-content">
       <!-- Page Header -->
-      <app-page-header
-        [title]="'PROFILE.TITLE' | translate"
+      <app-page-header [title]="'PROFILE.TITLE' | translate"
         [subtitle]="'PROFILE.SUBTITLE' | translate"
         [showBackButton]="true"
-        (back)="goBack()">
-      </app-page-header>
+        (back)="goBack()" />
 
       <div class="profile-grid">
         <!-- Left Column: Profile Image & Read-only Info -->
@@ -75,52 +73,44 @@
         <!-- Right Column: Editable Form -->
         <div class="profile-main">
           <!-- Personal Information Form Component -->
-          <app-profile-info-form
-            [profile]="profile"
+          <app-profile-info-form [profile]="profile"
             [isSaving]="isSavingInfo"
             [successMessage]="infoSuccessMessage"
             [errorMessage]="infoErrorMessage"
-            (formSubmit)="onSavePersonalInfo($event)">
-          </app-profile-info-form>
+            (formSubmit)="onSavePersonalInfo($event)" />
 
           <!-- Email Change Form Component -->
-          <app-profile-email-form
-            [currentEmail]="profile!.email"
+          <app-profile-email-form [currentEmail]="profile!.email"
             [isSaving]="isSavingEmail"
             [successMessage]="emailSuccessMessage"
             [errorMessage]="emailErrorMessage"
-            (formSubmit)="onRequestEmailChange($event)">
-          </app-profile-email-form>
+            (formSubmit)="onRequestEmailChange($event)" />
 
           <!-- Password Change Form Component -->
-          <app-profile-password-form
-            [isSaving]="isSavingPassword"
+          <app-profile-password-form [isSaving]="isSavingPassword"
             [successMessage]="passwordSuccessMessage"
             [errorMessage]="passwordErrorMessage"
-            (formSubmit)="onSavePassword($event)">
-          </app-profile-password-form>
+            (formSubmit)="onSavePassword($event)" />
         </div>
       </div>
     </div>
 
     <!-- Image Cropper Modal -->
     @if (showImageCropper) {
-      <app-image-cropper-modal
-        [imageChangedEvent]="imageChangedEvent"
+      <app-image-cropper-modal [imageChangedEvent]="imageChangedEvent"
         [isUploading]="isUploadingImage"
         (cropCancelled)="onCropCancelled()"
         (imageUploaded)="onImageUploaded($event)"
         (cropperError)="onCropperError($event)"
-      ></app-image-cropper-modal>
+       />
     }
 
     <!-- Change Email Verification Modal -->
     @if (showEmailVerificationModal) {
-      <app-change-email-modal
-        [newEmail]="pendingEmail"
+      <app-change-email-modal [newEmail]="pendingEmail"
         (close)="closeEmailVerificationModal()"
         (emailVerified)="onEmailVerified($event)"
-      ></app-change-email-modal>
+       />
     }
   }
 </div>

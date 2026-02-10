@@ -148,10 +148,9 @@
 }
 
 <!-- Delete Confirmation Modal -->
-<app-delete-confirm-modal
-  [user]="user()"
+<app-delete-confirm-modal [user]="user()"
   [isOpen]="showDeleteConfirm"
   [isLoading]="isLoading"
   (confirm)="confirmDelete()"
   (cancel)="cancelDelete()"
-></app-delete-confirm-modal>
+ />

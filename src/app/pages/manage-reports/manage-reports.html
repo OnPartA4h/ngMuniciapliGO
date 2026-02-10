@@ -1,8 +1,6 @@
 <div class="page-container">
-  <app-page-header
-    [title]="'MANAGE_REPORTS.TITLE' | translate"
-    [subtitle]="'MANAGE_REPORTS.SUBTITLE' | translate">
-  </app-page-header>
+  <app-page-header [title]="'MANAGE_REPORTS.TITLE' | translate"
+    [subtitle]="'MANAGE_REPORTS.SUBTITLE' | translate" />
 
   <div class="search-div-top">
     <div class="search-div">
@@ -50,10 +48,8 @@
     </div>
   }
 
-  <app-report-list
-    [problems]="problems"
+  <app-report-list [problems]="problems"
     [pagination]="pagination"
     [loading]="loading"
-    (pageChange)="onPageChange($event)">
-  </app-report-list>
+    (pageChange)="onPageChange($event)" />
 </div>

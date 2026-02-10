@@ -56,17 +56,15 @@
 
   <!-- Force Reset Password Modal -->
   @if (showResetPasswordModal) {
-    <app-force-reset-password-modal
-      [currentPassword]="currentPassword"
+    <app-force-reset-password-modal [currentPassword]="currentPassword"
       (passwordReset)="onPasswordReset()"
       (resetError)="onResetError($event)"
-    ></app-force-reset-password-modal>
+     />
   }
 
   <!-- Forgot Password Modal -->
   @if (showForgotPasswordModal) {
-    <app-forgot-password-modal
-      (close)="closeForgotPasswordModal()"
-    ></app-forgot-password-modal>
+    <app-forgot-password-modal (close)="closeForgotPasswordModal()"
+     />
   }
 </div>

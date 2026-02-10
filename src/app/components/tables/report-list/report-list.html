@@ -43,18 +43,14 @@
   }
 
   @if (problems().length === 0 && !loading()) {
-    <app-empty-state
-      iconClass="fas fa-clipboard-list"
+    <app-empty-state iconClass="fas fa-clipboard-list"
       [title]="'MANAGE_REPORTS.NO_REPORTS' | translate"
-      [description]="'MANAGE_REPORTS.NO_REPORTS_DESC' | translate">
-    </app-empty-state>
+      [description]="'MANAGE_REPORTS.NO_REPORTS_DESC' | translate" />
   }
 
   @if (problems().length > 0 && pagination(); as pg) {
-    <app-pagination
-      [currentPage]="pg.currentPage"
+    <app-pagination [currentPage]="pg.currentPage"
       [totalPages]="pg.totalPages"
-      (pageChange)="onPageChange($event)">
-    </app-pagination>
+      (pageChange)="onPageChange($event)" />
   }
 </div>

@@ -19,7 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
           <p class="page-header__subtitle">{{ subtitle() }}</p>
         }
       </div>
-      <ng-content></ng-content>
+      <ng-content />
     </div>
   `
 })

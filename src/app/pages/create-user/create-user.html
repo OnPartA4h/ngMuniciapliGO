@@ -1,22 +1,16 @@
 <div class="page-container page-container--narrow">
-  <app-page-header
-    [title]="'CREATE_USER.TITLE' | translate"
+  <app-page-header [title]="'CREATE_USER.TITLE' | translate"
     [subtitle]="'CREATE_USER.SUBTITLE' | translate"
     [showBackButton]="true"
-    (back)="cancel()">
-  </app-page-header>
+    (back)="cancel()" />
 
   <div class="form-card">
-    <app-create-user-form
-      (formSubmit)="onFormSubmit($event)"
-      (cancel)="cancel()">
-    </app-create-user-form>
+    <app-create-user-form (formSubmit)="onFormSubmit($event)"
+      (cancel)="cancel()" />
   </div>
 </div>
 
 <!-- Password Success Modal -->
-<app-password-success-modal
-  [isOpen]="showPasswordModal"
+<app-password-success-modal [isOpen]="showPasswordModal"
   [generatedPassword]="generatedPassword"
-  (close)="closePasswordModal()">
-</app-password-success-modal>
+  (close)="closePasswordModal()" />

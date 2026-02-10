@@ -31,10 +31,8 @@
   </table>
 
   @if (users().length === 0) {
-    <app-empty-state
-      iconClass="fas fa-users"
+    <app-empty-state iconClass="fas fa-users"
       [title]="'MANAGE_USERS.NO_USERS' | translate"
-      [description]="'MANAGE_USERS.NO_USERS_DESC' | translate">
-    </app-empty-state>
+      [description]="'MANAGE_USERS.NO_USERS_DESC' | translate" />
   }
 </div>
