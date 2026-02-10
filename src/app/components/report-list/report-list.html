@@ -1,0 +1,60 @@
+<div class="reports-list">
+  @for (p of problems; track p.id) {
+    <div class="report-card list-card" routerLink="/report-details/{{p.id}}">
+      <div class="report-thumbnail">
+        @if (p.photos && p.photos.length > 0) {
+          <img [src]="p.photos[0].url" alt="Photo du problème" />
+        }
+      </div>
+      <div class="report-info">
+        <div class="report-header">
+          <h3 class="report-title">{{ p.titre }}</h3>
+          <span class="badge badge-info">{{ generalService.getStatusLabel(p.statut) }}</span>
+        </div>
+        <div class="report-details">
+          <span class="report-location">
+            <i class="fas fa-map-marker-alt"></i>
+            {{ p.address }}
+          </span>
+          <span class="report-category">
+            <i class="fas fa-tag"></i>
+            {{ generalService.getCategoryLabel(p.categorie) }}
+          </span>
+        </div>
+        <div class="report-meta">
+          <span class="report-date">
+            <i class="fas fa-clock"></i>
+            {{ p.dateCreation | daysAgo }} {{ "MANAGE_REPORTS.DAYS" | translate }}
+          </span>
+          <span class="report-assignee">
+            <i class="fas fa-user"></i>
+            @if (p.assigneA === 2 && p.responsable) {
+              {{ p.responsable.firstName + ' ' + p.responsable.lastName }}
+            } @else {
+              {{ generalService.assignees()[p.assigneA].label }}
+            }
+          </span>
+        </div>
+      </div>
+      <div class="report-action">
+        <i class="fas fa-chevron-right"></i>
+      </div>
+    </div>
+  }
+
+  @if (problems.length === 0 && !loading) {
+    <app-empty-state
+      iconClass="fas fa-clipboard-list"
+      [title]="'MANAGE_REPORTS.NO_REPORTS' | translate"
+      [description]="'MANAGE_REPORTS.NO_REPORTS_DESC' | translate">
+    </app-empty-state>
+  }
+
+  @if (problems.length > 0 && pagination) {
+    <app-pagination
+      [currentPage]="pagination.currentPage"
+      [totalPages]="pagination.totalPages"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
+  }
+</div>
