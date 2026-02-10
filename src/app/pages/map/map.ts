@@ -50,17 +50,15 @@ export class Map implements AfterViewInit{
 
   async ngAfterViewInit() {
     this.getRadius()
-    await this.getProblems()
-    console.log(this.problems);
-    
     this.initMap()
+    await this.getProblems()
     this.placeMarkers()
     this.CurrentPosMarkerEvent()
   }
 
   initMap() {
     this.map = L.map('map')
-
+    
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(this.map);
@@ -72,11 +70,15 @@ export class Map implements AfterViewInit{
       timeout: 5000
     })
 
-    if (!this.currenctLng || !this.currentLat){
-      this.map!.setView(this.FALLBACK_COORDS, 13);
+    let latlngData = localStorage.getItem("latlng")
+    let point: L.LatLng | null = !latlngData ? null : JSON.parse(latlngData)
 
-      this.createCurrentPosMarker(this.FALLBACK_COORDS)
+    if (!point){
+      point = L.latLng(this.FALLBACK_COORDS)
     } 
+
+    this.map!.setView(point, 13);
+    this.createCurrentPosMarker(point)
   }
 
   ngOnDestroy() {
@@ -138,11 +140,11 @@ export class Map implements AfterViewInit{
     if (!this.map) return
 
     this.map.on('click', (event) => {
-
       this.removeCurrentPosMarker()
       this.removeCircleRadius()
       this.createCurrentPosMarker(event.latlng)
       this.reloadProblems()
+      localStorage.setItem("latlng", JSON.stringify(event.latlng))
     })
   }
 
