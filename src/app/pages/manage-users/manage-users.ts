@@ -9,10 +9,11 @@ import { LanguageService } from '../../services/language-service';
 import { User, RoleOption } from '../../models/user';
 import { EditUserModal } from '../../components/edit-user-modal/edit-user-modal';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent, PageHeaderComponent } from '../../components/ui';
 
 @Component({
   selector: 'app-manage-users',
-  imports: [CommonModule, FormsModule, RouterLink, EditUserModal, TranslateModule],
+  imports: [CommonModule, FormsModule, RouterLink, EditUserModal, TranslateModule, PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent, PageHeaderComponent],
   templateUrl: './manage-users.html',
   styleUrl: './manage-users.css',
 })
@@ -108,6 +109,11 @@ export class ManageUsers implements OnInit {
       this.currentPage--;
       await this.loadUsers();
     }
+  }
+
+  async onPageChange(page: number) {
+    this.currentPage = page;
+    await this.loadUsers();
   }
 
   openEditModal(user: User) {

@@ -1,16 +1,15 @@
-<div class="manage-users-container">
-  <div class="page-header">
-    <div>
-      <h1>{{ 'MANAGE_USERS.TITLE' | translate }}</h1>
-      <p>{{ 'MANAGE_USERS.SUBTITLE' | translate }}</p>
-    </div>
+<div class="page-container">
+  <app-page-header
+    [title]="'MANAGE_USERS.TITLE' | translate"
+    [subtitle]="'MANAGE_USERS.SUBTITLE' | translate"
+    [hasAction]="true">
     <a routerLink="/create-user" class="btn btn-primary">
       <i class="fas fa-user-plus"></i>
       {{ 'MANAGE_USERS.CREATE_USER' | translate }}
     </a>
-  </div>
+  </app-page-header>
 
-  <div class="filters-bar">
+  <div class="filter-bar">
     <div class="search-box">
       <i class="fas fa-search"></i>
       <input type="text" [placeholder]="'MANAGE_USERS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="searchQuery"
@@ -30,8 +29,8 @@
     </div>
   </div>
 
-  <div class="users-table-container" *ngIf="!isLoading">
-    <table class="users-table">
+  <div class="data-table-container" *ngIf="!isLoading">
+    <table class="data-table">
       <thead>
         <tr>
           <th>{{ 'MANAGE_USERS.FIRST_NAME' | translate }}</th>
@@ -41,11 +40,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users" (click)="openEditModal(user)" class="user-row">
+        <tr *ngFor="let user of users" (click)="openEditModal(user)" class="clickable-row">
           <td>{{ user.firstName }}</td>
           <td>{{ user.lastName }}</td>
           <td>
-            <div class="roles-badges">
+            <div class="badges-list">
               <span class="badge badge-info" *ngFor="let role of user.roles">
                 {{ getRoleLabel(role) }}
               </span>
@@ -60,31 +59,22 @@
       </tbody>
     </table>
 
-    <div class="empty-state" *ngIf="users.length === 0">
-      <i class="fas fa-users icon-large"></i>
-      <h3>{{ 'MANAGE_USERS.NO_USERS' | translate }}</h3>
-      <p>{{ 'MANAGE_USERS.NO_USERS_DESC' | translate }}</p>
-    </div>
+    <app-empty-state
+      *ngIf="users.length === 0"
+      iconClass="fas fa-users"
+      [title]="'MANAGE_USERS.NO_USERS' | translate"
+      [description]="'MANAGE_USERS.NO_USERS_DESC' | translate">
+    </app-empty-state>
   </div>
 
-  <div class="loading-spinner" *ngIf="isLoading">
-    <div class="spinner"></div>
-    <p>{{ 'COMMON.LOADING' | translate }}</p>
-  </div>
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-  <div class="pagination" *ngIf="!isLoading && users.length > 0">
-    <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
-      <i class="fas fa-chevron-left"></i>
-      {{ 'COMMON.PREVIOUS' | translate }}
-    </button>
-    <span class="pagination-info">
-      {{ 'MANAGE_USERS.PAGE_INFO' | translate: {current: currentPage, total: totalPages, count: totalUsers} }}
-    </span>
-    <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
-      {{ 'COMMON.NEXT' | translate }}
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
+  <app-pagination
+    *ngIf="!isLoading && users.length > 0"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
 </div>
 
 <app-edit-user-modal [user]="selectedUser" [isOpen]="showEditModal" (close)="closeEditModal()"
