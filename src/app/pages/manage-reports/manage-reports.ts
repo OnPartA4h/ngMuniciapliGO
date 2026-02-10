@@ -4,7 +4,7 @@ import { WhiteService } from '../../services/white-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { Problem, StatusOption, CategoryOption } from '../../models/problem';
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Pagination } from '../../models/pagination';
 import { FormsModule } from '@angular/forms';
 import { PageHeaderComponent } from '../../components/ui';
@@ -12,7 +12,7 @@ import { ReportListComponent } from '../../components/tables/report-list/report-
 
 @Component({
   selector: 'app-manage-reports',
-  imports: [CommonModule, TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent],
+  imports: [TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent, NgClass],
   templateUrl: './manage-reports.html',
   styleUrl: './manage-reports.css',
 })
