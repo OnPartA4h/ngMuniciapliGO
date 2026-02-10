@@ -212,7 +212,8 @@
     "ASSIGN_SUCCESS_CITOYEN": "Les citoyens ont été assignés.",
     "ASSIGN_SUCCESS_COL_BLEU": "{{colbleu}} a été assigné.",
     "ACCEPTER_SUCCESS": "Le problème a été accepté avec succès.",
-    "REFUSER_SUCCESS": "Le problème a été refusé avec succès."
+    "REFUSER_SUCCESS": "Le problème a été refusé avec succès.",
+    "MESSAGE_REFUS": "Entrez un message de refus..."
   },
   "LOGIN": {
     "SUBTITLE": "Connectez-vous à votre compte",

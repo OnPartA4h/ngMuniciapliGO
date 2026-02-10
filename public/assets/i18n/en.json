@@ -212,7 +212,8 @@
     "ASSIGN_SUCCESS_CITOYEN": "Successfully assigned to citizens.",
     "ASSIGN_SUCCESS_COL_BLEU": "Successfully assigned to {{colbleu}}.",
     "ACCEPTER_SUCCESS": "Successfully accepted the problem.",
-    "REFUSER_SUCCESS": "Successfully rejected the problem."
+    "REFUSER_SUCCESS": "Successfully rejected the problem.",
+    "MESSAGE_REFUS": "Enter a rejection message..."
   },
   "LOGIN": {
     "SUBTITLE": "Sign in to your account",

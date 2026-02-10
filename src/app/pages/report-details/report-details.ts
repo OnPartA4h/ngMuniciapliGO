@@ -23,6 +23,7 @@ export class ReportDetails implements OnInit {
   photoIndex = signal<number>(0);
   colBleus: any[] = [];
   search = "";
+  message_refus = ""
 
   constructor(
     private route: ActivatedRoute,
@@ -82,6 +83,18 @@ export class ReportDetails implements OnInit {
     } catch (err) {
       console.error(err);
     }
+  }
+
+  async acceptFix() {
+
+  }
+
+  async refuseFix() {
+
+  }
+
+  async swapPhotos() {
+
   }
 
   async assignCitoyen() {
