@@ -1,10 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { CategoryOption, Problem } from '../models/problem';
-import { AssigneAOption, CategoryOption, Problem, StatusOption } from '../models/problem';
 import { environment } from '../../environments/environment';
 import { PaginatedProblems } from '../models/paginatedProblems';
+import { Problem } from '../models/problem';
 
 @Injectable({
   providedIn: 'root',
