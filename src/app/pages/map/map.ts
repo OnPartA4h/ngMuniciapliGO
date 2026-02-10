@@ -7,6 +7,7 @@ import { MapSidebar } from '../../components/map-sidebar/map-sidebar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MapConfigModal } from '../../components/map-config-modal/map-config-modal';
+import { categoryIcons, categoryEnumMap } from '../../models/categoryIcons';
 
 @Component({
   selector: 'app-map',
@@ -38,13 +39,22 @@ export class Map implements AfterViewInit{
   isConfigModalOpen: boolean = false
 
   redIcon = new L.Icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  defaultIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
 
   constructor(public whiteService: WhiteService, private cdr: ChangeDetectorRef) {}
 
@@ -101,6 +111,11 @@ export class Map implements AfterViewInit{
     this.radius = !radiusData ? this.DEFAULT_RADIUS : parseInt(radiusData)
   }
 
+  getCategoryIcon(categoryEnum: number): L.Icon | L.DivIcon {
+    const categoryName = categoryEnumMap[categoryEnum];
+    return categoryIcons[categoryName] || this.defaultIcon;
+  }
+
   placeMarkers() {
     if (!this.map) return
 
@@ -110,7 +125,9 @@ export class Map implements AfterViewInit{
     });
 
     for (let p of this.problems){
-      let marker = L.marker([p.latitude, p.longitude])
+      // Obtenir l'icône appropriée selon la catégorie
+      const icon = this.getCategoryIcon(p.categorie);
+      let marker = L.marker([p.latitude, p.longitude], { icon: icon })
 
       marker.on('click', () => {
         this.selectedProblem = p;

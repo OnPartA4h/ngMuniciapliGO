@@ -22,7 +22,7 @@
   align-items: center;
   padding: var(--spacing-2xl) var(--spacing-xl);
   border-bottom: 1px solid var(--color-gray-200);
-  background: var(--color-bg-gradient);
+  background: var(--color-primary);
 }
 
 .sidebar-header h2 {
