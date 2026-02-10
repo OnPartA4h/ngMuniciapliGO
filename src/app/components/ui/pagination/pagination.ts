@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -26,7 +26,7 @@ import { TranslateModule } from '@ngx-translate/core';
 export class PaginationComponent {
   readonly currentPage = input(1);
   readonly totalPages = input(1);
-  @Output() pageChange = new EventEmitter<number>();
+  readonly pageChange = output<number>();
 
   onPrevious(): void {
     if (this.currentPage() > 1) {

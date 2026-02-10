@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -28,5 +28,5 @@ export class PageHeaderComponent {
   readonly subtitle = input('');
   readonly showBackButton = input(false);
   readonly hasAction = input(false);
-  @Output() back = new EventEmitter<void>();
+  readonly back = output<void>();
 }

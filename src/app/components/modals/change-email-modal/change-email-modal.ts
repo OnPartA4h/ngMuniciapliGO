@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, inject, input } from '@angular/core';
+import { Component, OnInit, inject, input, output } from '@angular/core';
 
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -17,8 +17,8 @@ export class ChangeEmailModal implements OnInit {
   private translateService = inject(TranslateService);
 
   readonly newEmail = input<string | null>(null);
-  @Output() close = new EventEmitter<void>();
-  @Output() emailVerified = new EventEmitter<string>();
+  readonly close = output<void>();
+  readonly emailVerified = output<string>();
 
   verificationForm: FormGroup;
   
@@ -85,7 +85,7 @@ export class ChangeEmailModal implements OnInit {
     this.verificationForm.reset();
     this.errorMessage = null;
     this.successMessage = null;
-    this.close.emit();
+    this.close.emit(undefined);
   }
 
   handleBackdropClick(event: MouseEvent) {

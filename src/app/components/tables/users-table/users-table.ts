@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { EmptyStateComponent } from '../../ui';
@@ -13,7 +13,7 @@ import { RoleOption, User } from '../../../models/user';
 export class UsersTableComponent {
   readonly users = input.required<User[]>();
   readonly roles = input<RoleOption[]>([]);
-  @Output() editUser = new EventEmitter<User>();
+  readonly editUser = output<User>();
 
   getRoleLabel(roleKey: string): string {
     const role = this.roles().find(r => r.key === roleKey);

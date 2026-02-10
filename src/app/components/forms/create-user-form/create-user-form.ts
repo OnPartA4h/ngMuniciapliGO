@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, inject } from '@angular/core';
+import { Component, OnInit, inject, output } from '@angular/core';
 
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -20,8 +20,8 @@ export class CreateUserFormComponent implements OnInit {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
 
-  @Output() formSubmit = new EventEmitter<CreateUserDto>();
-  @Output() cancel = new EventEmitter<void>();
+  readonly formSubmit = output<CreateUserDto>();
+  readonly cancel = output<void>();
 
   userForm: FormGroup;
   availableRoles: RoleOption[] = [];
@@ -128,6 +128,6 @@ export class CreateUserFormComponent implements OnInit {
   }
 
   onCancel() {
-    this.cancel.emit();
+    this.cancel.emit(undefined);
   }
 }

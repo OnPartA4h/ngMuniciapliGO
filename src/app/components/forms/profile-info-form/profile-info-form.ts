@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnChanges, SimpleChanges, inject, input } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, inject, input, output } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -19,7 +19,7 @@ export class ProfileInfoFormComponent implements OnChanges {
   readonly successMessage = input<string | null>(null);
   readonly errorMessage = input<string | null>(null);
 
-  @Output() formSubmit = new EventEmitter<UpdateUserDto>();
+  readonly formSubmit = output<UpdateUserDto>();
 
   profileForm: FormGroup;
 

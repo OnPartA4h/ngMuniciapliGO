@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, inject, input } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -21,7 +21,7 @@ export class ReportListComponent {
   readonly problems = input.required<Problem[]>();
   readonly pagination = input<Pagination | null>(null);
   readonly loading = input(false);
-  @Output() pageChange = new EventEmitter<number>();
+  readonly pageChange = output<number>();
 
   onPageChange(page: number): void {
     this.pageChange.emit(page);

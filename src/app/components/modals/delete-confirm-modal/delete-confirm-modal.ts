@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { User } from '../../../models/user';
@@ -14,15 +14,15 @@ export class DeleteConfirmModal {
   readonly user = input<User | null>(null);
   readonly isOpen = input<boolean>(false);
   readonly isLoading = input<boolean>(false);
-  @Output() confirm = new EventEmitter<void>();
-  @Output() cancel = new EventEmitter<void>();
+  readonly confirm = output<void>();
+  readonly cancel = output<void>();
 
   onConfirm() {
-    this.confirm.emit();
+    this.confirm.emit(undefined);
   }
 
   onCancel() {
-    this.cancel.emit();
+    this.cancel.emit(undefined);
   }
 
   handleBackdropClick(event: MouseEvent) {

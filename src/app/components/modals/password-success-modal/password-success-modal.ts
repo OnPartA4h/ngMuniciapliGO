@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, inject, input } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -14,7 +14,7 @@ export class PasswordSuccessModalComponent {
 
   readonly generatedPassword = input<string | null>(null);
   readonly isOpen = input(false);
-  @Output() close = new EventEmitter<void>();
+  readonly close = output<void>();
 
   async copyPassword() {
     const generatedPassword = this.generatedPassword();
@@ -29,6 +29,6 @@ export class PasswordSuccessModalComponent {
   }
 
   closeModal() {
-    this.close.emit();
+    this.close.emit(undefined);
   }
 }

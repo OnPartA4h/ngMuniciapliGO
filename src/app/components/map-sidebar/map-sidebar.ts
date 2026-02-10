@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, inject, input } from '@angular/core';
+import { Component, OnInit, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Problem } from '../../models/problem';
@@ -17,7 +17,7 @@ export class MapSidebar implements OnInit {
 
   readonly problem = input<Problem | null>(null);
   readonly isOpen = input<boolean>(false);
-  @Output() close = new EventEmitter<void>();
+  readonly close = output<void>();
 
   async ngOnInit() {
     // Load categories and statuses when component initializes
@@ -28,7 +28,7 @@ export class MapSidebar implements OnInit {
   }
 
   closeSidebar() {
-    this.close.emit();
+    this.close.emit(undefined);
   }
 
   getStatusClass(statusKey: number): string {

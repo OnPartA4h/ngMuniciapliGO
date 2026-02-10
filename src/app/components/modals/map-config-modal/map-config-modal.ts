@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, input } from '@angular/core';
+import { Component, OnInit, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -12,8 +12,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class MapConfigModal implements OnInit{
   readonly isOpen = input<boolean>(false);
-  @Output() close = new EventEmitter<void>();
-  @Output() apply = new EventEmitter<void>();
+  readonly close = output<void>();
+  readonly apply = output<void>();
 
   DEFAULT_RADIUS = 1000
 
@@ -49,12 +49,12 @@ export class MapConfigModal implements OnInit{
   }
 
   closeModal() {
-    this.close.emit();
+    this.close.emit(undefined);
   }
 
   applyFilters() {
     localStorage.setItem("radius", this.radius.toString());
-    this.apply.emit()
+    this.apply.emit(undefined);
     this.closeModal();
   }
 

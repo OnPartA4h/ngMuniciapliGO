@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, inject, output } from '@angular/core';
 
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,7 +15,7 @@ export class ForgotPasswordModal {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
 
-  @Output() close = new EventEmitter<void>();
+  readonly close = output<void>();
 
   forgotPasswordForm: FormGroup;
   isLoading = false;
@@ -58,7 +58,7 @@ export class ForgotPasswordModal {
     this.forgotPasswordForm.reset();
     this.errorMessage = null;
     this.successMessage = null;
-    this.close.emit();
+    this.close.emit(undefined);
   }
 
   handleBackdropClick(event: MouseEvent) {

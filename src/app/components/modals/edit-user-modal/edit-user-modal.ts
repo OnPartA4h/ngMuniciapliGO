@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef, inject, input } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef, inject, input, output } from '@angular/core';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxMaskPipe } from 'ngx-mask';
@@ -24,8 +24,8 @@ export class EditUserModal implements OnInit, OnChanges {
 
   readonly user = input<User | null>(null);
   readonly isOpen = input<boolean>(false);
-  @Output() close = new EventEmitter<void>();
-  @Output() userDeleted = new EventEmitter<void>();
+  readonly close = output<void>();
+  readonly userDeleted = output<void>();
 
   roles: RoleOption[] = [];
   isLoading = false;
@@ -57,7 +57,7 @@ export class EditUserModal implements OnInit, OnChanges {
     this.showDeleteConfirm = false;
     this.isLoading = false;
     this.successMessage = null;
-    this.close.emit();
+    this.close.emit(undefined);
   }
 
   async changeRole(role: RoleOption) {
@@ -113,8 +113,8 @@ export class EditUserModal implements OnInit, OnChanges {
       await this.adminService.deleteUser(user.id);
       this.showDeleteConfirm = false;
       this.isLoading = false;
-      this.userDeleted.emit();
-      this.close.emit();
+      this.userDeleted.emit(undefined);
+      this.close.emit(undefined);
     } catch (error) {
       console.error('Error deleting user:', error);
       this.isLoading = false;
