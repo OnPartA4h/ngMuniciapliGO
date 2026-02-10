@@ -25,6 +25,7 @@ export class Map implements AfterViewInit{
   map: L.Map | undefined;
   currentPosMarker: L.Marker | undefined
   circleRadius: L.Circle | undefined
+  previewCircle: L.Circle | undefined
   markerClusterGroup: L.MarkerClusterGroup | undefined;
 
   radius: number = -1
@@ -166,12 +167,25 @@ export class Map implements AfterViewInit{
   }
 
   addCircleRadius(latlng: L.LatLng) {
+    this.removeCircleRadius()
+
      this.circleRadius = L.circle(latlng, {
         radius: this.radius,
         color: 'blue',
         fillColor: 'blue',
         fillOpacity: 0.2
       }).addTo(this.map!)
+  }
+
+  addPreviewCircle(latlng: L.LatLng, radius: number) {
+    this.previewCircle?.remove()
+
+    this.previewCircle = L.circle(latlng, {
+    radius,
+    color: 'green',
+    dashArray: '6, 6',
+    fillOpacity: 0.1
+  }).addTo(this.map!);
   }
 
   removeCircleRadius(){
@@ -206,11 +220,14 @@ export class Map implements AfterViewInit{
   }
 
   closeModal() {
+    this.removePreviewCirlce()
     this.isConfigModalOpen = false;
   }
 
   async reloadProblems() {
     this.getRadius();
+
+    this.removePreviewCirlce()
 
     this.circleRadius?.setRadius(this.radius)
     
@@ -235,4 +252,19 @@ export class Map implements AfterViewInit{
 
     this.map.setView([this.currentLat, this.currentLng])
   }
+
+  previewRadius(radius: number) {
+  if (!this.currentLat || !this.currentLng) return;
+
+    const point = L.latLng(this.currentLat, this.currentLng);
+    this.addPreviewCircle(point, radius);
+  }
+
+  removePreviewCirlce() {
+    this.previewCircle?.remove();
+    this.previewCircle = undefined;
+  }
+
+
+  
 }

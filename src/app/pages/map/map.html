@@ -15,4 +15,4 @@
   </button>
 </div>
 
-<app-map-config-modal [isOpen]="isConfigModalOpen" (close)="closeModal()" (apply)="reloadProblems()"></app-map-config-modal>
+<app-map-config-modal [isOpen]="isConfigModalOpen" (close)="closeModal()" (apply)="reloadProblems()" (radiusChange)="previewRadius($event)"></app-map-config-modal>
