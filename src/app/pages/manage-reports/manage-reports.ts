@@ -1,19 +1,18 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { WhiteService } from '../../services/white-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { Problem, StatusOption, CategoryOption } from '../../models/problem';
 import { CommonModule } from '@angular/common';
-import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 import { Pagination } from '../../models/pagination';
 import { FormsModule } from '@angular/forms';
-import { PaginationComponent, EmptyStateComponent, PageHeaderComponent } from '../../components/ui';
+import { PageHeaderComponent } from '../../components/ui';
+import { ReportListComponent } from '../../components/report-list/report-list';
 
 @Component({
   selector: 'app-manage-reports',
-  imports: [RouterLink, CommonModule, DaysAgoPipe, TranslateModule, FormsModule, PaginationComponent, EmptyStateComponent, PageHeaderComponent],
+  imports: [CommonModule, TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent],
   templateUrl: './manage-reports.html',
   styleUrl: './manage-reports.css',
 })

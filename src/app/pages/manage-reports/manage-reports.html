@@ -21,92 +21,39 @@
       {{ 'COMMON.SEARCH' | translate }}
     </button>
   </div>
-  <div class="search-div-top">
-    <div class="filter-group" *ngIf="showFilters">
-      <select [(ngModel)]="currentAssigneA" (change)="getAllReports()">
-        <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_ASSIGNEA' | translate }}</option>
-        @for (s of this.generalService.assignees(); track $index) {
-        <option [value]=$index+1>
-          {{ s.label }}
-        </option>
-        }
-      </select>
-      <select [(ngModel)]="currentCategory" (change)="getAllReports()">
-        <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_CATEGORIES' | translate }}</option>
-        @for (c of this.generalService.categories(); track $index) {
-        <option [value]=$index+1>
-          {{ c.label }}
-        </option>
-        }
-      </select>
-      <select [(ngModel)]="currentStatus" (change)="getAllReports()">
-        <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_STATUSES' | translate }}</option>
-        @for (s of this.generalService.statuses(); track $index) {
-        <option [value]=$index+1>
-          {{ s.label }}
-        </option>
-        }
-      </select>
-      <button class="btn btn-secondary btn-reset-filters" (click)="resetFilters()">
-        <i class="fa-solid fa-arrow-rotate-left"></i>
-      </button>
-    </div>
-  </div>
 
-  <div class="reports-list">
-    <!-- Report Item -->
-    <div class="report-card list-card" routerLink="/report-details/{{p.id}}" *ngFor="let p of problems">
-      <div class="report-thumbnail">
-        <img [src]="p.photos[0].url" alt="Photo du problème" *ngIf="p.photos && p.photos.length > 0" />
-      </div>
-      <div class="report-info">
-        <div class="report-header">
-          <h3 class="report-title">{{p.titre}}</h3>
-          <span class="badge badge-info">{{ this.generalService.getStatusLabel(p.statut) }}</span>
-        </div>
-        <div class="report-details">
-          <span class="report-location">
-            <i class="fas fa-map-marker-alt"></i>
-            {{p.address}}
-          </span>
-          <span class="report-category">
-            <i class="fas fa-tag"></i>
-            {{ this.generalService.getCategoryLabel(p.categorie) }}
-          </span>
-        </div>
-        <div class="report-meta">
-          <span class="report-date">
-            <i class="fas fa-clock"></i>
-            {{p.dateCreation | daysAgo}} {{"MANAGE_REPORTS.DAYS" | translate}}
-          </span>
-          <span class="report-assignee">
-            <i class="fas fa-user"></i>
-            @if(p.assigneA == 2 && p.responsable){
-            {{p.responsable.firstName + ' ' + p.responsable.lastName}}
-            } @else {
-            {{this.generalService.assignees()[p.assigneA].label}}
-            }
-          </span>
-        </div>
-      </div>
-      <div class="report-action">
-        <i class="fas fa-chevron-right"></i>
+  @if (showFilters) {
+    <div class="search-div-top">
+      <div class="filter-group">
+        <select [(ngModel)]="currentAssigneA" (change)="getAllReports()">
+          <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_ASSIGNEA' | translate }}</option>
+          @for (s of generalService.assignees(); track $index) {
+            <option [value]="$index + 1">{{ s.label }}</option>
+          }
+        </select>
+        <select [(ngModel)]="currentCategory" (change)="getAllReports()">
+          <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_CATEGORIES' | translate }}</option>
+          @for (c of generalService.categories(); track $index) {
+            <option [value]="$index + 1">{{ c.label }}</option>
+          }
+        </select>
+        <select [(ngModel)]="currentStatus" (change)="getAllReports()">
+          <option [ngValue]="null">{{ 'MANAGE_REPORTS.ALL_STATUSES' | translate }}</option>
+          @for (s of generalService.statuses(); track $index) {
+            <option [value]="$index + 1">{{ s.label }}</option>
+          }
+        </select>
+        <button class="btn btn-secondary btn-reset-filters" (click)="resetFilters()">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+        </button>
       </div>
     </div>
+  }
 
-    <!-- Empty State -->
-    <app-empty-state
-      *ngIf="problems.length === 0 && !loading"
-      iconClass="fas fa-clipboard-list"
-      [title]="'MANAGE_REPORTS.NO_REPORTS' | translate"
-      [description]="'MANAGE_REPORTS.NO_REPORTS_DESC' | translate">
-    </app-empty-state>
-
-    <app-pagination
-      *ngIf="problems.length > 0"
-      [currentPage]="pagination?.currentPage ?? 1"
-      [totalPages]="pagination?.totalPages ?? 1"
-      (pageChange)="onPageChange($event)">
-    </app-pagination>
-  </div>
+  <app-report-list
+    [problems]="problems"
+    [pagination]="pagination"
+    [loading]="loading"
+    (pageChange)="onPageChange($event)">
+  </app-report-list>
 </div>
