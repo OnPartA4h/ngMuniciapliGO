@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { User, RoleOption } from '../../models/user';
-import { EmptyStateComponent } from '../ui';
+import { EmptyStateComponent } from '../../ui';
+import { RoleOption, User } from '../../../models/user';
 
 @Component({
   selector: 'app-users-table',

@@ -2,11 +2,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Problem } from '../../models/problem';
-import { GeneralService } from '../../services/general-service';
-import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
-import { EmptyStateComponent, PaginationComponent } from '../ui';
-import { Pagination } from '../../models/pagination';
+import { Problem } from '../../../models/problem';
+import { GeneralService } from '../../../services/general-service';
+import { DaysAgoPipe } from '../../../pipes/days-ago-pipe';
+import { EmptyStateComponent, PaginationComponent } from '../../ui';
+import { Pagination } from '../../../models/pagination';
 
 @Component({
   selector: 'app-report-list',
