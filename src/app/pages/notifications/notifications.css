@@ -1,136 +1,30 @@
-.notifications-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 24px;
-}
+/* notifications: Page-specific styles only.
+   Shared styles (page-header, pagination, empty-state, loading-state, filter-tabs, notification-item, etc.)
+   are provided by global styles.css */
 
 .notifications-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-2xl);
   flex-wrap: wrap;
-  gap: 16px;
+  gap: var(--spacing-lg);
 }
 
-.notifications-header h1 {
-  color: var(--color-primary);
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  margin: 0;
-}
-
-.mark-all-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #3b82f6;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.mark-all-btn:hover:not(:disabled) {
-  background: #2563eb;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.mark-all-btn:disabled {
-  background: #d1d5db;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.filter-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 24px;
-  border-bottom: 2px solid #e5e7eb;
-}
-
-.filter-tab {
-  background: transparent;
-  border: none;
-  padding: 12px 20px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #6b7280;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-bottom: 3px solid transparent;
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.filter-tab:hover {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.05);
-}
-
-.filter-tab.active {
-  color: #3b82f6;
-  border-bottom-color: #3b82f6;
-}
-
-.filter-tab .count {
-  background: #e5e7eb;
-  color: #6b7280;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.filter-tab.active .count {
-  background: #dbeafe;
-  color: #3b82f6;
-}
-
+/* Notification List */
 .notifications-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-
-.notification-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 16px;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.notification-item:hover {
-  border-color: #3b82f6;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
-.notification-item.unread {
-  background: #eff6ff;
-  border-color: #3b82f6;
+  gap: var(--spacing-md);
 }
 
 .notification-indicator {
   width: 10px;
   height: 10px;
-  background: #3b82f6;
+  background: var(--color-primary);
   border-radius: 50%;
   flex-shrink: 0;
-  margin-top: 8px;
+  margin-top: var(--spacing-sm);
   animation: pulse-dot 2s infinite;
 }
 
@@ -150,39 +44,39 @@
   min-width: 0;
 }
 
-.notification-header {
+.notification-header-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 8px;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
 }
 
 .notification-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1f2937;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
   margin: 0;
   flex: 1;
 }
 
 .notification-time {
-  font-size: 13px;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
   white-space: nowrap;
 }
 
 .notification-message {
-  font-size: 14px;
-  color: #4b5563;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
   margin: 0;
   line-height: 1.5;
 }
 
 .mark-read-btn {
   background: transparent;
-  border: 2px solid #3b82f6;
-  color: #3b82f6;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -190,108 +84,21 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-base);
   flex-shrink: 0;
 }
 
 .mark-read-btn:hover {
-  background: #3b82f6;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-white);
   transform: scale(1.1);
 }
 
-.empty-state {
-  text-align: center;
-  padding: 64px 24px;
-}
-
-.empty-state i {
-  font-size: 64px;
-  color: #d1d5db;
-  margin-bottom: 16px;
-}
-
-.empty-state h3 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #6b7280;
-  margin: 0 0 8px 0;
-}
-
-.empty-state p {
-  font-size: 14px;
-  color: #9ca3af;
-  margin: 0;
-}
-
-.loading-state {
-  text-align: center;
-  padding: 64px 24px;
-  color: #6b7280;
-}
-
-.loading-state i {
-  font-size: 48px;
-  margin-bottom: 16px;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
-}
-
-.pagination-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: white;
-  color: #3b82f6;
-  border: 2px solid #3b82f6;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background: #3b82f6;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.pagination-btn:disabled {
-  background: #f3f4f6;
-  color: #d1d5db;
-  border-color: #e5e7eb;
-  cursor: not-allowed;
-}
-
-.pagination-info {
-  font-size: 14px;
-  color: #6b7280;
-  font-weight: 500;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-  .notifications-container {
-    padding: 16px;
-  }
-
   .notifications-header {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .notifications-header h1 {
-    font-size: 24px;
   }
 
   .filter-tabs {
@@ -299,16 +106,12 @@
     width: 100%;
   }
 
-  .notification-header {
+  .notification-header-row {
     flex-direction: column;
     align-items: flex-start;
   }
 
   .notification-time {
-    font-size: 12px;
-  }
-
-  .pagination {
-    flex-wrap: wrap;
+    font-size: var(--font-size-xs);
   }
 }

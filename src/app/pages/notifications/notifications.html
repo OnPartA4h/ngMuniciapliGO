@@ -1,8 +1,8 @@
-<div class="notifications-container">
+<div class="page-container page-container--narrow">
   <div class="notifications-header">
-    <h1>{{ 'NOTIFICATIONS.TITLE' | translate }}</h1>
+    <h1 class="page-header__title">{{ 'NOTIFICATIONS.TITLE' | translate }}</h1>
     <button 
-      class="mark-all-btn" 
+      class="btn btn-primary" 
       (click)="markAllAsRead()" 
       [disabled]="notifications.length === 0 || areAllNotificationsRead()"
       *ngIf="notifications.length > 0">
@@ -17,7 +17,7 @@
       [class.active]="filterRead === undefined"
       (click)="setFilter(undefined)">
       {{ 'NOTIFICATIONS.ALL' | translate }}
-      <span class="count">{{ totalCount }}</span>
+      <span class="filter-tab__count">{{ totalCount }}</span>
     </button>
     <button 
       class="filter-tab" 
@@ -43,7 +43,7 @@
       <div class="notification-indicator" *ngIf="!notification.estLue"></div>
       
       <div class="notification-content">
-        <div class="notification-header">
+        <div class="notification-header-row">
           <h3 class="notification-title">{{ notification.problemeTitre }}</h3>
           <span class="notification-time">{{ getTimeAgo(notification.dateCreation) }}</span>
         </div>
@@ -59,35 +59,20 @@
       </button>
     </div>
 
-    <div class="empty-state" *ngIf="notifications.length === 0">
-      <i class="fas fa-bell-slash"></i>
-      <h3>{{ 'NOTIFICATIONS.NO_NOTIFICATIONS' | translate }}</h3>
-      <p>{{ 'NOTIFICATIONS.NO_NOTIFICATIONS_DESC' | translate }}</p>
-    </div>
+    <app-empty-state
+      *ngIf="notifications.length === 0"
+      iconClass="fas fa-bell-slash"
+      [title]="'NOTIFICATIONS.NO_NOTIFICATIONS' | translate"
+      [description]="'NOTIFICATIONS.NO_NOTIFICATIONS_DESC' | translate">
+    </app-empty-state>
   </div>
 
-  <div class="loading-state" *ngIf="loading">
-    <i class="fas fa-spinner fa-spin"></i>
-    <p>{{ 'COMMON.LOADING' | translate }}</p>
-  </div>
+  <app-loading-spinner *ngIf="loading"></app-loading-spinner>
 
-  <div class="pagination" *ngIf="totalPages > 1 && !loading">
-    <button 
-      class="pagination-btn" 
-      (click)="previousPage()" 
-      [disabled]="currentPage === 1">
-      <i class="fas fa-chevron-left"></i>
-      {{ 'COMMON.PREVIOUS' | translate }}
-    </button>
-    <span class="pagination-info">
-      {{ 'COMMON.PAGE' | translate }} {{ currentPage }} / {{ totalPages }}
-    </span>
-    <button 
-      class="pagination-btn" 
-      (click)="nextPage()" 
-      [disabled]="currentPage === totalPages">
-      {{ 'COMMON.NEXT' | translate }}
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
+  <app-pagination
+    *ngIf="totalPages > 1 && !loading"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
 </div>

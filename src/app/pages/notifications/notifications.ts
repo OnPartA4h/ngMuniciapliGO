@@ -6,11 +6,12 @@ import { lastValueFrom, Subscription } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
 import { NotificationHubService } from '../../services/notification-hub.service';
 import { Notification, PaginatedNotifications } from '../../models/notification';
+import { PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent } from '../../components/ui';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent],
   templateUrl: './notifications.html',
   styleUrls: ['./notifications.css']
 })
@@ -119,6 +120,11 @@ export class Notifications implements OnInit, OnDestroy {
       this.currentPage++;
       this.loadNotifications();
     }
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadNotifications();
   }
 
   getTimeAgo(dateString: string): string {
