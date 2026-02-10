@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Problem } from '../../models/problem';
@@ -13,13 +13,11 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
   styleUrl: './map-sidebar.css',
 })
 export class MapSidebar implements OnInit {
+  generalService = inject(GeneralService);
+
   @Input() problem: Problem | null = null;
   @Input() isOpen: boolean = false;
   @Output() close = new EventEmitter<void>();
-
-  constructor(
-    public generalService: GeneralService,
-  ) {}
 
   async ngOnInit() {
     // Load categories and statuses when component initializes

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, inject } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -10,6 +10,8 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './profile-email-form.html',
 })
 export class ProfileEmailFormComponent implements OnChanges {
+  private fb = inject(FormBuilder);
+
   @Input() currentEmail: string | null = null;
   @Input() isSaving = false;
   @Input() successMessage: string | null = null;
@@ -19,7 +21,7 @@ export class ProfileEmailFormComponent implements OnChanges {
 
   emailForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.emailForm = this.fb.group({
       newEmail: ['', [Validators.required, Validators.email]]
     });

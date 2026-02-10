@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, inject } from '@angular/core';
 
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -15,6 +15,11 @@ import { UserFormComponent } from '../user-form/user-form';
   styleUrl: './create-user-form.css',
 })
 export class CreateUserFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private generalService = inject(GeneralService);
+  private languageService = inject(LanguageService);
+  private translateService = inject(TranslateService);
+
   @Output() formSubmit = new EventEmitter<CreateUserDto>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -24,12 +29,7 @@ export class CreateUserFormComponent implements OnInit {
   isLoading = false;
   selectedRole = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private generalService: GeneralService,
-    private languageService: LanguageService,
-    private translateService: TranslateService,
-  ) {
+  constructor() {
     this.userForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],

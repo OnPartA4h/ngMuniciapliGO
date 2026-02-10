@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
@@ -12,10 +12,9 @@ import { NotificationService } from '../../services/notification.service';
   styleUrls: ['./notification-bell.css']
 })
 export class NotificationBell implements OnInit {
-  constructor(
-    public notificationService: NotificationService,
-    private router: Router
-  ) {}
+  notificationService = inject(NotificationService);
+  private router = inject(Router);
+
 
   async ngOnInit(): Promise<void> {
     // Charger le compteur initial depuis l'API

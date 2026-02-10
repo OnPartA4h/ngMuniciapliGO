@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,6 +14,10 @@ import { ForgotPasswordModal } from '../../components/modals/forgot-password-mod
   styleUrl: './login.css',
 })
 export class Login {
+  authService = inject(AuthService);
+  private formBuilder = inject(FormBuilder);
+  router = inject(Router);
+
   
   formGroup: FormGroup;
   showResetPasswordModal = false;
@@ -21,7 +25,7 @@ export class Login {
   currentPassword = '';
   isLoading = false;
 
-  constructor(public authService: AuthService, private formBuilder: FormBuilder, public router: Router) {
+  constructor() {
     this.formGroup = this.formBuilder.group(
       {
         email: ['', [Validators.required, Validators.email]],

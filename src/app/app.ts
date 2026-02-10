@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Header } from './components/header/header';
 
@@ -12,10 +12,12 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./app.css'],
 })
 export class App {
+  private router = inject(Router);
+
   showHeaderFooter = true;
   private hiddenRoutes = ['/login'];
 
-  constructor(private router: Router) {
+  constructor() {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {

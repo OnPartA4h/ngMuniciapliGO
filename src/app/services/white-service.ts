@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { PaginatedProblems } from '../models/paginatedProblems';
@@ -9,9 +9,9 @@ import { Problem } from '../models/problem';
   providedIn: 'root',
 })
 export class WhiteService {
-  private apiUrl = environment.apiUrl;
+  http = inject(HttpClient);
 
-  constructor(public http: HttpClient) { }
+  private apiUrl = environment.apiUrl;
 
   async getAllProblems(options?: any): Promise<Problem[]> {
     let x = await lastValueFrom(this.http.get<Problem[]>(

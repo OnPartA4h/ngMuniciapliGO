@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,6 +16,10 @@ import { PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent } fro
   styleUrls: ['./notifications.css']
 })
 export class Notifications implements OnInit, OnDestroy {
+  private notificationService = inject(NotificationService);
+  private notificationHubService = inject(NotificationHubService);
+  private router = inject(Router);
+
   notifications: Notification[] = [];
   currentPage = 1;
   totalPages = 1;
@@ -24,12 +28,6 @@ export class Notifications implements OnInit, OnDestroy {
   loading = false;
   filterRead: boolean | undefined = undefined;
   private newNotificationSubscription?: Subscription;
-
-  constructor(
-    private notificationService: NotificationService,
-    private notificationHubService: NotificationHubService,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     this.loadNotifications();

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
@@ -18,22 +18,20 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   imports: [DaysAgoPipe, FormsModule, TranslateModule, MatSnackBarModule],
 })
 export class ReportDetails implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  generalService = inject(GeneralService);
+  private languageService = inject(LanguageService);
+  private whiteService = inject(WhiteService);
+  private userService = inject(UserService);
+  private snackbar = inject(MatSnackBar);
+  private translate = inject(TranslateService);
+
   problem: any = null;
   isLoading = true;
   photoIndex = signal<number>(0);
   colBleus: any[] = [];
   search = "";
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    public generalService: GeneralService,
-    private languageService: LanguageService,
-    private whiteService: WhiteService,
-    private userService: UserService,
-    private snackbar: MatSnackBar,
-    private translate: TranslateService
-  ) { }
 
   async ngOnInit() {
     await Promise.all([

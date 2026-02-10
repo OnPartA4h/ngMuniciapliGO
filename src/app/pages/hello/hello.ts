@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ApiService } from '../../services/hello-service';
 
 @Component({
@@ -8,9 +8,9 @@ import { ApiService } from '../../services/hello-service';
   styleUrl: './hello.css',
 })
 export class Hello implements OnInit {
-  txt = "";
+  service = inject(ApiService);
 
-  constructor(public service: ApiService) {}
+  txt = "";
 
   ngOnInit() {
     this.getHello();

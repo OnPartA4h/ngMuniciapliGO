@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -12,6 +12,9 @@ import { AuthService } from '../../../services/auth-service';
   styleUrl: './forgot-password-modal.css',
 })
 export class ForgotPasswordModal {
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+
   @Output() close = new EventEmitter<void>();
 
   forgotPasswordForm: FormGroup;
@@ -19,10 +22,7 @@ export class ForgotPasswordModal {
   successMessage: string | null = null;
   errorMessage: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService
-  ) {
+  constructor() {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });

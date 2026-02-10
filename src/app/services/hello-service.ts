@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { helloWorld } from '../models/helloWorld';
 import { environment } from '../../environments/environment';
@@ -8,9 +8,9 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = environment.apiUrl;
+  http = inject(HttpClient);
 
-  constructor(public http: HttpClient) {}
+  private apiUrl = environment.apiUrl;
 
   async helloWorld(): Promise<string> {
     const response = await lastValueFrom(

@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -10,13 +10,14 @@ import { LanguageService } from './language-service';
   providedIn: 'root',
 })
 export class GeneralService {
+  private http = inject(HttpClient);
+  private languageService = inject(LanguageService);
+
   private apiUrl = environment.apiUrl;
 
   categories = signal<CategoryOption[]>([]);
   statuses = signal<StatusOption[]>([]);
   assignees = signal<AssigneAOption[]>([]);
-
-  constructor(private http: HttpClient, private languageService: LanguageService) { }
 
   async getRoles(lang: string): Promise<RoleOption[]> {
     return await lastValueFrom(

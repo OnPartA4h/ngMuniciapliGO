@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,12 +16,12 @@ import { Pagination } from '../../../models/pagination';
   styleUrl: './report-list.css',
 })
 export class ReportListComponent {
+  generalService = inject(GeneralService);
+
   @Input({ required: true }) problems: Problem[] = [];
   @Input() pagination: Pagination | null = null;
   @Input() loading = false;
   @Output() pageChange = new EventEmitter<number>();
-
-  constructor(public generalService: GeneralService) {}
 
   onPageChange(page: number): void {
     this.pageChange.emit(page);

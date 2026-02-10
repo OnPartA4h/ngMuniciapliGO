@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -13,6 +13,10 @@ import { ChangePasswordDto } from '../../../models/user';
   styleUrl: './force-reset-password-modal.css',
 })
 export class ForceResetPasswordModal {
+  private fb = inject(FormBuilder);
+  private userService = inject(UserService);
+  private translateService = inject(TranslateService);
+
   @Input() currentPassword: string = '';
   
   @Output() passwordReset = new EventEmitter<void>();
@@ -22,11 +26,7 @@ export class ForceResetPasswordModal {
   isSubmitting = false;
   errorMessage: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private userService: UserService,
-    private translateService: TranslateService
-  ) {
+  constructor() {
     this.resetPasswordForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)]],
       confirmPassword: ['', [Validators.required]]

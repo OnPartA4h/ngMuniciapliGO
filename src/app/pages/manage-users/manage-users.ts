@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -18,6 +18,11 @@ import { UsersTableComponent } from '../../components/tables/users-table/users-t
   styleUrl: './manage-users.css',
 })
 export class ManageUsers implements OnInit {
+  private adminService = inject(AdminService);
+  private generalService = inject(GeneralService);
+  private languageService = inject(LanguageService);
+  private cdr = inject(ChangeDetectorRef);
+
   users: User[] = [];
   availableRoles: RoleOption[] = [];
 
@@ -37,13 +42,6 @@ export class ManageUsers implements OnInit {
 
   // Loading state
   isLoading: boolean = false;
-
-  constructor(
-    private adminService: AdminService,
-    private generalService: GeneralService,
-    private languageService: LanguageService,
-    private cdr: ChangeDetectorRef,
-  ) {}
 
   async ngOnInit() {
     await Promise.all([

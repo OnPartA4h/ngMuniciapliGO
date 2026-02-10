@@ -9,6 +9,9 @@ import { NotificationHubService } from './notification-hub.service';
   providedIn: 'root',
 })
 export class AuthService {
+  http = inject(HttpClient);
+  private router = inject(Router);
+
   private apiUrl = environment.apiUrl;
 
   private tokenSignal : WritableSignal<string|null> = signal(localStorage.getItem("token"));
@@ -24,8 +27,6 @@ export class AuthService {
 
   private loginResponse: any = null;
   private notificationHubService = inject(NotificationHubService);
-
-  constructor(public http: HttpClient, private router: Router) {}
 
   errorMessage: string = ""
 

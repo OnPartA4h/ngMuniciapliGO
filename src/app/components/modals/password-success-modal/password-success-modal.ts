@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -10,11 +10,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   styleUrl: './password-success-modal.css',
 })
 export class PasswordSuccessModalComponent {
+  private translateService = inject(TranslateService);
+
   @Input() generatedPassword: string | null = null;
   @Input() isOpen = false;
   @Output() close = new EventEmitter<void>();
-
-  constructor(private translateService: TranslateService) {}
 
   async copyPassword() {
     if (this.generatedPassword) {

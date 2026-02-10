@@ -1,6 +1,6 @@
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
-import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { WhiteService } from '../../services/white-service';
 import { Problem } from '../../models/problem';
 import { MapSidebar } from '../../components/map-sidebar/map-sidebar';
@@ -16,6 +16,9 @@ import { MapConfigModal } from '../../components/modals/map-config-modal/map-con
   styleUrl: './map.css',
 })
 export class Map implements AfterViewInit{
+  whiteService = inject(WhiteService);
+  private cdr = inject(ChangeDetectorRef);
+
   DEFAULT_LAT: number = 45.5312
   DEFAULT_LNG: number = -73.5181
   DEFAULT_RADIUS: number = 1000
@@ -36,8 +39,6 @@ export class Map implements AfterViewInit{
   isSidebarOpen: boolean = false;
 
   isConfigModalOpen: boolean = false
-
-  constructor(public whiteService: WhiteService, private cdr: ChangeDetectorRef) {}
 
   async ngAfterViewInit() {
     this.getRadius()

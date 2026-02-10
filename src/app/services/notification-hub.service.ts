@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, inject } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { environment } from '../../environments/environment';
 import { Notification } from '../models/notification';
@@ -8,12 +8,10 @@ import { NotificationService } from './notification.service';
   providedIn: 'root'
 })
 export class NotificationHubService {
-  private hubConnection?: signalR.HubConnection;
+  private ngZone = inject(NgZone);
+  private notificationService = inject(NotificationService);
 
-  constructor(
-    private ngZone: NgZone,
-    private notificationService: NotificationService
-  ) {}
+  private hubConnection?: signalR.HubConnection;
 
   async startConnection(token: string): Promise<void> {
     if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {

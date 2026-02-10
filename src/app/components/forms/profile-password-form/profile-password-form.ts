@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -11,6 +11,9 @@ import { ChangePasswordDto } from '../../../models/user';
   templateUrl: './profile-password-form.html',
 })
 export class ProfilePasswordFormComponent {
+  private fb = inject(FormBuilder);
+  private translateService = inject(TranslateService);
+
   @Input() isSaving = false;
   @Input() successMessage: string | null = null;
   @Input() errorMessage: string | null = null;
@@ -19,10 +22,7 @@ export class ProfilePasswordFormComponent {
 
   passwordForm: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-    private translateService: TranslateService,
-  ) {
+  constructor() {
     this.passwordForm = this.fb.group({
       currentPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)]],

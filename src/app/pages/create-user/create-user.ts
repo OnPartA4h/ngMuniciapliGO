@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,15 +15,13 @@ import { PasswordSuccessModalComponent } from '../../components/modals/password-
   styleUrl: './create-user.css',
 })
 export class CreateUser {
+  private adminService = inject(AdminService);
+  private router = inject(Router);
+
   @ViewChild(CreateUserFormComponent) createUserForm!: CreateUserFormComponent;
 
   generatedPassword: string | null = null;
   showPasswordModal = false;
-
-  constructor(
-    private adminService: AdminService,
-    private router: Router,
-  ) {}
 
   async onFormSubmit(userData: CreateUserDto) {
     this.createUserForm.setLoading(true);

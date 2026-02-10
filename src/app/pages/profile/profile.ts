@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, inject } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -30,6 +30,14 @@ import { ProfilePasswordFormComponent } from '../../components/forms/profile-pas
   styleUrl: './profile.css',
 })
 export class Profile implements OnInit {
+  private authService = inject(AuthService);
+  private userService = inject(UserService);
+  private generalService = inject(GeneralService);
+  private languageService = inject(LanguageService);
+  private translateService = inject(TranslateService);
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
+
   @ViewChild(ProfileEmailFormComponent) emailFormComponent!: ProfileEmailFormComponent;
   @ViewChild(ProfilePasswordFormComponent) passwordFormComponent!: ProfilePasswordFormComponent;
 
@@ -58,16 +66,6 @@ export class Profile implements OnInit {
   // Email verification modal
   showEmailVerificationModal = false;
   pendingEmail: string | null = null;
-
-  constructor(
-    private authService: AuthService,
-    private userService: UserService,
-    private generalService: GeneralService,
-    private languageService: LanguageService,
-    private translateService: TranslateService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
 
   async ngOnInit() {
     try {

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef, inject } from '@angular/core';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxMaskPipe } from 'ngx-mask';
@@ -16,6 +16,12 @@ import { DeleteConfirmModal } from '../delete-confirm-modal/delete-confirm-modal
   styleUrl: './edit-user-modal.css',
 })
 export class EditUserModal implements OnInit, OnChanges {
+  private adminService = inject(AdminService);
+  private generalService = inject(GeneralService);
+  private languageService = inject(LanguageService);
+  private translate = inject(TranslateService);
+  private cdr = inject(ChangeDetectorRef);
+
   @Input() user: User | null = null;
   @Input() isOpen: boolean = false;
   @Output() close = new EventEmitter<void>();
@@ -26,14 +32,6 @@ export class EditUserModal implements OnInit, OnChanges {
   showDeleteConfirm = false;
   currentUserId: string | null = null;
   successMessage: string | null = null;
-
-  constructor(
-    private adminService: AdminService,
-    private generalService: GeneralService,
-    private languageService: LanguageService,
-    private translate: TranslateService,
-    private cdr: ChangeDetectorRef
-  ) {}
 
   async ngOnInit() {
     await this.loadRoles();

@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -8,6 +8,8 @@ import { Notification, PaginatedNotifications, UnreadCount } from '../models/not
   providedIn: 'root'
 })
 export class NotificationService {
+  private http = inject(HttpClient);
+
   private apiUrl = `${environment.apiUrl}/api/Notification`;
   
   // Signal pour le compteur de notifications non lues
@@ -16,8 +18,6 @@ export class NotificationService {
   // Subject pour émettre les nouvelles notifications en temps réel
   private newNotificationSubject = new Subject<Notification>();
   newNotification$ = this.newNotificationSubject.asObservable();
-
-  constructor(private http: HttpClient) {}
 
   getNotifications(page: number = 1, estLue?: boolean): Observable<PaginatedNotifications> {
     let params = new HttpParams().set('page', page.toString());

@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit, inject } from '@angular/core';
 
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -12,6 +12,10 @@ import { UserService } from '../../../services/user-service';
   styleUrl: './change-email-modal.css',
 })
 export class ChangeEmailModal implements OnInit {
+  private fb = inject(FormBuilder);
+  private userService = inject(UserService);
+  private translateService = inject(TranslateService);
+
   @Input() newEmail: string | null = null;
   @Output() close = new EventEmitter<void>();
   @Output() emailVerified = new EventEmitter<string>();
@@ -22,11 +26,7 @@ export class ChangeEmailModal implements OnInit {
   successMessage: string | null = null;
   errorMessage: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private userService: UserService,
-    private translateService: TranslateService
-  ) {
+  constructor() {
     this.verificationForm = this.fb.group({
       code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
     });

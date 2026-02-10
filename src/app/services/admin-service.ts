@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { CreateUserDto, CreateUserResponseDto, PaginatedUsersResponse } from '../models/user';
@@ -8,9 +8,9 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class AdminService {
-  private apiUrl = environment.apiUrl;
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  private apiUrl = environment.apiUrl;
 
   async getAllUsers(page: number = 1, role?: string, search?: string): Promise<PaginatedUsersResponse> {
     let params = new HttpParams().set('page', page.toString());

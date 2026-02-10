@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, inject } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -12,6 +12,8 @@ import { UserFormComponent } from '../user-form/user-form';
   templateUrl: './profile-info-form.html',
 })
 export class ProfileInfoFormComponent implements OnChanges {
+  private fb = inject(FormBuilder);
+
   @Input() profile: User | null = null;
   @Input() isSaving = false;
   @Input() successMessage: string | null = null;
@@ -21,7 +23,7 @@ export class ProfileInfoFormComponent implements OnChanges {
 
   profileForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.profileForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],

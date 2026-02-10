@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { WhiteService } from '../../services/white-service';
 import { GeneralService } from '../../services/general-service';
@@ -17,6 +17,10 @@ import { ReportListComponent } from '../../components/tables/report-list/report-
   styleUrl: './manage-reports.css',
 })
 export class ManageReports implements OnInit {
+  whiteService = inject(WhiteService);
+  generalService = inject(GeneralService);
+  private languageService = inject(LanguageService);
+
   loading = true;
   showFilters = false;
 
@@ -30,12 +34,6 @@ export class ManageReports implements OnInit {
 
   problems: Problem[] = []
   pagination: Pagination | null = null
-
-  constructor(
-    public whiteService: WhiteService,
-    public generalService: GeneralService,
-    private languageService: LanguageService
-  ) { }
 
   async ngOnInit() {
     this.loading = true;

@@ -1,5 +1,5 @@
 
-import { Component, computed } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { LanguageService } from '../../services/language-service';
@@ -13,16 +13,14 @@ import { NotificationBell } from '../notification-bell/notification-bell';
   styleUrl: './header.css',
 })
 export class Header {
+  authService = inject(AuthService);
+  languageService = inject(LanguageService);
+
   // Utiliser un computed pour réagir aux changements du signal token
   isConnected = computed(() => !!this.authService.token());
   
   // Computed pour les rôles (pour réactivité complète)
   userRoles = computed(() => this.authService.roles());
-
-  constructor(
-    public authService: AuthService,
-    public languageService: LanguageService
-  ) {}
 
   logout() {
     this.authService.logout();
