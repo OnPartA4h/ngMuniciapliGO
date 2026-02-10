@@ -54,10 +54,11 @@ export class Notifications implements OnInit, OnDestroy {
       const response = await lastValueFrom(
         this.notificationService.getNotifications(this.currentPage, this.filterRead)
       );
+      console.log('API response for notifications:', response);
       this.notifications = response.items;
-      this.totalPages = response.totalPages;
-      this.totalCount = response.totalCount;
-      this.pageSize = response.pageSize;
+      this.totalPages = response.pagination.totalPages;
+      this.totalCount = response.pagination.totalCount || 0;
+      this.pageSize = response.pagination.pageSize;
     } catch (error) {
       console.error('Error loading notifications:', error);
     } finally {

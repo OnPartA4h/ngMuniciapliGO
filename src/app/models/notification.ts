@@ -1,3 +1,5 @@
+import { Pagination } from "./pagination";
+
 export interface Notification {
   id: number;
   problemeId: number;
@@ -9,10 +11,7 @@ export interface Notification {
 
 export interface PaginatedNotifications {
   items: Notification[];
-  page: number;
-  pageSize: number;
-  totalCount: number;
-  totalPages: number;
+  pagination: Pagination;
 }
 
 export interface UnreadCount {
