@@ -28,7 +28,7 @@ export class Map implements AfterViewInit{
 
   radius: number = -1
   currentLat: number | null = null
-  currenctLng: number | null = null
+  currentLng: number | null = null
 
   problems: Problem[] = []
   
@@ -88,12 +88,12 @@ export class Map implements AfterViewInit{
   }
 
   async getProblems() {
-    if (!this.currenctLng || !this.currentLat){
+    if (!this.currentLng || !this.currentLat){
       this.problems = await this.whiteService.getMapProblems(this.radius, this.DEFAULT_LAT, this.DEFAULT_LNG)
       return
     } 
 
-    this.problems = await this.whiteService.getMapProblems(this.radius, this.currentLat, this.currenctLng)
+    this.problems = await this.whiteService.getMapProblems(this.radius, this.currentLat, this.currentLng)
   }
 
   getRadius() {
@@ -165,6 +165,7 @@ export class Map implements AfterViewInit{
   removeCurrentPosMarker() {
     if (!this.currentPosMarker) return
     this.currentPosMarker.remove()
+    this.currentPosMarker = undefined
   }
 
   createCurrentPosMarker(latlng: L.LatLngExpression) {
@@ -178,7 +179,7 @@ export class Map implements AfterViewInit{
       })
 
       this.currentLat = point.lat
-      this.currenctLng = point.lng
+      this.currentLng = point.lng
 
       this.addCircleRadius(point)
   }
@@ -206,7 +207,15 @@ export class Map implements AfterViewInit{
   }
 
   resetView() {
-    if (!this.map || !this.currenctLng || !this.currentLat) return
-    this.map.setView([this.currentLat, this.currenctLng])
+    if (!this.map || !this.currentLat || !this.currentLng) return
+
+    if (!this.currentPosMarker) {
+      this.map.setView(this.FALLBACK_COORDS, 14)
+      this.createCurrentPosMarker(this.FALLBACK_COORDS)
+      this.reloadProblems()
+      return
+    }
+
+    this.map.setView([this.currentLat, this.currentLng])
   }
 }
