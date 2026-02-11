@@ -1,6 +1,7 @@
 {
   "HEADER": {
     "HOME": "Home",
+    "MAP": "Map",
     "MANAGE_REPORTS": "Manage Problems",
     "MANAGE_USERS": "Manage Users",
     "LOGIN": "Login",
@@ -295,5 +296,9 @@
     "CLUSTER_MARKERS_DESC": "Group nearby markers for better readability",
     "RESET": "Reset",
     "APPLY": "Apply"
+  },
+  "MAP": {
+    "ERROR_LOADING_PROBLEMS": "Unable to load problems. Please check your connection and try again.",
+    "NO_PROBLEMS_FOUND": "There are no problems in this area"
   }
 }

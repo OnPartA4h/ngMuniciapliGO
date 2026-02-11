@@ -9,7 +9,7 @@
     </a>
 
     <a routerLink="/map" routerLinkActive="active">
-      Map
+      {{ 'HEADER.MAP' | translate }}
     </a>
 
     @if (userRoles().includes('ColBlanc') || userRoles().includes('Admin')) {

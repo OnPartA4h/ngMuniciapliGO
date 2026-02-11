@@ -1,6 +1,7 @@
 {
   "HEADER": {
     "HOME": "Accueil",
+    "MAP": "Carte",
     "MANAGE_REPORTS": "Gérer les signalements",
     "MANAGE_USERS": "Gérer les utilisateurs",
     "LOGIN": "Connexion",
@@ -295,5 +296,9 @@
     "CLUSTER_MARKERS_DESC": "Grouper les marqueurs proches pour une meilleure lisibilité",
     "RESET": "Réinitialiser",
     "APPLY": "Appliquer"
+  },
+  "MAP": {
+    "ERROR_LOADING_PROBLEMS": "Impossible de charger les signalements. Veuillez vérifier votre connexion et réessayer.",
+    "NO_PROBLEMS_FOUND": "Il n'y a aucun signalement dans cette zone"
   }
 }

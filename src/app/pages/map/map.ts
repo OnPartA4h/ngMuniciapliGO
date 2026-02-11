@@ -4,14 +4,15 @@ import { AfterViewInit, ChangeDetectorRef, Component, inject } from '@angular/co
 import { WhiteService } from '../../services/white-service';
 import { Problem } from '../../models/problem';
 import { MapSidebar } from '../../components/map-sidebar/map-sidebar';
-
 import { FormsModule } from '@angular/forms';
 import { MapConfigModal } from '../../components/modals/map-config-modal/map-config-modal';
 import { categoryIcons, categoryEnumMap } from '../../models/categoryIcons';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-map',
-  imports: [MapSidebar, FormsModule, MapConfigModal],
+  imports: [MapSidebar, FormsModule, MapConfigModal, MatSnackBarModule, TranslateModule],
   standalone: true,
   templateUrl: './map.html',
   styleUrl: './map.css',
@@ -19,6 +20,8 @@ import { categoryIcons, categoryEnumMap } from '../../models/categoryIcons';
 export class Map implements AfterViewInit{
   whiteService = inject(WhiteService);
   private cdr = inject(ChangeDetectorRef);
+  private snackbar = inject(MatSnackBar);
+  private translate = inject(TranslateService);
 
   DEFAULT_LAT: number = 45.5312
   DEFAULT_LNG: number = -73.5181
@@ -100,12 +103,32 @@ export class Map implements AfterViewInit{
   }
 
   async getProblems() {
-    if (!this.currentLng || !this.currentLat){
-      this.problems = await this.whiteService.getMapProblems(this.radius, this.DEFAULT_LAT, this.DEFAULT_LNG)
-      return
-    } 
-
-    this.problems = await this.whiteService.getMapProblems(this.radius, this.currentLat, this.currentLng)
+    try {
+      if (!this.currentLng || !this.currentLat){
+        this.problems = await this.whiteService.getMapProblems(this.radius, this.DEFAULT_LAT, this.DEFAULT_LNG)
+      } else {
+        this.problems = await this.whiteService.getMapProblems(this.radius, this.currentLat, this.currentLng)
+      }
+      
+      if (this.problems.length <= 0){
+        const message = this.translate.instant('MAP.NO_PROBLEMS_FOUND');
+        this.snackbar.open(message, this.translate.instant('COMMON.CLOSE'), {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass: ['info-snackbar']
+        });
+      }
+    } catch (error) {
+      const message = this.translate.instant('MAP.ERROR_LOADING_PROBLEMS');
+      this.snackbar.open(message, this.translate.instant('COMMON.CLOSE'), {
+        duration: 2000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['error-snackbar']
+      });
+      this.problems = [];
+    }
   }
 
   getRadius() {
@@ -127,7 +150,6 @@ export class Map implements AfterViewInit{
     });
 
     for (let p of this.problems){
-      // Obtenir l'icône appropriée selon la catégorie
       const icon = this.getCategoryIcon(p.categorie);
       let marker = L.marker([p.latitude, p.longitude], { icon: icon })
 
@@ -265,7 +287,9 @@ export class Map implements AfterViewInit{
     this.previewCircle?.remove();
     this.previewCircle = undefined;
   }
+}
+
 
 
   
-}
+

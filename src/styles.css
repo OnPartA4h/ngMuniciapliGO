@@ -1074,5 +1074,31 @@ body {
   transform: translateX(-4px);
 }
 
+/* Snackbar Styles */
+.error-snackbar {
+  background-color: var(--color-error) !important;
+}
+
+.error-snackbar .mat-mdc-snack-bar-label {
+  color: var(--color-white) !important;
+}
+
+.error-snackbar .mat-mdc-button {
+  color: var(--color-white) !important;
+}
+
+.info-snackbar {
+  background-color: var(--color-info) !important;
+}
+
+.info-snackbar .mat-mdc-snack-bar-label {
+  color: var(--color-white) !important;
+}
+
+.info-snackbar .mat-mdc-button {
+  color: var(--color-white) !important;
+}
+
 /* Responsive Globals */
 /* (consolidated in the first @media block above) */
+
