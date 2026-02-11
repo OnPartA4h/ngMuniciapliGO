@@ -300,5 +300,27 @@
   "MAP": {
     "ERROR_LOADING_PROBLEMS": "Unable to load problems. Please check your connection and try again.",
     "NO_PROBLEMS_FOUND": "There are no problems in this area"
+  },
+  "MANAGE_DOUBLES": {
+    "TITLE": "Manage Duplicates",
+    "SUBTITLE": "Review and process duplicate problem declarations detected by the system.",
+    "PENDING_GROUPS": "Pending Groups",
+    "TOTAL_DUPLICATES": "Duplicates Detected",
+    "RESOLVED": "Resolved",
+    "TAB_PENDING": "Pending",
+    "TAB_RESOLVED": "Resolved",
+    "SIMILARITY": "similarity",
+    "DUPLICATES": "duplicate(s)",
+    "ORIGINAL_REPORT": "Original Report",
+    "SUSPECTED_DUPLICATES": "Suspected Duplicates",
+    "PENDING_REVIEW": "Pending Review",
+    "VIEW_REPORT": "View",
+    "ACCEPT": "Accept",
+    "REFUSE": "Refuse",
+    "ACCEPT_ALL": "Accept All",
+    "REFUSE_ALL": "Refuse All",
+    "MERGED": "Merged",
+    "NO_DOUBLES": "No Duplicates",
+    "NO_DOUBLES_DESC": "No duplicate declarations have been detected at this time."
   }
 }

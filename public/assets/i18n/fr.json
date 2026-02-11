@@ -300,5 +300,27 @@
   "MAP": {
     "ERROR_LOADING_PROBLEMS": "Impossible de charger les signalements. Veuillez vérifier votre connexion et réessayer.",
     "NO_PROBLEMS_FOUND": "Il n'y a aucun signalement dans cette zone"
+  },
+  "MANAGE_DOUBLES": {
+    "TITLE": "Gestion des doublons",
+    "SUBTITLE": "Examinez et traitez les déclarations de problèmes en double détectées par le système.",
+    "PENDING_GROUPS": "Groupes en attente",
+    "TOTAL_DUPLICATES": "Doublons détectés",
+    "RESOLVED": "Traités",
+    "TAB_PENDING": "En attente",
+    "TAB_RESOLVED": "Traités",
+    "SIMILARITY": "similarité",
+    "DUPLICATES": "doublon(s)",
+    "ORIGINAL_REPORT": "Signalement original",
+    "SUSPECTED_DUPLICATES": "Doublons suspectés",
+    "PENDING_REVIEW": "En attente",
+    "VIEW_REPORT": "Voir",
+    "ACCEPT": "Accepter",
+    "REFUSE": "Refuser",
+    "ACCEPT_ALL": "Tout accepter",
+    "REFUSE_ALL": "Tout refuser",
+    "MERGED": "Fusionné",
+    "NO_DOUBLES": "Aucun doublon",
+    "NO_DOUBLES_DESC": "Aucune déclaration en double n'a été détectée pour le moment."
   }
 }

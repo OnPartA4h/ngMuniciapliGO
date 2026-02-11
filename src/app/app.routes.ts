@@ -14,10 +14,12 @@ import { ReportDetails } from './pages/report-details/report-details';
 import { Profile } from './pages/profile/profile';
 import { Notifications } from './pages/notifications/notifications';
 import { Landing } from './pages/landing/landing';
+import { ManageDoubles } from './pages/manage-doubles/manage-doubles';
 
 export const routes: Routes = [
   { path: 'hello', component: Hello },
   { path: 'map', component: Map, canActivate: [authGuard]},
+  { path: 'manage-doubles', component: ManageDoubles, canActivate: [authGuard]},
   { path: 'home', component: Home, canActivate: [authGuard] },
   { path: 'login', component: Login, canActivate: [loginGuard] },
   { path: 'manage-reports', component: ManageReports, canActivate: [authGuard, whiteGuard] },

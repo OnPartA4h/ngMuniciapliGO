@@ -1,1 +1,168 @@
-<p>manage-doubles works!</p>
+<div class="page-container">
+  <app-page-header [title]="'MANAGE_DOUBLES.TITLE' | translate"
+    [subtitle]="'MANAGE_DOUBLES.SUBTITLE' | translate" />
+
+  <!-- Tabs -->
+  <div class="filter-tabs">
+    <button class="filter-tab" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
+      <i class="fas fa-hourglass-half"></i>
+      {{ 'MANAGE_DOUBLES.TAB_PENDING' | translate }}
+      <span class="filter-tab__count">{{ pendingCount }}</span>
+    </button>
+    <button class="filter-tab" [class.active]="activeTab === 'resolved'" (click)="setTab('resolved')">
+      <i class="fas fa-check-double"></i>
+      {{ 'MANAGE_DOUBLES.TAB_RESOLVED' | translate }}
+      <span class="filter-tab__count">{{ resolvedCount }}</span>
+    </button>
+  </div>
+
+  <!-- Groups List -->
+  <div class="doubles-list">
+    @for (group of currentGroups; track group.id) {
+      <div class="double-group-card" [class.expanded]="group.expanded">
+        <!-- Group Header -->
+        <div class="double-group-header" (click)="toggleExpand(group)">
+          <div class="double-group-header__left">
+            <div class="category-icon-circle">
+              <i class="fas" [ngClass]="getCategoryIcon(group.original.categorie)"></i>
+            </div>
+            <div class="double-group-header__info">
+              <h3 class="double-group-header__title">{{ group.original.titre }}</h3>
+              <div class="double-group-header__meta">
+                <span class="meta-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  {{ group.original.address }}
+                </span>
+                <span class="meta-item">
+                  <i class="fas fa-tag"></i>
+                  {{ getCategoryLabel(group.original.categorie) }}
+                </span>
+                <span class="meta-item">
+                  <i class="fas fa-calendar"></i>
+                  {{ group.original.dateCreation | date:'dd/MM/yyyy' }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="double-group-header__right">
+            <span class="similarity-badge" [ngClass]="getSimilarityClass(group.similarityScore)">
+              <i class="fas fa-percentage"></i>
+              {{ group.similarityScore }}% {{ 'MANAGE_DOUBLES.SIMILARITY' | translate }}
+            </span>
+            <span class="duplicates-count-badge">
+              <i class="fas fa-clone"></i>
+              {{ group.duplicates.length }} {{ 'MANAGE_DOUBLES.DUPLICATES' | translate }}
+            </span>
+            <button class="btn-expand">
+              <i class="fas" [ngClass]="group.expanded ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Expanded Content -->
+        @if (group.expanded) {
+          <div class="double-group-body">
+            <!-- Original Report -->
+            <div class="original-report">
+              <div class="report-label">
+                <i class="fas fa-flag"></i>
+                {{ 'MANAGE_DOUBLES.ORIGINAL_REPORT' | translate }}
+              </div>
+              <div class="double-report-card original">
+                <div class="double-report-card__content">
+                  <h4 class="double-report-card__title">{{ group.original.titre }}</h4>
+                  <p class="double-report-card__description">{{ group.original.description }}</p>
+                  <div class="double-report-card__details">
+                    <span class="detail-item">
+                      <i class="fas fa-map-marker-alt"></i>
+                      {{ group.original.address }}
+                    </span>
+                    <span class="detail-item">
+                      <i class="fas fa-user"></i>
+                      {{ group.original.reportedBy }}
+                    </span>
+                    <span class="detail-item">
+                      <i class="fas fa-calendar"></i>
+                      {{ group.original.dateCreation | date:'dd MMM yyyy' }}
+                    </span>
+                  </div>
+                </div>
+                <div class="double-report-card__actions">
+                  <button class="btn btn-outline btn-sm">
+                    <i class="fas fa-external-link-alt"></i>
+                    {{ 'MANAGE_DOUBLES.VIEW_REPORT' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Duplicate Reports -->
+            <div class="duplicates-section">
+              <div class="report-label report-label--duplicate">
+                <i class="fas fa-clone"></i>
+                {{ 'MANAGE_DOUBLES.SUSPECTED_DUPLICATES' | translate }}
+              </div>
+              @for (dup of group.duplicates; track dup.id) {
+                <div class="double-report-card duplicate">
+                  <div class="double-report-card__connector"></div>
+                  <div class="double-report-card__content">
+                    <div class="double-report-card__header-row">
+                      <h4 class="double-report-card__title">{{ dup.titre }}</h4>
+                      <span class="badge badge-warning">{{ 'MANAGE_DOUBLES.PENDING_REVIEW' | translate }}</span>
+                    </div>
+                    <p class="double-report-card__description">{{ dup.description }}</p>
+                    <div class="double-report-card__details">
+                      <span class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{ dup.address }}
+                      </span>
+                      <span class="detail-item">
+                        <i class="fas fa-user"></i>
+                        {{ dup.reportedBy }}
+                      </span>
+                      <span class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        {{ dup.dateCreation | date:'dd MMM yyyy' }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="double-report-card__actions">
+                    @if (activeTab === 'pending') {
+                      <button class="btn btn-success btn-sm">
+                        <i class="fas fa-check"></i>
+                        {{ 'MANAGE_DOUBLES.ACCEPT' | translate }}
+                      </button>
+                      <button class="btn btn-danger btn-sm">
+                        <i class="fas fa-times"></i>
+                        {{ 'MANAGE_DOUBLES.REFUSE' | translate }}
+                      </button>
+                    } @else {
+                      <span class="badge badge-success">
+                        <i class="fas fa-check"></i>
+                        {{ 'MANAGE_DOUBLES.MERGED' | translate }}
+                      </span>
+                    }
+                    <button class="btn btn-outline btn-sm">
+                      <i class="fas fa-external-link-alt"></i>
+                      {{ 'MANAGE_DOUBLES.VIEW_REPORT' | translate }}
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+
+
+          </div>
+        }
+      </div>
+    }
+
+    @if (currentGroups.length === 0) {
+      <div class="empty-state">
+        <i class="fas fa-clone empty-state__icon"></i>
+        <h3 class="empty-state__title">{{ 'MANAGE_DOUBLES.NO_DOUBLES' | translate }}</h3>
+        <p class="empty-state__description">{{ 'MANAGE_DOUBLES.NO_DOUBLES_DESC' | translate }}</p>
+      </div>
+    }
+  </div>
+</div>
