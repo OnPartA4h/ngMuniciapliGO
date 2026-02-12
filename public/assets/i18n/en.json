@@ -300,5 +300,15 @@
   "MAP": {
     "ERROR_LOADING_PROBLEMS": "Unable to load problems. Please check your connection and try again.",
     "NO_PROBLEMS_FOUND": "There are no problems in this area"
+  },
+  "DUPLICATES": {
+    "TITLE": "Duplicate Groups",
+    "SUBTITLE": "Reports detected as potentially similar",
+    "TAB": "Duplicates",
+    "GROUP": "Group",
+    "REPORTS": "reports",
+    "SIMILARITY": "Similarity",
+    "NO_GROUPS": "No duplicates detected",
+    "NO_GROUPS_DESC": "There are currently no duplicate report groups pending review."
   }
 }

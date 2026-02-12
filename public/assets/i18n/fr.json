@@ -300,5 +300,15 @@
   "MAP": {
     "ERROR_LOADING_PROBLEMS": "Impossible de charger les signalements. Veuillez vérifier votre connexion et réessayer.",
     "NO_PROBLEMS_FOUND": "Il n'y a aucun signalement dans cette zone"
+  },
+  "DUPLICATES": {
+    "TITLE": "Groupes de doublons",
+    "SUBTITLE": "Signalements détectés comme potentiellement similaires",
+    "TAB": "Doublons",
+    "GROUP": "Groupe",
+    "REPORTS": "signalements",
+    "SIMILARITY": "Similarité",
+    "NO_GROUPS": "Aucun doublon détecté",
+    "NO_GROUPS_DESC": "Il n'y a actuellement aucun groupe de signalements en double en attente de révision."
   }
 }
