@@ -9,10 +9,11 @@ import { Pagination } from '../../models/pagination';
 import { FormsModule } from '@angular/forms';
 import { PageHeaderComponent } from '../../components/ui';
 import { ReportListComponent } from '../../components/tables/report-list/report-list';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-manage-reports',
-  imports: [TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent, NgClass],
+  imports: [TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent, NgClass, RouterLink],
   templateUrl: './manage-reports.html',
   styleUrl: './manage-reports.css',
 })

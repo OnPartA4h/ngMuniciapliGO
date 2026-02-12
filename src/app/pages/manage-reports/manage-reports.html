@@ -2,6 +2,18 @@
   <app-page-header [title]="'MANAGE_REPORTS.TITLE' | translate"
     [subtitle]="'MANAGE_REPORTS.SUBTITLE' | translate" />
 
+  <!-- Navigation Tabs -->
+  <div class="filter-tabs">
+    <a class="filter-tab active" routerLink="/manage-reports">
+      <i class="fas fa-clipboard-list"></i>
+      {{ 'HEADER.MANAGE_REPORTS' | translate }}
+    </a>
+    <a class="filter-tab" routerLink="/manage-duplicates">
+      <i class="fas fa-clone"></i>
+      {{ 'DUPLICATES.TAB' | translate }}
+    </a>
+  </div>
+
   <div class="search-div-top">
     <div class="search-div">
       <div class="search-box">

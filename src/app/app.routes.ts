@@ -14,6 +14,7 @@ import { ReportDetails } from './pages/report-details/report-details';
 import { Profile } from './pages/profile/profile';
 import { Notifications } from './pages/notifications/notifications';
 import { Landing } from './pages/landing/landing';
+import { ManageDuplicates } from './pages/manage-duplicates/manage-duplicates';
 
 export const routes: Routes = [
   { path: 'hello', component: Hello },
@@ -21,6 +22,7 @@ export const routes: Routes = [
   { path: 'home', component: Home, canActivate: [authGuard] },
   { path: 'login', component: Login, canActivate: [loginGuard] },
   { path: 'manage-reports', component: ManageReports, canActivate: [authGuard, whiteGuard] },
+  { path: 'manage-duplicates', component: ManageDuplicates, canActivate: [authGuard, whiteGuard] },
   { path: 'manage-users', component: ManageUsers, canActivate: [authGuard, adminGuard] },
   { path: 'create-user', component: CreateUser, canActivate: [authGuard, adminGuard] },
   { path: 'report-details/:id', component: ReportDetails, canActivate: [authGuard] },

@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { PaginatedProblems } from '../models/paginatedProblems';
 import { Problem } from '../models/problem';
+import { DuplicateGroup } from '../models/duplicate-group';
 
 @Injectable({
   providedIn: 'root',
@@ -70,5 +71,17 @@ export class WhiteService {
   async getProblem(id: number): Promise<any> {
     let x = await lastValueFrom(this.http.get<Problem>(`${this.apiUrl}/api/ColBlanc/problems/${id}`))
     return x
+  }
+
+  async getPendingDuplicateGroups(): Promise<DuplicateGroup[]> {
+    return await lastValueFrom(
+      this.http.get<DuplicateGroup[]>(`${this.apiUrl}/api/ColBlanc/duplicate-groups/pending`)
+    );
+  }
+
+  async getDuplicateGroup(groupId: number): Promise<DuplicateGroup> {
+    return await lastValueFrom(
+      this.http.get<DuplicateGroup>(`${this.apiUrl}/api/ColBlanc/duplicate-groups/${groupId}`)
+    );
   }
 }
