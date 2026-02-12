@@ -34,6 +34,7 @@ export class ManageDuplicates implements OnInit {
     this.languageService.onLangChange().subscribe(() => {
       this.generalService.loadCategories();
       this.generalService.loadStatuses();
+      this.loadGroups();
     });
     this.loading = false;
   }
