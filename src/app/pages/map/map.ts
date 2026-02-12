@@ -1,5 +1,6 @@
 import * as L from 'leaflet';
-import 'leaflet.markercluster';
+// @ts-ignore - MarkerClusterGroup is exported by the CJS module but types only declare L augmentation
+import { MarkerClusterGroup } from 'leaflet.markercluster';
 import { AfterViewInit, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { WhiteService } from '../../services/white-service';
 import { Problem } from '../../models/problem';
@@ -32,7 +33,7 @@ export class Map implements AfterViewInit{
   currentPosMarker: L.Marker | undefined
   circleRadius: L.Circle | undefined
   previewCircle: L.Circle | undefined
-  markerClusterGroup: L.MarkerClusterGroup | undefined;
+  markerClusterGroup: any;
 
   radius: number = -1
   currentLat: number | null = null
@@ -144,7 +145,7 @@ export class Map implements AfterViewInit{
   placeMarkers() {
     if (!this.map) return
 
-    this.markerClusterGroup = L.markerClusterGroup({
+    this.markerClusterGroup = new MarkerClusterGroup({
       showCoverageOnHover: false,
       maxClusterRadius: 50
     });
