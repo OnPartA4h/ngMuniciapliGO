@@ -1,19 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
-import { ForceResetPasswordModal } from '../../components/force-reset-password-modal/force-reset-password-modal';
-import { ForgotPasswordModal } from '../../components/forgot-password-modal/forgot-password-modal';
+import { ForceResetPasswordModal } from '../../components/modals/force-reset-password-modal/force-reset-password-modal';
+import { ForgotPasswordModal } from '../../components/modals/forgot-password-modal/forgot-password-modal';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TranslateModule, ForceResetPasswordModal, ForgotPasswordModal],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, TranslateModule, ForceResetPasswordModal, ForgotPasswordModal],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
+  authService = inject(AuthService);
+  private formBuilder = inject(FormBuilder);
+  router = inject(Router);
+
   
   formGroup: FormGroup;
   showResetPasswordModal = false;
@@ -21,7 +25,7 @@ export class Login {
   currentPassword = '';
   isLoading = false;
 
-  constructor(public authService: AuthService, private formBuilder: FormBuilder, public router: Router) {
+  constructor() {
     this.formGroup = this.formBuilder.group(
       {
         email: ['', [Validators.required, Validators.email]],
@@ -46,13 +50,13 @@ export class Login {
 
       // Check if user needs to reset password
       const loginResponse = this.authService.getLoginResponse();
-      /*if (loginResponse && loginResponse.user.mustResetPassword) {
+      if (loginResponse && loginResponse.user.mustResetPassword) {
         // Store the current password for the reset modal
         this.currentPassword = password;
         this.showResetPasswordModal = true;
         this.isLoading = false;
         return;
-      }*/
+      }
 
       if (roles.includes('Admin') && token){
         this.router.navigate(['/manage-users'])

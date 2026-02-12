@@ -1,9 +1,9 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { StatusOption, CategoryOption, AssigneAOption } from '../../models/problem';
-import { CommonModule } from '@angular/common';
+
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 import { WhiteService } from '../../services/white-service';
 import { UserService } from '../../services/user-service';
@@ -15,25 +15,26 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   selector: 'app-report-details',
   templateUrl: './report-details.html',
   styleUrl: './report-details.css',
-  imports: [CommonModule, DaysAgoPipe, FormsModule, TranslateModule, MatSnackBarModule],
+  imports: [DaysAgoPipe, FormsModule, TranslateModule, MatSnackBarModule],
 })
 export class ReportDetails implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  generalService = inject(GeneralService);
+  private languageService = inject(LanguageService);
+  private whiteService = inject(WhiteService);
+  private userService = inject(UserService);
+  private snackbar = inject(MatSnackBar);
+  private translate = inject(TranslateService);
+
   problem: any = null;
   isLoading = true;
   photoIndex = signal<number>(0);
+  resolutionPhotoIndex = signal<number>(0);
+  showPhotoModal = signal<boolean>(false);
   colBleus: any[] = [];
   search = "";
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    public generalService: GeneralService,
-    private languageService: LanguageService,
-    private whiteService: WhiteService,
-    private userService: UserService,
-    private snackbar: MatSnackBar,
-    private translate: TranslateService
-  ) { }
+  message_refus = ""
 
   async ngOnInit() {
     await Promise.all([
@@ -71,15 +72,39 @@ export class ReportDetails implements OnInit {
     }
     catch (e) {
       this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
+      console.error(e);
     }
   }
 
   async refuseProblem() {
     try {
-      this.whiteService.refuseProblem(this.problem.id);
+      await this.whiteService.refuseProblem(this.problem.id);
       this.snackbar.open(this.translate.instant('MANAGE_REPORTS.REFUSER_SUCCESS'), 'OK', { duration: 3000 });
       this.router.navigate(['/manage-reports']);
     } catch (err) {
+      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
+      console.error(err);
+    }
+  }
+
+  async acceptFix() {
+    try {
+      await this.whiteService.acceptFix(this.problem.id);
+      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ACCEPTER_FIX_SUCCESS'), 'OK', { duration: 3000 });
+      this.router.navigate(['/manage-reports']);
+    } catch (err) {
+      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
+      console.error(err);
+    }
+  }
+
+  async refuseFix() {
+    try {
+      await this.whiteService.refuseFix(this.problem.id, this.message_refus);
+      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.REFUSER_FIX_SUCCESS'), 'OK', { duration: 3000 });
+      this.router.navigate(['/manage-reports']);
+    } catch (err: any) {
+      this.snackbar.open(err.error.errors.Reason[0], 'OK', { duration: 3000 });
       console.error(err);
     }
   }
@@ -97,7 +122,7 @@ export class ReportDetails implements OnInit {
   async assignColBleu(colBleuId: string) {
     try {
       this.problem = await this.whiteService.assignProblemColbleu(this.problem.id, colBleuId);
-      let name = this.problem?.colBleuAssigne?.firstName + ' ' + this.problem?.colBleuAssigne?.lastName;
+      let name = this.problem?.responsable?.firstName + ' ' + this.problem?.responsable?.lastName;
       this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ASSIGN_SUCCESS_COL_BLEU', { colbleu: name }), 'OK', { duration: 3000 });
     }
     catch (e) {
@@ -125,5 +150,24 @@ export class ReportDetails implements OnInit {
       this.colBleus = [];
     else
       this.colBleus = await this.userService.getColBleus(this.search);
+  }
+
+  openPhotoModal(index: number) {
+    this.resolutionPhotoIndex.set(index);
+    this.showPhotoModal.set(true);
+  }
+
+  closePhotoModal() {
+    this.showPhotoModal.set(false);
+  }
+
+  nextResolutionPhoto() {
+    if (!this.problem?.resolutionPhotos?.length) return;
+    this.resolutionPhotoIndex.set((this.resolutionPhotoIndex() + 1) % this.problem.resolutionPhotos.length);
+  }
+
+  prevResolutionPhoto() {
+    if (!this.problem?.resolutionPhotos?.length) return;
+    this.resolutionPhotoIndex.set((this.resolutionPhotoIndex() - 1 + this.problem.resolutionPhotos.length) % this.problem.resolutionPhotos.length);
   }
 }

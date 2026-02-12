@@ -1,0 +1,88 @@
+<div class="modal-backdrop" (click)="handleBackdropClick($event)">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ 'PROFILE.VERIFY_EMAIL' | translate }}</h2>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Success Message -->
+      @if (successMessage) {
+        <div class="alert alert-success">
+          <i class="fas fa-check-circle"></i>
+          <span>{{ successMessage }}</span>
+        </div>
+      }
+
+      <!-- Error Message -->
+      @if (errorMessage) {
+        <div class="alert alert-error">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
+      <!-- Verification Code Form -->
+      <p class="modal-description">
+        {{ 'PROFILE.VERIFICATION_CODE_DESC' | translate: {email: newEmail()} }}
+      </p>
+
+      <form [formGroup]="verificationForm" (ngSubmit)="submitVerification()">
+        <div class="form-group">
+          <label for="code">
+            {{ 'PROFILE.VERIFICATION_CODE' | translate }} <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="code"
+            formControlName="code"
+            [placeholder]="'PROFILE.VERIFICATION_CODE_PLACEHOLDER' | translate"
+            [class.error]="verificationForm.get('code')?.invalid && verificationForm.get('code')?.touched"
+            maxlength="6"
+            />
+            @if (verificationForm.get('code')?.hasError('required') && verificationForm.get('code')?.touched) {
+              <span class="error-text">
+                {{ 'COMMON.REQUIRED_FIELD' | translate }}
+              </span>
+            }
+            @if (verificationForm.get('code')?.hasError('minlength') && verificationForm.get('code')?.touched) {
+              <span class="error-text">
+                {{ 'PROFILE.VERIFICATION_CODE_INVALID' | translate }}
+              </span>
+            }
+          </div>
+
+          <button type="button" class="btn-link" (click)="resendCode()" [style.pointer-events]="isLoading ? 'none' : 'auto'" [style.opacity]="isLoading ? '0.6' : '1'">
+            <i class="fas fa-redo"></i>
+            {{ 'PROFILE.RESEND_CODE' | translate }}
+          </button>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeModal()"
+          [style.pointer-events]="isLoading ? 'none' : 'auto'"
+          [style.opacity]="isLoading ? '0.6' : '1'"
+          >
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          (click)="submitVerification()"
+          [style.pointer-events]="(verificationForm.invalid || isLoading) ? 'none' : 'auto'"
+          [style.opacity]="(verificationForm.invalid || isLoading) ? '0.6' : '1'"
+          >
+          @if (isLoading) {
+            <span class="spinner"></span>
+          }
+          {{ isLoading ? ('COMMON.LOADING' | translate) : 'PROFILE.VERIFY_CODE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>

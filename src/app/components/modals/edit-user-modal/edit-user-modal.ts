@@ -1,0 +1,137 @@
+import { Component, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef, inject, input, output } from '@angular/core';
+
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NgxMaskPipe } from 'ngx-mask';
+import { User, RoleOption } from '../../../models/user';
+import { AdminService } from '../../../services/admin-service';
+import { GeneralService } from '../../../services/general-service';
+import { LanguageService } from '../../../services/language-service';
+import { DeleteConfirmModal } from '../delete-confirm-modal/delete-confirm-modal';
+
+@Component({
+  selector: 'app-edit-user-modal',
+  standalone: true,
+  imports: [TranslateModule, DeleteConfirmModal, NgxMaskPipe],
+  templateUrl: './edit-user-modal.html',
+  styleUrl: './edit-user-modal.css',
+})
+export class EditUserModal implements OnInit, OnChanges {
+  private adminService = inject(AdminService);
+  private generalService = inject(GeneralService);
+  private languageService = inject(LanguageService);
+  private translate = inject(TranslateService);
+  private cdr = inject(ChangeDetectorRef);
+
+  readonly user = input<User | null>(null);
+  readonly isOpen = input<boolean>(false);
+  readonly close = output<void>();
+  readonly userDeleted = output<void>();
+
+  roles: RoleOption[] = [];
+  isLoading = false;
+  showDeleteConfirm = false;
+  currentUserId: string | null = null;
+  successMessage: string | null = null;
+
+  async ngOnInit() {
+    await this.loadRoles();
+    this.currentUserId = localStorage.getItem("userId");
+  }
+
+  async ngOnChanges(changes: SimpleChanges) {
+    if (changes['isOpen'] && changes['isOpen'].currentValue) {
+      await this.loadRoles();
+    }
+  }
+
+  async loadRoles() {
+    try {
+      const lang = this.languageService.getCurrentLanguage();
+      this.roles = await this.generalService.getRoles(lang);
+    } catch (error) {
+      console.error('Error loading roles:', error);
+    }
+  }
+
+  closeModal() {
+    this.showDeleteConfirm = false;
+    this.isLoading = false;
+    this.successMessage = null;
+    this.close.emit(undefined);
+  }
+
+  async changeRole(role: RoleOption) {
+    const user = this.user();
+    if (!user || this.isLoading || this.isCurrentUser()) return;
+
+    // If already has this role, do nothing
+    if (user.roles.includes(role.key)) return;
+
+    try {
+      this.isLoading = true;
+      const response = await this.adminService.changeRole(user.id, role.key);
+      
+      // Update user roles with the response
+      user.roles = response.roles;
+      
+      this.showSuccessMessage();
+    } catch (error) {
+      console.error('Error changing role:', error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  private showSuccessMessage() {
+    const user = this.user();
+    this.successMessage = this.translate.instant('EDIT_USER_MODAL.ROLE_CHANGED', {
+      firstName: user?.firstName,
+      lastName: user?.lastName
+    });
+
+    setTimeout(() => {
+      this.successMessage = null;
+      this.cdr.markForCheck();
+    }, 3000);
+  }
+
+  openDeleteConfirm() {
+    if (this.isCurrentUser()) return;
+    this.showDeleteConfirm = true;
+  }
+
+  cancelDelete() {
+    this.showDeleteConfirm = false;
+  }
+
+  async confirmDelete() {
+    const user = this.user();
+    if (!user || this.isLoading || this.isCurrentUser()) return;
+
+    try {
+      this.isLoading = true;
+      await this.adminService.deleteUser(user.id);
+      this.showDeleteConfirm = false;
+      this.isLoading = false;
+      this.userDeleted.emit(undefined);
+      this.close.emit(undefined);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      this.isLoading = false;
+    }
+  }
+
+  getCurrentRole(): string {
+    return this.user()?.roles[0] || '';
+  }
+
+  isCurrentUser(): boolean {
+    return this.user()?.id === this.currentUserId;
+  }
+
+  handleBackdropClick(event: MouseEvent) {
+    if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {
+      this.closeModal();
+    }
+  }
+}

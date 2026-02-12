@@ -1,13 +1,17 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal, Signal, WritableSignal } from '@angular/core';
+import { Injectable, signal, Signal, WritableSignal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { NotificationHubService } from './notification-hub.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  http = inject(HttpClient);
+  private router = inject(Router);
+
   private apiUrl = environment.apiUrl;
 
   private tokenSignal : WritableSignal<string|null> = signal(localStorage.getItem("token"));
@@ -22,8 +26,7 @@ export class AuthService {
   readonly profilePictureUrl : Signal<string|null> = this.profilePictureSignal.asReadonly();
 
   private loginResponse: any = null;
-
-  constructor(public http: HttpClient, private router: Router) {}
+  private notificationHubService = inject(NotificationHubService);
 
   errorMessage: string = ""
 
@@ -58,6 +61,14 @@ export class AuthService {
 
       // Store the login response for mustResetPassword check
       this.loginResponse = response;
+
+      // Connect to SignalR notification hub
+      try {
+        await this.notificationHubService.startConnection(response.token);
+      } catch (error) {
+        console.error('Failed to connect to notification hub:', error);
+        // Continue with login even if SignalR fails
+      }
 
       this.errorMessage = ""
     } catch (error: any) {
@@ -97,6 +108,11 @@ export class AuthService {
     this.rolesSignal.set([])
     this.profilePictureSignal.set(null)
     this.loginResponse = null
+
+    // Disconnect from SignalR
+    this.notificationHubService.stopConnection().catch(err => {
+      console.error('Error disconnecting from notification hub:', err);
+    });
 
     this.router.navigate(['/login']);
   }

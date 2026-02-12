@@ -1,0 +1,201 @@
+<!-- Personal Info Section -->
+<div class="form-section">
+  <h3 class="form-section__heading">{{ 'PROFILE.PERSONAL_INFO' | translate }}</h3>
+
+  <div class="form-grid-2">
+    <div class="form-group">
+      <label for="firstName">
+        {{ 'CREATE_USER.FIRST_NAME' | translate }} <span class="required">*</span>
+      </label>
+      <input
+        type="text"
+        id="firstName"
+        [formControl]="$any(form().get('firstName'))"
+        [placeholder]="'CREATE_USER.FIRST_NAME_PLACEHOLDER' | translate"
+        [class.error]="getError('firstName')"
+      />
+      @if (hasError('firstName', 'required')) {
+        <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+      }
+      @if (hasError('firstName', 'minlength')) {
+        <div class="form-error">{{ 'COMMON.MIN_LENGTH' | translate: { min: 2 } }}</div>
+      }
+      @if (hasError('firstName', 'maxlength')) {
+        <div class="form-error">{{ 'COMMON.MAX_LENGTH' | translate: { max: 50 } }}</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">
+        {{ 'CREATE_USER.LAST_NAME' | translate }} <span class="required">*</span>
+      </label>
+      <input
+        type="text"
+        id="lastName"
+        [formControl]="$any(form().get('lastName'))"
+        [placeholder]="'CREATE_USER.LAST_NAME_PLACEHOLDER' | translate"
+        [class.error]="getError('lastName')"
+      />
+      @if (hasError('lastName', 'required')) {
+        <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+      }
+      @if (hasError('lastName', 'minlength')) {
+        <div class="form-error">{{ 'COMMON.MIN_LENGTH' | translate: { min: 2 } }}</div>
+      }
+      @if (hasError('lastName', 'maxlength')) {
+        <div class="form-error">{{ 'COMMON.MAX_LENGTH' | translate: { max: 50 } }}</div>
+      }
+    </div>
+  </div>
+
+  @if (showEmail()) {
+    <div class="form-group">
+      <label for="email">
+        {{ 'CREATE_USER.EMAIL' | translate }} <span class="required">*</span>
+      </label>
+      <input
+        type="email"
+        id="email"
+        [formControl]="$any(form().get('email'))"
+        [placeholder]="emailPlaceholder()"
+        [class.error]="getError('email')"
+      />
+      @if (hasError('email', 'required')) {
+        <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+      }
+      @if (hasError('email', 'email')) {
+        <div class="form-error">{{ 'COMMON.INVALID_EMAIL' | translate }}</div>
+      }
+    </div>
+  }
+
+  <div class="form-group">
+    <label for="phoneNumber">
+      {{ 'PROFILE.PHONE' | translate }} <span class="required">*</span>
+    </label>
+    <input
+      type="text"
+      id="phoneNumber"
+      [formControl]="$any(form().get('phoneNumber'))"
+      mask="(000) 000-0000"
+      [placeholder]="'CREATE_USER.PHONE_PLACEHOLDER' | translate"
+      [class.error]="getError('phoneNumber')"
+    />
+    @if (hasError('phoneNumber', 'required')) {
+      <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+    }
+    @if (hasError('phoneNumber', 'minlength')) {
+      <div class="form-error">{{ 'COMMON.INVALID_PHONE' | translate }}</div>
+    }
+  </div>
+</div>
+
+<!-- Address Section -->
+<div class="form-section__divider">
+  <h3 class="form-section__heading">{{ 'EDIT_USER_MODAL.ADDRESS' | translate }}</h3>
+
+  <div class="form-grid-2">
+    <div class="form-group">
+      <label for="streetNumber">
+        {{ 'PROFILE.STREET_NUMBER' | translate }} <span class="required">*</span>
+      </label>
+      <input
+        type="text"
+        id="streetNumber"
+        [formControl]="$any(form().get('streetNumber'))"
+        [placeholder]="'CREATE_USER.STREET_NUMBER_PLACEHOLDER' | translate"
+        [class.error]="getError('streetNumber')"
+      />
+      @if (hasError('streetNumber', 'required')) {
+        <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="streetName">
+        {{ 'PROFILE.STREET_NAME' | translate }} <span class="required">*</span>
+      </label>
+      <input
+        type="text"
+        id="streetName"
+        [formControl]="$any(form().get('streetName'))"
+        [placeholder]="'CREATE_USER.STREET_NAME_PLACEHOLDER' | translate"
+        [class.error]="getError('streetName')"
+      />
+      @if (hasError('streetName', 'required')) {
+        <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+      }
+    </div>
+  </div>
+
+  <div class="form-grid-2">
+    <div class="form-group">
+      <label for="city">
+        {{ 'PROFILE.CITY' | translate }} <span class="required">*</span>
+      </label>
+      <input
+        type="text"
+        id="city"
+        [formControl]="$any(form().get('city'))"
+        [placeholder]="'CREATE_USER.CITY_PLACEHOLDER' | translate"
+        [class.error]="getError('city')"
+      />
+      @if (hasError('city', 'required')) {
+        <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="province">
+        {{ 'PROFILE.PROVINCE' | translate }} <span class="required">*</span>
+      </label>
+      @if (showProvinceDropdown() && provinces().length > 0) {
+        <select
+          id="province"
+          [formControl]="$any(form().get('province'))"
+          [class.error]="getError('province')"
+        >
+          <option value="" disabled selected hidden>
+            {{ 'CREATE_USER.PROVINCE_PLACEHOLDER' | translate }}
+          </option>
+          @for (prov of provinces(); track prov.key) {
+            <option [value]="prov.label">{{ prov.label }}</option>
+          }
+        </select>
+      } @else {
+        <input
+          type="text"
+          id="province"
+          [formControl]="$any(form().get('province'))"
+          [class.error]="getError('province')"
+        />
+      }
+      @if (hasError('province', 'required')) {
+        <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+      }
+    </div>
+  </div>
+
+  <div class="form-group postal-code-group">
+    <label for="postalCode">
+      {{ 'PROFILE.POSTAL_CODE' | translate }} <span class="required">*</span>
+    </label>
+    <input
+      type="text"
+      id="postalCode"
+      [formControl]="$any(form().get('postalCode'))"
+      class="postal-code-input"
+      [class.error]="getError('postalCode')"
+      [placeholder]="'CREATE_USER.POSTAL_CODE_PLACEHOLDER' | translate"
+    />
+    @if (hasError('postalCode', 'required')) {
+      <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
+    }
+    @if (hasError('postalCode', 'pattern')) {
+      <div class="form-error">{{ 'PROFILE.INVALID_POSTAL_CODE' | translate }}</div>
+    }
+    @if (hasError('postalCode', 'minlength')) {
+      <div class="form-error">{{ 'PROFILE.INVALID_POSTAL_CODE' | translate }}</div>
+    }
+  </div>
+</div>

@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,16 +7,22 @@ import { AdminService } from '../../services/admin-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { User, RoleOption } from '../../models/user';
-import { EditUserModal } from '../../components/edit-user-modal/edit-user-modal';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { EditUserModal } from '../../components/modals/edit-user-modal/edit-user-modal';
+import { PaginationComponent, LoadingSpinnerComponent, PageHeaderComponent } from '../../components/ui';
+import { UsersTableComponent } from '../../components/tables/users-table/users-table';
 
 @Component({
   selector: 'app-manage-users',
-  imports: [CommonModule, FormsModule, RouterLink, EditUserModal, TranslateModule],
+  imports: [FormsModule, RouterLink, EditUserModal, TranslateModule, PaginationComponent, LoadingSpinnerComponent, PageHeaderComponent, UsersTableComponent],
   templateUrl: './manage-users.html',
   styleUrl: './manage-users.css',
 })
 export class ManageUsers implements OnInit {
+  private adminService = inject(AdminService);
+  private generalService = inject(GeneralService);
+  private languageService = inject(LanguageService);
+  private cdr = inject(ChangeDetectorRef);
+
   users: User[] = [];
   availableRoles: RoleOption[] = [];
 
@@ -36,13 +42,6 @@ export class ManageUsers implements OnInit {
 
   // Loading state
   isLoading: boolean = false;
-
-  constructor(
-    private adminService: AdminService,
-    private generalService: GeneralService,
-    private languageService: LanguageService,
-    private cdr: ChangeDetectorRef,
-  ) {}
 
   async ngOnInit() {
     await Promise.all([
@@ -108,6 +107,11 @@ export class ManageUsers implements OnInit {
       this.currentPage--;
       await this.loadUsers();
     }
+  }
+
+  async onPageChange(page: number) {
+    this.currentPage = page;
+    await this.loadUsers();
   }
 
   openEditModal(user: User) {

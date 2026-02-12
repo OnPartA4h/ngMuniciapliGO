@@ -1,0 +1,58 @@
+import { Component, input, output } from '@angular/core';
+
+import { TranslateModule } from '@ngx-translate/core';
+import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
+
+@Component({
+  selector: 'app-image-cropper-modal',
+  standalone: true,
+  imports: [TranslateModule, ImageCropperComponent],
+  templateUrl: './image-cropper-modal.html',
+  styleUrl: './image-cropper-modal.css',
+})
+export class ImageCropperModal {
+  readonly imageChangedEvent = input<Event | null>(null);
+  readonly isUploading = input(false);
+  
+  readonly cropCancelled = output<void>();
+  readonly imageUploaded = output<Blob>();
+  readonly cropperError = output<string>();
+
+  croppedImage: Blob | null = null;
+
+  imageCropped(event: ImageCroppedEvent) {
+    if (event.blob) {
+      this.croppedImage = event.blob;
+      console.log('Image cropped, blob available:', !!event.blob);
+    }
+  }
+
+  imageLoaded() {
+    // Image loaded successfully
+    console.log('Image loaded successfully');
+  }
+
+  cropperReady() {
+    // Cropper is ready
+    console.log('Cropper ready');
+  }
+
+  loadImageFailed() {
+    console.error('Failed to load image');
+    this.cropperError.emit('PROFILE.PHOTO_ERROR');
+    this.cancel();
+  }
+
+  cancel() {
+    // Ne pas permettre l'annulation pendant le téléchargement
+    if (!this.isUploading()) {
+      this.cropCancelled.emit(undefined);
+    }
+  }
+
+  upload() {
+    if (this.croppedImage) {
+      this.imageUploaded.emit(this.croppedImage);
+    }
+  }
+}

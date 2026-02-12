@@ -1,0 +1,57 @@
+@if (isOpen()) {
+  <div class="modal-backdrop" (click)="handleBackdropClick($event)">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <!-- Header -->
+      <div class="modal-header">
+        <h2>
+          <i class="fas fa-sliders-h"></i>
+          {{ 'MAP_CONFIG.TITLE' | translate }}
+        </h2>
+        <button class="close-btn" (click)="closeModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <!-- Search Radius -->
+        <div class="config-section">
+          <div class="section-header">
+            <i class="fas fa-bullseye"></i>
+            <h3>{{ 'MAP_CONFIG.RADIUS' | translate }}</h3>
+          </div>
+          <div class="radius-control">
+            <div class="radius-slider">
+              <input 
+                type="range" 
+                [(ngModel)]="radius" 
+                min="100" 
+                max="10000" 
+                step="100"
+                class="slider"
+                (input)="onRadiusChange()"
+              />
+              <div class="radius-value">
+                <span class="value">{{ radius }}</span>
+                <span class="unit">m</span>
+              </div>
+            </div>
+            <p class="hint">{{ 'MAP_CONFIG.RADIUS_HINT' | translate }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="resetFilters()">
+          <i class="fas fa-undo"></i>
+          {{ 'MAP_CONFIG.RESET' | translate }}
+        </button>
+        <button class="btn btn-primary" (click)="applyFilters()">
+          <i class="fas fa-check"></i>
+          {{ 'MAP_CONFIG.APPLY' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

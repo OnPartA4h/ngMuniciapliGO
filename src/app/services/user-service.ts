@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -10,13 +10,11 @@ import { AuthService } from './auth-service';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = environment.apiUrl;
+  http = inject(HttpClient);
+  private router = inject(Router);
+  private authService = inject(AuthService);
 
-  constructor(
-    public http: HttpClient,
-    private router: Router,
-    private authService: AuthService
-  ) { }
+  private apiUrl = environment.apiUrl;
 
   async getProfile(): Promise<User> {
     const profile = await lastValueFrom(this.http.get<User>(`${this.apiUrl}/api/User/me`));

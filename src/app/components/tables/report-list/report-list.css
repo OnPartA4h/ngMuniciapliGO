@@ -1,0 +1,105 @@
+/* Report List Component - extracted from manage-reports */
+
+.reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.report-card {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-lg);
+}
+
+.report-thumbnail {
+  flex-shrink: 0;
+  margin-right: var(--spacing-xl);
+}
+
+.report-thumbnail img {
+  width: 100px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: var(--border-radius-sm);
+}
+
+.report-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.report-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.report-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.report-details {
+  display: flex;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.report-location,
+.report-category {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.report-meta {
+  display: flex;
+  gap: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
+.report-date,
+.report-assignee {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.report-action {
+  flex-shrink: 0;
+  margin-left: var(--spacing-lg);
+  color: var(--color-primary);
+}
+
+@media (max-width: 768px) {
+  .report-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .report-thumbnail {
+    margin-right: 0;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .report-thumbnail img {
+    width: 100%;
+    height: 150px;
+  }
+
+  .report-action {
+    display: none;
+  }
+}

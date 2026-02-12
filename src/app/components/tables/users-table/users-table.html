@@ -1,0 +1,38 @@
+<div class="data-table-container">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>{{ 'MANAGE_USERS.FIRST_NAME' | translate }}</th>
+        <th>{{ 'MANAGE_USERS.LAST_NAME' | translate }}</th>
+        <th>{{ 'MANAGE_USERS.ROLES' | translate }}</th>
+        <th>{{ 'MANAGE_USERS.ACTIONS' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (user of users(); track user.id) {
+        <tr class="clickable-row" (click)="onRowClick(user)">
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+          <td>
+            <div class="badges-list">
+              @for (role of user.roles; track role) {
+                <span class="badge badge-info">{{ getRoleLabel(role) }}</span>
+              }
+            </div>
+          </td>
+          <td>
+            <button class="btn-icon" (click)="onRowClick(user); $event.stopPropagation()">
+              <i class="fas fa-edit"></i>
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (users().length === 0) {
+    <app-empty-state iconClass="fas fa-users"
+      [title]="'MANAGE_USERS.NO_USERS' | translate"
+      [description]="'MANAGE_USERS.NO_USERS_DESC' | translate" />
+  }
+</div>

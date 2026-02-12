@@ -1,0 +1,6 @@
+<button class="notification-bell" (click)="goToNotifications()" [attr.aria-label]="'Notifications (' + notificationService.unreadCount() + ' non lues)'">
+  <i class="fas fa-bell"></i>
+  @if (notificationService.unreadCount() > 0) {
+    <span class="badge">{{ notificationService.unreadCount() > 99 ? '99+' : notificationService.unreadCount() }}</span>
+  }
+</button>

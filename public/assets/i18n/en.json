@@ -1,6 +1,7 @@
 {
   "HEADER": {
     "HOME": "Home",
+    "MAP": "Map",
     "MANAGE_REPORTS": "Manage Problems",
     "MANAGE_USERS": "Manage Users",
     "LOGIN": "Login",
@@ -30,10 +31,21 @@
     "ERROR": "Error",
     "PREVIOUS": "Previous",
     "NEXT": "Next",
+    "PAGE": "Page",
     "EMAIL_CONFIRMED": "Email Confirmed",
     "EMAIL_NOT_CONFIRMED": "Email Not Confirmed",
     "MUST_RESET_PASSWORD": "Must Reset Password",
     "PASSWORD_OK": "Password OK"
+  },
+  "NOTIFICATIONS": {
+    "TITLE": "Notifications",
+    "MARK_ALL_READ": "Mark all as read",
+    "MARK_AS_READ": "Mark as read",
+    "ALL": "All",
+    "UNREAD": "Unread",
+    "READ": "Read",
+    "NO_NOTIFICATIONS": "No notifications",
+    "NO_NOTIFICATIONS_DESC": "You're all caught up! No new notifications at the moment."
   },
   "PROFILE": {
     "TITLE": "My Profile",
@@ -187,18 +199,21 @@
   "MANAGE_REPORTS": {
     "TITLE": "Problem Management",
     "SUBTITLE": "List of all reported problems",
+    "TITLE_DETAIL": "Problem details",
+    "SUBTITLE_DETAIL": "All of the problem informations",
     "SEARCH_PLACEHOLDER": "Search for a problem...",
     "ALL_CATEGORIES": "All categories",
     "ALL_STATUSES": "All statuses",
+    "ALL_ASSIGNEA": "All assignees",
     "NO_REPORTS": "No problems found",
-    "NO_REPORTS_DESC": "No problems have been reported yet",
+    "NO_REPORTS_DESC": "No problems matching these filters",
     "LOCATION": "Location",
     "CATEGORY": "Category",
     "STATUS": "Status",
     "DATE": "Date",
     "DATE_CREATION": "Date Reported",
     "DEMANDEUR": "Reported by",
-    "ASSIGNEE": "Assigned to",
+    "ASSIGNEE": "Assignee",
     "UNASSIGNED": "Unassigned",
     "PAGE_INFO": "Page {{current}} of {{total}}",
     "NO_PHOTO": "No photo",
@@ -208,10 +223,15 @@
     "NO_PROBLEM": "No problem found...",
     "ACCEPTER": "Accept",
     "REFUSER": "Reject",
+    "NO_MESSAGE": "No message provided.",
+    "MESSAGE_HEADER": "Message from assignee",
     "ASSIGN_SUCCESS_CITOYEN": "Successfully assigned to citizens.",
     "ASSIGN_SUCCESS_COL_BLEU": "Successfully assigned to {{colbleu}}.",
     "ACCEPTER_SUCCESS": "Successfully accepted the problem.",
-    "REFUSER_SUCCESS": "Successfully rejected the problem."
+    "REFUSER_SUCCESS": "Successfully rejected the problem.",
+    "ACCEPTER_FIX_SUCCESS": "Successfully accepted the resolution.",
+    "REFUSER_FIX_SUCCESS": "Successfully rejected the resolution.",
+    "MESSAGE_REFUS": "Enter a rejection message..."
   },
   "LOGIN": {
     "SUBTITLE": "Sign in to your account",
@@ -245,5 +265,40 @@
     "NT": "Northwest Territories",
     "YT": "Yukon",
     "NU": "Nunavut"
+  },
+  "MAP_SIDEBAR": {
+    "TITLE": "Report Details",
+    "NO_IMAGE": "No image available",
+    "CATEGORY": "Category",
+    "DESCRIPTION": "Description",
+    "LOCATION": "Location",
+    "COORDINATES": "Coordinates",
+    "REPORTED_DATE": "Reported Date",
+    "REPORTED_BY": "Reported By",
+    "VIEW_DETAILS": "View Full Details",
+    "GET_DIRECTIONS": "Get Directions",
+    "SELECT_MARKER": "Select a Marker",
+    "SELECT_MARKER_DESC": "Click on a map marker to view the report details"
+  },
+  "MAP_CONFIG": {
+    "TITLE": "Map Configuration",
+    "RADIUS": "Search Radius",
+    "RADIUS_HINT": "Show reports within X m radius of your location",
+    "STATUS_FILTER": "Filter by Status",
+    "CATEGORY_FILTER": "Filter by Category",
+    "DATE_RANGE": "Date Range",
+    "FROM": "From",
+    "TO": "To",
+    "DISPLAY_OPTIONS": "Display Options",
+    "SHOW_USER_LOCATION": "Show My Location",
+    "SHOW_USER_LOCATION_DESC": "Center the map on your current location",
+    "CLUSTER_MARKERS": "Cluster Markers",
+    "CLUSTER_MARKERS_DESC": "Group nearby markers for better readability",
+    "RESET": "Reset",
+    "APPLY": "Apply"
+  },
+  "MAP": {
+    "ERROR_LOADING_PROBLEMS": "Unable to load problems. Please check your connection and try again.",
+    "NO_PROBLEMS_FOUND": "There are no problems in this area"
   }
 }

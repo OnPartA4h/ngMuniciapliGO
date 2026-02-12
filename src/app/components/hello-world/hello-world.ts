@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, NgZone } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, NgZone, inject } from '@angular/core';
 import { ApiService } from '../../services/hello-service';
 
 @Component({
@@ -10,7 +10,9 @@ import { ApiService } from '../../services/hello-service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HelloWorld implements OnInit {
-  constructor(public service: ApiService, private ngZone: NgZone) {}
+  service = inject(ApiService);
+  private ngZone = inject(NgZone);
+
 
   txt: string = "";
 
