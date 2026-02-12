@@ -48,15 +48,16 @@
             <div class="group-card__info">
               <div class="group-card__title">
                 <i class="fas fa-clone"></i>
-                {{ 'DUPLICATES.GROUP' | translate }} #{{ group.id }}
+                {{ group.name || ('DUPLICATES.GROUP' | translate) + ' #' + group.id }}
               </div>
+              <p class="group-card__reason">{{ group.aiReason }}</p>
               <div class="group-card__meta">
                 <span class="badge badge-warning">
                   {{ group.members.length }} {{ 'DUPLICATES.REPORTS' | translate }}
                 </span>
                 <span class="group-card__date">
                   <i class="fas fa-clock"></i>
-                  {{ group.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                  {{ group.dateCreation | date:'dd/MM/yyyy HH:mm' }}
                 </span>
               </div>
             </div>
@@ -83,6 +84,9 @@
                     <div class="member-card__info">
                       <div class="member-card__header">
                         <h4 class="member-card__title">{{ member.probleme.titre }}</h4>
+                        @if (member.isPrimary) {
+                          <span class="badge badge-success">{{ 'DUPLICATES.PRIMARY' | translate }}</span>
+                        }
                         <span class="badge badge-info">{{ getStatusLabel(member.probleme.statut) }}</span>
                       </div>
                       <div class="member-card__details">
@@ -98,7 +102,7 @@
                       <div class="member-card__footer">
                         <span class="member-card__score">
                           <i class="fas fa-percentage"></i>
-                          {{ 'DUPLICATES.SIMILARITY' | translate }}: {{ (member.similarityScore * 100).toFixed(0) }}%
+                          {{ 'DUPLICATES.SIMILARITY' | translate }}: {{ member.similarityScore.toFixed(0) }}%
                         </span>
                         <span class="member-card__date">
                           <i class="fas fa-calendar"></i>

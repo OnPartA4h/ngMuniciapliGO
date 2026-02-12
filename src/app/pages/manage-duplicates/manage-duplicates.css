@@ -68,6 +68,13 @@
   color: var(--color-primary);
 }
 
+.group-card__reason {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: var(--spacing-xs) 0 var(--spacing-sm) 0;
+  line-height: 1.5;
+}
+
 .group-card__meta {
   display: flex;
   align-items: center;
