@@ -28,6 +28,9 @@
               "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
               "src/custom-theme.scss",
               "src/styles.css"
+            ],
+            "scripts": [
+              "node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"
             ]
           },
           "configurations": {
