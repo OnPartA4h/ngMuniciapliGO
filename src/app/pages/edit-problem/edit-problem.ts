@@ -90,11 +90,14 @@ export class EditProblem implements OnInit {
       this.problem.set(problem);
 
       // Pre-fill form with problem data
+      // Determine the select option value (category key) that matches the numeric index from the backend
+      const categoryKey = this.categories()[problem.categorie]?.key ?? String(problem.categorie);
+
       this.editForm.patchValue({
         titre: problem.titre,
         description: problem.description || '',
         address: problem.address,
-        categorie: String(problem.categorie)
+        categorie: categoryKey
       });
     } catch (error) {
       console.error('Error loading problem:', error);
