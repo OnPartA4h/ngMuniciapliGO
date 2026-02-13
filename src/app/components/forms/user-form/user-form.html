@@ -185,6 +185,7 @@
       id="postalCode"
       [formControl]="$any(form().get('postalCode'))"
       class="postal-code-input"
+      mask="A0A 0A0"
       [class.error]="getError('postalCode')"
       [placeholder]="'CREATE_USER.POSTAL_CODE_PLACEHOLDER' | translate"
     />
@@ -192,9 +193,6 @@
       <div class="form-error">{{ 'COMMON.REQUIRED_FIELD' | translate }}</div>
     }
     @if (hasError('postalCode', 'pattern')) {
-      <div class="form-error">{{ 'PROFILE.INVALID_POSTAL_CODE' | translate }}</div>
-    }
-    @if (hasError('postalCode', 'minlength')) {
       <div class="form-error">{{ 'PROFILE.INVALID_POSTAL_CODE' | translate }}</div>
     }
   </div>

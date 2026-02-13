@@ -60,11 +60,13 @@ export class Login {
 
       if (roles.includes('Admin') && token){
         this.router.navigate(['/manage-users'])
+        await this.authService.connectToNotificationHub();
         return
       }
 
       if (roles.includes('ColBlanc') && token){
         this.router.navigate(['/manage-reports'])
+        await this.authService.connectToNotificationHub();
         return
       }
     } catch (error) {
@@ -74,7 +76,7 @@ export class Login {
     }
   }
 
-  onPasswordReset() {
+  async onPasswordReset() {
     // After password reset, redirect based on roles
     this.showResetPasswordModal = false;
     let roles = this.authService.roles()
@@ -82,11 +84,13 @@ export class Login {
 
     if (roles.includes('Admin') && token){
       this.router.navigate(['/manage-users'])
+      await this.authService.connectToNotificationHub();
       return
     }
 
     if (roles.includes('ColBlanc') && token){
       this.router.navigate(['/manage-reports'])
+      await this.authService.connectToNotificationHub();
       return
     }
   }

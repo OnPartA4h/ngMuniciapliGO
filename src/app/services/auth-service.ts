@@ -62,14 +62,6 @@ export class AuthService {
       // Store the login response for mustResetPassword check
       this.loginResponse = response;
 
-      // Connect to SignalR notification hub
-      try {
-        await this.notificationHubService.startConnection(response.token);
-      } catch (error) {
-        console.error('Failed to connect to notification hub:', error);
-        // Continue with login even if SignalR fails
-      }
-
       this.errorMessage = ""
     } catch (error: any) {
       if (error.status < 500 && error.status > 0) {
@@ -82,6 +74,20 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return this.tokenSignal() !== null;
+  }
+
+  async connectToNotificationHub(): Promise<void> {
+    const token = this.tokenSignal();
+    if (!token) {
+      console.warn('No token available for SignalR connection');
+      return;
+    }
+
+    try {
+      await this.notificationHubService.startConnection(token);
+    } catch (error) {
+      console.error('Failed to connect to notification hub:', error);
+    }
   }
 
   setProfilePictureUrl(url: string | null) {

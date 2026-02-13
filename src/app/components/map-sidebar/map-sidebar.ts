@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, input, output } from '@angular/core';
-import { NgIf, DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Problem } from '../../models/problem';
 import { GeneralService } from '../../services/general-service';
@@ -8,7 +8,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-map-sidebar',
   standalone: true,
-  imports: [TranslateModule, RouterLink, DatePipe, DecimalPipe, NgIf],
+  imports: [TranslateModule, RouterLink, DatePipe, DecimalPipe],
   templateUrl: './map-sidebar.html',
   styleUrl: './map-sidebar.css',
 })
