@@ -311,5 +311,9 @@
     "NO_GROUPS": "No duplicates detected",
     "NO_GROUPS_DESC": "There are currently no duplicate report groups pending review.",
     "PRIMARY": "Primary"
+  },
+  "REPORT_DETAILS": {
+    "SUBSCRIBE": "Subscribe to notifications",
+    "UNSUBSCRIBE": "Unsubscribe from notifications"
   }
 }

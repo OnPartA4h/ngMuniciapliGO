@@ -1,5 +1,6 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { StatusOption, CategoryOption, AssigneAOption } from '../../models/problem';
@@ -10,6 +11,7 @@ import { UserService } from '../../services/user-service';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-report-details',
@@ -26,6 +28,7 @@ export class ReportDetails implements OnInit {
   private userService = inject(UserService);
   private snackbar = inject(MatSnackBar);
   private translate = inject(TranslateService);
+  private notifService = inject(NotificationService)
 
   problem: any = null;
   isLoading = true;
@@ -35,34 +38,38 @@ export class ReportDetails implements OnInit {
   colBleus: any[] = [];
   search = "";
   message_refus = ""
+  isSubscribed = false;
 
   async ngOnInit() {
     await Promise.all([
       this.generalService.loadCategories(),
       this.generalService.loadStatuses(),
       this.generalService.loadAssigneA(),
-      this.loadProblem()
+      this.loadProblem(),
+      
     ]);
     this.languageService.onLangChange().subscribe(() => {
       this.generalService.loadCategories();
       this.generalService.loadStatuses();
       this.generalService.loadAssigneA();
     });
+
   }
 
   async loadProblem() {
-    this.route.params.subscribe(async params => {
-      if (params['id']) {
-        try {
-          this.problem = await this.whiteService.getProblem(params['id']);
-          this.photoIndex.set(0);
-          console.log(this.problem);
-        } catch (error) {
-          console.error('Error loading problem:', error);
-        }
+    const params = await firstValueFrom(this.route.params);
+    if (params['id']) {
+      try {
+        this.problem = await this.whiteService.getProblem(params['id']);
+        this.photoIndex.set(0);
+        console.log(this.problem);
+
+        this.isSubscribed = await this.notifService.isSubscribed(params['id']);
+      } catch (error) {
+        console.error('Error loading problem:', error);
       }
-      this.isLoading = false;
-    });
+    }
+    this.isLoading = false;
   }
 
   async acceptProblem() {
@@ -169,5 +176,13 @@ export class ReportDetails implements OnInit {
   prevResolutionPhoto() {
     if (!this.problem?.resolutionPhotos?.length) return;
     this.resolutionPhotoIndex.set((this.resolutionPhotoIndex() - 1 + this.problem.resolutionPhotos.length) % this.problem.resolutionPhotos.length);
+  }
+
+  async toggleSubscription() {
+    this.isSubscribed = !this.isSubscribed
+
+    this.isSubscribed
+    ? await this.notifService.subscribe(this.problem.id)
+    : await this.notifService.unsubscribe(this.problem.id)
   }
 }
