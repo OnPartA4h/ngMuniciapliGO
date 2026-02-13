@@ -1,0 +1,29 @@
+/* Edit Problem Page Styles */
+.page-container {
+  padding: var(--spacing-2xl);
+}
+
+/* Form specific adjustments */
+.form-card textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-alert--success {
+  animation: fadeIn 0.3s ease;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .page-container {
+    padding: var(--spacing-lg);
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
