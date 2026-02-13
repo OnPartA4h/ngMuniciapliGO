@@ -26,11 +26,25 @@ export class Problem {
     public statut: number,
     public categorie: number,
     public dateCreation: Date,
-    public dateResolution: Date,
-    public responsable: User | null,
-    public assigneA: number,
-    public photos: Photo[],
+    public dateResolution: Date | null,
     public latitude: number,
-    public longitude: number
+    public longitude: number,
+    public assigneA: number,
+    public citoyenDemandeurId: string,
+    public citoyenDemandeur: User | null,
+    public colBlancsAssocies: User[],
+    public responsableId: string | null,
+    public responsable: User | null,
+    public photos: Photo[],
+    public resolutionPhotos: Photo[],
+    public resolutionDescription: string | null,
+    public rejectionReason: string | null
   ) { }
+}
+
+export interface ProblemeEditDTO {
+  titre: string;
+  description?: string;
+  address: string;
+  categorie: number;
 }
