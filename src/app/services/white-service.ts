@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { PaginatedProblems } from '../models/paginatedProblems';
-import { Problem } from '../models/problem';
+import { Problem, ProblemeEditDTO } from '../models/problem';
 import { DuplicateGroup } from '../models/duplicate-group';
 
 @Injectable({
@@ -82,6 +82,12 @@ export class WhiteService {
   async getDuplicateGroup(groupId: number): Promise<DuplicateGroup> {
     return await lastValueFrom(
       this.http.get<DuplicateGroup>(`${this.apiUrl}/api/ColBlanc/duplicate-groups/${groupId}`)
+    );
+  }
+
+  async editProblem(id: number, dto: ProblemeEditDTO): Promise<Problem> {
+    return await lastValueFrom(
+      this.http.put<Problem>(`${this.apiUrl}/api/ColBlanc/${id}/edit`, dto)
     );
   }
 }
