@@ -42,6 +42,7 @@ export class ManageDuplicates implements OnInit {
   readonly currentPage = signal(1);
   readonly totalPages = signal(1);
   readonly totalCount = signal(0);
+  readonly showClosed = signal(false);
 
   async ngOnInit() {
     this.loading.set(true);
@@ -61,7 +62,7 @@ export class ManageDuplicates implements OnInit {
   async loadGroups(page: number = 1) {
     try {
       this.errorMessage.set('');
-      const response = await this.whiteService.getPendingDuplicateGroups(page, false);
+      const response = await this.whiteService.getPendingDuplicateGroups(page, this.showClosed());
       this.groups.set(response.items);
       this.currentPage.set(response.pagination.currentPage);
       this.totalPages.set(response.pagination.totalPages);
@@ -141,6 +142,15 @@ export class ManageDuplicates implements OnInit {
     if (page < 1 || page > this.totalPages()) return;
     this.loading.set(true);
     await this.loadGroups(page);
+    this.loading.set(false);
+  }
+
+  async toggleShowClosed() {
+    this.showClosed.update(value => !value);
+    this.selectedGroupId.set(null);
+    this.currentPage.set(1);
+    this.loading.set(true);
+    await this.loadGroups(1);
     this.loading.set(false);
   }
 }

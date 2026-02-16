@@ -340,6 +340,7 @@
     "ACCEPT_GROUP": "Accepter le groupe",
     "EXCLUDE": "Exclure du groupe",
     "CONFIRM_EXCLUDE": "Êtes-vous sûr de vouloir exclure ce signalement du groupe ?",
-    "CONFIRM_ACCEPT": "Êtes-vous sûr de vouloir accepter ce groupe et fusionner les signalements ?"
+    "CONFIRM_ACCEPT": "Êtes-vous sûr de vouloir accepter ce groupe et fusionner les signalements ?",
+    "SHOW_CLOSED": "Afficher les groupes fermés"
   }
 }

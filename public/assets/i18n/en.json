@@ -340,6 +340,7 @@
     "ACCEPT_GROUP": "Accept Group",
     "EXCLUDE": "Exclude from group",
     "CONFIRM_EXCLUDE": "Are you sure you want to exclude this report from the group?",
-    "CONFIRM_ACCEPT": "Are you sure you want to accept this group and merge the reports?"
+    "CONFIRM_ACCEPT": "Are you sure you want to accept this group and merge the reports?",
+    "SHOW_CLOSED": "Show closed groups"
   }
 }

@@ -17,6 +17,14 @@
     </a>
   </div>
 
+  <!-- Toggle for Closed Groups -->
+  <div class="toggle-section">
+    <label class="checkbox-label">
+      <input type="checkbox" [checked]="showClosed()" (change)="toggleShowClosed()" class="checkbox-input" />
+      <span class="checkbox-text">{{ 'DUPLICATES.SHOW_CLOSED' | translate }}</span>
+    </label>
+  </div>
+
   <!-- Loading State -->
   @if (loading()) {
     <app-loading-spinner />
