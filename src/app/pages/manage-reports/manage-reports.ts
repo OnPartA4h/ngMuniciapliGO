@@ -1,19 +1,18 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { WhiteService } from '../../services/white-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { Problem, StatusOption, CategoryOption } from '../../models/problem';
-import { NgClass } from '@angular/common';
 import { Pagination } from '../../models/pagination';
 import { FormsModule } from '@angular/forms';
-import { PageHeaderComponent } from '../../components/ui';
+import { PageHeaderComponent, NavigationTabsComponent, NavigationTab, AiProcessingStatusComponent } from '../../components/ui';
 import { ReportListComponent } from '../../components/tables/report-list/report-list';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-manage-reports',
-  imports: [TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent, NgClass, RouterLink],
+  imports: [CommonModule, TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent, NavigationTabsComponent, AiProcessingStatusComponent],
   templateUrl: './manage-reports.html',
   styleUrl: './manage-reports.css',
 })
@@ -27,6 +26,19 @@ export class ManageReports implements OnInit {
 
   categories = signal<CategoryOption[]>([]);
   statuses = signal<StatusOption[]>([]);
+  
+  navigationTabs: NavigationTab[] = [
+    {
+      label: 'HEADER.MANAGE_REPORTS',
+      route: '/manage-reports',
+      icon: 'fas fa-clipboard-list'
+    },
+    {
+      label: 'DUPLICATES.TAB',
+      route: '/manage-duplicates',
+      icon: 'fas fa-clone'
+    }
+  ];
 
   currentCategory: number | null = null;
   currentStatus: number | null = null;
