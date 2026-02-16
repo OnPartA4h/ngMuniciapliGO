@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
 import { ApiInterceptor } from './interceptors/api-interceptor';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +19,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([ApiInterceptor])
     ),
     provideEnvironmentNgxMask(),
+    provideCharts(withDefaultRegisterables()),
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
