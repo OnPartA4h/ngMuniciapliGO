@@ -38,7 +38,8 @@ export class Problem {
     public photos: Photo[],
     public resolutionPhotos: Photo[],
     public resolutionDescription: string | null,
-    public rejectionReason: string | null
+    public rejectionReason: string | null,
+    public isInOpenDuplicateGroup: boolean
   ) { }
 }
 
