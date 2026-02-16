@@ -122,6 +122,11 @@
     "VERIFY_CODE": "Vérifier le code",
     "RESEND_CODE": "Renvoyer le code"
   },
+  "AI_PROCESSING": {
+    "NO_PROCESSING": "Aucun signalement en traitement",
+    "ONE_PROCESSING": "1 signalement en cours d'analyse par l'IA pour trouver les doublons",
+    "MULTIPLE_PROCESSING": "{{count}} signalements en cours d'analyse par l'IA pour trouver les doublons"
+  },
   "MANAGE_USERS": {
     "TITLE": "Gestion des utilisateurs",
     "SUBTITLE": "Liste de tous les utilisateurs du système",

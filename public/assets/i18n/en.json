@@ -122,6 +122,11 @@
     "VERIFY_CODE": "Verify Code",
     "RESEND_CODE": "Resend Code"
   },
+  "AI_PROCESSING": {
+    "NO_PROCESSING": "No reports being processed",
+    "ONE_PROCESSING": "1 report is currently being analyzed by AI to find duplicates",
+    "MULTIPLE_PROCESSING": "{{count}} reports are currently being analyzed by AI to find duplicates"
+  },
   "MANAGE_USERS": {
     "TITLE": "User Management",
     "SUBTITLE": "List of all system users",
