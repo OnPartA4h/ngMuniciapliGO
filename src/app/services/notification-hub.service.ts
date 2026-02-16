@@ -12,13 +12,27 @@ export class NotificationHubService {
   private notificationService = inject(NotificationService);
 
   private hubConnection?: signalR.HubConnection;
+  private currentToken?: string;
+  private reconnectAttempts = 0;
+  private maxReconnectAttempts = 5;
+  private reconnectDelay = 3000; // 3 seconds
   
   // Signal for AI processing count
   readonly duplicateProcessingCount = signal<number>(0);
+  readonly isConnected = signal<boolean>(false);
 
   async startConnection(token: string): Promise<void> {
+    // Store token for potential reconnection
+    this.currentToken = token;
+
     if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
       console.log('Already connected to notification hub');
+      this.isConnected.set(true);
+      return;
+    }
+
+    if (this.hubConnection?.state === signalR.HubConnectionState.Connecting) {
+      console.log('Connection in progress, waiting...');
       return;
     }
 
@@ -26,8 +40,32 @@ export class NotificationHubService {
       .withUrl(`${environment.apiUrl}/hubs/notification`, {
         accessTokenFactory: () => token
       })
-      .withAutomaticReconnect()
+      .withAutomaticReconnect([0, 0, 1000, 3000, 5000, 10000])
+      .withServerTimeout(30000)
       .build();
+
+    // Handle reconnection events
+    this.hubConnection.onreconnecting(() => {
+      this.ngZone.run(() => {
+        console.log('Reconnecting to notification hub...');
+        this.isConnected.set(false);
+      });
+    });
+
+    this.hubConnection.onreconnected(() => {
+      this.ngZone.run(() => {
+        console.log('Reconnected to notification hub');
+        this.isConnected.set(true);
+        this.reconnectAttempts = 0;
+      });
+    });
+
+    this.hubConnection.onclose(() => {
+      this.ngZone.run(() => {
+        console.log('Disconnected from notification hub');
+        this.isConnected.set(false);
+      });
+    });
 
     // Écouter les notifications entrantes
     this.hubConnection.on('ReceiveNotification', (notification: Notification) => {
@@ -46,18 +84,56 @@ export class NotificationHubService {
       });
     });
 
-    await this.hubConnection
-      .start()
-      .then(() => console.log('Connected to notification hub'))
-      .catch(err => console.log('Error connecting to notification hub: ' + err));
+    try {
+      await this.hubConnection.start();
+      this.ngZone.run(() => {
+        console.log('Connected to notification hub');
+        this.isConnected.set(true);
+        this.reconnectAttempts = 0;
+      });
+    } catch (err) {
+      this.ngZone.run(() => {
+        console.error('Error connecting to notification hub:', err);
+        this.isConnected.set(false);
+        this.handleConnectionError();
+      });
+    }
+  }
+
+  private handleConnectionError(): void {
+    if (this.reconnectAttempts < this.maxReconnectAttempts && this.currentToken) {
+      this.reconnectAttempts++;
+      console.log(`Reconnect attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts} in ${this.reconnectDelay}ms`);
+      
+      setTimeout(() => {
+        if (this.currentToken) {
+          this.startConnection(this.currentToken).catch(err => {
+            console.error('Reconnection attempt failed:', err);
+          });
+        }
+      }, this.reconnectDelay);
+    }
   }
 
   async stopConnection(): Promise<void> {
     if (this.hubConnection) {
-      await this.hubConnection
-        .stop()
-        .then(() => console.log('Disconnected from notification hub'))
-        .catch(err => console.log('Error disconnecting: ' + err));
+      try {
+        await this.hubConnection.stop();
+        this.ngZone.run(() => {
+          console.log('Disconnected from notification hub');
+          this.isConnected.set(false);
+        });
+      } catch (err) {
+        console.error('Error disconnecting from notification hub:', err);
+      }
     }
+  }
+
+  getConnectionState(): signalR.HubConnectionState | undefined {
+    return this.hubConnection?.state;
+  }
+
+  isConnectionActive(): boolean {
+    return this.hubConnection?.state === signalR.HubConnectionState.Connected;
   }
 }
