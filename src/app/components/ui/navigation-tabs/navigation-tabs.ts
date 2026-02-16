@@ -13,8 +13,7 @@ export interface NavigationTab {
   selector: 'app-navigation-tabs',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, TranslateModule],
-  templateUrl: './navigation-tabs.html',
-  styleUrl: './navigation-tabs.css'
+  templateUrl: './navigation-tabs.html'
 })
 export class NavigationTabsComponent {
   readonly tabs = input.required<NavigationTab[]>();
