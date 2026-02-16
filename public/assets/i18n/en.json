@@ -120,7 +120,9 @@
     "EMAIL_CHANGE_RESEND_ERROR": "Error resending the code.",
     "SEND_CODE": "Send Code",
     "VERIFY_CODE": "Verify Code",
-    "RESEND_CODE": "Resend Code"
+    "RESEND_CODE": "Resend Code",
+    "SUBSCRIBED_TASKS": "Subscribed Tasks",
+    "NO_SUBSCRIBED_TASKS": "No subscribed tasks"
   },
   "AI_PROCESSING": {
     "NO_PROCESSING": "No reports being processed",
@@ -238,7 +240,8 @@
     "REFUSER_SUCCESS": "Successfully rejected the problem.",
     "ACCEPTER_FIX_SUCCESS": "Successfully accepted the resolution.",
     "REFUSER_FIX_SUCCESS": "Successfully rejected the resolution.",
-    "MESSAGE_REFUS": "Enter a rejection message..."
+    "MESSAGE_REFUS": "Enter a rejection message...",
+    "UNSUBSCRIBE_ERROR": "Unable to unsubscribe from this problem"
   },
   "EDIT_PROBLEM": {
     "TITLE": "Edit Problem",
@@ -348,5 +351,9 @@
     "CONFIRM_ACCEPT": "Are you sure you want to accept this group and merge the reports?",
     "SHOW_CLOSED": "Show closed groups",
     "GROUP_CLOSED": "Group closed"
+  },
+  "REPORT_DETAILS": {
+    "SUBSCRIBE": "Subscribe to notifications",
+    "UNSUBSCRIBE": "Unsubscribe from notifications"
   }
 }

@@ -68,6 +68,68 @@
               </span>
             </div>
           </div>
+
+          <!-- Subscribed Tasks -->
+          <div class="info-card subscribed-tasks-card">
+            <div class="subscribed-tasks-header">
+              <h3>
+                <i class="fas fa-bell"></i>
+                {{ 'PROFILE.SUBSCRIBED_TASKS' | translate }}
+              </h3>
+              <span class="subscribed-count-badge">{{ subscribedProblems.length }}</span>
+            </div>
+
+            @if (isLoadingSubscribed) {
+              <div class="subscribed-loading">
+                <div class="spinner spinner--sm"></div>
+                <span>{{ 'COMMON.LOADING' | translate }}</span>
+              </div>
+            } @else if (subscribedProblems.length === 0) {
+              <div class="subscribed-empty">
+                <i class="fas fa-bell-slash"></i>
+                <p>{{ 'PROFILE.NO_SUBSCRIBED_TASKS' | translate }}</p>
+              </div>
+            } @else {
+              <div class="subscribed-list">
+                @for (p of subscribedProblems; track p.id) {
+                  <a class="subscribed-item" routerLink="/report-details/{{p.id}}">
+                    <div class="subscribed-item__info">
+                      <span class="subscribed-item__title">{{ p.titre }}</span>
+                      <div class="subscribed-item__meta">
+                        <span>
+                          <i class="fas fa-map-marker-alt"></i>
+                          {{ p.address }}
+                        </span>
+                        <span>
+                          <i class="fas fa-clock"></i>
+                          {{ p.dateCreation | daysAgo }} {{ 'MANAGE_REPORTS.DAYS' | translate }}
+                        </span>
+                      </div>
+                    </div>
+                    <span class="badge badge-info subscribed-item__badge">{{ generalServicePublic.getStatusLabel(p.statut) }}</span>
+                  </a>
+                }
+              </div>
+
+              @if (subscribedPagination && subscribedPagination.totalPages > 1) {
+                <div class="subscribed-pagination">
+                  <button class="subscribed-pagination-btn"
+                    [disabled]="subscribedPagination.currentPage <= 1"
+                    (click)="onSubscribedPageChange(subscribedPagination.currentPage - 1)">
+                    <i class="fas fa-chevron-left"></i>
+                  </button>
+                  <span class="subscribed-pagination-info">
+                    {{ subscribedPagination.currentPage }} / {{ subscribedPagination.totalPages }}
+                  </span>
+                  <button class="subscribed-pagination-btn"
+                    [disabled]="subscribedPagination.currentPage >= subscribedPagination.totalPages"
+                    (click)="onSubscribedPageChange(subscribedPagination.currentPage + 1)">
+                    <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+              }
+            }
+          </div>
         </div>
 
         <!-- Right Column: Editable Form -->

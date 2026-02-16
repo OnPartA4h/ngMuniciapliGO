@@ -120,7 +120,9 @@
     "EMAIL_CHANGE_RESEND_ERROR": "Erreur lors du renvoi du code.",
     "SEND_CODE": "Envoyer le code",
     "VERIFY_CODE": "Vérifier le code",
-    "RESEND_CODE": "Renvoyer le code"
+    "RESEND_CODE": "Renvoyer le code",
+    "SUBSCRIBED_TASKS": "Tâches suivies",
+    "NO_SUBSCRIBED_TASKS": "Aucune tâche suivie"
   },
   "AI_PROCESSING": {
     "NO_PROCESSING": "Aucun signalement en traitement",
@@ -238,7 +240,8 @@
     "REFUSER_SUCCESS": "Le problème a été refusé avec succès.",
     "ACCEPTER_FIX_SUCCESS": "Successfully accepted the resolution.",
     "REFUSER_FIX_SUCCESS": "Successfully rejected the resolution.",
-    "MESSAGE_REFUS": "Entrez un message de refus..."
+    "MESSAGE_REFUS": "Entrez un message de refus...",
+    "UNSUBSCRIBE_ERROR": "Impossible de se désabonner de ce problème"
   },
   "EDIT_PROBLEM": {
     "TITLE": "Modifier le problème",
@@ -348,5 +351,9 @@
     "CONFIRM_ACCEPT": "Êtes-vous sûr de vouloir accepter ce groupe et fusionner les signalements ?",
     "SHOW_CLOSED": "Afficher les groupes fermés",
     "GROUP_CLOSED": "Groupe fermé"
+  },
+  "REPORT_DETAILS": {
+    "SUBSCRIBE": "S'abonner aux notifications",
+    "UNSUBSCRIBE": "Se désabonner des notifications"
   }
 }
