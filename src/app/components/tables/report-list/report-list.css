@@ -69,12 +69,21 @@
 }
 
 .report-date,
-.report-assignee {
+.report-assignee,
+.report-likes {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: var(--font-size-xs);
   color: var(--color-text-tertiary);
+}
+
+.report-likes {
+  color: var(--color-primary);
+}
+
+.report-likes i {
+  color: var(--color-primary);
 }
 
 .report-action {
