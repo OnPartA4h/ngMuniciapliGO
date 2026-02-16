@@ -143,14 +143,20 @@
   padding: 0;
 }
 
-.member-card__exclude-btn:hover {
+.member-card__exclude-btn:hover:not(:disabled) {
   background: var(--color-error-dark);
   transform: scale(1.1);
   box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3);
 }
 
-.member-card__exclude-btn:active {
+.member-card__exclude-btn:active:not(:disabled) {
   transform: scale(0.95);
+}
+
+.member-card__exclude-btn:disabled {
+  background: var(--color-gray-300);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 @media (max-width: 768px) {

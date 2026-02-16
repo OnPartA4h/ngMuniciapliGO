@@ -13,6 +13,7 @@ import { DuplicateGroupMember } from '../../../models/duplicate-group';
 })
 export class DuplicateMemberCardComponent {
   readonly member = input.required<DuplicateGroupMember>();
+  readonly isGroupClosed = input(false);
   readonly exclude = output<Event>();
 
   onExclude(event: Event) {

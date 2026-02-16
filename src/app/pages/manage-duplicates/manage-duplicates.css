@@ -62,10 +62,16 @@
   margin-bottom: var(--spacing-md);
   border-bottom: 1px solid var(--color-gray-200);
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .group-actions .btn {
   flex: 0 1 auto;
+}
+
+.group-actions .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Members List */

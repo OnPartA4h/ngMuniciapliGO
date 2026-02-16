@@ -48,6 +48,7 @@
       @if (!member().isPrimary) {
         <button class="member-card__exclude-btn" 
                 (click)="onExclude($event)"
+                [disabled]="isGroupClosed()"
                 [title]="'DUPLICATES.EXCLUDE' | translate">
           <i class="fas fa-times"></i>
         </button>

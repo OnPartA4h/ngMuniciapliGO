@@ -57,10 +57,18 @@
           
           <!-- Group Actions -->
           <div class="group-actions">
-            <button class="btn btn-success" (click)="acceptGroup(group.id, $event)">
+            <button class="btn btn-success" 
+                    (click)="acceptGroup(group.id, $event)"
+                    [disabled]="group.isClosed">
               <i class="fas fa-check"></i>
               {{ 'DUPLICATES.ACCEPT_GROUP' | translate }}
             </button>
+            @if (group.isClosed) {
+              <span class="badge badge-secondary">
+                <i class="fas fa-lock"></i>
+                {{ 'DUPLICATES.GROUP_CLOSED' | translate }}
+              </span>
+            }
           </div>
 
           <!-- Members List -->
@@ -68,6 +76,7 @@
             @for (member of group.members; track member.id) {
               <app-duplicate-member-card
                 [member]="member"
+                [isGroupClosed]="group.isClosed"
                 (exclude)="excludeProblem(group.id, member.problemeId, $event)" />
             }
           </div>
