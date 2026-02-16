@@ -118,7 +118,9 @@
     "EMAIL_CHANGE_RESEND_ERROR": "Error resending the code.",
     "SEND_CODE": "Send Code",
     "VERIFY_CODE": "Verify Code",
-    "RESEND_CODE": "Resend Code"
+    "RESEND_CODE": "Resend Code",
+    "SUBSCRIBED_TASKS": "Subscribed Tasks",
+    "NO_SUBSCRIBED_TASKS": "No subscribed tasks"
   },
   "MANAGE_USERS": {
     "TITLE": "User Management",
@@ -231,7 +233,8 @@
     "REFUSER_SUCCESS": "Successfully rejected the problem.",
     "ACCEPTER_FIX_SUCCESS": "Successfully accepted the resolution.",
     "REFUSER_FIX_SUCCESS": "Successfully rejected the resolution.",
-    "MESSAGE_REFUS": "Enter a rejection message..."
+    "MESSAGE_REFUS": "Enter a rejection message...",
+    "UNSUBSCRIBE_ERROR": "Unable to unsubscribe from this problem"
   },
   "EDIT_PROBLEM": {
     "TITLE": "Edit Problem",
@@ -335,5 +338,9 @@
     "NO_GROUPS": "No duplicates detected",
     "NO_GROUPS_DESC": "There are currently no duplicate report groups pending review.",
     "PRIMARY": "Primary"
+  },
+  "REPORT_DETAILS": {
+    "SUBSCRIBE": "Subscribe to notifications",
+    "UNSUBSCRIBE": "Unsubscribe from notifications"
   }
 }

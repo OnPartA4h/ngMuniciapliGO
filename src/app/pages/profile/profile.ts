@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, inject, viewChild } from '@angular/core';
 
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth-service';
 import { GeneralService } from '../../services/general-service';
@@ -13,6 +13,10 @@ import { LoadingSpinnerComponent, PageHeaderComponent } from '../../components/u
 import { ProfileInfoFormComponent } from '../../components/forms/profile-info-form/profile-info-form';
 import { ProfileEmailFormComponent } from '../../components/forms/profile-email-form/profile-email-form';
 import { ProfilePasswordFormComponent } from '../../components/forms/profile-password-form/profile-password-form';
+import { NotificationService } from '../../services/notification.service';
+import { Problem } from '../../models/problem';
+import { Pagination } from '../../models/pagination';
+import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 
 @Component({
   selector: 'app-profile',
@@ -24,7 +28,9 @@ import { ProfilePasswordFormComponent } from '../../components/forms/profile-pas
     PageHeaderComponent,
     ProfileInfoFormComponent,
     ProfileEmailFormComponent,
-    ProfilePasswordFormComponent
+    ProfilePasswordFormComponent,
+    RouterLink,
+    DaysAgoPipe,
 ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
@@ -37,6 +43,8 @@ export class Profile implements OnInit {
   private translateService = inject(TranslateService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private notifService = inject(NotificationService);
+  generalServicePublic = inject(GeneralService);
 
   readonly emailFormComponent = viewChild.required(ProfileEmailFormComponent);
   readonly passwordFormComponent = viewChild.required(ProfilePasswordFormComponent);
@@ -67,10 +75,16 @@ export class Profile implements OnInit {
   showEmailVerificationModal = false;
   pendingEmail: string | null = null;
 
+  // Subscribed tasks
+  subscribedProblems: Problem[] = [];
+  subscribedPagination: Pagination | null = null;
+  isLoadingSubscribed = false;
+
   async ngOnInit() {
     try {
       await this.loadRoles();
       await this.loadProfile();
+      await this.loadSubscribedProblems();
     } finally {
       this.isLoading = false;
       this.cdr.detectChanges();
@@ -97,6 +111,25 @@ export class Profile implements OnInit {
     } catch (error) {
       console.error('Error loading roles:', error);
     }
+  }
+
+  async loadSubscribedProblems(page: number = 1) {
+    this.isLoadingSubscribed = true;
+    try {
+      const res = await this.notifService.getSubscribedProblems({ page });
+      this.subscribedProblems = res.items;
+      this.subscribedPagination = res.pagination;
+    } catch (error) {
+      console.error('Error loading subscribed problems:', error);
+      this.subscribedProblems = [];
+    } finally {
+      this.isLoadingSubscribed = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  async onSubscribedPageChange(page: number) {
+    await this.loadSubscribedProblems(page);
   }
 
   getRoleLabel(roleKey: string): string {

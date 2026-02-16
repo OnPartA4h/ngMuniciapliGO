@@ -43,9 +43,14 @@
                 </div>
             </div>
             <div class="details-box">
-                <div class="page-header">
-                    <h2>{{ problem?.titre }}</h2>
-                    <p>{{ problem.description }}</p>
+                <div class="details-box__top-row">
+                    <div class="page-header">
+                        <h2>{{ problem?.titre }}</h2>
+                        <p>{{ problem.description }}</p>
+                    </div>
+                    <button class="btn-subscribe" [class.subscribed]="isSubscribed" (click)="toggleSubscription()" [title]="isSubscribed ? ('REPORT_DETAILS.UNSUBSCRIBE' | translate) : ('REPORT_DETAILS.SUBSCRIBE' | translate)">
+                        <i class="fas" [class.fa-bell]="isSubscribed" [class.fa-bell-slash]="!isSubscribed"></i>
+                    </button>
                 </div>
                 @if (problem.statut === 5) {
                 <div class="divider"></div>

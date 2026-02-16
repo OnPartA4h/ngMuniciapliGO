@@ -118,7 +118,9 @@
     "EMAIL_CHANGE_RESEND_ERROR": "Erreur lors du renvoi du code.",
     "SEND_CODE": "Envoyer le code",
     "VERIFY_CODE": "Vérifier le code",
-    "RESEND_CODE": "Renvoyer le code"
+    "RESEND_CODE": "Renvoyer le code",
+    "SUBSCRIBED_TASKS": "Tâches suivies",
+    "NO_SUBSCRIBED_TASKS": "Aucune tâche suivie"
   },
   "MANAGE_USERS": {
     "TITLE": "Gestion des utilisateurs",
@@ -231,7 +233,8 @@
     "REFUSER_SUCCESS": "Le problème a été refusé avec succès.",
     "ACCEPTER_FIX_SUCCESS": "Successfully accepted the resolution.",
     "REFUSER_FIX_SUCCESS": "Successfully rejected the resolution.",
-    "MESSAGE_REFUS": "Entrez un message de refus..."
+    "MESSAGE_REFUS": "Entrez un message de refus...",
+    "UNSUBSCRIBE_ERROR": "Impossible de se désabonner de ce problème"
   },
   "EDIT_PROBLEM": {
     "TITLE": "Modifier le problème",
@@ -335,5 +338,9 @@
     "NO_GROUPS": "Aucun doublon détecté",
     "NO_GROUPS_DESC": "Il n'y a actuellement aucun groupe de signalements en double en attente de révision.",
     "PRIMARY": "Principal"
+  },
+  "REPORT_DETAILS": {
+    "SUBSCRIBE": "S'abonner aux notifications",
+    "UNSUBSCRIBE": "Se désabonner des notifications"
   }
 }
