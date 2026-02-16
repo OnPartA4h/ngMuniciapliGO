@@ -118,7 +118,9 @@
     "EMAIL_CHANGE_RESEND_ERROR": "Error resending the code.",
     "SEND_CODE": "Send Code",
     "VERIFY_CODE": "Verify Code",
-    "RESEND_CODE": "Resend Code"
+    "RESEND_CODE": "Resend Code",
+    "SUBSCRIBED_TASKS": "Subscribed Tasks",
+    "NO_SUBSCRIBED_TASKS": "No subscribed tasks"
   },
   "MANAGE_USERS": {
     "TITLE": "User Management",

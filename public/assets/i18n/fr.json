@@ -118,7 +118,9 @@
     "EMAIL_CHANGE_RESEND_ERROR": "Erreur lors du renvoi du code.",
     "SEND_CODE": "Envoyer le code",
     "VERIFY_CODE": "Vérifier le code",
-    "RESEND_CODE": "Renvoyer le code"
+    "RESEND_CODE": "Renvoyer le code",
+    "SUBSCRIBED_TASKS": "Tâches suivies",
+    "NO_SUBSCRIBED_TASKS": "Aucune tâche suivie"
   },
   "MANAGE_USERS": {
     "TITLE": "Gestion des utilisateurs",

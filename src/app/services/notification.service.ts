@@ -1,8 +1,9 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { lastValueFrom, Observable, Subject } from 'rxjs';
+import { last, lastValueFrom, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Notification, PaginatedNotifications, UnreadCount } from '../models/notification';
+import { Problem } from '../models/problem';
 
 @Injectable({
   providedIn: 'root'
@@ -76,6 +77,11 @@ export class NotificationService {
     let res = await lastValueFrom(this.http.get<boolean>(`${this.apiUrl}/problems/${id}/isSubscribed`))
     console.log(res);
 
+    return res
+  }
+
+  async getSubscribedProblems(options: any): Promise<any> {
+    let res = await lastValueFrom(this.http.get<any>(`${this.apiUrl}/my-subscribed-tasks`, {params: options}))
     return res
   }
 }
