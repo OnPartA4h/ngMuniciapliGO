@@ -79,7 +79,6 @@ export class NotificationHubService {
     // Écouter les mises à jour du nombre de signalements en traitement
     this.hubConnection.on('DuplicateProcessingCount', (count: number) => {
       this.ngZone.run(() => {
-        console.log('Duplicate processing count updated:', count);
         this.duplicateProcessingCount.set(count);
       });
     });
