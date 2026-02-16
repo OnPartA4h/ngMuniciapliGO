@@ -179,10 +179,17 @@ export class ReportDetails implements OnInit {
   }
 
   async toggleSubscription() {
-    this.isSubscribed = !this.isSubscribed
+    if (!this.isSubscribed){
+      await this.notifService.subscribe(this.problem.id)
+      this.isSubscribed = true
+      return
+    } 
 
-    this.isSubscribed
-    ? await this.notifService.subscribe(this.problem.id)
-    : await this.notifService.unsubscribe(this.problem.id)
+    try {
+      await this.notifService.unsubscribe(this.problem.id)
+      this.isSubscribed = false
+    } catch {
+      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.UNSUBSCRIBE_ERROR'), 'OK', { duration: 2000})
+    }
   }
 }

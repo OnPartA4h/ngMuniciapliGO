@@ -233,7 +233,8 @@
     "REFUSER_SUCCESS": "Successfully rejected the problem.",
     "ACCEPTER_FIX_SUCCESS": "Successfully accepted the resolution.",
     "REFUSER_FIX_SUCCESS": "Successfully rejected the resolution.",
-    "MESSAGE_REFUS": "Enter a rejection message..."
+    "MESSAGE_REFUS": "Enter a rejection message...",
+    "UNSUBSCRIBE_ERROR": "Unable to unsubscribe from this problem"
   },
   "LOGIN": {
     "SUBTITLE": "Sign in to your account",

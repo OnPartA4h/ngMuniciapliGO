@@ -48,10 +48,8 @@ export class Login {
       let token = this.authService.token()
       let roles = this.authService.roles()
 
-      // Check if user needs to reset password
       const loginResponse = this.authService.getLoginResponse();
       if (loginResponse && loginResponse.user.mustResetPassword) {
-        // Store the current password for the reset modal
         this.currentPassword = password;
         this.showResetPasswordModal = true;
         this.isLoading = false;
@@ -77,7 +75,6 @@ export class Login {
   }
 
   async onPasswordReset() {
-    // After password reset, redirect based on roles
     this.showResetPasswordModal = false;
     let roles = this.authService.roles()
     let token = this.authService.token()
@@ -96,7 +93,6 @@ export class Login {
   }
 
   onResetError(error: string | undefined) {
-    // Handle error if needed
     console.error('Password reset error:', error);
   }
 
