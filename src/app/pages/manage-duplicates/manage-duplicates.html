@@ -3,19 +3,10 @@
     [subtitle]="'DUPLICATES.SUBTITLE' | translate" />
 
   <!-- Navigation Tabs -->
-  <div class="filter-tabs">
-    <a class="filter-tab" routerLink="/manage-reports">
-      <i class="fas fa-clipboard-list"></i>
-      {{ 'HEADER.MANAGE_REPORTS' | translate }}
-    </a>
-    <a class="filter-tab active" routerLink="/manage-duplicates">
-      <i class="fas fa-clone"></i>
-      {{ 'DUPLICATES.TAB' | translate }}
-      @if (totalCount() > 0) {
-        <span class="filter-tab__count">{{ totalCount() }}</span>
-      }
-    </a>
-  </div>
+  <app-navigation-tabs [tabs]="navigationTabs" />
+
+  <!-- AI Processing Status -->
+  <app-ai-processing-status />
 
   <!-- Toggle for Closed Groups -->
   <div class="toggle-section">

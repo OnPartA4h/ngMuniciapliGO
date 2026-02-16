@@ -8,9 +8,11 @@ import {
   PageHeaderComponent,
   LoadingSpinnerComponent,
   EmptyStateComponent,
-  PaginationComponent
+  PaginationComponent,
+  NavigationTabsComponent,
+  NavigationTab,
+  AiProcessingStatusComponent
 } from '../../components/ui';
-import { RouterLink } from '@angular/router';
 import { DuplicateGroupCardComponent } from '../../components/cards/duplicate-group-card/duplicate-group-card';
 import { DuplicateMemberCardComponent } from '../../components/cards/duplicate-member-card/duplicate-member-card';
 
@@ -24,7 +26,8 @@ import { DuplicateMemberCardComponent } from '../../components/cards/duplicate-m
     PaginationComponent,
     DuplicateGroupCardComponent,
     DuplicateMemberCardComponent,
-    RouterLink
+    NavigationTabsComponent,
+    AiProcessingStatusComponent
   ],
   templateUrl: './manage-duplicates.html',
   styleUrl: './manage-duplicates.css',
@@ -43,6 +46,22 @@ export class ManageDuplicates implements OnInit {
   readonly totalPages = signal(1);
   readonly totalCount = signal(0);
   readonly showClosed = signal(false);
+
+  get navigationTabs(): NavigationTab[] {
+    return [
+      {
+        label: 'HEADER.MANAGE_REPORTS',
+        route: '/manage-reports',
+        icon: 'fas fa-clipboard-list'
+      },
+      {
+        label: 'DUPLICATES.TAB',
+        route: '/manage-duplicates',
+        icon: 'fas fa-clone',
+        badge: this.totalCount()
+      }
+    ];
+  }
 
   async ngOnInit() {
     this.loading.set(true);
