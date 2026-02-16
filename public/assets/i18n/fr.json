@@ -19,6 +19,7 @@
     "DELETE": "Supprimer",
     "DELETING": "Suppression...",
     "BACK": "Retour",
+    "GO_BACK": "Retour",
     "REQUIRED": "Requis",
     "REQUIRED_FIELD": "Ce champ est requis",
     "INVALID_EMAIL": "Adresse email invalide",
@@ -32,6 +33,7 @@
     "PREVIOUS": "Précédent",
     "NEXT": "Suivant",
     "PAGE": "Page",
+    "OF": "de",
     "EMAIL_CONFIRMED": "Email confirmé",
     "EMAIL_NOT_CONFIRMED": "Email non confirmé",
     "MUST_RESET_PASSWORD": "Doit réinitialiser le mot de passe",
@@ -334,6 +336,10 @@
     "SIMILARITY": "Similarité",
     "NO_GROUPS": "Aucun doublon détecté",
     "NO_GROUPS_DESC": "Il n'y a actuellement aucun groupe de signalements en double en attente de révision.",
-    "PRIMARY": "Principal"
+    "PRIMARY": "Principal",
+    "ACCEPT_GROUP": "Accepter le groupe",
+    "EXCLUDE": "Exclure du groupe",
+    "CONFIRM_EXCLUDE": "Êtes-vous sûr de vouloir exclure ce signalement du groupe ?",
+    "CONFIRM_ACCEPT": "Êtes-vous sûr de vouloir accepter ce groupe et fusionner les signalements ?"
   }
 }

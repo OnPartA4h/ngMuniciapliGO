@@ -1,0 +1,30 @@
+<div class="group-card" [class.group-card--expanded]="isExpanded()" (click)="onToggle()">
+  <div class="group-card__header">
+    <div class="group-card__info">
+      <div class="group-card__title">
+        <i class="fas fa-clone"></i>
+        {{ group().name || ('DUPLICATES.GROUP' | translate) + ' #' + group().id }}
+      </div>
+      <p class="group-card__reason">{{ getAiReason() }}</p>
+      <div class="group-card__meta">
+        <span class="badge badge-warning">
+          {{ group().members.length }} {{ 'DUPLICATES.REPORTS' | translate }}
+        </span>
+        <span class="group-card__date">
+          <i class="fas fa-clock"></i>
+          {{ group().dateCreation | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+      </div>
+    </div>
+    <div class="group-card__chevron">
+      <i class="fas" [class.fa-chevron-down]="!isExpanded()"
+         [class.fa-chevron-up]="isExpanded()"></i>
+    </div>
+  </div>
+
+  @if (isExpanded()) {
+    <div class="group-card__body" (click)="$event.stopPropagation()">
+      <ng-content></ng-content>
+    </div>
+  }
+</div>

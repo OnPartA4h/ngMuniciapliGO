@@ -19,6 +19,7 @@
     "DELETE": "Delete",
     "DELETING": "Deleting...",
     "BACK": "Back",
+    "GO_BACK": "Go Back",
     "REQUIRED": "Required",
     "REQUIRED_FIELD": "This field is required",
     "INVALID_EMAIL": "Invalid email address",
@@ -32,6 +33,7 @@
     "PREVIOUS": "Previous",
     "NEXT": "Next",
     "PAGE": "Page",
+    "OF": "of",
     "EMAIL_CONFIRMED": "Email Confirmed",
     "EMAIL_NOT_CONFIRMED": "Email Not Confirmed",
     "MUST_RESET_PASSWORD": "Must Reset Password",
@@ -334,6 +336,10 @@
     "SIMILARITY": "Similarity",
     "NO_GROUPS": "No duplicates detected",
     "NO_GROUPS_DESC": "There are currently no duplicate report groups pending review.",
-    "PRIMARY": "Primary"
+    "PRIMARY": "Primary",
+    "ACCEPT_GROUP": "Accept Group",
+    "EXCLUDE": "Exclude from group",
+    "CONFIRM_EXCLUDE": "Are you sure you want to exclude this report from the group?",
+    "CONFIRM_ACCEPT": "Are you sure you want to accept this group and merge the reports?"
   }
 }
