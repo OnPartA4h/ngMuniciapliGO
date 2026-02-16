@@ -110,30 +110,37 @@
   color: var(--color-text-tertiary);
 }
 
+.member-card__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-shrink: 0;
+}
+
 .member-card__action {
   flex-shrink: 0;
-  margin-left: var(--spacing-lg);
   color: var(--color-primary);
   font-size: var(--font-size-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .member-card__exclude-btn {
-  position: absolute;
-  top: var(--spacing-md);
-  right: var(--spacing-md);
+  flex-shrink: 0;
   background: var(--color-error);
   color: white;
   border: none;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all var(--transition-base);
   font-size: var(--font-size-sm);
-  z-index: 10;
+  padding: 0;
 }
 
 .member-card__exclude-btn:hover {
@@ -162,6 +169,12 @@
   .member-card__no-photo {
     width: 100%;
     height: 120px;
+  }
+
+  .member-card__actions {
+    align-self: flex-end;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
   }
 
   .member-card__action {

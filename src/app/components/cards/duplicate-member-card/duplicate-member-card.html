@@ -44,15 +44,17 @@
         </span>
       </div>
     </div>
-    <div class="member-card__action">
-      <i class="fas fa-chevron-right"></i>
+    <div class="member-card__actions">
+      @if (!member().isPrimary) {
+        <button class="member-card__exclude-btn" 
+                (click)="onExclude($event)"
+                [title]="'DUPLICATES.EXCLUDE' | translate">
+          <i class="fas fa-times"></i>
+        </button>
+      }
+      <div class="member-card__action">
+        <i class="fas fa-chevron-right"></i>
+      </div>
     </div>
   </a>
-  @if (!member().isPrimary) {
-    <button class="member-card__exclude-btn" 
-            (click)="onExclude($event)"
-            [title]="'DUPLICATES.EXCLUDE' | translate">
-      <i class="fas fa-times"></i>
-    </button>
-  }
 </div>
