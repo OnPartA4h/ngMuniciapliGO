@@ -1,4 +1,8 @@
 <div class="container">
+    <div class="page-header">
+        <h1>{{ 'DASHBOARD.TITLE' | translate }}</h1>
+        <p>{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
+    </div>
     <div class="charts-grid">
         <app-chart [datasets]="datasets1" [chartType]="'bar'"></app-chart>
         <app-chart [datasets]="datasets2" [chartType]="'bar'"></app-chart>

@@ -11,6 +11,23 @@
     margin: 32px 0;
 }
 
+.page-header {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.page-header h1 {
+    color: var(--color-primary);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.page-header p {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    margin: 0;
+}
+
 @media (max-width: 900px) {
     .charts-grid {
         grid-template-columns: 1fr;

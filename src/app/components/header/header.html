@@ -5,7 +5,7 @@
 
   <nav>
     <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-      {{ 'HEADER.HOME' | translate }}
+      {{ 'DASHBOARD.TITLE' | translate }}
     </a>
 
     <a routerLink="/map" routerLinkActive="active">
@@ -13,19 +13,15 @@
     </a>
 
     @if (userRoles().includes('ColBlanc') || userRoles().includes('Admin')) {
-      <a
-        routerLink="/manage-reports"
-        routerLinkActive="active">
-        {{ 'HEADER.MANAGE_REPORTS' | translate }}
-      </a>
+    <a routerLink="/manage-reports" routerLinkActive="active">
+      {{ 'HEADER.MANAGE_REPORTS' | translate }}
+    </a>
     }
 
     @if (userRoles().includes('Admin')) {
-      <a
-        routerLink="/manage-users"
-        routerLinkActive="active">
-        {{ 'HEADER.MANAGE_USERS' | translate }}
-      </a>
+    <a routerLink="/manage-users" routerLinkActive="active">
+      {{ 'HEADER.MANAGE_USERS' | translate }}
+    </a>
     }
   </nav>
 
@@ -38,34 +34,34 @@
 
     <!-- Notification Bell (when connected) -->
     @if (isConnected()) {
-      <app-notification-bell />
+    <app-notification-bell />
     }
 
     <!-- Profile Avatar (when connected) -->
     @if (isConnected()) {
-      <a routerLink="/profile" class="profile-avatar" routerLinkActive="active">
-        @if (authService.profilePictureUrl()) {
-          <img [src]="authService.profilePictureUrl()!" alt="Profile" />
-        }
-        @if (!authService.profilePictureUrl()) {
-          <i class="fas fa-user"></i>
-        }
-      </a>
+    <a routerLink="/profile" class="profile-avatar" routerLinkActive="active">
+      @if (authService.profilePictureUrl()) {
+      <img [src]="authService.profilePictureUrl()!" alt="Profile" />
+      }
+      @if (!authService.profilePictureUrl()) {
+      <i class="fas fa-user"></i>
+      }
+    </a>
     }
 
 
     <!-- Login/Logout -->
     @if (!isConnected()) {
-      <a routerLink="/login" class="btn-login">
-        {{ 'HEADER.LOGIN' | translate }}
-      </a>
+    <a routerLink="/login" class="btn-login">
+      {{ 'HEADER.LOGIN' | translate }}
+    </a>
     }
 
     @if (isConnected()) {
-      <button class="btn-login" (click)="logout()">
-        <i class="fas fa-sign-out-alt"></i>
-        {{ 'HEADER.LOGOUT' | translate }}
-      </button>
+    <button class="btn-login" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      {{ 'HEADER.LOGOUT' | translate }}
+    </button>
     }
   </div>
 </header>

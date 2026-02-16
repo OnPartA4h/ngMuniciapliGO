@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Chart } from '../../components/chart/chart';
 import { ChartData, ChartType } from 'chart.js';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
-  imports: [Chart],
+  imports: [Chart, TranslateModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

@@ -311,5 +311,9 @@
     "NO_GROUPS": "Aucun doublon détecté",
     "NO_GROUPS_DESC": "Il n'y a actuellement aucun groupe de signalements en double en attente de révision.",
     "PRIMARY": "Principal"
+  },
+  "DASHBOARD": {
+    "TITLE": "Tableau de bord",
+    "SUBTITLE": "Statistiques des problèmes"
   }
 }
