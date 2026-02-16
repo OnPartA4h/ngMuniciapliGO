@@ -11,115 +11,66 @@
     <a class="filter-tab active" routerLink="/manage-duplicates">
       <i class="fas fa-clone"></i>
       {{ 'DUPLICATES.TAB' | translate }}
-      @if (groups.length > 0) {
-        <span class="filter-tab__count">{{ groups.length }}</span>
+      @if (totalCount() > 0) {
+        <span class="filter-tab__count">{{ totalCount() }}</span>
       }
     </a>
   </div>
 
-  @if (loading) {
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <p class="loading-state__text">{{ 'COMMON.LOADING' | translate }}</p>
-    </div>
+  <!-- Loading State -->
+  @if (loading()) {
+    <app-loading-spinner />
   }
 
-  @if (!loading && errorMessage) {
+  <!-- Error Banner -->
+  @if (!loading() && errorMessage()) {
     <div class="error-banner">
       <i class="fas fa-exclamation-triangle"></i>
-      <span>{{ errorMessage }}</span>
+      <span>{{ errorMessage() }}</span>
     </div>
   }
 
-  @if (!loading && !errorMessage && groups.length === 0) {
-    <div class="empty-state">
-      <i class="empty-state__icon fas fa-check-circle"></i>
-      <h3 class="empty-state__title">{{ 'DUPLICATES.NO_GROUPS' | translate }}</h3>
-      <p class="empty-state__description">{{ 'DUPLICATES.NO_GROUPS_DESC' | translate }}</p>
-    </div>
+  <!-- Empty State -->
+  @if (!loading() && !errorMessage() && groups().length === 0) {
+    <app-empty-state
+      iconClass="fas fa-check-circle"
+      [title]="'DUPLICATES.NO_GROUPS' | translate"
+      [description]="'DUPLICATES.NO_GROUPS_DESC' | translate" />
   }
 
-  @if (!loading && groups.length > 0) {
+  <!-- Groups List -->
+  @if (!loading() && groups().length > 0) {
     <div class="groups-list">
-      @for (group of groups; track group.id) {
-        <div class="group-card" [class.group-card--expanded]="selectedGroup?.id === group.id"
-             (click)="selectGroup(group)">
-          <div class="group-card__header">
-            <div class="group-card__info">
-              <div class="group-card__title">
-                <i class="fas fa-clone"></i>
-                {{ group.name || ('DUPLICATES.GROUP' | translate) + ' #' + group.id }}
-              </div>
-              <p class="group-card__reason">{{ group.aiReason }}</p>
-              <div class="group-card__meta">
-                <span class="badge badge-warning">
-                  {{ group.members.length }} {{ 'DUPLICATES.REPORTS' | translate }}
-                </span>
-                <span class="group-card__date">
-                  <i class="fas fa-clock"></i>
-                  {{ group.dateCreation | date:'dd/MM/yyyy HH:mm' }}
-                </span>
-              </div>
-            </div>
-            <div class="group-card__chevron">
-              <i class="fas" [class.fa-chevron-down]="selectedGroup?.id !== group.id"
-                 [class.fa-chevron-up]="selectedGroup?.id === group.id"></i>
-            </div>
+      @for (group of groups(); track group.id) {
+        <app-duplicate-group-card
+          [group]="group"
+          [isExpanded]="selectedGroupId() === group.id"
+          (toggleExpanded)="selectGroup(group)">
+          
+          <!-- Group Actions -->
+          <div class="group-actions">
+            <button class="btn btn-success" (click)="acceptGroup(group.id, $event)">
+              <i class="fas fa-check"></i>
+              {{ 'DUPLICATES.ACCEPT_GROUP' | translate }}
+            </button>
           </div>
 
-          @if (selectedGroup?.id === group.id) {
-            <div class="group-card__body" (click)="$event.stopPropagation()">
-              <div class="members-list">
-                @for (member of selectedGroup!.members; track member.id) {
-                  <a class="member-card list-card" routerLink="/report-details/{{ member.probleme.id }}">
-                    <div class="member-card__thumbnail">
-                      @if (member.probleme.photos && member.probleme.photos.length > 0) {
-                        <img [src]="member.probleme.photos[0].url" alt="Photo" />
-                      } @else {
-                        <div class="member-card__no-photo">
-                          <i class="fas fa-image"></i>
-                        </div>
-                      }
-                    </div>
-                    <div class="member-card__info">
-                      <div class="member-card__header">
-                        <h4 class="member-card__title">{{ member.probleme.titre }}</h4>
-                        @if (member.isPrimary) {
-                          <span class="badge badge-success">{{ 'DUPLICATES.PRIMARY' | translate }}</span>
-                        }
-                        <span class="badge badge-info">{{ getStatusLabel(member.probleme.statut) }}</span>
-                      </div>
-                      <div class="member-card__details">
-                        <span class="member-card__detail">
-                          <i class="fas fa-map-marker-alt"></i>
-                          {{ member.probleme.address }}
-                        </span>
-                        <span class="member-card__detail">
-                          <i class="fas fa-tag"></i>
-                          {{ getCategoryLabel(member.probleme.categorie) }}
-                        </span>
-                      </div>
-                      <div class="member-card__footer">
-                        <span class="member-card__score">
-                          <i class="fas fa-percentage"></i>
-                          {{ 'DUPLICATES.SIMILARITY' | translate }}: {{ member.similarityScore.toFixed(0) }}%
-                        </span>
-                        <span class="member-card__date">
-                          <i class="fas fa-calendar"></i>
-                          {{ member.probleme.dateCreation | date:'dd/MM/yyyy' }}
-                        </span>
-                      </div>
-                    </div>
-                    <div class="member-card__action">
-                      <i class="fas fa-chevron-right"></i>
-                    </div>
-                  </a>
-                }
-              </div>
-            </div>
-          }
-        </div>
+          <!-- Members List -->
+          <div class="members-list">
+            @for (member of group.members; track member.id) {
+              <app-duplicate-member-card
+                [member]="member"
+                (exclude)="excludeProblem(group.id, member.problemeId, $event)" />
+            }
+          </div>
+        </app-duplicate-group-card>
       }
     </div>
+
+    <!-- Pagination -->
+    <app-pagination
+      [currentPage]="currentPage()"
+      [totalPages]="totalPages()"
+      (pageChange)="changePage($event)" />
   }
 </div>
