@@ -1,12 +1,12 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
+
 import { NotificationHubService } from '../../../services/notification-hub.service';
 
 @Component({
   selector: 'app-ai-processing-status',
   standalone: true,
-  imports: [TranslateModule, CommonModule],
+  imports: [TranslateModule],
   templateUrl: './ai-processing-status.html',
   styleUrl: './ai-processing-status.css'
 })

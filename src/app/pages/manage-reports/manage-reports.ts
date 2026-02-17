@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { WhiteService } from '../../services/white-service';
 import { GeneralService } from '../../services/general-service';
@@ -12,7 +12,7 @@ import { ReportListComponent } from '../../components/tables/report-list/report-
 
 @Component({
   selector: 'app-manage-reports',
-  imports: [CommonModule, TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent, NavigationTabsComponent, AiProcessingStatusComponent],
+  imports: [TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent, NavigationTabsComponent, AiProcessingStatusComponent, NgClass],
   templateUrl: './manage-reports.html',
   styleUrl: './manage-reports.css',
 })
