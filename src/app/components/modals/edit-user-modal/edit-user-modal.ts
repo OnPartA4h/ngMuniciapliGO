@@ -1,4 +1,4 @@
-import { Component, OnInit, effect, inject, input, output, signal } from '@angular/core';
+import { Component, OnInit, inject, input, output, signal } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxMaskPipe } from 'ngx-mask';
 import { User, RoleOption } from '../../../models/user';
@@ -31,19 +31,10 @@ export class EditUserModal implements OnInit {
   successMessage = signal<string | null>(null);
   currentUserId = signal<string | null>(null);
 
-  private successMessageTimeout: ReturnType<typeof setTimeout> | null = null;
-
-  constructor() {
-    effect(() => {
-      if (this.isOpen()) {
-        this.loadRoles();
-      }
-    });
-  }
-
   ngOnInit() {
     const userId = localStorage.getItem('userId');
     this.currentUserId.set(userId);
+    this.loadRoles();
   }
 
   private async loadRoles() {
@@ -60,9 +51,6 @@ export class EditUserModal implements OnInit {
     this.showDeleteConfirm.set(false);
     this.isLoading.set(false);
     this.successMessage.set(null);
-    if (this.successMessageTimeout) {
-      clearTimeout(this.successMessageTimeout);
-    }
     this.close.emit(undefined);
   }
 
@@ -90,10 +78,7 @@ export class EditUserModal implements OnInit {
     });
     this.successMessage.set(message);
 
-    if (this.successMessageTimeout) {
-      clearTimeout(this.successMessageTimeout);
-    }
-    this.successMessageTimeout = setTimeout(() => {
+    setTimeout(() => {
       this.successMessage.set(null);
     }, 3000);
   }
