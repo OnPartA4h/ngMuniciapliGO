@@ -144,11 +144,11 @@ export class Profile implements OnInit {
 
     try {
       const response = await this.userService.updateUser(dto);
-      this.infoSuccessMessage.set(response.message || this.translateService.instant('PROFILE.SUCCESS_UPDATE'));
+      this.infoSuccessMessage.set(this.translateService.instant('PROFILE.SUCCESS_UPDATE'));
       this.profile.set(response.user);
     } catch (error: any) {
       console.error('Error updating profile:', error);
-      this.infoErrorMessage.set(error?.error?.message || this.translateService.instant('PROFILE.ERROR_UPDATE'));
+      this.infoErrorMessage.set(this.translateService.instant('PROFILE.ERROR_UPDATE'));
     } finally {
       this.isSavingInfo.set(false);
     }
@@ -162,11 +162,11 @@ export class Profile implements OnInit {
 
     try {
       const response = await this.userService.changePassword(dto);
-      this.passwordSuccessMessage.set(response.message || this.translateService.instant('PROFILE.PASSWORD_SUCCESS'));
+      this.passwordSuccessMessage.set(this.translateService.instant('PROFILE.PASSWORD_SUCCESS'));
       this.passwordFormComponent().resetForm();
     } catch (error: any) {
       console.error('Error changing password:', error);
-      this.passwordErrorMessage.set(error?.error?.message || this.translateService.instant('PROFILE.PASSWORD_ERROR'));
+      this.passwordErrorMessage.set(this.translateService.instant('PROFILE.PASSWORD_ERROR'));
     } finally {
       this.isSavingPassword.set(false);
     }
@@ -185,7 +185,7 @@ export class Profile implements OnInit {
       this.emailFormComponent().resetForm();
     } catch (error: any) {
       console.error('Error requesting email change:', error);
-      this.emailErrorMessage.set(error?.error?.message || this.translateService.instant('PROFILE.EMAIL_REQUEST_ERROR'));
+      this.emailErrorMessage.set(this.translateService.instant('PROFILE.EMAIL_REQUEST_ERROR'));
     } finally {
       this.isSavingEmail.set(false);
     }
