@@ -49,6 +49,12 @@ export class GeneralService {
     );
   }
 
+  async getStats(): Promise<any> {
+    return await lastValueFrom(
+      this.http.get<any>(`${this.apiUrl}/api/Stats`)
+    );
+  }
+
   async loadCategories() {
     try {
       const lang = this.languageService.getCurrentLanguage();

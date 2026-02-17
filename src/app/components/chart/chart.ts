@@ -12,5 +12,5 @@ import { ChartData, ChartType } from 'chart.js';
 
 export class Chart {
   @Input() chartType: ChartType = 'bar';
-  @Input() datasets!: ChartData<'bar', { key: string, value: number }[]>;
+  @Input() datasets!: ChartData;
 }

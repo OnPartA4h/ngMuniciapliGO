@@ -1,37 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Chart } from '../../components/chart/chart';
 import { ChartData, ChartType } from 'chart.js';
 import { TranslateModule } from '@ngx-translate/core';
+import { StatBox } from '../../components/stat-box/stat-box';
+import { GeneralService } from '../../services/general-service';
 
 @Component({
   selector: 'app-home',
-  imports: [Chart, TranslateModule],
+  imports: [Chart, TranslateModule, StatBox],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home {
-  datasets1: ChartData<'bar', { key: string, value: number }[]> = {
-    datasets: [{
-      data: [{ key: 'A', value: 10 }, { key: 'B', value: 20 }],
-      parsing: { xAxisKey: 'key', yAxisKey: 'value' }
-    }]
-  };
-  datasets2: ChartData<'bar', { key: string, value: number }[]> = {
-    datasets: [{
-      data: [{ key: 'C', value: 5 }, { key: 'D', value: 15 }],
-      parsing: { xAxisKey: 'key', yAxisKey: 'value' }
-    }]
-  };
-  datasets3: ChartData<'bar', { key: string, value: number }[]> = {
-    datasets: [{
-      data: [{ key: 'E', value: 8 }, { key: 'F', value: 12 }],
-      parsing: { xAxisKey: 'key', yAxisKey: 'value' }
-    }]
-  };
-  datasets4: ChartData<'bar', { key: string, value: number }[]> = {
-    datasets: [{
-      data: [{ key: 'G', value: 18 }, { key: 'H', value: 7 }],
-      parsing: { xAxisKey: 'key', yAxisKey: 'value' }
-    }]
+  generalService = inject(GeneralService);
+  stats: any
+
+  async ngOnInit() {
+    await Promise.all([
+      this.stats = await this.generalService.getStats()
+    ]);
+    console.log(this.stats);
+  }
+
+  datasets: ChartData<'bar', number[]> = {
+    labels: ['A', 'B'],
+    datasets: [
+      {
+        label: 'Reported',
+        data: [10, 20],
+        backgroundColor: 'rgba(255, 99, 132, 0.6)'
+      },
+      {
+        label: 'Solved',
+        data: [5, 15],
+        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+      }
+    ]
   };
 }
