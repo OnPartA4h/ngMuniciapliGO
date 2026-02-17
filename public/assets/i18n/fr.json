@@ -213,6 +213,7 @@
     "DATE": "Date",
     "DATE_CREATION": "Date Création",
     "DEMANDEUR": "Demandeur",
+    "ASSIGNEA": "Type de Responsable",
     "ASSIGNEE": "Responsable",
     "UNASSIGNED": "Non assigné",
     "PAGE_INFO": "Page {{current}} sur {{total}}",

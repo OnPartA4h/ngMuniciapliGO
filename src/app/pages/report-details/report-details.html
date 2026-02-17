@@ -97,13 +97,20 @@
                     <span>
                         <div class="property">
                             <i class="fas fa-user"></i>
+                            {{"MANAGE_REPORTS.ASSIGNEA" | translate}}
+                        </div>
+                        {{this.generalService.assignees()[problem.assigneA].label}}
+                    </span>
+                    <span>
+                        <div class="property">
+                            <i class="fas fa-user"></i>
                             {{"MANAGE_REPORTS.ASSIGNEE" | translate}}
                         </div>
-                        @if(problem.assigneA == 2) {
+                        @if(problem.assigneA != 0 && problem.responsable) {
                         {{problem.responsable.firstName + ' ' + problem.responsable.lastName}}
                         }
                         @else {
-                        {{this.generalService.assignees()[problem.assigneA].label}}
+                        {{"MANAGE_REPORTS.UNASSIGNED" | translate}}
                         }
                     </span>
                     <span>

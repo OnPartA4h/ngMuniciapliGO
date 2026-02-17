@@ -213,6 +213,7 @@
     "DATE": "Date",
     "DATE_CREATION": "Date Reported",
     "DEMANDEUR": "Reported by",
+    "ASSIGNEA": "Assignee Type",
     "ASSIGNEE": "Assignee",
     "UNASSIGNED": "Unassigned",
     "PAGE_INFO": "Page {{current}} of {{total}}",
