@@ -10,8 +10,8 @@
         <p>{{ 'LOGIN.SUBTITLE' | translate }}</p>
       </div>
 
-      @if (authService.errorMessage != '') {
-        <div class="form-alert form-alert--error login-error-message">{{ 'LOGIN.ERROR_MESSAGE' | translate }}</div>
+      @if (errorMessage != '') {
+        <div class="form-alert form-alert--error login-error-message">{{errorMessage}}</div>
       }
 
       <form [formGroup]="formGroup" class="login-form">

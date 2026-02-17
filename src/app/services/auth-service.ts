@@ -28,48 +28,32 @@ export class AuthService {
   private loginResponse: any = null;
   private notificationHubService = inject(NotificationHubService);
 
-  errorMessage: string = ""
-
   async login(email: string, password: string) {
     const dto = {
       email: email,
       password: password
     };
 
-    try {
-      const response = await lastValueFrom(this.http.post<any>(`${this.apiUrl}/api/Auth/login`, dto));
+    const response = await lastValueFrom(this.http.post<any>(`${this.apiUrl}/api/Auth/login`, dto));
       console.log(response);
 
       const roles: string[] = response.user.roles;
 
-      if (!roles.includes("Admin") && !roles.includes("ColBlanc")) {
-        console.log("NOT ADMIN OR COL BLANC!!!!");
-        this.errorMessage = "NOT ADMIN OR COL BLANC!!!!"
-        return;
-      }
-
-      localStorage.setItem("token", response.token);
-      this.tokenSignal.set(response.token)
-
-      localStorage.setItem("roles", JSON.stringify(response.user.roles))
-      this.rolesSignal.set(response.user.roles)
-
-      localStorage.setItem("userId", response.user.id)
+      this.updateSignals(response)
 
       // Update profile picture signal from login response
       this.profilePictureSignal.set(response.user.profilePictureUrl || null);
 
       // Store the login response for mustResetPassword check
       this.loginResponse = response;
+  }
 
-      this.errorMessage = ""
-    } catch (error: any) {
-      if (error.status < 500 && error.status > 0) {
-        this.errorMessage = "Email or password is incorrect"
-      } else {
-        this.errorMessage = "Erreur serveur. Veuillez réessayer plus tard."
-      }
-    }
+  updateSignals(data: any) {
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("roles", JSON.stringify(data.user.roles))
+    localStorage.setItem("userId", data.user.id)
+    this.tokenSignal.set(data.token)
+    this.rolesSignal.set(data.user.roles)
   }
 
   isAuthenticated(): boolean {

@@ -17,13 +17,16 @@ export class Login {
   authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   router = inject(Router);
-
   
   formGroup: FormGroup;
   showResetPasswordModal = false;
   showForgotPasswordModal = false;
   currentPassword = '';
   isLoading = false;
+
+  roles: string[] = []
+  token: string | null = null
+  errorMessage: string = ""
 
   constructor() {
     this.formGroup = this.formBuilder.group(
@@ -45,8 +48,10 @@ export class Login {
     try {
       await this.authService.login(email, password)
 
-      let token = this.authService.token()
-      let roles = this.authService.roles()
+      this.token = this.authService.token()
+      this.roles = this.authService.roles()
+
+      this.verifyPermissions()
 
       const loginResponse = this.authService.getLoginResponse();
       if (loginResponse && loginResponse.user.mustResetPassword) {
@@ -56,19 +61,14 @@ export class Login {
         return;
       }
 
-      if (roles.includes('Admin') && token){
-        this.router.navigate(['/manage-users'])
-        await this.authService.connectToNotificationHub();
-        return
-      }
+      await this.handleRedirection()
 
-      if (roles.includes('ColBlanc') && token){
-        this.router.navigate(['/manage-reports'])
-        await this.authService.connectToNotificationHub();
-        return
+    } catch (error: any) {
+      if (error.status >= 500 || error.status == 0){
+        this.errorMessage = "Server ERROR GRRRR"
+      } else if (error.status < 500){
+        this.errorMessage = "Invalid Credentials"
       }
-    } catch (error) {
-      console.error('Login error:', error);
     } finally {
       this.isLoading = false;
     }
@@ -76,16 +76,25 @@ export class Login {
 
   async onPasswordReset() {
     this.showResetPasswordModal = false;
-    let roles = this.authService.roles()
-    let token = this.authService.token()
+    await this.handleRedirection()
+  }
 
-    if (roles.includes('Admin') && token){
-      this.router.navigate(['/manage-users'])
-      await this.authService.connectToNotificationHub();
-      return
-    }
+  verifyPermissions(){
+    if (!this.roles.includes("Admin") && !this.roles.includes("ColBlanc")) {
+        console.log("NOT ADMIN OR COL BLANC!!!!");
+        this.errorMessage = "NOT ADMIN OR COL BLANC!!!!"
+        return;
+      }
+  }
 
-    if (roles.includes('ColBlanc') && token){
+  async handleRedirection() {
+    if (this.roles.includes('Admin') && this.token){
+        this.router.navigate(['/manage-users'])
+        await this.authService.connectToNotificationHub();
+        return
+      }
+
+    if (this.roles.includes('ColBlanc') && this.token){
       this.router.navigate(['/manage-reports'])
       await this.authService.connectToNotificationHub();
       return
