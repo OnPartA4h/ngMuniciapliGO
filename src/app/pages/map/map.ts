@@ -9,6 +9,8 @@ import { MapConfigModal } from '../../components/modals/map-config-modal/map-con
 import { categoryIcons, categoryEnumMap } from '../../models/categoryIcons';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { GeneralService } from '../../services/general-service';
+import { District } from '../../models/district';
 
 @Component({
   selector: 'app-map',
@@ -19,6 +21,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 })
 export class Map implements AfterViewInit, OnDestroy {
   whiteService = inject(WhiteService);
+  generalService = inject(GeneralService)
   private snackbar = inject(MatSnackBar);
   private translate = inject(TranslateService);
 
@@ -27,19 +30,29 @@ export class Map implements AfterViewInit, OnDestroy {
   DEFAULT_RADIUS: number = 1000
   FALLBACK_COORDS: L.LatLngExpression = [this.DEFAULT_LAT, this.DEFAULT_LNG];
 
+  DISTRICT_COLORS = [
+    '#3B82F6', // Blue 
+    '#10B981', // Green 
+    '#F59E0B', // Orange 
+    '#EF4444'  // Red 
+  ];
+
   map: L.Map | undefined;
   currentPosMarker: L.Marker | undefined
   circleRadius: L.Circle | undefined
   previewCircle: L.Circle | undefined
   markerClusterGroup: L.MarkerClusterGroup | undefined;
+  polygonGroup: L.LayerGroup | undefined
 
   radius = signal(-1);
   currentLat = signal<number | null>(null);
   currentLng = signal<number | null>(null);
   problems = signal<Problem[]>([]);
+  districts = signal<District[]>([])
   selectedProblem = signal<Problem | null>(null);
   isSidebarOpen = signal(false);
   isConfigModalOpen = signal(false);
+  showDistricts = signal(false)
 
   redIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -62,13 +75,17 @@ export class Map implements AfterViewInit, OnDestroy {
   async ngAfterViewInit() {
     this.getRadius()
     this.initMap()
+
     await this.getProblems()
+
     this.placeMarkers()
     this.currentPosMarkerEvent()
   }
 
   initMap() {
-    this.map = L.map('map')
+    this.map = L.map('map', {
+      zoomControl: false
+    })
     
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
@@ -134,6 +151,11 @@ export class Map implements AfterViewInit, OnDestroy {
     }
   }
 
+  async getDistricts() {
+    let districts = await this.generalService.getDistricts()
+    this.districts.set(districts)
+  }
+
   getRadius() {
     let radiusData = localStorage.getItem("radius")
     this.radius.set(!radiusData ? this.DEFAULT_RADIUS : parseInt(radiusData))
@@ -191,6 +213,16 @@ export class Map implements AfterViewInit, OnDestroy {
     })
   }
 
+  currentPosMarkerDistrictEvent(polygon: L.Polygon) {
+    polygon.on('click', (event) => {
+      this.removeCurrentPosMarker()
+      this.removeCircleRadius()
+      this.createCurrentPosMarker(event.latlng)
+      this.reloadProblems()
+      localStorage.setItem("latlng", JSON.stringify(event.latlng))
+    })
+  }
+
   addCircleRadius(latlng: L.LatLng) {
     this.removeCircleRadius()
     const radiusValue = this.radius();
@@ -199,7 +231,8 @@ export class Map implements AfterViewInit, OnDestroy {
       radius: radiusValue,
       color: 'blue',
       fillColor: 'blue',
-      fillOpacity: 0.2
+      fillOpacity: 0.2,
+      interactive: false
     }).addTo(this.map!)
   }
 
@@ -293,6 +326,88 @@ export class Map implements AfterViewInit, OnDestroy {
   removePreviewCirlce() {
     this.previewCircle?.remove();
     this.previewCircle = undefined;
+  }
+
+  createDistrictPolygon(district: District): L.Polygon {
+    const latlngs = district.coordinates.map(ring =>
+      ring.map(coord => [coord[1], coord[0]] as [number, number])
+    );
+
+    const color = this.DISTRICT_COLORS[district.colorIndex % this.DISTRICT_COLORS.length];
+
+    const polygon = L.polygon(latlngs, {
+      color: color,
+      fillColor: color,
+      fillOpacity: 0.3,
+      weight: 2,
+      interactive: true,
+      bubblingMouseEvents: true
+    });
+
+    const popupContent = `
+      <div style="font-family: var(--font-family-base);">
+        <strong style="font-size: 16px; color: ${color};">${district.name}</strong><br>
+        <span style="color: var(--color-text-secondary);">District ${district.number}</span><br>
+        <span style="color: var(--color-text-secondary);">${district.arrondissement}</span>
+      </div>
+    `;
+
+    polygon.bindPopup(popupContent, {
+      autoClose: true,
+      closeOnClick: true,
+      className: 'district-popup'
+    });
+
+    polygon.on('mousedown', (e: L.LeafletMouseEvent) => {
+      if (e.originalEvent.button === 1) { 
+        e.originalEvent.preventDefault();
+        polygon.openPopup(e.latlng);
+      }
+    });
+
+    polygon.on('click', (e: L.LeafletMouseEvent) => {
+      polygon.closePopup();
+    });
+
+    polygon.on('mouseover', () => {
+      polygon.setStyle({
+        fillOpacity: 0.5,
+        weight: 3
+      });
+    });
+
+    polygon.on('mouseout', () => {
+      polygon.setStyle({
+        fillOpacity: 0.3,
+        weight: 2
+      });
+    });
+
+    return polygon;
+  }
+
+  renderDistricts() {
+    this.polygonGroup?.clearLayers()
+    this.polygonGroup = L.layerGroup().addTo(this.map!)
+
+    this.districts().forEach(district => {
+      const polygon = this.createDistrictPolygon(district);
+      polygon.addTo(this.polygonGroup!);
+
+       this.currentPosMarkerDistrictEvent(polygon)
+    });
+  }
+
+  async toggleDistricts() {
+    this.showDistricts.set(!this.showDistricts())
+
+    if(this.showDistricts()){
+      await this.getDistricts()
+    } else {
+      this.districts.set([])
+    }
+
+    this.renderDistricts()
   }
 }
 

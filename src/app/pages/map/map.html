@@ -4,6 +4,11 @@
     [isOpen]="isSidebarOpen()"
     (close)="closeSidebar()" />
 
+  <button class="districts-button" title="Afficher/Masquer les districts" (click)="toggleDistricts()">
+    <i class="fas fa-map"></i>
+    <span>Districts</span>
+  </button>
+
   <button class="center-button" (click)="resetView()">
     <i class="fas fa-crosshairs"></i>
   </button>
