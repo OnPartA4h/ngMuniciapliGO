@@ -118,6 +118,13 @@
                         </div>
                         {{problem.citoyenDemandeur.firstName + ' ' + problem.citoyenDemandeur.lastName}}
                     </span>
+                    <span>
+                        <div class="property">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                            {{"MANAGE_REPORTS.LIKES" | translate}}
+                        </div>
+                        {{problem.nbLikes}}
+                    </span>
                     <div class="report-header">
                         <span class="badge badge-info">
                             {{ this.generalService.getStatusLabel(problem.statut) }}

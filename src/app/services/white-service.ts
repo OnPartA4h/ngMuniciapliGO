@@ -18,6 +18,8 @@ export class WhiteService {
       `${this.apiUrl}/api/ColBlanc/problems`,
       { params: options as any })
     );
+    console.log(x);
+    
     return x;
   }
 

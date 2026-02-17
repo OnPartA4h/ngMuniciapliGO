@@ -47,6 +47,13 @@
             <option [value]="$index + 1">{{ s.label }}</option>
           }
         </select>
+        <label class="filter-checkbox">
+          <input type="checkbox" [(ngModel)]="filterByLikes" (change)="getAllReports()" />
+          <span>
+            <i class="fa-solid fa-thumbs-up"></i>
+            {{ 'MANAGE_REPORTS.FILTER_BY_LIKES' | translate }}
+          </span>
+        </label>
         <button class="btn btn-secondary btn-reset-filters" (click)="resetFilters()">
           <i class="fa-solid fa-arrow-rotate-left"></i>
         </button>
