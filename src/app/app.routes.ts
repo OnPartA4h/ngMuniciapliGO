@@ -3,34 +3,34 @@ import { authGuard } from './guards/auth-guard';
 import { loginGuard } from './guards/login-guard';
 import { adminGuard } from './guards/admin-guard';
 import { whiteGuard } from './guards/white-guard';
-import { Hello } from './pages/hello/hello';
-import { Map } from './pages/map/map';
-import { Home } from './pages/home/home';
-import { Login } from './pages/login/login';
-import { ManageReports } from './pages/manage-reports/manage-reports';
-import { ManageUsers } from './pages/manage-users/manage-users';
-import { CreateUser } from './pages/create-user/create-user';
-import { ReportDetails } from './pages/report-details/report-details';
-import { EditProblem } from './pages/edit-problem/edit-problem';
-import { Profile } from './pages/profile/profile';
-import { Notifications } from './pages/notifications/notifications';
-import { Landing } from './pages/landing/landing';
-import { ManageDuplicates } from './pages/manage-duplicates/manage-duplicates';
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const routes: Routes = [
-  { path: 'hello', component: Hello },
-  { path: 'map', component: Map, canActivate: [authGuard]},
-  { path: 'home', component: Home, canActivate: [authGuard] },
-  { path: 'login', component: Login, canActivate: [loginGuard] },
-  { path: 'manage-reports', component: ManageReports, canActivate: [authGuard, whiteGuard] },
-  { path: 'manage-duplicates', component: ManageDuplicates, canActivate: [authGuard, whiteGuard] },
-  { path: 'manage-users', component: ManageUsers, canActivate: [authGuard, adminGuard] },
-  { path: 'create-user', component: CreateUser, canActivate: [authGuard, adminGuard] },
-  { path: 'report-details/:id', component: ReportDetails, canActivate: [authGuard] },
-  { path: 'edit-problem/:id', component: EditProblem, canActivate: [authGuard, whiteGuard] },
-  { path: 'profile', component: Profile, canActivate: [authGuard] },
-  { path: 'notifications', component: Notifications, canActivate: [authGuard] },
-  { path: 'landing', component: Landing },
+  { path: 'hello', loadComponent: () => import('./pages/hello/hello').then(m => m.Hello) },
+  { path: 'map', loadComponent: () => import('./pages/map/map').then(m => m.Map), canActivate: [authGuard]},
+  { path: 'home', loadComponent: () => import('./pages/home/home').then(m => m.Home), canActivate: [authGuard] },
+  { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.Login), canActivate: [loginGuard] },
+  { path: 'manage-reports', loadComponent: () => import('./pages/manage-reports/manage-reports').then(m => m.ManageReports), canActivate: [authGuard, whiteGuard] },
+  { path: 'manage-duplicates', loadComponent: () => import('./pages/manage-duplicates/manage-duplicates').then(m => m.ManageDuplicates), canActivate: [authGuard, whiteGuard] },
+  { path: 'manage-users', loadComponent: () => import('./pages/manage-users/manage-users').then(m => m.ManageUsers), canActivate: [authGuard, adminGuard] },
+  { path: 'create-user', loadComponent: () => import('./pages/create-user/create-user').then(m => m.CreateUser), canActivate: [authGuard, adminGuard] },
+  { path: 'report-details/:id', loadComponent: () => import('./pages/report-details/report-details').then(m => m.ReportDetails), canActivate: [authGuard] },
+  { path: 'edit-problem/:id', loadComponent: () => import('./pages/edit-problem/edit-problem').then(m => m.EditProblem), canActivate: [authGuard, whiteGuard] },
+  { path: 'profile', loadComponent: () => import('./pages/profile/profile').then(m => m.Profile), canActivate: [authGuard] },
+  { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications').then(m => m.Notifications), canActivate: [authGuard] },
+  { path: 'landing', loadComponent: () => import('./pages/landing/landing').then(m => m.Landing) },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
 ];
