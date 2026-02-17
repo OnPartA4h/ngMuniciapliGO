@@ -1,0 +1,10 @@
+@if (isVisible() && processingCount() > 0) {
+  <div class="ai-processing-status">
+    <div class="ai-processing-content">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span class="ai-processing-text">
+        {{ getProcessingStatusMessage() | translate: { count: processingCount() } }}
+      </span>
+    </div>
+  </div>
+}

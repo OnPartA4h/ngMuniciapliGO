@@ -2,9 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { PaginatedProblems } from '../models/paginatedProblems';
 import { Problem, ProblemeEditDTO } from '../models/problem';
-import { DuplicateGroup } from '../models/duplicate-group';
+import { DuplicateGroup, PaginatedDuplicateGroup } from '../models/duplicate-group';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +18,8 @@ export class WhiteService {
       `${this.apiUrl}/api/ColBlanc/problems`,
       { params: options as any })
     );
+    console.log(x);
+    
     return x;
   }
 
@@ -73,15 +74,31 @@ export class WhiteService {
     return x
   }
 
-  async getPendingDuplicateGroups(): Promise<DuplicateGroup[]> {
+  async getPendingDuplicateGroups(page: number = 1, isClosed?: boolean): Promise<PaginatedDuplicateGroup> {
+    let params = new HttpParams().set('page', page.toString());
+    if (isClosed !== undefined) {
+      params = params.set('isClosed', isClosed.toString());
+    }
     return await lastValueFrom(
-      this.http.get<DuplicateGroup[]>(`${this.apiUrl}/api/ColBlanc/duplicate-groups/pending`)
+      this.http.get<PaginatedDuplicateGroup>(`${this.apiUrl}/api/ColBlanc/duplicate-groups/pending`, { params })
     );
   }
 
   async getDuplicateGroup(groupId: number): Promise<DuplicateGroup> {
     return await lastValueFrom(
       this.http.get<DuplicateGroup>(`${this.apiUrl}/api/ColBlanc/duplicate-groups/${groupId}`)
+    );
+  }
+
+  async excludeProblemFromGroup(groupId: number, problemeId: number): Promise<{ message: string }> {
+    return await lastValueFrom(
+      this.http.delete<{ message: string }>(`${this.apiUrl}/api/ColBlanc/duplicate-groups/${groupId}/exclude/${problemeId}`)
+    );
+  }
+
+  async acceptDuplicateGroup(groupId: number): Promise<DuplicateGroup> {
+    return await lastValueFrom(
+      this.http.post<DuplicateGroup>(`${this.apiUrl}/api/ColBlanc/duplicate-groups/${groupId}/accept`, null)
     );
   }
 

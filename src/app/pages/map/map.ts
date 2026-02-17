@@ -1,6 +1,6 @@
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
-import { AfterViewInit, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject, signal, OnDestroy } from '@angular/core';
 import { WhiteService } from '../../services/white-service';
 import { Problem } from '../../models/problem';
 import { MapSidebar } from '../../components/map-sidebar/map-sidebar';
@@ -17,9 +17,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   templateUrl: './map.html',
   styleUrl: './map.css',
 })
-export class Map implements AfterViewInit{
+export class Map implements AfterViewInit, OnDestroy {
   whiteService = inject(WhiteService);
-  private cdr = inject(ChangeDetectorRef);
   private snackbar = inject(MatSnackBar);
   private translate = inject(TranslateService);
 
@@ -34,16 +33,13 @@ export class Map implements AfterViewInit{
   previewCircle: L.Circle | undefined
   markerClusterGroup: L.MarkerClusterGroup | undefined;
 
-  radius: number = -1
-  currentLat: number | null = null
-  currentLng: number | null = null
-
-  problems: Problem[] = []
-  
-  selectedProblem: Problem | null = null;
-  isSidebarOpen: boolean = false;
-
-  isConfigModalOpen: boolean = false
+  radius = signal(-1);
+  currentLat = signal<number | null>(null);
+  currentLng = signal<number | null>(null);
+  problems = signal<Problem[]>([]);
+  selectedProblem = signal<Problem | null>(null);
+  isSidebarOpen = signal(false);
+  isConfigModalOpen = signal(false);
 
   redIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -104,13 +100,20 @@ export class Map implements AfterViewInit{
 
   async getProblems() {
     try {
-      if (!this.currentLng || !this.currentLat){
-        this.problems = await this.whiteService.getMapProblems(this.radius, this.DEFAULT_LAT, this.DEFAULT_LNG)
+      const currentLng = this.currentLng();
+      const currentLat = this.currentLat();
+      const radius = this.radius();
+      
+      let fetchedProblems: Problem[];
+      if (!currentLng || !currentLat){
+        fetchedProblems = await this.whiteService.getMapProblems(radius, this.DEFAULT_LAT, this.DEFAULT_LNG)
       } else {
-        this.problems = await this.whiteService.getMapProblems(this.radius, this.currentLat, this.currentLng)
+        fetchedProblems = await this.whiteService.getMapProblems(radius, currentLat, currentLng)
       }
       
-      if (this.problems.length <= 0){
+      this.problems.set(fetchedProblems);
+      
+      if (fetchedProblems.length <= 0){
         const message = this.translate.instant('MAP.NO_PROBLEMS_FOUND');
         this.snackbar.open(message, this.translate.instant('COMMON.CLOSE'), {
           duration: 3000,
@@ -127,13 +130,13 @@ export class Map implements AfterViewInit{
         verticalPosition: 'bottom',
         panelClass: ['error-snackbar']
       });
-      this.problems = [];
+      this.problems.set([]);
     }
   }
 
   getRadius() {
     let radiusData = localStorage.getItem("radius")
-    this.radius = !radiusData ? this.DEFAULT_RADIUS : parseInt(radiusData)
+    this.radius.set(!radiusData ? this.DEFAULT_RADIUS : parseInt(radiusData))
   }
 
   getCategoryIcon(categoryEnum: number): L.Icon | L.DivIcon {
@@ -149,14 +152,14 @@ export class Map implements AfterViewInit{
       maxClusterRadius: 50
     });
 
-    for (let p of this.problems){
+    const problemsList = this.problems();
+    for (let p of problemsList){
       const icon = this.getCategoryIcon(p.categorie);
       let marker = L.marker([p.latitude, p.longitude], { icon: icon })
 
       marker.on('click', () => {
-        this.selectedProblem = p;
-        this.isSidebarOpen = true;
-        this.cdr.detectChanges(); 
+        this.selectedProblem.set(p);
+        this.isSidebarOpen.set(true);
       })
 
       this.markerClusterGroup.addLayer(marker)
@@ -167,14 +170,13 @@ export class Map implements AfterViewInit{
 
   removeMarkers() {
     this.map!.removeLayer(this.markerClusterGroup!)
-    this.problems = []
+    this.problems.set([]);
     this.markerClusterGroup = undefined
   }
 
   closeSidebar() {
-    this.isSidebarOpen = false;
-    this.selectedProblem = null;
-    this.cdr.detectChanges(); 
+    this.isSidebarOpen.set(false);
+    this.selectedProblem.set(null);
   }
 
   currentPosMarkerEvent() {
@@ -191,13 +193,14 @@ export class Map implements AfterViewInit{
 
   addCircleRadius(latlng: L.LatLng) {
     this.removeCircleRadius()
+    const radiusValue = this.radius();
 
-     this.circleRadius = L.circle(latlng, {
-        radius: this.radius,
-        color: 'blue',
-        fillColor: 'blue',
-        fillOpacity: 0.2
-      }).addTo(this.map!)
+    this.circleRadius = L.circle(latlng, {
+      radius: radiusValue,
+      color: 'blue',
+      fillColor: 'blue',
+      fillOpacity: 0.2
+    }).addTo(this.map!)
   }
 
   addPreviewCircle(latlng: L.LatLng, radius: number) {
@@ -226,25 +229,24 @@ export class Map implements AfterViewInit{
     let point = L.latLng(latlng)
     this.currentPosMarker = L.marker(latlng, {icon: this.redIcon}).addTo(this.map!)
 
-      this.currentPosMarker.on('click', () => {
-        this.removeCurrentPosMarker()
-        this.removeCircleRadius()
-        this.removeMarkers()
-      })
+    this.currentPosMarker.on('click', () => {
+      this.removeCurrentPosMarker()
+      this.removeCircleRadius()
+      this.removeMarkers()
+    })
 
-      this.currentLat = point.lat
-      this.currentLng = point.lng
-
-      this.addCircleRadius(point)
+    this.currentLat.set(point.lat);
+    this.currentLng.set(point.lng);
+    this.addCircleRadius(point)
   }
 
   openModal() {
-    this.isConfigModalOpen = true;
+    this.isConfigModalOpen.set(true);
   }
 
   closeModal() {
     this.removePreviewCirlce()
-    this.isConfigModalOpen = false;
+    this.isConfigModalOpen.set(false);
   }
 
   async reloadProblems() {
@@ -252,7 +254,8 @@ export class Map implements AfterViewInit{
 
     this.removePreviewCirlce()
 
-    this.circleRadius?.setRadius(this.radius)
+    const radiusValue = this.radius();
+    this.circleRadius?.setRadius(radiusValue)
     
     if (this.markerClusterGroup && this.map) {
       this.map.removeLayer(this.markerClusterGroup);
@@ -264,7 +267,9 @@ export class Map implements AfterViewInit{
   }
 
   resetView() {
-    if (!this.map || !this.currentLat || !this.currentLng) return
+    const currentLat = this.currentLat();
+    const currentLng = this.currentLng();
+    if (!this.map || !currentLat || !currentLng) return
 
     if (!this.currentPosMarker) {
       this.map.setView(this.FALLBACK_COORDS, 14)
@@ -273,13 +278,15 @@ export class Map implements AfterViewInit{
       return
     }
 
-    this.map.setView([this.currentLat, this.currentLng])
+    this.map.setView([currentLat, currentLng])
   }
 
   previewRadius(radius: number) {
-  if (!this.currentLat || !this.currentLng) return;
+    const currentLat = this.currentLat();
+    const currentLng = this.currentLng();
+    if (!currentLat || !currentLng) return;
 
-    const point = L.latLng(this.currentLat, this.currentLng);
+    const point = L.latLng(currentLat, currentLng);
     this.addPreviewCircle(point, radius);
   }
 

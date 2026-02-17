@@ -1,19 +1,18 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { WhiteService } from '../../services/white-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { Problem, StatusOption, CategoryOption } from '../../models/problem';
-import { NgClass } from '@angular/common';
 import { Pagination } from '../../models/pagination';
 import { FormsModule } from '@angular/forms';
-import { PageHeaderComponent } from '../../components/ui';
+import { PageHeaderComponent, NavigationTabsComponent, NavigationTab, AiProcessingStatusComponent } from '../../components/ui';
 import { ReportListComponent } from '../../components/tables/report-list/report-list';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-manage-reports',
-  imports: [TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent, NgClass, RouterLink],
+  imports: [TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent, NavigationTabsComponent, AiProcessingStatusComponent, NgClass],
   templateUrl: './manage-reports.html',
   styleUrl: './manage-reports.css',
 })
@@ -27,11 +26,26 @@ export class ManageReports implements OnInit {
 
   categories = signal<CategoryOption[]>([]);
   statuses = signal<StatusOption[]>([]);
+  
+  navigationTabs: NavigationTab[] = [
+    {
+      label: 'HEADER.MANAGE_REPORTS',
+      route: '/manage-reports',
+      icon: 'fas fa-clipboard-list'
+    },
+    {
+      label: 'DUPLICATES.TAB',
+      route: '/manage-duplicates',
+      icon: 'fas fa-clone'
+    }
+  ];
 
   currentCategory: number | null = null;
   currentStatus: number | null = null;
   currentAssigneA: number | null = null;
   currentSearch: string | null = null;
+
+  filterByLikes: boolean = false;
 
   problems: Problem[] = []
   pagination: Pagination | null = null
@@ -68,16 +82,20 @@ export class ManageReports implements OnInit {
       params.search = this.currentSearch.trim();
     }
 
+    params.likes = this.filterByLikes
+
     let x: any = await this.whiteService.getAllProblems(params);
 
     this.pagination = x.pagination
     this.problems = x.items;
 
-    this.problems.sort((a, b) => {
-      const dateA = new Date(a.dateCreation).getTime();
-      const dateB = new Date(b.dateCreation).getTime();
-      return dateA - dateB;
-    });
+    if (!this.filterByLikes) {
+      this.problems.sort((a, b) => {
+        const dateA = new Date(a.dateCreation).getTime();
+        const dateB = new Date(b.dateCreation).getTime();
+        return dateA - dateB;
+      });
+    }
   }
 
   resetFilters() {
@@ -85,6 +103,7 @@ export class ManageReports implements OnInit {
     this.currentStatus = null;
     this.currentAssigneA = null;
     this.currentSearch = ""
+    this.filterByLikes = false;
     this.getAllReports();
   }
 

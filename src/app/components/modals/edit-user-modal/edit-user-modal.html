@@ -3,7 +3,7 @@
     <div class="modal-container" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>{{ 'EDIT_USER_MODAL.TITLE' | translate }}</h2>
-        <button class="close-btn" (click)="closeModal()" [disabled]="isLoading">
+        <button class="close-btn" (click)="closeModal()" [disabled]="isLoading()">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -43,17 +43,14 @@
               <label>{{ 'EDIT_USER_MODAL.FIRST_NAME' | translate }}</label>
               <p>{{ u.firstName }}</p>
             </div>
-            
             <div class="detail-group">
               <label>{{ 'EDIT_USER_MODAL.LAST_NAME' | translate }}</label>
               <p>{{ u.lastName }}</p>
             </div>
-            
             <div class="detail-group">
               <label>{{ 'EDIT_USER_MODAL.EMAIL' | translate }}</label>
               <p>{{ u.email }}</p>
             </div>
-            
             <div class="detail-group">
               <label>{{ 'EDIT_USER_MODAL.PHONE' | translate }}</label>
               <p>{{ u.phoneNumber | mask: '(000) 000-0000' }}</p>
@@ -68,22 +65,18 @@
                 <label>{{ 'EDIT_USER_MODAL.STREET_NUMBER' | translate }}</label>
                 <p>{{ u.streetNumber || '-' }}</p>
               </div>
-              
               <div class="detail-group">
                 <label>{{ 'EDIT_USER_MODAL.STREET_NAME' | translate }}</label>
                 <p>{{ u.streetName || '-' }}</p>
               </div>
-              
               <div class="detail-group">
                 <label>{{ 'EDIT_USER_MODAL.CITY' | translate }}</label>
                 <p>{{ u.city || '-' }}</p>
               </div>
-              
               <div class="detail-group">
                 <label>{{ 'EDIT_USER_MODAL.PROVINCE' | translate }}</label>
                 <p>{{ u.province || '-' }}</p>
               </div>
-              
               <div class="detail-group">
                 <label>{{ 'EDIT_USER_MODAL.POSTAL_CODE' | translate }}</label>
                 <p>{{ u.postalCode ? (u.postalCode | mask: 'A0A 0A0') : '-' }}</p>
@@ -91,23 +84,21 @@
             </div>
           </div>
 
-          <!-- Roles Section with Radio Buttons -->
+          <!-- Roles Section -->
           <div class="roles-section">
             <h3>{{ 'EDIT_USER_MODAL.ROLES' | translate }}</h3>
-            
-            @if (successMessage) {
+            @if (successMessage()) {
               <div class="success-message">
                 <i class="fas fa-check-circle"></i>
-                <span>{{ successMessage }}</span>
+                <span>{{ successMessage() }}</span>
               </div>
             }
-            
             <div class="roles-list">
-              @for (role of roles; track role.key) {
+              @for (role of roles(); track role.key) {
                 <div 
                   class="role-item" 
                   [class.selected]="getCurrentRole() === role.key"
-                  [class.disabled]="isCurrentUser() || isLoading"
+                  [class.disabled]="isCurrentUser() || isLoading()"
                   (click)="changeRole(role)"
                 >
                   <label class="radio-label">
@@ -116,7 +107,7 @@
                       name="userRole"
                       [value]="role.key"
                       [checked]="getCurrentRole() === role.key"
-                      [disabled]="isCurrentUser() || isLoading"
+                      [disabled]="isCurrentUser() || isLoading()"
                       (click)="$event.stopPropagation()"
                     />
                     <span class="radio-custom"></span>
@@ -133,13 +124,13 @@
         <button 
           class="btn btn-danger" 
           (click)="openDeleteConfirm()" 
-          [disabled]="isLoading || isCurrentUser()"
+          [disabled]="isLoading() || isCurrentUser()"
           [class.disabled]="isCurrentUser()"
         >
           <i class="fas fa-trash"></i>
           {{ 'EDIT_USER_MODAL.DELETE_USER' | translate }}
         </button>
-        <button class="btn btn-secondary" (click)="closeModal()" [disabled]="isLoading">
+        <button class="btn btn-secondary" (click)="closeModal()" [disabled]="isLoading()">
           {{ 'COMMON.CLOSE' | translate }}
         </button>
       </div>
@@ -147,10 +138,9 @@
   </div>
 }
 
-<!-- Delete Confirmation Modal -->
 <app-delete-confirm-modal [user]="user()"
-  [isOpen]="showDeleteConfirm"
-  [isLoading]="isLoading"
+  [isOpen]="showDeleteConfirm()"
+  [isLoading]="isLoading()"
   (confirm)="confirmDelete()"
   (cancel)="cancelDelete()"
- />
+/>

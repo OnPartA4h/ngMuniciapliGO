@@ -1,0 +1,14 @@
+<div class="filter-tabs">
+  @for (tab of tabs(); track tab.route) {
+    <a class="filter-tab" 
+       [routerLink]="tab.route" 
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: false}">
+      <i [class]="tab.icon"></i>
+      {{ tab.label | translate }}
+      @if (tab.badge && tab.badge > 0) {
+        <span class="filter-tab__count">{{ tab.badge }}</span>
+      }
+    </a>
+  }
+</div>

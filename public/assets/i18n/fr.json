@@ -19,6 +19,7 @@
     "DELETE": "Supprimer",
     "DELETING": "Suppression...",
     "BACK": "Retour",
+    "GO_BACK": "Retour",
     "REQUIRED": "Requis",
     "REQUIRED_FIELD": "Ce champ est requis",
     "INVALID_EMAIL": "Adresse email invalide",
@@ -32,6 +33,7 @@
     "PREVIOUS": "Précédent",
     "NEXT": "Suivant",
     "PAGE": "Page",
+    "OF": "de",
     "EMAIL_CONFIRMED": "Email confirmé",
     "EMAIL_NOT_CONFIRMED": "Email non confirmé",
     "MUST_RESET_PASSWORD": "Doit réinitialiser le mot de passe",
@@ -118,7 +120,14 @@
     "EMAIL_CHANGE_RESEND_ERROR": "Erreur lors du renvoi du code.",
     "SEND_CODE": "Envoyer le code",
     "VERIFY_CODE": "Vérifier le code",
-    "RESEND_CODE": "Renvoyer le code"
+    "RESEND_CODE": "Renvoyer le code",
+    "SUBSCRIBED_TASKS": "Tâches suivies",
+    "NO_SUBSCRIBED_TASKS": "Aucune tâche suivie"
+  },
+  "AI_PROCESSING": {
+    "NO_PROCESSING": "Aucun signalement en traitement",
+    "ONE_PROCESSING": "1 signalement en cours d'analyse par l'IA pour trouver les doublons",
+    "MULTIPLE_PROCESSING": "{{count}} signalements en cours d'analyse par l'IA pour trouver les doublons"
   },
   "MANAGE_USERS": {
     "TITLE": "Gestion des utilisateurs",
@@ -205,6 +214,7 @@
     "ALL_CATEGORIES": "Toutes les catégories",
     "ALL_STATUSES": "Tous les statuts",
     "ALL_ASSIGNEA": "Tous les assignés",
+    "FILTER_BY_LIKES": "Trier par J'aime",
     "NO_REPORTS": "Aucun problème trouvé",
     "NO_REPORTS_DESC": "Aucun problème n'a été trouvé avec ces filtres",
     "LOCATION": "Localisation",
@@ -232,7 +242,33 @@
     "REFUSER_SUCCESS": "Le problème a été refusé avec succès.",
     "ACCEPTER_FIX_SUCCESS": "Successfully accepted the resolution.",
     "REFUSER_FIX_SUCCESS": "Successfully rejected the resolution.",
-    "MESSAGE_REFUS": "Entrez un message de refus..."
+    "MESSAGE_REFUS": "Entrez un message de refus...",
+    "UNSUBSCRIBE_ERROR": "Impossible de se désabonner de ce problème",
+    "LIKES": "J'aime"
+  },
+  "EDIT_PROBLEM": {
+    "TITLE": "Modifier le problème",
+    "SUBTITLE": "Modifier les informations du problème",
+    "FORM_TITLE": "Informations du problème",
+    "FORM_DESCRIPTION": "Mettre à jour les détails de ce problème",
+    "TITRE": "Titre",
+    "TITRE_PLACEHOLDER": "Entrez le titre du problème",
+    "TITRE_MIN_LENGTH": "Le titre doit contenir au moins 12 caractères",
+    "TITRE_MAX_LENGTH": "Le titre ne doit pas dépasser 200 caractères",
+    "DESCRIPTION": "Description",
+    "DESCRIPTION_PLACEHOLDER": "Entrez une description détaillée (optionnel)",
+    "DESCRIPTION_MAX_LENGTH": "La description ne doit pas dépasser 256 caractères",
+    "ADDRESS": "Adresse",
+    "ADDRESS_PLACEHOLDER": "Entrez l'emplacement du problème",
+    "ADDRESS_MAX_LENGTH": "L'adresse ne doit pas dépasser 500 caractères",
+    "CATEGORY": "Catégorie",
+    "CATEGORY_PLACEHOLDER": "Sélectionnez une catégorie",
+    "SUCCESS": "Problème mis à jour avec succès !",
+    "ERROR_LOADING": "Erreur lors du chargement du problème",
+    "ERROR_UPDATING": "Erreur lors de la mise à jour du problème",
+    "NOT_FOUND": "Problème introuvable",
+    "NOT_FOUND_DESC": "Le problème que vous recherchez n'existe pas ou a été supprimé.",
+    "GO_BACK": "Retour"
   },
   "LOGIN": {
     "SUBTITLE": "Connectez-vous à votre compte",
@@ -311,10 +347,20 @@
     "SIMILARITY": "Similarité",
     "NO_GROUPS": "Aucun doublon détecté",
     "NO_GROUPS_DESC": "Il n'y a actuellement aucun groupe de signalements en double en attente de révision.",
-    "PRIMARY": "Principal"
+    "PRIMARY": "Principal",
+    "ACCEPT_GROUP": "Accepter le groupe",
+    "EXCLUDE": "Exclure du groupe",
+    "CONFIRM_EXCLUDE": "Êtes-vous sûr de vouloir exclure ce signalement du groupe ?",
+    "CONFIRM_ACCEPT": "Êtes-vous sûr de vouloir accepter ce groupe et fusionner les signalements ?",
+    "SHOW_CLOSED": "Afficher les groupes fermés",
+    "GROUP_CLOSED": "Groupe fermé"
   },
   "DASHBOARD": {
     "TITLE": "Tableau de bord",
     "SUBTITLE": "Statistiques des problèmes"
+  },
+  "REPORT_DETAILS": {
+    "SUBSCRIBE": "S'abonner aux notifications",
+    "UNSUBSCRIBE": "Se désabonner des notifications"
   }
 }

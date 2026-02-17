@@ -19,6 +19,7 @@
     "DELETE": "Delete",
     "DELETING": "Deleting...",
     "BACK": "Back",
+    "GO_BACK": "Go Back",
     "REQUIRED": "Required",
     "REQUIRED_FIELD": "This field is required",
     "INVALID_EMAIL": "Invalid email address",
@@ -32,6 +33,7 @@
     "PREVIOUS": "Previous",
     "NEXT": "Next",
     "PAGE": "Page",
+    "OF": "of",
     "EMAIL_CONFIRMED": "Email Confirmed",
     "EMAIL_NOT_CONFIRMED": "Email Not Confirmed",
     "MUST_RESET_PASSWORD": "Must Reset Password",
@@ -118,7 +120,14 @@
     "EMAIL_CHANGE_RESEND_ERROR": "Error resending the code.",
     "SEND_CODE": "Send Code",
     "VERIFY_CODE": "Verify Code",
-    "RESEND_CODE": "Resend Code"
+    "RESEND_CODE": "Resend Code",
+    "SUBSCRIBED_TASKS": "Subscribed Tasks",
+    "NO_SUBSCRIBED_TASKS": "No subscribed tasks"
+  },
+  "AI_PROCESSING": {
+    "NO_PROCESSING": "No reports being processed",
+    "ONE_PROCESSING": "1 report is currently being analyzed by AI to find duplicates",
+    "MULTIPLE_PROCESSING": "{{count}} reports are currently being analyzed by AI to find duplicates"
   },
   "MANAGE_USERS": {
     "TITLE": "User Management",
@@ -205,6 +214,7 @@
     "ALL_CATEGORIES": "All categories",
     "ALL_STATUSES": "All statuses",
     "ALL_ASSIGNEA": "All assignees",
+    "FILTER_BY_LIKES": "Sort by Likes",
     "NO_REPORTS": "No problems found",
     "NO_REPORTS_DESC": "No problems matching these filters",
     "LOCATION": "Location",
@@ -232,7 +242,33 @@
     "REFUSER_SUCCESS": "Successfully rejected the problem.",
     "ACCEPTER_FIX_SUCCESS": "Successfully accepted the resolution.",
     "REFUSER_FIX_SUCCESS": "Successfully rejected the resolution.",
-    "MESSAGE_REFUS": "Enter a rejection message..."
+    "MESSAGE_REFUS": "Enter a rejection message...",
+    "UNSUBSCRIBE_ERROR": "Unable to unsubscribe from this problem",
+    "LIKES": "Likes"
+  },
+  "EDIT_PROBLEM": {
+    "TITLE": "Edit Problem",
+    "SUBTITLE": "Modify problem information",
+    "FORM_TITLE": "Problem Information",
+    "FORM_DESCRIPTION": "Update the details of this problem",
+    "TITRE": "Title",
+    "TITRE_PLACEHOLDER": "Enter the problem title",
+    "TITRE_MIN_LENGTH": "Title must be at least 12 characters",
+    "TITRE_MAX_LENGTH": "Title must not exceed 200 characters",
+    "DESCRIPTION": "Description",
+    "DESCRIPTION_PLACEHOLDER": "Enter a detailed description (optional)",
+    "DESCRIPTION_MAX_LENGTH": "Description must not exceed 256 characters",
+    "ADDRESS": "Address",
+    "ADDRESS_PLACEHOLDER": "Enter the problem location",
+    "ADDRESS_MAX_LENGTH": "Address must not exceed 500 characters",
+    "CATEGORY": "Category",
+    "CATEGORY_PLACEHOLDER": "Select a category",
+    "SUCCESS": "Problem successfully updated!",
+    "ERROR_LOADING": "Error loading problem",
+    "ERROR_UPDATING": "Error updating problem",
+    "NOT_FOUND": "Problem Not Found",
+    "NOT_FOUND_DESC": "The problem you're looking for doesn't exist or has been deleted.",
+    "GO_BACK": "Go Back"
   },
   "LOGIN": {
     "SUBTITLE": "Sign in to your account",
@@ -311,10 +347,20 @@
     "SIMILARITY": "Similarity",
     "NO_GROUPS": "No duplicates detected",
     "NO_GROUPS_DESC": "There are currently no duplicate report groups pending review.",
-    "PRIMARY": "Primary"
+    "PRIMARY": "Primary",
+    "ACCEPT_GROUP": "Accept Group",
+    "EXCLUDE": "Exclude from group",
+    "CONFIRM_EXCLUDE": "Are you sure you want to exclude this report from the group?",
+    "CONFIRM_ACCEPT": "Are you sure you want to accept this group and merge the reports?",
+    "SHOW_CLOSED": "Show closed groups",
+    "GROUP_CLOSED": "Group closed"
   },
   "DASHBOARD": {
     "TITLE": "Dashboard",
     "SUBTITLE": "All your beautiful problem statistics"
+  },
+  "REPORT_DETAILS": {
+    "SUBSCRIBE": "Subscribe to notifications",
+    "UNSUBSCRIBE": "Unsubscribe from notifications"
   }
 }

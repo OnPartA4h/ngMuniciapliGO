@@ -20,7 +20,13 @@
       }
       <!-- Problem Title -->
       <div class="problem-header">
-        <h3>{{ p.titre }}</h3>
+        <div class="problem-title-section">
+          <h3>{{ p.titre }}</h3>
+          <span class="problem-likes">
+            <i class="fa-solid fa-thumbs-up"></i>
+            {{ p.nbLikes }}
+          </span>
+        </div>
         <span class="status-badge">
           {{ this.generalService.getStatusLabel(p.statut) }}
         </span>

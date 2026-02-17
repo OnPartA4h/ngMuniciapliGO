@@ -3,16 +3,10 @@
     [subtitle]="'MANAGE_REPORTS.SUBTITLE' | translate" />
 
   <!-- Navigation Tabs -->
-  <div class="filter-tabs">
-    <a class="filter-tab active" routerLink="/manage-reports">
-      <i class="fas fa-clipboard-list"></i>
-      {{ 'HEADER.MANAGE_REPORTS' | translate }}
-    </a>
-    <a class="filter-tab" routerLink="/manage-duplicates">
-      <i class="fas fa-clone"></i>
-      {{ 'DUPLICATES.TAB' | translate }}
-    </a>
-  </div>
+  <app-navigation-tabs [tabs]="navigationTabs" />
+
+  <!-- AI Processing Status -->
+  <app-ai-processing-status />
 
   <div class="search-div-top">
     <div class="search-div">
@@ -53,6 +47,13 @@
             <option [value]="$index + 1">{{ s.label }}</option>
           }
         </select>
+        <label class="filter-checkbox">
+          <input type="checkbox" [(ngModel)]="filterByLikes" (change)="getAllReports()" />
+          <span>
+            <i class="fa-solid fa-thumbs-up"></i>
+            {{ 'MANAGE_REPORTS.FILTER_BY_LIKES' | translate }}
+          </span>
+        </label>
         <button class="btn btn-secondary btn-reset-filters" (click)="resetFilters()">
           <i class="fa-solid fa-arrow-rotate-left"></i>
         </button>
