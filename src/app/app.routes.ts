@@ -4,22 +4,9 @@ import { loginGuard } from './guards/login-guard';
 import { adminGuard } from './guards/admin-guard';
 import { whiteGuard } from './guards/white-guard';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 export const routes: Routes = [
   { path: 'hello', loadComponent: () => import('./pages/hello/hello').then(m => m.Hello) },
-  { path: 'map', loadComponent: () => import('./pages/map/map').then(m => m.Map), canActivate: [authGuard]},
+  { path: 'map', loadComponent: () => import('./pages/map/map').then(m => m.Map), canActivate: [authGuard] },
   { path: 'home', loadComponent: () => import('./pages/home/home').then(m => m.Home), canActivate: [authGuard] },
   { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.Login), canActivate: [loginGuard] },
   { path: 'manage-reports', loadComponent: () => import('./pages/manage-reports/manage-reports').then(m => m.ManageReports), canActivate: [authGuard, whiteGuard] },
