@@ -207,6 +207,7 @@
     "ALL_CATEGORIES": "Toutes les catégories",
     "ALL_STATUSES": "Tous les statuts",
     "ALL_ASSIGNEA": "Tous les assignés",
+    "FILTER_BY_LIKES": "Trier par J'aime",
     "NO_REPORTS": "Aucun problème trouvé",
     "NO_REPORTS_DESC": "Aucun problème n'a été trouvé avec ces filtres",
     "LOCATION": "Localisation",

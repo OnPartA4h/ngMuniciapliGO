@@ -207,6 +207,7 @@
     "ALL_CATEGORIES": "All categories",
     "ALL_STATUSES": "All statuses",
     "ALL_ASSIGNEA": "All assignees",
+    "FILTER_BY_LIKES": "Sort by Likes",
     "NO_REPORTS": "No problems found",
     "NO_REPORTS_DESC": "No problems matching these filters",
     "LOCATION": "Location",

@@ -33,6 +33,8 @@ export class ManageReports implements OnInit {
   currentAssigneA: number | null = null;
   currentSearch: string | null = null;
 
+  filterByLikes: boolean = false;
+
   problems: Problem[] = []
   pagination: Pagination | null = null
 
@@ -68,16 +70,20 @@ export class ManageReports implements OnInit {
       params.search = this.currentSearch.trim();
     }
 
+    params.likes = this.filterByLikes
+
     let x: any = await this.whiteService.getAllProblems(params);
 
     this.pagination = x.pagination
     this.problems = x.items;
 
-    this.problems.sort((a, b) => {
-      const dateA = new Date(a.dateCreation).getTime();
-      const dateB = new Date(b.dateCreation).getTime();
-      return dateA - dateB;
-    });
+    if (!this.filterByLikes) {
+      this.problems.sort((a, b) => {
+        const dateA = new Date(a.dateCreation).getTime();
+        const dateB = new Date(b.dateCreation).getTime();
+        return dateA - dateB;
+      });
+    }
   }
 
   resetFilters() {
@@ -85,6 +91,7 @@ export class ManageReports implements OnInit {
     this.currentStatus = null;
     this.currentAssigneA = null;
     this.currentSearch = ""
+    this.filterByLikes = false;
     this.getAllReports();
   }
 
