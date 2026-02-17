@@ -39,7 +39,7 @@ export class Problem {
     public resolutionPhotos: Photo[],
     public resolutionDescription: string | null,
     public rejectionReason: string | null,
-    public isInOpenDuplicateGroup: boolean
+    public isInOpenDuplicateGroup: boolean,
     public nbLikes: number
   ) { }
 }
