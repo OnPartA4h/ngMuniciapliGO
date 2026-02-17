@@ -1,7 +1,7 @@
 <div class="map-container">
   <div id="map"></div>
-  <app-map-sidebar [problem]="selectedProblem" 
-    [isOpen]="isSidebarOpen"
+  <app-map-sidebar [problem]="selectedProblem()" 
+    [isOpen]="isSidebarOpen()"
     (close)="closeSidebar()" />
 
   <button class="center-button" (click)="resetView()">
@@ -13,4 +13,4 @@
   </button>
 </div>
 
-<app-map-config-modal [isOpen]="isConfigModalOpen" (close)="closeModal()" (apply)="reloadProblems()" (radiusChange)="previewRadius($event)" />
+<app-map-config-modal [isOpen]="isConfigModalOpen()" (close)="closeModal()" (apply)="reloadProblems()" (radiusChange)="previewRadius($event)" />

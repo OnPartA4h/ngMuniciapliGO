@@ -1,11 +1,11 @@
 <div class="profile-container">
   <!-- Loading State -->
-  @if (isLoading) {
+  @if (isLoading()) {
     <app-loading-spinner />
   }
 
   <!-- Profile Content -->
-  @if (!isLoading && profile) {
+  @if (!isLoading() && profile()) {
     <div class="profile-content">
       <!-- Page Header -->
       <app-page-header [title]="'PROFILE.TITLE' | translate"
@@ -19,10 +19,10 @@
           <!-- Profile Image Section -->
           <div class="profile-image-section">
             <div class="profile-image-container" (click)="triggerFileInput()">
-              @if (profileImageUrl) {
-                <img [src]="profileImageUrl" alt="Profile" class="profile-image" />
+              @if (profileImageUrl()) {
+                <img [src]="profileImageUrl()" alt="Profile" class="profile-image" />
               }
-              @if (!profileImageUrl) {
+              @if (!profileImageUrl()) {
                 <div class="profile-image-placeholder">
                   <i class="fas fa-user"></i>
                 </div>
@@ -39,7 +39,7 @@
               (change)="onFileSelected($event)" 
               style="display: none;"
             />
-            @if (profileImageUrl) {
+            @if (profileImageUrl()) {
               <button class="btn-remove-image" (click)="removeProfileImage()">
                 <i class="fas fa-trash"></i>
                 {{ 'PROFILE.REMOVE_PHOTO' | translate }}
@@ -54,7 +54,7 @@
             <div class="info-item">
               <label>{{ 'PROFILE.ROLES' | translate }}</label>
               <div class="roles-list">
-                @for (role of profile.roles; track role) {
+                @for (role of profile()!.roles; track role) {
                   <span class="role-badge">{{ getRoleLabel(role) }}</span>
                 }
               </div>
@@ -62,9 +62,9 @@
 
             <div class="info-item">
               <label>{{ 'PROFILE.MUST_RESET_PASSWORD' | translate }}</label>
-              <span class="status-badge" [class.status-warning]="profile.mustResetPassword" [class.status-yes]="!profile.mustResetPassword">
-                <i [class]="profile.mustResetPassword ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'"></i>
-                {{ (profile.mustResetPassword ? 'COMMON.YES' : 'COMMON.NO') | translate }}
+              <span class="status-badge" [class.status-warning]="profile()!.mustResetPassword" [class.status-yes]="!profile()!.mustResetPassword">
+                <i [class]="profile()!.mustResetPassword ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'"></i>
+                {{ (profile()!.mustResetPassword ? 'COMMON.YES' : 'COMMON.NO') | translate }}
               </span>
             </div>
           </div>
@@ -76,22 +76,22 @@
                 <i class="fas fa-bell"></i>
                 {{ 'PROFILE.SUBSCRIBED_TASKS' | translate }}
               </h3>
-              <span class="subscribed-count-badge">{{ subscribedProblems.length }}</span>
+              <span class="subscribed-count-badge">{{ subscribedProblems().length }}</span>
             </div>
 
-            @if (isLoadingSubscribed) {
+            @if (isLoadingSubscribed()) {
               <div class="subscribed-loading">
                 <div class="spinner spinner--sm"></div>
                 <span>{{ 'COMMON.LOADING' | translate }}</span>
               </div>
-            } @else if (subscribedProblems.length === 0) {
+            } @else if (subscribedProblems().length === 0) {
               <div class="subscribed-empty">
                 <i class="fas fa-bell-slash"></i>
                 <p>{{ 'PROFILE.NO_SUBSCRIBED_TASKS' | translate }}</p>
               </div>
             } @else {
               <div class="subscribed-list">
-                @for (p of subscribedProblems; track p.id) {
+                @for (p of subscribedProblems(); track p.id) {
                   <a class="subscribed-item" routerLink="/report-details/{{p.id}}">
                     <div class="subscribed-item__info">
                       <span class="subscribed-item__title">{{ p.titre }}</span>
@@ -111,19 +111,19 @@
                 }
               </div>
 
-              @if (subscribedPagination && subscribedPagination.totalPages > 1) {
+              @if (subscribedPagination() && subscribedPagination()!.totalPages > 1) {
                 <div class="subscribed-pagination">
                   <button class="subscribed-pagination-btn"
-                    [disabled]="subscribedPagination.currentPage <= 1"
-                    (click)="onSubscribedPageChange(subscribedPagination.currentPage - 1)">
+                    [disabled]="subscribedPagination()!.currentPage <= 1"
+                    (click)="onSubscribedPageChange(subscribedPagination()!.currentPage - 1)">
                     <i class="fas fa-chevron-left"></i>
                   </button>
                   <span class="subscribed-pagination-info">
-                    {{ subscribedPagination.currentPage }} / {{ subscribedPagination.totalPages }}
+                    {{ subscribedPagination()!.currentPage }} / {{ subscribedPagination()!.totalPages }}
                   </span>
                   <button class="subscribed-pagination-btn"
-                    [disabled]="subscribedPagination.currentPage >= subscribedPagination.totalPages"
-                    (click)="onSubscribedPageChange(subscribedPagination.currentPage + 1)">
+                    [disabled]="subscribedPagination()!.currentPage >= subscribedPagination()!.totalPages"
+                    (click)="onSubscribedPageChange(subscribedPagination()!.currentPage + 1)">
                     <i class="fas fa-chevron-right"></i>
                   </button>
                 </div>
@@ -135,32 +135,32 @@
         <!-- Right Column: Editable Form -->
         <div class="profile-main">
           <!-- Personal Information Form Component -->
-          <app-profile-info-form [profile]="profile"
-            [isSaving]="isSavingInfo"
-            [successMessage]="infoSuccessMessage"
-            [errorMessage]="infoErrorMessage"
+          <app-profile-info-form [profile]="profile()"
+            [isSaving]="isSavingInfo()"
+            [successMessage]="infoSuccessMessage()"
+            [errorMessage]="infoErrorMessage()"
             (formSubmit)="onSavePersonalInfo($event)" />
 
           <!-- Email Change Form Component -->
-          <app-profile-email-form [currentEmail]="profile!.email"
-            [isSaving]="isSavingEmail"
-            [successMessage]="emailSuccessMessage"
-            [errorMessage]="emailErrorMessage"
+          <app-profile-email-form [currentEmail]="profile()!.email"
+            [isSaving]="isSavingEmail()"
+            [successMessage]="emailSuccessMessage()"
+            [errorMessage]="emailErrorMessage()"
             (formSubmit)="onRequestEmailChange($event)" />
 
           <!-- Password Change Form Component -->
-          <app-profile-password-form [isSaving]="isSavingPassword"
-            [successMessage]="passwordSuccessMessage"
-            [errorMessage]="passwordErrorMessage"
+          <app-profile-password-form [isSaving]="isSavingPassword()"
+            [successMessage]="passwordSuccessMessage()"
+            [errorMessage]="passwordErrorMessage()"
             (formSubmit)="onSavePassword($event)" />
         </div>
       </div>
     </div>
 
     <!-- Image Cropper Modal -->
-    @if (showImageCropper) {
-      <app-image-cropper-modal [imageChangedEvent]="imageChangedEvent"
-        [isUploading]="isUploadingImage"
+    @if (showImageCropper()) {
+      <app-image-cropper-modal [imageChangedEvent]="imageChangedEvent()"
+        [isUploading]="isUploadingImage()"
         (cropCancelled)="onCropCancelled()"
         (imageUploaded)="onImageUploaded($event)"
         (cropperError)="onCropperError($event)"
@@ -168,8 +168,8 @@
     }
 
     <!-- Change Email Verification Modal -->
-    @if (showEmailVerificationModal) {
-      <app-change-email-modal [newEmail]="pendingEmail"
+    @if (showEmailVerificationModal()) {
+      <app-change-email-modal [newEmail]="pendingEmail()"
         (close)="closeEmailVerificationModal()"
         (emailVerified)="onEmailVerified($event)"
        />

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, inject, viewChild } from '@angular/core';
+import { Component, OnInit, inject, viewChild, signal } from '@angular/core';
 
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -42,43 +42,42 @@ export class Profile implements OnInit {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
   private notifService = inject(NotificationService);
   generalServicePublic = inject(GeneralService);
 
   readonly emailFormComponent = viewChild.required(ProfileEmailFormComponent);
   readonly passwordFormComponent = viewChild.required(ProfilePasswordFormComponent);
 
-  profile: User | null = null;
-  roles: RoleOption[] = [];
+  profile = signal<User | null>(null);
+  roles = signal<RoleOption[]>([]);
   
-  isLoading = true;
-  isSavingInfo = false;
-  isSavingPassword = false;
-  isSavingEmail = false;
+  isLoading = signal(true);
+  isSavingInfo = signal(false);
+  isSavingPassword = signal(false);
+  isSavingEmail = signal(false);
   
-  infoSuccessMessage: string | null = null;
-  infoErrorMessage: string | null = null;
-  passwordSuccessMessage: string | null = null;
-  passwordErrorMessage: string | null = null;
-  emailSuccessMessage: string | null = null;
-  emailErrorMessage: string | null = null;
+  infoSuccessMessage = signal<string | null>(null);
+  infoErrorMessage = signal<string | null>(null);
+  passwordSuccessMessage = signal<string | null>(null);
+  passwordErrorMessage = signal<string | null>(null);
+  emailSuccessMessage = signal<string | null>(null);
+  emailErrorMessage = signal<string | null>(null);
   
-  profileImageUrl: string | null = null;
+  profileImageUrl = signal<string | null>(null);
   
   // Image cropper properties
-  showImageCropper = false;
-  imageChangedEvent: Event | null = null;
-  isUploadingImage = false;
+  showImageCropper = signal(false);
+  imageChangedEvent = signal<Event | null>(null);
+  isUploadingImage = signal(false);
   
   // Email verification modal
-  showEmailVerificationModal = false;
-  pendingEmail: string | null = null;
+  showEmailVerificationModal = signal(false);
+  pendingEmail = signal<string | null>(null);
 
   // Subscribed tasks
-  subscribedProblems: Problem[] = [];
-  subscribedPagination: Pagination | null = null;
-  isLoadingSubscribed = false;
+  subscribedProblems = signal<Problem[]>([]);
+  subscribedPagination = signal<Pagination | null>(null);
+  isLoadingSubscribed = signal(false);
 
   async ngOnInit() {
     try {
@@ -86,45 +85,45 @@ export class Profile implements OnInit {
       await this.loadProfile();
       await this.loadSubscribedProblems();
     } finally {
-      this.isLoading = false;
-      this.cdr.detectChanges();
+      this.isLoading.set(false);
     }
   }
 
   async loadProfile() {
     try {
-      this.profile = await this.userService.getProfile();
+      const profileData = await this.userService.getProfile();
+      this.profile.set(profileData);
       
-      if (this.profile.profilePictureUrl) {
-        this.profileImageUrl = this.profile.profilePictureUrl;
+      if (profileData?.profilePictureUrl) {
+        this.profileImageUrl.set(profileData.profilePictureUrl);
       }
     } catch (error) {
       console.error('Error loading profile:', error);
-      this.infoErrorMessage = this.translateService.instant('PROFILE.ERROR_LOADING');
+      this.infoErrorMessage.set(this.translateService.instant('PROFILE.ERROR_LOADING'));
     }
   }
 
   async loadRoles() {
     try {
       const lang = this.languageService.getCurrentLanguage();
-      this.roles = await this.generalService.getRoles(lang);
+      const rolesData = await this.generalService.getRoles(lang);
+      this.roles.set(rolesData);
     } catch (error) {
       console.error('Error loading roles:', error);
     }
   }
 
   async loadSubscribedProblems(page: number = 1) {
-    this.isLoadingSubscribed = true;
+    this.isLoadingSubscribed.set(true);
     try {
       const res = await this.notifService.getSubscribedProblems({ page });
-      this.subscribedProblems = res.items;
-      this.subscribedPagination = res.pagination;
+      this.subscribedProblems.set(res.items);
+      this.subscribedPagination.set(res.pagination);
     } catch (error) {
       console.error('Error loading subscribed problems:', error);
-      this.subscribedProblems = [];
+      this.subscribedProblems.set([]);
     } finally {
-      this.isLoadingSubscribed = false;
-      this.cdr.detectChanges();
+      this.isLoadingSubscribed.set(false);
     }
   }
 
@@ -133,118 +132,112 @@ export class Profile implements OnInit {
   }
 
   getRoleLabel(roleKey: string): string {
-    const role = this.roles.find(r => r.key === roleKey);
+    const role = this.roles().find(r => r.key === roleKey);
     return role ? role.label : roleKey;
   }
 
   // --- Personal Info API call ---
   async onSavePersonalInfo(dto: UpdateUserDto) {
-    this.isSavingInfo = true;
-    this.infoSuccessMessage = null;
-    this.infoErrorMessage = null;
+    this.isSavingInfo.set(true);
+    this.infoSuccessMessage.set(null);
+    this.infoErrorMessage.set(null);
 
     try {
       const response = await this.userService.updateUser(dto);
-      this.infoSuccessMessage = response.message || this.translateService.instant('PROFILE.SUCCESS_UPDATE');
-      this.profile = response.user;
-      this.cdr.detectChanges();
+      this.infoSuccessMessage.set(response.message || this.translateService.instant('PROFILE.SUCCESS_UPDATE'));
+      this.profile.set(response.user);
     } catch (error: any) {
       console.error('Error updating profile:', error);
-      this.infoErrorMessage = error?.error?.message || this.translateService.instant('PROFILE.ERROR_UPDATE');
+      this.infoErrorMessage.set(error?.error?.message || this.translateService.instant('PROFILE.ERROR_UPDATE'));
     } finally {
-      this.isSavingInfo = false;
-      this.cdr.detectChanges();
+      this.isSavingInfo.set(false);
     }
   }
 
   // --- Password API call ---
   async onSavePassword(dto: ChangePasswordDto) {
-    this.passwordSuccessMessage = null;
-    this.passwordErrorMessage = null;
-    this.isSavingPassword = true;
+    this.passwordSuccessMessage.set(null);
+    this.passwordErrorMessage.set(null);
+    this.isSavingPassword.set(true);
 
     try {
       const response = await this.userService.changePassword(dto);
-      this.passwordSuccessMessage = response.message || this.translateService.instant('PROFILE.PASSWORD_SUCCESS');
+      this.passwordSuccessMessage.set(response.message || this.translateService.instant('PROFILE.PASSWORD_SUCCESS'));
       this.passwordFormComponent().resetForm();
     } catch (error: any) {
       console.error('Error changing password:', error);
-      this.passwordErrorMessage = error?.error?.message || this.translateService.instant('PROFILE.PASSWORD_ERROR');
+      this.passwordErrorMessage.set(error?.error?.message || this.translateService.instant('PROFILE.PASSWORD_ERROR'));
     } finally {
-      this.isSavingPassword = false;
-      this.cdr.detectChanges();
+      this.isSavingPassword.set(false);
     }
   }
 
   // --- Email change API call ---
   async onRequestEmailChange(data: { newEmail: string }) {
-    this.emailSuccessMessage = null;
-    this.emailErrorMessage = null;
-    this.isSavingEmail = true;
+    this.emailSuccessMessage.set(null);
+    this.emailErrorMessage.set(null);
+    this.isSavingEmail.set(true);
 
     try {
       await this.userService.requestEmailChange({ newEmail: data.newEmail });
-      this.pendingEmail = data.newEmail;
-      this.showEmailVerificationModal = true;
+      this.pendingEmail.set(data.newEmail);
+      this.showEmailVerificationModal.set(true);
       this.emailFormComponent().resetForm();
-      this.cdr.detectChanges();
     } catch (error: any) {
       console.error('Error requesting email change:', error);
-      this.emailErrorMessage = error?.error?.message || this.translateService.instant('PROFILE.EMAIL_REQUEST_ERROR');
+      this.emailErrorMessage.set(error?.error?.message || this.translateService.instant('PROFILE.EMAIL_REQUEST_ERROR'));
     } finally {
-      this.isSavingEmail = false;
-      this.cdr.detectChanges();
+      this.isSavingEmail.set(false);
     }
   }
 
   closeEmailVerificationModal() {
-    this.showEmailVerificationModal = false;
-    this.pendingEmail = null;
+    this.showEmailVerificationModal.set(false);
+    this.pendingEmail.set(null);
   }
 
   async onEmailVerified(newEmail: string) {
-    this.profile = await this.userService.getProfile();
+    const profileData = await this.userService.getProfile();
+    this.profile.set(profileData);
     this.closeEmailVerificationModal();
-    this.emailSuccessMessage = this.translateService.instant('PROFILE.EMAIL_CHANGED_SUCCESS');
-    this.cdr.detectChanges();
+    this.emailSuccessMessage.set(this.translateService.instant('PROFILE.EMAIL_CHANGED_SUCCESS'));
   }
 
   // --- Image handling (stays in page as it involves DOM + multiple API calls) ---
   onFileSelected(event: Event) {
-    this.imageChangedEvent = event;
-    this.showImageCropper = true;
-    this.cdr.detectChanges();
+    this.imageChangedEvent.set(event);
+    this.showImageCropper.set(true);
   }
 
   onCropCancelled() {
-    this.showImageCropper = false;
-    this.imageChangedEvent = null;
+    this.showImageCropper.set(false);
+    this.imageChangedEvent.set(null);
     const fileInput = document.getElementById('profileImageInput') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';
     }
-    this.cdr.detectChanges();
   }
 
   onCropperError(errorKey: string) {
-    this.infoErrorMessage = this.translateService.instant(errorKey);
-    this.showImageCropper = false;
-    this.imageChangedEvent = null;
+    this.infoErrorMessage.set(this.translateService.instant(errorKey));
+    this.showImageCropper.set(false);
+    this.imageChangedEvent.set(null);
   }
 
   async onImageUploaded(croppedBlob: Blob) {
-    this.isUploadingImage = true;
-    this.infoSuccessMessage = null;
-    this.infoErrorMessage = null;
+    this.isUploadingImage.set(true);
+    this.infoSuccessMessage.set(null);
+    this.infoErrorMessage.set(null);
 
     try {
       const file = new File([croppedBlob], 'profile-picture.jpg', { type: 'image/jpeg' });
       const response = await this.userService.uploadProfilePicture(file);
-      this.profileImageUrl = response.profilePictureUrl;
-      this.profile = await this.userService.getProfile();
-      this.infoSuccessMessage = this.translateService.instant('PROFILE.PHOTO_UPLOADED');
-      this.showImageCropper = false;
-      this.imageChangedEvent = null;
+      this.profileImageUrl.set(response.profilePictureUrl);
+      const profileData = await this.userService.getProfile();
+      this.profile.set(profileData);
+      this.infoSuccessMessage.set(this.translateService.instant('PROFILE.PHOTO_UPLOADED'));
+      this.showImageCropper.set(false);
+      this.imageChangedEvent.set(null);
       const fileInput = document.getElementById('profileImageInput') as HTMLInputElement;
       if (fileInput) {
         fileInput.value = '';
@@ -252,13 +245,12 @@ export class Profile implements OnInit {
     } catch (error: any) {
       console.error('Error uploading profile picture:', error);
       if (error?.error?.message) {
-        this.infoErrorMessage = error.error.message;
+        this.infoErrorMessage.set(error.error.message);
       } else {
-        this.infoErrorMessage = this.translateService.instant('PROFILE.PHOTO_ERROR');
+        this.infoErrorMessage.set(this.translateService.instant('PROFILE.PHOTO_ERROR'));
       }
     } finally {
-      this.isUploadingImage = false;
-      this.cdr.detectChanges();
+      this.isUploadingImage.set(false);
     }
   }
 
@@ -271,21 +263,21 @@ export class Profile implements OnInit {
       return;
     }
 
-    this.isUploadingImage = true;
-    this.infoSuccessMessage = null;
-    this.infoErrorMessage = null;
+    this.isUploadingImage.set(true);
+    this.infoSuccessMessage.set(null);
+    this.infoErrorMessage.set(null);
 
     try {
       await this.userService.deleteProfilePicture();
-      this.profileImageUrl = null;
-      this.profile = await this.userService.getProfile();
-      this.infoSuccessMessage = this.translateService.instant('PROFILE.PHOTO_DELETED');
+      this.profileImageUrl.set(null);
+      const profileData = await this.userService.getProfile();
+      this.profile.set(profileData);
+      this.infoSuccessMessage.set(this.translateService.instant('PROFILE.PHOTO_DELETED'));
     } catch (error: any) {
       console.error('Error deleting profile picture:', error);
-      this.infoErrorMessage = this.translateService.instant('PROFILE.PHOTO_DELETE_ERROR');
+      this.infoErrorMessage.set(this.translateService.instant('PROFILE.PHOTO_DELETE_ERROR'));
     } finally {
-      this.isUploadingImage = false;
-      this.cdr.detectChanges();
+      this.isUploadingImage.set(false);
     }
   }
 

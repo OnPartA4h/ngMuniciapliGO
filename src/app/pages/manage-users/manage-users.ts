@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -21,27 +21,26 @@ export class ManageUsers implements OnInit {
   private adminService = inject(AdminService);
   private generalService = inject(GeneralService);
   private languageService = inject(LanguageService);
-  private cdr = inject(ChangeDetectorRef);
 
-  users: User[] = [];
-  availableRoles: RoleOption[] = [];
+  users = signal<User[]>([]);
+  availableRoles = signal<RoleOption[]>([]);
 
   // Pagination
-  currentPage: number = 1;
-  pageSize: number = 50;
-  totalPages: number = 1;
-  totalUsers: number = 0;
+  currentPage = signal(1);
+  pageSize = signal(50);
+  totalPages = signal(1);
+  totalUsers = signal(0);
 
   // Filters
-  searchQuery: string = '';
-  selectedRole: string = '';
+  searchQuery = signal('');
+  selectedRole = signal('');
 
   // Modal state
-  showEditModal: boolean = false;
-  selectedUser: User | null = null;
+  showEditModal = signal(false);
+  selectedUser = signal<User | null>(null);
 
   // Loading state
-  isLoading: boolean = false;
+  isLoading = signal(false);
 
   async ngOnInit() {
     await Promise.all([
@@ -56,7 +55,8 @@ export class ManageUsers implements OnInit {
   async loadRoles() {
     try {
       const lang = this.languageService.getCurrentLanguage();
-      this.availableRoles = await this.generalService.getRoles(lang);
+      const rolesData = await this.generalService.getRoles(lang);
+      this.availableRoles.set(rolesData);
     } catch (error) {
       console.error('Error loading roles:', error);
     }
@@ -64,65 +64,62 @@ export class ManageUsers implements OnInit {
 
   async loadUsers() {
     try {
-      this.isLoading = true;
+      this.isLoading.set(true);
       const response = await this.adminService.getAllUsers(
-        this.currentPage,
-        this.selectedRole || undefined,
-        this.searchQuery || undefined
+        this.currentPage(),
+        this.selectedRole() || undefined,
+        this.searchQuery() || undefined
       );
 
-      this.users = response.users;
-      this.currentPage = response.pagination.currentPage;
-      this.pageSize = response.pagination.pageSize;
-      this.totalPages = response.pagination.totalPages;
-      this.totalUsers = response.pagination.totalUsers;
+      this.users.set(response.users);
+      this.currentPage.set(response.pagination.currentPage);
+      this.pageSize.set(response.pagination.pageSize);
+      this.totalPages.set(response.pagination.totalPages);
+      this.totalUsers.set(response.pagination.totalUsers);
     } catch (error) {
       console.error('Error loading users:', error);
     } finally {
-      this.isLoading = false;
-      // Force change detection to update UI after async operation
-      this.cdr.markForCheck();
+      this.isLoading.set(false);
     }
   }
 
   async onSearch() {
-    this.currentPage = 1;
+    this.currentPage.set(1);
     await this.loadUsers();
   }
 
   async onRoleFilterChange() {
-    this.currentPage = 1;
+    this.currentPage.set(1);
     await this.loadUsers();
   }
 
   async nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.set(this.currentPage() + 1);
       await this.loadUsers();
     }
   }
 
   async previousPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
+    if (this.currentPage() > 1) {
+      this.currentPage.set(this.currentPage() - 1);
       await this.loadUsers();
     }
   }
 
   async onPageChange(page: number) {
-    this.currentPage = page;
+    this.currentPage.set(page);
     await this.loadUsers();
   }
 
   openEditModal(user: User) {
-    this.selectedUser = user;
-    this.showEditModal = true;
+    this.selectedUser.set(user);
+    this.showEditModal.set(true);
   }
 
   closeEditModal() {
-    this.selectedUser = null;
-    this.showEditModal = false;
-    this.cdr.markForCheck();
+    this.selectedUser.set(null);
+    this.showEditModal.set(false);
   }
 
   async onUserDeleted() {
@@ -131,7 +128,7 @@ export class ManageUsers implements OnInit {
   }
 
   getRoleLabel(roleKey: string): string {
-    const role = this.availableRoles.find(r => r.key === roleKey);
+    const role = this.availableRoles().find(r => r.key === roleKey);
     return role ? role.label : roleKey;
   }
 }

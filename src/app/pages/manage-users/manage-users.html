@@ -12,13 +12,14 @@
   <div class="filter-bar">
     <div class="search-box">
       <i class="fas fa-search"></i>
-      <input type="text" [placeholder]="'MANAGE_USERS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="searchQuery"
+      <input type="text" [placeholder]="'MANAGE_USERS.SEARCH_PLACEHOLDER' | translate" [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
         (keyup.enter)="onSearch()" />
     </div>
     <div class="filter-group">
-      <select [(ngModel)]="selectedRole" (change)="onRoleFilterChange()">
+      <select [ngModel]="selectedRole()" (ngModelChange)="selectedRole.set($event)" (change)="onRoleFilterChange()">
         <option value="">{{ 'MANAGE_USERS.FILTER_ALL' | translate }}</option>
-        @for (role of availableRoles; track role.key) {
+        @for (role of availableRoles(); track role.key) {
           <option [value]="role.key">{{ role.label }}</option>
         }
       </select>
@@ -29,22 +30,22 @@
     </div>
   </div>
 
-  @if (!isLoading) {
-    <app-users-table [users]="users"
-      [roles]="availableRoles"
+  @if (!isLoading()) {
+    <app-users-table [users]="users()"
+      [roles]="availableRoles()"
       (editUser)="openEditModal($event)" />
   }
 
-  @if (isLoading) {
+  @if (isLoading()) {
     <app-loading-spinner />
   }
 
-  @if (!isLoading && users.length > 0) {
-    <app-pagination [currentPage]="currentPage"
-      [totalPages]="totalPages"
+  @if (!isLoading() && users().length > 0) {
+    <app-pagination [currentPage]="currentPage()"
+      [totalPages]="totalPages()"
       (pageChange)="onPageChange($event)" />
   }
 </div>
 
-<app-edit-user-modal [user]="selectedUser" [isOpen]="showEditModal" (close)="closeEditModal()"
+<app-edit-user-modal [user]="selectedUser()" [isOpen]="showEditModal()" (close)="closeEditModal()"
   (userDeleted)="onUserDeleted()" />
