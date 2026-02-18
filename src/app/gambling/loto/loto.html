@@ -1,0 +1,108 @@
+<!-- Ambient particles -->
+@for (s of ambientStars; track s.x) {
+  <span class="ambient-star" [style.left.px]="s.x" [style.top.px]="s.y" [style.opacity]="s.life">{{ s.char }}</span>
+}
+
+<div class="loto-page">
+
+  <!-- ═══ HEADER ════════════════════════════════════════════════════ -->
+  <div class="loto-header">
+    <div class="loto-header__trophy">🏆</div>
+    <h1 class="loto-header__title">
+      <span class="tl" style="--d:0">L</span>
+      <span class="tl" style="--d:1">O</span>
+      <span class="tl" style="--d:2">T</span>
+      <span class="tl" style="--d:3">T</span>
+      <span class="tl" style="--d:4">O</span>
+      <span class="tl--gap">&nbsp;&nbsp;</span>
+      <span class="tl tl--gold" style="--d:5">D</span>
+      <span class="tl tl--gold" style="--d:6">R</span>
+      <span class="tl tl--gold" style="--d:7">A</span>
+      <span class="tl tl--gold" style="--d:8">W</span>
+    </h1>
+    <p class="loto-header__sub">🎫 Register · Wait · Win Big! 🎫</p>
+  </div>
+
+  <!-- ═══ LOBBY ══════════════════════════════════════════════════ -->
+  @if (state() === 'lobby') {
+    <div class="loto-lobby">
+
+      <!-- Registration form -->
+      <app-loto-register (registered)="onRegistered($event)" />
+
+      <!-- Centre: timer + participants preview -->
+      <div class="loto-lobby__centre">
+        <app-loto-timer (drawTime)="onDrawTime()" />
+
+        <div class="loto-participants">
+          <h3 class="loto-participants__title">
+            🎟️ Participants
+            <span class="loto-participants__count">{{ svcRef.publicParticipants().length }}</span>
+          </h3>
+
+          @if (svcRef.publicParticipants().length === 0) {
+            <p class="loto-participants__empty">No one registered yet. Be the first!</p>
+          } @else {
+            <div class="loto-participants__list">
+              @for (p of svcRef.publicParticipants(); track p.name) {
+                <div class="participant-row">
+                  <span class="participant-row__name">{{ p.name }}</span>
+                  <div class="participant-row__bar-wrap">
+                    <div
+                      class="participant-row__bar"
+                      [style.width.%]="(p.entries / svcRef.totalEntries()) * 100"
+                    ></div>
+                  </div>
+                  <span class="participant-row__entries">×{{ p.entries }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Wheel preview -->
+      <div class="loto-lobby__wheel">
+        <p class="wheel-preview-label">🎡 Live Odds Preview</p>
+        <app-loto-wheel
+          [participants]="svcRef.publicParticipants()"
+          [winnerName]="null"
+          (spinComplete)="onWheelDone($event)"
+        />
+      </div>
+    </div>
+  }
+
+  <!-- ═══ DRAWING ═══════════════════════════════════════════════ -->
+  @if (state() === 'drawing') {
+    <div class="loto-drawing">
+      <div class="loto-drawing__label">
+        <span class="drawing-spinner">🎰</span>
+        <h2>Drawing the winner…</h2>
+        <p>The wheel of fate is spinning!</p>
+      </div>
+      <app-loto-wheel
+        [participants]="svcRef.publicParticipants()"
+        [winnerName]="winner()?.name ?? null"
+        (spinComplete)="onWheelDone($event)"
+      />
+    </div>
+  }
+
+  <!-- ═══ RESULT ════════════════════════════════════════════════ -->
+  @if (state() === 'result' && winner()) {
+    <div class="loto-result">
+      <div class="loto-result__firework">🎆</div>
+      <div class="loto-result__card">
+        <div class="result-glow"></div>
+        <p class="result-tag">🏆 WINNER 🏆</p>
+        <div class="result-name">{{ winner()!.name }}</div>
+        <p class="result-entries">with {{ winner()!.entries }} entr{{ winner()!.entries > 1 ? 'ies' : 'y' }}</p>
+        <button class="result-reset-btn" (click)="resetDraw()">
+          <span>🔄</span> New Draw
+        </button>
+      </div>
+    </div>
+  }
+
+</div>

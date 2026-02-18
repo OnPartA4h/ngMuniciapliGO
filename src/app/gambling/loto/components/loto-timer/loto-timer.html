@@ -1,0 +1,30 @@
+@if (isLoading()) {
+  <div class="lt-loading">Loading draw time…</div>
+} @else if (isFinished()) {
+  <div class="lt-finished">
+    <span class="lt-finished__icon">🎰</span>
+    <span>Drawing winner…</span>
+  </div>
+} @else {
+  <div class="lt-container" [class.lt-urgent]="urgency">
+    <div class="lt-label">
+      <span class="lt-label__icon">⏱️</span>
+      Next Draw In
+    </div>
+    <div class="lt-time">
+      <span class="lt-time__num">{{ minutes.toString().padStart(2,'0') }}</span>
+      <span class="lt-time__sep">:</span>
+      <span class="lt-time__num">{{ secs.toString().padStart(2,'0') }}</span>
+    </div>
+    <!-- Ring progress -->
+    <svg class="lt-ring" viewBox="0 0 120 120">
+      <circle class="lt-ring__bg"   cx="60" cy="60" r="52"/>
+      <circle
+        class="lt-ring__fg"
+        cx="60" cy="60" r="52"
+        [style.stroke-dashoffset]="327 - (327 * progress / 100)"
+        [class.lt-ring__fg--urgent]="urgency"
+      />
+    </svg>
+  </div>
+}

@@ -1,0 +1,357 @@
+/* ══════════════════════════════════════════════════════════════
+   Loto Draw – page styles
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Ambient particles ──────────────────────────────────────── */
+.ambient-star {
+  position: fixed;
+  font-size: 18px;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+}
+
+/* ── Page ───────────────────────────────────────────────────── */
+.loto-page {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 75% 20%, #0d1f3c 0%, #050514 45%, #000000 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 32px 24px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 44px;
+}
+
+/* Star-field */
+.loto-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.55) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 60%, rgba(255,255,255,0.40) 0%, transparent 100%),
+    radial-gradient(1px 1px at 65% 10%, rgba(255,255,255,0.60) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 50%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(2px 2px at 25% 85%, rgba(255,215,0,0.35)  0%, transparent 100%),
+    radial-gradient(2px 2px at 55% 45%, rgba(77,150,255,0.30) 0%, transparent 100%),
+    radial-gradient(2px 2px at 90% 80%, rgba(107,203,119,0.35) 0%, transparent 100%);
+  animation: starfield-drift 50s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes starfield-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 250px 500px; }
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.loto-header {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.loto-header__trophy {
+  font-size: 56px;
+  display: inline-block;
+  animation: trophy-float 2.2s ease-in-out infinite;
+}
+@keyframes trophy-float {
+  0%,100% { transform: translateY(0) scale(1);    }
+  50%     { transform: translateY(-14px) scale(1.08); }
+}
+.loto-header__title {
+  margin: 8px 0 4px;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tl {
+  display: inline-block;
+  background: linear-gradient(135deg, #ffffff 0%, #aaaaaa 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: tl-float 2.5s ease-in-out infinite;
+  animation-delay: calc(var(--d) * 0.1s);
+}
+.tl--gold {
+  background: linear-gradient(135deg, #FFD700 0%, #FF8C00 50%, #FFD700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.tl--gap { width: 0.3em; }
+@keyframes tl-float {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-9px); }
+}
+.loto-header__sub {
+  color: rgba(255,255,255,0.55);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  margin: 0;
+  animation: sub-pulse 3s ease-in-out infinite;
+}
+@keyframes sub-pulse {
+  0%,100% { opacity: 0.55; }
+  50%     { opacity: 1; }
+}
+
+/* ── Lobby layout ───────────────────────────────────────────── */
+.loto-lobby {
+  display: flex;
+  align-items: flex-start;
+  gap: 36px;
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Centre column */
+.loto-lobby__centre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  min-width: 240px;
+}
+
+/* Wheel preview column */
+.loto-lobby__wheel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.wheel-preview-label {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ── Participants panel ──────────────────────────────────────── */
+.loto-participants {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 18px 16px;
+  width: 240px;
+}
+.loto-participants__title {
+  color: #FFD700;
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.03em;
+}
+.loto-participants__count {
+  background: rgba(255,215,0,0.2);
+  border: 1px solid rgba(255,215,0,0.4);
+  border-radius: 50px;
+  padding: 2px 10px;
+  font-size: 0.78rem;
+  color: #FFD700;
+}
+.loto-participants__empty {
+  color: rgba(255,255,255,0.3);
+  font-size: 0.82rem;
+  text-align: center;
+  margin: 8px 0;
+  font-style: italic;
+}
+.loto-participants__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 280px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,215,0,0.3) transparent;
+}
+
+/* Participant row */
+.participant-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 30px;
+  align-items: center;
+  gap: 8px;
+  animation: row-in 0.3s ease-out;
+}
+@keyframes row-in {
+  from { transform: translateX(12px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+.participant-row__name {
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.participant-row__bar-wrap {
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.participant-row__bar {
+  height: 100%;
+  background: linear-gradient(90deg, #FFD700, #FF8C00);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.participant-row__entries {
+  color: #FFD700;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+/* ── Drawing state ───────────────────────────────────────────── */
+.loto-drawing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  position: relative;
+  z-index: 1;
+}
+.loto-drawing__label {
+  text-align: center;
+}
+.loto-drawing__label h2 {
+  color: #FFD700;
+  font-size: 2rem;
+  font-weight: 900;
+  margin: 8px 0 4px;
+  animation: glow-text 1.5s ease-in-out infinite alternate;
+}
+@keyframes glow-text {
+  from { text-shadow: 0 0 8px #FFD700; }
+  to   { text-shadow: 0 0 28px #FFD700, 0 0 48px #FF8C00; }
+}
+.loto-drawing__label p {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.95rem;
+  margin: 0;
+}
+.drawing-spinner {
+  font-size: 2.5rem;
+  display: inline-block;
+  animation: ds-spin 1s linear infinite;
+}
+@keyframes ds-spin {
+  from { transform: rotate(0); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Result state ────────────────────────────────────────────── */
+.loto-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+}
+.loto-result__firework {
+  font-size: 4rem;
+  animation: fw-bounce 0.6s ease-out infinite alternate;
+}
+@keyframes fw-bounce {
+  from { transform: scale(1) rotate(-5deg); }
+  to   { transform: scale(1.15) rotate(5deg); }
+}
+.loto-result__card {
+  position: relative;
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(16px);
+  border: 2px solid rgba(255,215,0,0.7);
+  border-radius: 28px;
+  padding: 40px 56px;
+  text-align: center;
+  overflow: hidden;
+  animation: result-pop 0.6s cubic-bezier(0.175,0.885,0.32,1.275);
+  box-shadow: 0 0 60px rgba(255,215,0,0.3), 0 30px 80px rgba(0,0,0,0.5);
+}
+@keyframes result-pop {
+  from { transform: scale(0.4) rotate(-15deg); opacity: 0; }
+  to   { transform: scale(1)   rotate(0deg);   opacity: 1; }
+}
+.result-glow {
+  position: absolute;
+  inset: -60px;
+  background: radial-gradient(circle, rgba(255,215,0,0.18) 0%, transparent 70%);
+  animation: res-glow-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes res-glow-pulse {
+  0%,100% { opacity: 0.6; transform: scale(0.95); }
+  50%     { opacity: 1;   transform: scale(1.05); }
+}
+.result-tag {
+  color: #FFD700;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+}
+.result-name {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255,215,0,0.6);
+  margin-bottom: 8px;
+  animation: name-shimmer 2s ease-in-out infinite;
+}
+@keyframes name-shimmer {
+  0%,100% { text-shadow: 0 0 20px rgba(255,215,0,0.6); }
+  50%     { text-shadow: 0 0 40px rgba(255,215,0,1), 0 0 60px rgba(255,140,0,0.5); }
+}
+.result-entries {
+  color: rgba(255,255,255,0.55);
+  font-size: 1rem;
+  margin: 0 0 28px;
+}
+.result-reset-btn {
+  padding: 14px 40px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1a0533;
+  background: linear-gradient(135deg, #FFD700, #FF8C00);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.15s, filter 0.15s;
+  box-shadow: 0 4px 20px rgba(255,215,0,0.4);
+}
+.result-reset-btn:hover { transform: scale(1.06) translateY(-2px); filter: brightness(1.1); }
+
+/* ── Snack overrides ─────────────────────────────────────────── */
+::ng-deep .loto-snack {
+  background: linear-gradient(135deg, #050514, #0d1f3c) !important;
+  border: 2px solid #FFD700 !important;
+  border-radius: 16px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 32px rgba(255,215,0,0.45) !important;
+}
+::ng-deep .loto-snack .mat-mdc-snack-bar-label { color: #FFD700 !important; }
+::ng-deep .loto-snack .mat-mdc-button { color: #FF922B !important; font-weight: 800 !important; }

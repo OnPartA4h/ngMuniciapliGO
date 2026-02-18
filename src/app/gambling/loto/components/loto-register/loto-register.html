@@ -1,0 +1,94 @@
+<div class="lr-card">
+  <div class="lr-card__header">
+    <span class="lr-icon">🎟️</span>
+    <h3>Enter the Draw</h3>
+    <p>Register for your chance to win!</p>
+  </div>
+
+  @if (success()) {
+    <div class="lr-success">
+      <span class="lr-success__icon">✅</span>
+      <p>You're registered! Good luck!</p>
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="lr-form" novalidate>
+    <!-- Name -->
+    <div class="lr-field" [class.lr-field--error]="f['name'].invalid && f['name'].touched">
+      <label>
+        <span class="lr-field__icon">👤</span>
+        Your Name
+      </label>
+      <input
+        type="text"
+        formControlName="name"
+        placeholder="e.g. Alice Dupont"
+        autocomplete="off"
+      />
+      @if (f['name'].invalid && f['name'].touched) {
+        <span class="lr-field__err">
+          @if (f['name'].errors?.['required']) { Name is required. }
+          @else if (f['name'].errors?.['minlength']) { At least 2 characters. }
+        </span>
+      }
+    </div>
+
+    <!-- Email -->
+    <div class="lr-field" [class.lr-field--error]="f['email'].invalid && f['email'].touched">
+      <label>
+        <span class="lr-field__icon">📧</span>
+        Email Address
+      </label>
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="alice@example.com"
+        autocomplete="off"
+      />
+      @if (f['email'].invalid && f['email'].touched) {
+        <span class="lr-field__err">
+          @if (f['email'].errors?.['required']) { Email is required. }
+          @else { Invalid email address. }
+        </span>
+      }
+    </div>
+
+    <!-- Entries -->
+    <div class="lr-field" [class.lr-field--error]="f['entries'].invalid && f['entries'].touched">
+      <label>
+        <span class="lr-field__icon">🎫</span>
+        Number of Entries
+        <span class="lr-field__hint">(1–100, more = bigger slice!)</span>
+      </label>
+      <div class="lr-entries-row">
+        <button type="button" class="lr-entries-btn" (click)="f['entries'].setValue(Math.max(1, (f['entries'].value||1)-1))">−</button>
+        <input
+          type="number"
+          formControlName="entries"
+          min="1"
+          max="100"
+          class="lr-entries-input"
+        />
+        <button type="button" class="lr-entries-btn" (click)="f['entries'].setValue(Math.min(100, (f['entries'].value||1)+1))">+</button>
+      </div>
+      @if (f['entries'].invalid && f['entries'].touched) {
+        <span class="lr-field__err">Enter a number between 1 and 100.</span>
+      }
+    </div>
+
+    <button
+      type="submit"
+      class="lr-submit"
+      [class.lr-submit--loading]="isLoading()"
+      [disabled]="form.invalid || isLoading()"
+    >
+      @if (isLoading()) {
+        <span class="lr-submit__spinner">⏳</span>
+        Registering…
+      } @else {
+        <span>🚀</span>
+        Register Now!
+      }
+    </button>
+  </form>
+</div>

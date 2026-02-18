@@ -19,6 +19,7 @@ export const routes: Routes = [
   { path: 'profile', loadComponent: () => import('./pages/profile/profile').then(m => m.Profile), canActivate: [authGuard] },
   { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications').then(m => m.Notifications), canActivate: [authGuard] },
   { path: 'spin-wheel', loadComponent: () => import('./gambling/spin-wheel/spin-wheel').then(m => m.SpinWheel) },
+  { path: 'loto', loadComponent: () => import('./gambling/loto/loto').then(m => m.Loto) },
   { path: 'landing', loadComponent: () => import('./pages/landing/landing').then(m => m.Landing) },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
