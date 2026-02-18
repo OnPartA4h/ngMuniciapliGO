@@ -18,7 +18,7 @@ export class CommentService {
   }
 
   async ignoreCommentReport(problemId: number, notificationId: number) {
-    let res = await lastValueFrom(this.http.post<any>(`${this.apiUrl}/api/Probleme/${problemId}/ignore/${notificationId}`, {}))
+    let res = await lastValueFrom(this.http.delete<any>(`${this.apiUrl}/api/Probleme/${problemId}/comments/ignore/${notificationId}`, {}))
     console.log(res);
     return res;
   }
