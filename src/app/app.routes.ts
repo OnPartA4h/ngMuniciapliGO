@@ -18,7 +18,7 @@ export const routes: Routes = [
   { path: 'edit-problem/:id', loadComponent: () => import('./pages/edit-problem/edit-problem').then(m => m.EditProblem), canActivate: [authGuard, whiteGuard] },
   { path: 'profile', loadComponent: () => import('./pages/profile/profile').then(m => m.Profile), canActivate: [authGuard] },
   { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications').then(m => m.Notifications), canActivate: [authGuard] },
-  { path: 'spin-wheel', loadComponent: () => import('./pages/spin-wheel/spin-wheel').then(m => m.SpinWheel) },
+  { path: 'spin-wheel', loadComponent: () => import('./gambling/spin-wheel/spin-wheel').then(m => m.SpinWheel) },
   { path: 'landing', loadComponent: () => import('./pages/landing/landing').then(m => m.Landing) },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
