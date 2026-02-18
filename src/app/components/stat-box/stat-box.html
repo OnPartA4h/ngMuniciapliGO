@@ -4,15 +4,15 @@
         @if (value !== -1){
         @if (value > 72){
         {{ (value / 24) % 1 === 0 ? (value / 24) : (value / 24) | number:'1.1-1' }}
-        <span class="stat-unit">jours</span>
+        <span class="stat-unit">{{ 'DASHBOARD.DAYS' | translate }}</span>
         }
         @else {
         {{ value }}
-        <span class="stat-unit">heures</span>
+        <span class="stat-unit">{{ 'DASHBOARD.HOURS' | translate }}</span>
         }
         }
         @else {
-        <span class="stat-unit error">No value available</span>
+        <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
         }
     </div>
 </div>

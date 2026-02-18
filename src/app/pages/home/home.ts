@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Chart } from '../../components/chart/chart';
 import { ChartData, ChartType } from 'chart.js';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StatBox } from '../../components/stat-box/stat-box';
 import { GeneralService } from '../../services/general-service';
 import { GraphDTO } from '../../models/problem';
@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 export class Home {
   generalService = inject(GeneralService);
   languageService = inject(LanguageService);
+  private translate = inject(TranslateService);
   datasets!: ChartData<'line', { x: number; y: number }[]>;
   currentTimeSpan: number = 0;
   currentAssigneA: number = 0;
@@ -38,11 +39,12 @@ export class Home {
     this.stats = await this.generalService.getStats(this.currentTimeSpan, this.currentAssigneA)
 
     const graph: GraphDTO[] = this.stats.graph;
+    console.log(this.stats);
 
     this.datasets = {
       datasets: [
         {
-          label: 'Reported',
+          label: this.translate.instant("DASHBOARD.REPORTED"),
           data: graph.map(d => ({
             x: new Date(d.date).getTime(),
             y: d.reportedCount
@@ -51,7 +53,7 @@ export class Home {
           borderColor: 'rgba(54, 162, 235, 0.3)'
         },
         {
-          label: 'Solved',
+          label: this.translate.instant("DASHBOARD.SOLVED"),
           data: graph.map(d => ({
             x: new Date(d.date).getTime(),
             y: d.solvedCount

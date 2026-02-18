@@ -357,7 +357,16 @@
   },
   "DASHBOARD": {
     "TITLE": "Tableau de bord",
-    "SUBTITLE": "Statistiques des problèmes"
+    "SUBTITLE": "Statistiques des problèmes",
+    "ERROR": "Aucune valeur disponible",
+    "DAYS": "jours",
+    "HOURS": "heures",
+    "REPORTED": "Signalés",
+    "SOLVED": "Résolus",
+    "GRAPH_TITLE": "Évolution des problèmes dans le temps",
+    "ASSIGNATION": "Temps d'assignation moyen",
+    "PRISE_EN_CHARGE": "Temps de prise en charge moyen",
+    "RESOLUTION": "Temps de résolution moyen"
   },
   "REPORT_DETAILS": {
     "SUBSCRIBE": "S'abonner aux notifications",

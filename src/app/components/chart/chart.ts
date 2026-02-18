@@ -28,14 +28,5 @@ export class Chart {
         beginAtZero: true
       }
     },
-    plugins: {
-      title: {
-        display: true,
-        text: 'Évolution des signalements et résolutions',
-        font: { size: 18 },
-        color: '#444',
-        padding: { top: 10, bottom: 20 }
-      }
-    }
   };
 }

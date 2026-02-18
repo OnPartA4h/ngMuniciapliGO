@@ -357,7 +357,16 @@
   },
   "DASHBOARD": {
     "TITLE": "Dashboard",
-    "SUBTITLE": "All your beautiful problem statistics"
+    "SUBTITLE": "All your beautiful problem statistics",
+    "ERROR": "No value available",
+    "DAYS": "days",
+    "HOURS": "hours",
+    "REPORTED": "Reported",
+    "SOLVED": "Solved",
+    "GRAPH_TITLE": "Problems evolution",
+    "ASSIGNATION": "Average time until assignment",
+    "PRISE_EN_CHARGE": "Average time until starting",
+    "RESOLUTION": "Average time until resolve"
   },
   "REPORT_DETAILS": {
     "SUBSCRIBE": "Subscribe to notifications",

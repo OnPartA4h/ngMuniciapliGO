@@ -16,11 +16,18 @@
         </select>
     </div>
     <div class="stat-boxes-row">
-        <app-stat-box title="Temps de résolution moyen" [value]="stats?.tempsResolution"></app-stat-box>
-        <app-stat-box title="Temps de prise en charge moyen" [value]="stats?.tempsPriseEnCharge"></app-stat-box>
-        <app-stat-box title="Temps d'assignation moyen" [value]="stats?.tempsAssignation"></app-stat-box>
+        <app-stat-box [title]="'DASHBOARD.RESOLUTION' | translate" [value]="stats?.tempsResolution"></app-stat-box>
+        <app-stat-box [title]="'DASHBOARD.PRISE_EN_CHARGE' | translate"
+            [value]="stats?.tempsPriseEnCharge"></app-stat-box>
+        <app-stat-box [title]="'DASHBOARD.ASSIGNATION' | translate" [value]="stats?.tempsAssignation"></app-stat-box>
     </div>
     <div class="app-chart-container">
+        <div class="stat-title">{{ 'DASHBOARD.GRAPH_TITLE' | translate }}</div>
+        @if(stats?.graph?.length === 0){
+        <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
+        }
+        @else {
         <app-chart [datasets]="datasets" [chartType]="'line'"></app-chart>
+        }
     </div>
 </div>
