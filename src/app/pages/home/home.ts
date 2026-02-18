@@ -30,7 +30,8 @@ export class Home {
             x: new Date(d.date).getTime(),
             y: d.reportedCount
           })),
-          backgroundColor: 'rgba(255, 99, 132, 0.6)'
+          backgroundColor: 'rgba(44, 157, 233, 0.8)',
+          borderColor: 'rgba(54, 162, 235, 0.3)'
         },
         {
           label: 'Solved',
@@ -38,7 +39,8 @@ export class Home {
             x: new Date(d.date).getTime(),
             y: d.solvedCount
           })),
-          backgroundColor: 'rgba(54, 162, 235, 0.6)'
+          backgroundColor: 'rgba(35, 189, 94, 0.8)',
+          borderColor: 'rgba(35, 189, 94, 0.3)'
         }
       ]
     };
