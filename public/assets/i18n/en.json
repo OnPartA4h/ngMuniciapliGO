@@ -286,7 +286,11 @@
     "SEND_RESET_LINK": "Send Reset Link",
     "SIGN_IN": "Sign in",
     "SIGNING_IN": "Signing in...",
-    "ERROR_MESSAGE": "Invalid credentials. Please try again."
+    "ERROR_MESSAGE": "Invalid credentials. Please try again.",
+    "INVALID_CREDENTIALS": "Invalid credentials",
+    "SERVER_ERROR": "Server error",
+    "SOMETHING_WENT_WRONG": "Something went wrong",
+    "INSUFFICIENT_PERMISSIONS": "You do not have the necessary permissions to access this application"
   },
   "PROVINCES": {
     "ON": "Ontario",

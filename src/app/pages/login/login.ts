@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ForceResetPasswordModal } from '../../components/modals/force-reset-password-modal/force-reset-password-modal';
 import { ForgotPasswordModal } from '../../components/modals/forgot-password-modal/forgot-password-modal';
 
@@ -17,6 +17,7 @@ export class Login {
   authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   router = inject(Router);
+  private translateService = inject(TranslateService);
   
   formGroup: FormGroup;
   showResetPasswordModal = false;
@@ -64,10 +65,16 @@ export class Login {
       await this.handleRedirection()
 
     } catch (error: any) {
-      if (error.status >= 500 || error.status == 0){
-        this.errorMessage = "Server ERROR GRRRR"
-      } else if (error.status < 500){
-        this.errorMessage = "Invalid Credentials"
+      switch (error.status) {
+        case 401:
+          this.errorMessage = this.translateService.instant('LOGIN.INVALID_CREDENTIALS');
+          break;
+        case 500:
+          this.errorMessage = this.translateService.instant('LOGIN.SERVER_ERROR');
+          break;
+        default:
+          this.errorMessage = this.translateService.instant('LOGIN.SOMETHING_WENT_WRONG');
+          break
       }
     } finally {
       this.isLoading = false;
@@ -82,7 +89,7 @@ export class Login {
   verifyPermissions(){
     if (!this.roles.includes("Admin") && !this.roles.includes("ColBlanc")) {
         console.log("NOT ADMIN OR COL BLANC!!!!");
-        this.errorMessage = "NOT ADMIN OR COL BLANC!!!!"
+        this.errorMessage = this.translateService.instant('LOGIN.INSUFFICIENT_PERMISSIONS');
         return;
       }
   }

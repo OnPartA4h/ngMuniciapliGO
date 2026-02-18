@@ -286,7 +286,11 @@
     "SEND_RESET_LINK": "Envoyer le lien de réinitialisation",
     "SIGN_IN": "Se connecter",
     "SIGNING_IN": "Connexion en cours...",
-    "ERROR_MESSAGE": "Identifiants invalides. Veuillez réessayer."
+    "ERROR_MESSAGE": "Identifiants invalides. Veuillez réessayer.",
+    "INVALID_CREDENTIALS": "Identifiants invalides",
+    "SERVER_ERROR": "Erreur du serveur",
+    "SOMETHING_WENT_WRONG": "Une erreur s'est produite",
+    "INSUFFICIENT_PERMISSIONS": "Vous n'avez pas les permissions nécessaires pour accéder à cette application"
   },
   "PROVINCES": {
     "ON": "Ontario",
