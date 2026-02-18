@@ -392,6 +392,7 @@
     "UNSUBSCRIBE": "Se désabonner des notifications",
     "IN_DUPLICATE_GROUP": "Ce signalement est dans un groupe de doublons",
     "IN_DUPLICATE_GROUP_DESC": "Ce rapport fait partie d'un groupe de doublons en cours de révision. Rendez-vous sur la page des doublons pour gérer les membres du groupe.",
-    "GO_TO_DUPLICATES": "Aller aux doublons"
+    "GO_TO_DUPLICATES": "Aller aux doublons",
+    "EDIT_PROBLEM": "Éditer le problème"
   }
 }

@@ -392,6 +392,7 @@
     "UNSUBSCRIBE": "Unsubscribe from notifications",
     "IN_DUPLICATE_GROUP": "This report is in a duplicate group",
     "IN_DUPLICATE_GROUP_DESC": "This report is part of a duplicate group under review. Go to the duplicates page to manage group members.",
-    "GO_TO_DUPLICATES": "Go to duplicates"
+    "GO_TO_DUPLICATES": "Go to duplicates",
+    "EDIT_PROBLEM": "Edit problem"
   }
 }
