@@ -40,6 +40,6 @@ export interface PaginatedDuplicateGroup {
 
 export interface CreateDuplicateGroupDTO {
   name: string;
-  aiReasonEN: string | null;
-  aiReasonFR: string | null;
+  aiReasonEN?: string;
+  aiReasonFR?: string;
 }
