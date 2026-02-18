@@ -102,6 +102,15 @@ export class WhiteService {
     );
   }
 
+  async moveMemberToGroup(memberId: number, targetGroupId: number): Promise<{ message: string }> {
+    return await lastValueFrom(
+      this.http.put<{ message: string }>(
+        `${this.apiUrl}/api/ColBlanc/duplicate-groups/members/${memberId}/move`,
+        { targetGroupId }
+      )
+    );
+  }
+
   async editProblem(id: number, dto: ProblemeEditDTO): Promise<Problem> {
     return await lastValueFrom(
       this.http.put<Problem>(`${this.apiUrl}/api/ColBlanc/${id}/edit`, dto)
