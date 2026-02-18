@@ -50,6 +50,7 @@ export class ManageDuplicates implements OnInit {
   readonly showClosed = signal(false);
   readonly dragError = signal('');
   readonly movingMemberId = signal<number | null>(null);
+  readonly dragOverGroupId = signal<number | null>(null);
 
   get navigationTabs(): NavigationTab[] {
     return [
@@ -104,7 +105,6 @@ export class ManageDuplicates implements OnInit {
     try {
       const fullGroup = await this.whiteService.getDuplicateGroup(group.id);
       this.selectedGroupId.set(fullGroup.id);
-      // Update the group in the list with full data
       const groups = this.groups();
       const index = groups.findIndex(g => g.id === group.id);
       if (index !== -1) {
@@ -118,23 +118,21 @@ export class ManageDuplicates implements OnInit {
 
   async excludeProblem(groupId: number, problemeId: number, event: Event) {
     event.stopPropagation();
-    
+
     if (!confirm(this.translateService.instant('DUPLICATES.CONFIRM_EXCLUDE'))) {
       return;
     }
 
     try {
       await this.whiteService.excludeProblemFromGroup(groupId, problemeId);
-      
-      // Refresh the group
+
       const groups = this.groups();
       const groupIndex = groups.findIndex(g => g.id === groupId);
       if (groupIndex !== -1) {
         const updatedGroup = await this.whiteService.getDuplicateGroup(groupId);
         groups[groupIndex] = updatedGroup;
         this.groups.set([...groups]);
-        
-        // If no members left, deselect and reload the groups list
+
         if (updatedGroup.members.length === 0) {
           this.selectedGroupId.set(null);
           await this.loadGroups(this.currentPage());
@@ -147,7 +145,7 @@ export class ManageDuplicates implements OnInit {
 
   async acceptGroup(groupId: number, event: Event) {
     event.stopPropagation();
-    
+
     if (!confirm(this.translateService.instant('DUPLICATES.CONFIRM_ACCEPT'))) {
       return;
     }
@@ -169,7 +167,7 @@ export class ManageDuplicates implements OnInit {
   }
 
   async toggleShowClosed() {
-    this.showClosed.update(value => !value);
+    this.showClosed.update(v => !v);
     this.selectedGroupId.set(null);
     this.currentPage.set(1);
     this.loading.set(true);
@@ -177,20 +175,19 @@ export class ManageDuplicates implements OnInit {
     this.loading.set(false);
   }
 
-  /** Retourne les IDs CDK de toutes les listes de membres (pour connecter le drag-drop entre groupes). */
   getDropListIds(): string[] {
-    return this.groups().map(g => `members-list-${g.id}`);
+    return this.groups().map(g => `group-drop-${g.id}`);
   }
 
-  /** Appelé lorsqu'un membre est déposé dans un groupe cible. */
   async dropMember(event: CdkDragDrop<DuplicateGroupMember[]>, targetGroupId: number) {
+    this.dragOverGroupId.set(null);
+
     if (event.previousContainer === event.container) {
       return;
     }
 
     const member: DuplicateGroupMember = event.item.data;
-    // L'ID CDK de la liste source est "members-list-{groupId}"
-    const sourceGroupId = parseInt(event.previousContainer.id.replace('members-list-', ''), 10);
+    const sourceGroupId = parseInt(event.previousContainer.id.replace('group-drop-', ''), 10);
 
     if (member.isPrimary) {
       this.dragError.set(this.translateService.instant('DUPLICATES.CANNOT_MOVE_PRIMARY'));
@@ -201,7 +198,6 @@ export class ManageDuplicates implements OnInit {
     this.movingMemberId.set(member.id);
     this.dragError.set('');
 
-    // Mise à jour optimiste de l'UI
     const groups = this.groups();
     const sourceIndex = groups.findIndex(g => g.id === sourceGroupId);
     const targetIndex = groups.findIndex(g => g.id === targetGroupId);
@@ -218,7 +214,6 @@ export class ManageDuplicates implements OnInit {
     try {
       await this.whiteService.moveMemberToGroup(member.id, targetGroupId);
 
-      // Rafraîchir les deux groupes concernés
       const [updatedSource, updatedTarget] = await Promise.all([
         this.whiteService.getDuplicateGroup(sourceGroupId),
         this.whiteService.getDuplicateGroup(targetGroupId),
@@ -230,18 +225,17 @@ export class ManageDuplicates implements OnInit {
         return g;
       });
 
-      // Retirer les groupes sans membres
       this.groups.set(refreshed.filter(g => g.members.length > 0));
 
       if (updatedSource.members.length === 0 && this.selectedGroupId() === sourceGroupId) {
         this.selectedGroupId.set(null);
       }
     } catch (e: any) {
-      this.dragError.set(e?.error?.message || 'DUPLICATES.MOVE_ERROR');
-      // Annuler la mise à jour optimiste
+      this.dragError.set(e?.error?.message || this.translateService.instant('DUPLICATES.MOVE_ERROR'));
       await this.loadGroups(this.currentPage());
     } finally {
       this.movingMemberId.set(null);
     }
   }
 }
+

@@ -2,13 +2,10 @@
   <app-page-header [title]="'DUPLICATES.TITLE' | translate"
     [subtitle]="'DUPLICATES.SUBTITLE' | translate" />
 
-  <!-- Navigation Tabs -->
   <app-navigation-tabs [tabs]="navigationTabs" />
 
-  <!-- AI Processing Status -->
   <app-ai-processing-status />
 
-  <!-- Toggle for Closed Groups -->
   <div class="toggle-section">
     <label class="checkbox-label">
       <input type="checkbox" [checked]="showClosed()" (change)="toggleShowClosed()" class="checkbox-input" />
@@ -20,12 +17,10 @@
     </span>
   </div>
 
-  <!-- Loading State -->
   @if (loading()) {
     <app-loading-spinner />
   }
 
-  <!-- Error Banner -->
   @if (!loading() && errorMessage()) {
     <div class="error-banner">
       <i class="fas fa-exclamation-triangle"></i>
@@ -33,7 +28,6 @@
     </div>
   }
 
-  <!-- Drag Error Banner -->
   @if (dragError()) {
     <div class="error-banner error-banner--drag">
       <i class="fas fa-ban"></i>
@@ -41,7 +35,6 @@
     </div>
   }
 
-  <!-- Empty State -->
   @if (!loading() && !errorMessage() && groups().length === 0) {
     <app-empty-state
       iconClass="fas fa-check-circle"
@@ -49,88 +42,80 @@
       [description]="'DUPLICATES.NO_GROUPS_DESC' | translate" />
   }
 
-  <!-- Groups List (CDK Drop List Group) -->
   @if (!loading() && groups().length > 0) {
     <div class="groups-list" cdkDropListGroup>
       @for (group of groups(); track group.id) {
-        <app-duplicate-group-card
-          [group]="group"
-          [isExpanded]="selectedGroupId() === group.id"
-          (toggleExpanded)="selectGroup(group)">
 
-          <!-- Group Actions -->
-          <div class="group-actions">
-            <button class="btn btn-success"
-                    (click)="acceptGroup(group.id, $event)"
-                    [disabled]="group.isClosed">
-              <i class="fas fa-check"></i>
-              {{ 'DUPLICATES.ACCEPT_GROUP' | translate }}
-            </button>
-            @if (group.isClosed) {
-              <span class="badge badge-secondary">
-                <i class="fas fa-lock"></i>
-                {{ 'DUPLICATES.GROUP_CLOSED' | translate }}
-              </span>
-            }
-          </div>
+        <div class="group-drop-zone"
+             cdkDropList
+             [id]="'group-drop-' + group.id"
+             [cdkDropListData]="group.members"
+             [cdkDropListConnectedTo]="getDropListIds()"
+             [cdkDropListDisabled]="group.isClosed"
+             (cdkDropListDropped)="dropMember($event, group.id)"
+             (cdkDropListEntered)="dragOverGroupId.set(group.id)"
+             (cdkDropListExited)="dragOverGroupId.set(null)">
 
-          <!-- Members Drop List -->
-          <div class="members-list"
-               cdkDropList
-               [id]="'members-list-' + group.id"
-               [cdkDropListData]="group.members"
-               [cdkDropListConnectedTo]="getDropListIds()"
-               [cdkDropListDisabled]="group.isClosed"
-               (cdkDropListDropped)="dropMember($event, group.id)">
+          <app-duplicate-group-card
+            [group]="group"
+            [isExpanded]="selectedGroupId() === group.id"
+            [isDragOver]="dragOverGroupId() === group.id"
+            (toggleExpanded)="selectGroup(group)">
 
-            @for (member of group.members; track member.id) {
-              <div cdkDrag
-                   [cdkDragData]="member"
-                   [cdkDragDisabled]="member.isPrimary || group.isClosed"
-                   class="member-drag-wrapper"
-                   [class.member-drag-wrapper--primary]="member.isPrimary"
-                   [class.member-drag-wrapper--moving]="movingMemberId() === member.id">
+            <div class="group-actions">
+              <button class="btn btn-success"
+                      (click)="acceptGroup(group.id, $event)"
+                      [disabled]="group.isClosed">
+                <i class="fas fa-check"></i>
+                {{ 'DUPLICATES.ACCEPT_GROUP' | translate }}
+              </button>
+            </div>
 
-                <!-- Placeholder pendant le drag -->
-                <div *cdkDragPlaceholder class="member-drag-placeholder">
-                  <i class="fas fa-arrows-alt"></i>
+            <div class="members-list">
+              @for (member of group.members; track member.id) {
+                <div cdkDrag
+                     [cdkDragData]="member"
+                     [cdkDragDisabled]="member.isPrimary || group.isClosed"
+                     class="member-drag-wrapper"
+                     [class.member-drag-wrapper--moving]="movingMemberId() === member.id">
+
+                  <div *cdkDragPlaceholder class="member-drag-placeholder">
+                    <i class="fas fa-arrows-alt"></i>
+                    {{ 'DUPLICATES.DROP_HERE' | translate }}
+                  </div>
+
+                  <div *cdkDragPreview class="member-drag-preview">
+                    <i class="fas fa-clone"></i>
+                    <span>{{ member.probleme?.titre || ('DUPLICATES.REPORT' | translate) + ' #' + member.problemeId }}</span>
+                  </div>
+
+                  @if (!member.isPrimary && !group.isClosed) {
+                    <div cdkDragHandle class="drag-handle" [title]="'DUPLICATES.DRAG_TO_MOVE' | translate">
+                      <i class="fas fa-grip-vertical"></i>
+                    </div>
+                  }
+
+                  <app-duplicate-member-card
+                    class="member-card-fill"
+                    [member]="member"
+                    [isGroupClosed]="group.isClosed"
+                    (exclude)="excludeProblem(group.id, member.problemeId, $event)" />
+                </div>
+              }
+
+              @if (group.members.length === 0) {
+                <div class="drop-zone-empty">
+                  <i class="fas fa-inbox"></i>
                   {{ 'DUPLICATES.DROP_HERE' | translate }}
                 </div>
+              }
+            </div>
 
-                <!-- Aperçu pendant le drag (preview) -->
-                <div *cdkDragPreview class="member-drag-preview">
-                  <i class="fas fa-clone"></i>
-                  <span>{{ member.probleme?.titre || ('DUPLICATES.REPORT' | translate) + ' #' + member.problemeId }}</span>
-                </div>
-
-                <!-- Poignée de drag -->
-                @if (!member.isPrimary && !group.isClosed) {
-                  <div cdkDragHandle class="drag-handle" [title]="'DUPLICATES.DRAG_TO_MOVE' | translate">
-                    <i class="fas fa-grip-vertical"></i>
-                  </div>
-                }
-
-                <app-duplicate-member-card
-                  [member]="member"
-                  [isGroupClosed]="group.isClosed"
-                  (exclude)="excludeProblem(group.id, member.problemeId, $event)" />
-              </div>
-            }
-
-            <!-- Zone de dépôt vide (toujours visible pour les drops) -->
-            @if (group.members.length === 0) {
-              <div class="drop-zone-empty">
-                <i class="fas fa-inbox"></i>
-                {{ 'DUPLICATES.DROP_HERE' | translate }}
-              </div>
-            }
-          </div>
-
-        </app-duplicate-group-card>
+          </app-duplicate-group-card>
+        </div>
       }
     </div>
 
-    <!-- Pagination -->
     <app-pagination
       [currentPage]="currentPage()"
       [totalPages]="totalPages()"

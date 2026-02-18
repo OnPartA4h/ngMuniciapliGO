@@ -1,4 +1,11 @@
 /* Duplicate Member Card */
+
+:host {
+  display: block;
+  min-width: 0;
+  flex: 1;
+}
+
 .member-card {
   position: relative;
   display: flex;

@@ -19,6 +19,12 @@
   box-shadow: var(--shadow-lg);
 }
 
+.group-card--drag-over {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 33, 150, 243), 0.2), var(--shadow-lg);
+  background: rgba(var(--color-primary-rgb, 33, 150, 243), 0.03);
+}
+
 .group-card__header {
   display: flex;
   align-items: center;

@@ -1,4 +1,4 @@
-import { Component, input, output, signal, inject } from '@angular/core';
+import { Component, input, output, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 import { DuplicateGroup } from '../../../models/duplicate-group';
@@ -16,6 +16,7 @@ export class DuplicateGroupCardComponent {
 
   readonly group = input.required<DuplicateGroup>();
   readonly isExpanded = input(false);
+  readonly isDragOver = input(false);
   readonly toggleExpanded = output<void>();
 
   onToggle() {
