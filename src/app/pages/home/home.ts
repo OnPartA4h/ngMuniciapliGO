@@ -19,20 +19,23 @@ export class Home {
   languageService = inject(LanguageService);
   datasets!: ChartData<'line', { x: number; y: number }[]>;
   currentTimeSpan: number = 0;
+  currentAssigneA: number = 0;
   stats: any;
 
   async ngOnInit() {
     await Promise.all([
       this.generalService.loadTimeSpans(),
+      this.generalService.loadAssigneA(),
       this.getStats()
     ]);
     this.languageService.onLangChange().subscribe(() => {
       this.generalService.loadTimeSpans();
+      this.generalService.loadAssigneA();
     });
   }
 
   async getStats() {
-    this.stats = await this.generalService.getStats(this.currentTimeSpan)
+    this.stats = await this.generalService.getStats(this.currentTimeSpan, this.currentAssigneA)
 
     const graph: GraphDTO[] = this.stats.graph;
 

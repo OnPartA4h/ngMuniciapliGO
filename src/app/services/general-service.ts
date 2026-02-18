@@ -56,9 +56,13 @@ export class GeneralService {
     );
   }
 
-  async getStats(span: number): Promise<any> {
+  async getStats(span: number, assigneA: number | null = null): Promise<any> {
+    let ass = ""
+    if (assigneA) {
+      ass = `?assigneA=${assigneA}`;
+    }
     return await lastValueFrom(
-      this.http.get<any>(`${this.apiUrl}/api/Stats/${span}`)
+      this.http.get<any>(`${this.apiUrl}/api/Stats/${span}${ass}`)
     );
   }
 

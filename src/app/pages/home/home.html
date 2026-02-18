@@ -9,6 +9,11 @@
             <option [value]="$index">{{ s.label }}</option>
             }
         </select>
+        <select [(ngModel)]="currentAssigneA" (change)="getStats()">
+            @for (s of generalService.assignees(); track $index) {
+            <option [value]="$index">{{ s.label }}</option>
+            }
+        </select>
     </div>
     <div class="stat-boxes-row">
         <app-stat-box title="Temps de résolution moyen" [value]="stats?.tempsResolution"></app-stat-box>
