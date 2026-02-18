@@ -184,6 +184,22 @@
     "MESSAGE": "Are you sure you want to delete user <strong>{{firstName}} {{lastName}}</strong>?",
     "WARNING": "This action cannot be undone."
   },
+  "CREATE_DUPLICATE_GROUP": {
+    "TITLE": "Create Duplicate Group",
+    "SUBTITLE": "Manually create an empty group to move reports into via drag and drop",
+    "NAME": "Group name",
+    "NAME_PLACEHOLDER": "E.g.: Potholes on Saint-Denis street",
+    "NAME_HINT": "Give a descriptive name to easily identify this group.",
+    "NAME_REQUIRED": "Group name is required.",
+    "REASON_FR": "Reason (French)",
+    "REASON_FR_PLACEHOLDER": "Describe why these reports are similar…",
+    "REASON_EN": "Reason (English)",
+    "REASON_EN_PLACEHOLDER": "Describe why these reports are similar…",
+    "REASON_HINT": "Optional — helps agents understand the grouping.",
+    "INFO": "Once created, the group will appear in the duplicates list. You can then drag and drop reports from other groups into it.",
+    "SUBMIT": "Create group",
+    "ERROR": "An error occurred while creating the group."
+  },
   "CREATE_USER": {
     "TITLE": "Create New User",
     "SUBTITLE": "Fill in the information below to create a user account",
@@ -285,7 +301,10 @@
     "ERROR_UPDATING": "Error updating problem",
     "NOT_FOUND": "Problem Not Found",
     "NOT_FOUND_DESC": "The problem you're looking for doesn't exist or has been deleted.",
-    "GO_BACK": "Go Back"
+    "GO_BACK": "Go Back",
+    "IN_DUPLICATE_GROUP": "This report is in a duplicate group",
+    "IN_DUPLICATE_GROUP_DESC": "This report is part of a duplicate group under review. Go to the duplicates page to manage group members.",
+    "GO_TO_DUPLICATES": "Go to duplicates"
   },
   "LOGIN": {
     "SUBTITLE": "Sign in to your account",
@@ -365,6 +384,7 @@
     "TAB": "Duplicates",
     "GROUP": "Group",
     "REPORTS": "reports",
+    "REPORT": "Report",
     "SIMILARITY": "Similarity",
     "NO_GROUPS": "No duplicates detected",
     "NO_GROUPS_DESC": "There are currently no duplicate report groups pending review.",
@@ -374,7 +394,15 @@
     "CONFIRM_EXCLUDE": "Are you sure you want to exclude this report from the group?",
     "CONFIRM_ACCEPT": "Are you sure you want to accept this group and merge the reports?",
     "SHOW_CLOSED": "Show closed groups",
-    "GROUP_CLOSED": "Group closed"
+    "GROUP_CLOSED": "Group closed",
+    "DRAG_HINT": "Drag a report onto another group to move it",
+    "DRAG_TO_MOVE": "Drag to move to another group",
+    "DROP_HERE": "Drop here",
+    "CANNOT_MOVE_PRIMARY": "The primary member cannot be moved to another group",
+    "MOVE_ERROR": "Error while moving the report",
+    "CREATE_GROUP": "Create group",
+    "EMPTY_GROUP": "Empty group",
+    "EMPTY_GROUP_HINT": "This group is empty. Drag and drop reports from another group to add them here."
   },
   "DASHBOARD": {
     "TITLE": "Dashboard",
@@ -382,6 +410,10 @@
   },
   "REPORT_DETAILS": {
     "SUBSCRIBE": "Subscribe to notifications",
-    "UNSUBSCRIBE": "Unsubscribe from notifications"
+    "UNSUBSCRIBE": "Unsubscribe from notifications",
+    "IN_DUPLICATE_GROUP": "This report is in a duplicate group",
+    "IN_DUPLICATE_GROUP_DESC": "This report is part of a duplicate group under review. Go to the duplicates page to manage group members.",
+    "GO_TO_DUPLICATES": "Go to duplicates",
+    "EDIT_PROBLEM": "Edit problem"
   }
 }

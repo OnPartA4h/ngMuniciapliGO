@@ -13,6 +13,39 @@
   animation: fadeIn 0.3s ease;
 }
 
+/* Notice pour les rapports en groupe de doublons */
+.duplicate-group-notice {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  background: var(--color-primary-light);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--border-radius-md);
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+}
+
+.duplicate-group-notice i {
+  color: var(--color-primary);
+  font-size: var(--font-size-lg);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.duplicate-group-notice__title {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  margin: 0 0 4px 0;
+}
+
+.duplicate-group-notice__desc {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  margin: 0;
+  line-height: 1.4;
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .page-container {

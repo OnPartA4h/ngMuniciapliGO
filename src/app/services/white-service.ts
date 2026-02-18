@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Problem, ProblemeEditDTO } from '../models/problem';
-import { DuplicateGroup, PaginatedDuplicateGroup } from '../models/duplicate-group';
+import { CreateDuplicateGroupDTO, DuplicateGroup, PaginatedDuplicateGroup } from '../models/duplicate-group';
 
 @Injectable({
   providedIn: 'root',
@@ -99,6 +99,21 @@ export class WhiteService {
   async acceptDuplicateGroup(groupId: number): Promise<DuplicateGroup> {
     return await lastValueFrom(
       this.http.post<DuplicateGroup>(`${this.apiUrl}/api/ColBlanc/duplicate-groups/${groupId}/accept`, null)
+    );
+  }
+
+  async moveMemberToGroup(memberId: number, targetGroupId: number): Promise<{ message: string }> {
+    return await lastValueFrom(
+      this.http.put<{ message: string }>(
+        `${this.apiUrl}/api/ColBlanc/duplicate-groups/members/${memberId}/move`,
+        { targetGroupId }
+      )
+    );
+  }
+
+  async createDuplicateGroup(dto: CreateDuplicateGroupDTO): Promise<DuplicateGroup> {
+    return await lastValueFrom(
+      this.http.post<DuplicateGroup>(`${this.apiUrl}/api/ColBlanc/duplicate-groups`, dto)
     );
   }
 

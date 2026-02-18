@@ -16,6 +16,21 @@
       <h2>{{ 'EDIT_PROBLEM.FORM_TITLE' | translate }}</h2>
       <p class="form-card__description">{{ 'EDIT_PROBLEM.FORM_DESCRIPTION' | translate }}</p>
 
+      <!-- Notice pour les rapports en groupe de doublons -->
+      @if (problem() && problem()!.isInOpenDuplicateGroup) {
+        <div class="duplicate-group-notice">
+          <i class="fas fa-clone"></i>
+          <div>
+            <p class="duplicate-group-notice__title">{{ 'EDIT_PROBLEM.IN_DUPLICATE_GROUP' | translate }}</p>
+            <p class="duplicate-group-notice__desc">{{ 'EDIT_PROBLEM.IN_DUPLICATE_GROUP_DESC' | translate }}</p>
+          </div>
+        </div>
+        <a routerLink="/manage-duplicates" class="btn btn-primary btn-sm" style="margin-bottom: var(--spacing-lg);">
+          <i class="fas fa-arrow-right"></i>
+          {{ 'EDIT_PROBLEM.GO_TO_DUPLICATES' | translate }}
+        </a>
+      }
+
       <!-- Success Message -->
       @if (successMessage()) {
         <div class="form-alert form-alert--success">
