@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment';
 import { RoleOption } from '../models/user';
 import { StatusOption, CategoryOption, AssigneAOption, TimeSpanOption } from '../models/problem';
 import { LanguageService } from './language-service';
+import { District } from '../models/district';
+import { HtmlParser } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root',
@@ -73,6 +75,13 @@ export class GeneralService {
         { params }
       )
     );
+  }
+
+  async getDistricts(): Promise<District[]> {
+    let res = await lastValueFrom(this.http.get<District[]>(`${this.apiUrl}/api/General/districts`))
+    console.log(res);
+
+    return res
   }
 
   async loadCategories() {

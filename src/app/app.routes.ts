@@ -11,6 +11,7 @@ export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.Login), canActivate: [loginGuard] },
   { path: 'manage-reports', loadComponent: () => import('./pages/manage-reports/manage-reports').then(m => m.ManageReports), canActivate: [authGuard, whiteGuard] },
   { path: 'manage-duplicates', loadComponent: () => import('./pages/manage-duplicates/manage-duplicates').then(m => m.ManageDuplicates), canActivate: [authGuard, whiteGuard] },
+  { path: 'create-duplicate-group', loadComponent: () => import('./pages/create-duplicate-group/create-duplicate-group').then(m => m.CreateDuplicateGroup), canActivate: [authGuard, whiteGuard] },
   { path: 'manage-users', loadComponent: () => import('./pages/manage-users/manage-users').then(m => m.ManageUsers), canActivate: [authGuard, adminGuard] },
   { path: 'create-user', loadComponent: () => import('./pages/create-user/create-user').then(m => m.CreateUser), canActivate: [authGuard, adminGuard] },
   { path: 'report-details/:id', loadComponent: () => import('./pages/report-details/report-details').then(m => m.ReportDetails), canActivate: [authGuard] },

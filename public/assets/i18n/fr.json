@@ -47,7 +47,24 @@
     "UNREAD": "Non lues",
     "READ": "Lues",
     "NO_NOTIFICATIONS": "Aucune notification",
-    "NO_NOTIFICATIONS_DESC": "Vous êtes à jour ! Aucune nouvelle notification pour le moment."
+    "NO_NOTIFICATIONS_DESC": "Vous êtes à jour ! Aucune nouvelle notification pour le moment.",
+    "REPORT_REASON": "Raison",
+    "DELETE_COMMENT": "Supprimer",
+    "IGNORE_REPORT": "Ignorer",
+    "CONFIRM_DELETE": "Êtes-vous sûr de vouloir supprimer ce commentaire ?",
+    "CONFIRM_IGNORE": "Êtes-vous sûr de vouloir ignorer ce signalement ?",
+    "COMMENT_DELETED": "Commentaire supprimé avec succès",
+    "REPORT_IGNORED": "Signalement ignoré avec succès",
+    "ERROR_DELETE": "Erreur lors de la suppression du commentaire",
+    "ERROR_IGNORE": "Erreur lors de l'ignorance du signalement",
+    "CATEGORY_SPAM": "Spam",
+    "CATEGORY_INAPPROPRIATE_LANGUAGE": "Langage inapproprié",
+    "CATEGORY_HARASSMENT": "Harcèlement",
+    "CATEGORY_HATE_SPEECH": "Propos haineux",
+    "CATEGORY_THREATS": "Menaces",
+    "CATEGORY_MISINFORMATION": "Désinformation",
+    "CATEGORY_OFF_TOPIC": "Hors sujet",
+    "CATEGORY_OTHER": "Autre"
   },
   "PROFILE": {
     "TITLE": "Mon profil",
@@ -167,6 +184,22 @@
     "MESSAGE": "Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{{firstName}} {{lastName}}</strong> ?",
     "WARNING": "Cette action est irréversible."
   },
+  "CREATE_DUPLICATE_GROUP": {
+    "TITLE": "Créer un groupe de doublons",
+    "SUBTITLE": "Créez manuellement un groupe vide pour y déplacer des signalements par glisser-déposer",
+    "NAME": "Nom du groupe",
+    "NAME_PLACEHOLDER": "Ex. : Nids-de-poule rue Saint-Denis",
+    "NAME_HINT": "Donnez un nom descriptif pour identifier facilement ce groupe.",
+    "NAME_REQUIRED": "Le nom du groupe est obligatoire.",
+    "REASON_FR": "Raison (Français)",
+    "REASON_FR_PLACEHOLDER": "Décrivez pourquoi ces signalements sont similaires…",
+    "REASON_EN": "Reason (English)",
+    "REASON_EN_PLACEHOLDER": "Describe why these reports are similar…",
+    "REASON_HINT": "Optionnel — aide les agents à comprendre le regroupement.",
+    "INFO": "Une fois créé, le groupe apparaîtra dans la liste des doublons. Vous pourrez y glisser-déposer des signalements depuis d'autres groupes.",
+    "SUBMIT": "Créer le groupe",
+    "ERROR": "Une erreur est survenue lors de la création du groupe."
+  },
   "CREATE_USER": {
     "TITLE": "Créer un nouvel utilisateur",
     "SUBTITLE": "Remplissez les informations ci-dessous pour créer un compte utilisateur",
@@ -268,7 +301,10 @@
     "ERROR_UPDATING": "Erreur lors de la mise à jour du problème",
     "NOT_FOUND": "Problème introuvable",
     "NOT_FOUND_DESC": "Le problème que vous recherchez n'existe pas ou a été supprimé.",
-    "GO_BACK": "Retour"
+    "GO_BACK": "Retour",
+    "IN_DUPLICATE_GROUP": "Ce signalement est dans un groupe de doublons",
+    "IN_DUPLICATE_GROUP_DESC": "Ce rapport fait partie d'un groupe de doublons en cours de révision. Rendez-vous sur la page des doublons pour gérer les membres du groupe.",
+    "GO_TO_DUPLICATES": "Aller aux doublons"
   },
   "LOGIN": {
     "SUBTITLE": "Connectez-vous à votre compte",
@@ -286,7 +322,11 @@
     "SEND_RESET_LINK": "Envoyer le lien de réinitialisation",
     "SIGN_IN": "Se connecter",
     "SIGNING_IN": "Connexion en cours...",
-    "ERROR_MESSAGE": "Identifiants invalides. Veuillez réessayer."
+    "ERROR_MESSAGE": "Identifiants invalides. Veuillez réessayer.",
+    "INVALID_CREDENTIALS": "Identifiants invalides",
+    "SERVER_ERROR": "Erreur du serveur",
+    "SOMETHING_WENT_WRONG": "Une erreur s'est produite",
+    "INSUFFICIENT_PERMISSIONS": "Vous n'avez pas les permissions nécessaires pour accéder à cette application"
   },
   "PROVINCES": {
     "ON": "Ontario",
@@ -344,6 +384,7 @@
     "TAB": "Doublons",
     "GROUP": "Groupe",
     "REPORTS": "signalements",
+    "REPORT": "Signalement",
     "SIMILARITY": "Similarité",
     "NO_GROUPS": "Aucun doublon détecté",
     "NO_GROUPS_DESC": "Il n'y a actuellement aucun groupe de signalements en double en attente de révision.",
@@ -353,7 +394,15 @@
     "CONFIRM_EXCLUDE": "Êtes-vous sûr de vouloir exclure ce signalement du groupe ?",
     "CONFIRM_ACCEPT": "Êtes-vous sûr de vouloir accepter ce groupe et fusionner les signalements ?",
     "SHOW_CLOSED": "Afficher les groupes fermés",
-    "GROUP_CLOSED": "Groupe fermé"
+    "GROUP_CLOSED": "Groupe fermé",
+    "DRAG_HINT": "Glissez un signalement vers un autre groupe pour le déplacer",
+    "DRAG_TO_MOVE": "Glisser pour déplacer vers un autre groupe",
+    "DROP_HERE": "Déposer ici",
+    "CANNOT_MOVE_PRIMARY": "Le membre principal ne peut pas être déplacé vers un autre groupe",
+    "MOVE_ERROR": "Erreur lors du déplacement du signalement",
+    "CREATE_GROUP": "Créer un groupe",
+    "EMPTY_GROUP": "Groupe vide",
+    "EMPTY_GROUP_HINT": "Ce groupe est vide. Glissez-déposez des signalements depuis un autre groupe pour les y ajouter."
   },
   "DASHBOARD": {
     "TITLE": "Tableau de bord",
@@ -370,6 +419,10 @@
   },
   "REPORT_DETAILS": {
     "SUBSCRIBE": "S'abonner aux notifications",
-    "UNSUBSCRIBE": "Se désabonner des notifications"
+    "UNSUBSCRIBE": "Se désabonner des notifications",
+    "IN_DUPLICATE_GROUP": "Ce signalement est dans un groupe de doublons",
+    "IN_DUPLICATE_GROUP_DESC": "Ce rapport fait partie d'un groupe de doublons en cours de révision. Rendez-vous sur la page des doublons pour gérer les membres du groupe.",
+    "GO_TO_DUPLICATES": "Aller aux doublons",
+    "EDIT_PROBLEM": "Éditer le problème"
   }
 }

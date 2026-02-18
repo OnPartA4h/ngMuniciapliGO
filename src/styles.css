@@ -1102,3 +1102,39 @@ body {
 /* Responsive Globals */
 /* (consolidated in the first @media block above) */
 
+/* =====================================================
+   Angular CDK Drag & Drop — styles globaux
+   La preview est injectée dans le <body> par CDK,
+   elle n'hérite pas des styles du composant parent.
+   ===================================================== */
+
+/* Boîte flottante qui suit le curseur */
+.cdk-drag-preview.member-drag-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: var(--color-white);
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  max-width: 360px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Pas de pointer-events:none ici — CDK en a besoin pour calculer le drop */
+  z-index: 1000;
+}
+
+.cdk-drag-preview.member-drag-preview i {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* Animation de retour quand on annule, ou vers la cible au drop */
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0.2, 0, 0, 1);
+}

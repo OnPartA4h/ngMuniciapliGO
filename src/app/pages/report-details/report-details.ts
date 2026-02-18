@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
@@ -17,7 +17,7 @@ import { NotificationService } from '../../services/notification.service';
   selector: 'app-report-details',
   templateUrl: './report-details.html',
   styleUrl: './report-details.css',
-  imports: [DaysAgoPipe, FormsModule, TranslateModule, MatSnackBarModule],
+  imports: [DaysAgoPipe, FormsModule, TranslateModule, MatSnackBarModule, RouterLink],
 })
 export class ReportDetails implements OnInit {
   private route = inject(ActivatedRoute);

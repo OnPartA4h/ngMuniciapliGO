@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ForceResetPasswordModal } from '../../components/modals/force-reset-password-modal/force-reset-password-modal';
 import { ForgotPasswordModal } from '../../components/modals/forgot-password-modal/forgot-password-modal';
 
@@ -17,13 +17,17 @@ export class Login {
   authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   router = inject(Router);
-
+  private translateService = inject(TranslateService);
   
   formGroup: FormGroup;
   showResetPasswordModal = false;
   showForgotPasswordModal = false;
   currentPassword = '';
   isLoading = false;
+
+  roles: string[] = []
+  token: string | null = null
+  errorMessage: string = ""
 
   constructor() {
     this.formGroup = this.formBuilder.group(
@@ -45,8 +49,10 @@ export class Login {
     try {
       await this.authService.login(email, password)
 
-      let token = this.authService.token()
-      let roles = this.authService.roles()
+      this.token = this.authService.token()
+      this.roles = this.authService.roles()
+
+      this.verifyPermissions()
 
       const loginResponse = this.authService.getLoginResponse();
       if (loginResponse && loginResponse.user.mustResetPassword) {
@@ -56,19 +62,20 @@ export class Login {
         return;
       }
 
-      if (roles.includes('Admin') && token){
-        this.router.navigate(['/manage-users'])
-        await this.authService.connectToNotificationHub();
-        return
-      }
+      await this.handleRedirection()
 
-      if (roles.includes('ColBlanc') && token){
-        this.router.navigate(['/manage-reports'])
-        await this.authService.connectToNotificationHub();
-        return
+    } catch (error: any) {
+      switch (error.status) {
+        case 401:
+          this.errorMessage = this.translateService.instant('LOGIN.INVALID_CREDENTIALS');
+          break;
+        case 500:
+          this.errorMessage = this.translateService.instant('LOGIN.SERVER_ERROR');
+          break;
+        default:
+          this.errorMessage = this.translateService.instant('LOGIN.SOMETHING_WENT_WRONG');
+          break
       }
-    } catch (error) {
-      console.error('Login error:', error);
     } finally {
       this.isLoading = false;
     }
@@ -76,16 +83,25 @@ export class Login {
 
   async onPasswordReset() {
     this.showResetPasswordModal = false;
-    let roles = this.authService.roles()
-    let token = this.authService.token()
+    await this.handleRedirection()
+  }
 
-    if (roles.includes('Admin') && token){
-      this.router.navigate(['/manage-users'])
-      await this.authService.connectToNotificationHub();
-      return
-    }
+  verifyPermissions(){
+    if (!this.roles.includes("Admin") && !this.roles.includes("ColBlanc")) {
+        console.log("NOT ADMIN OR COL BLANC!!!!");
+        this.errorMessage = this.translateService.instant('LOGIN.INSUFFICIENT_PERMISSIONS');
+        return;
+      }
+  }
 
-    if (roles.includes('ColBlanc') && token){
+  async handleRedirection() {
+    if (this.roles.includes('Admin') && this.token){
+        this.router.navigate(['/manage-users'])
+        await this.authService.connectToNotificationHub();
+        return
+      }
+
+    if (this.roles.includes('ColBlanc') && this.token){
       this.router.navigate(['/manage-reports'])
       await this.authService.connectToNotificationHub();
       return

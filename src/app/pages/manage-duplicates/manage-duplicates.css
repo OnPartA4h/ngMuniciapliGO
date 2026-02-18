@@ -4,6 +4,7 @@
 .toggle-section {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: var(--spacing-2xl);
   padding: var(--spacing-lg);
   background: var(--color-gray-50);
@@ -32,6 +33,30 @@
   color: var(--color-text-primary);
 }
 
+.drag-hint {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.drag-hint i {
+  color: var(--color-primary);
+}
+
+.toggle-section__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.btn-sm {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: var(--font-size-sm);
+}
+
 /* Error Banner */
 .error-banner {
   display: flex;
@@ -54,6 +79,10 @@
   margin-bottom: var(--spacing-2xl);
 }
 
+.group-drop-zone {
+  display: block;
+}
+
 /* Group Actions */
 .group-actions {
   display: flex;
@@ -65,16 +94,12 @@
   align-items: center;
 }
 
-.group-actions .btn {
-  flex: 0 1 auto;
-}
-
 .group-actions .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* Members List */
+/* Members List (Drop Zone) */
 .members-list {
   display: flex;
   flex-direction: column;
@@ -82,8 +107,94 @@
   padding-top: var(--spacing-xl);
 }
 
+.member-drag-wrapper {
+  display: flex;
+  align-items: stretch;
+  gap: var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+  width: 100%;
+}
+
+/* Placeholder CDK : tient la place mais reste invisible.
+   height:0 + overflow:hidden = aucun espace réservé visible.
+   On ne met PAS display:none car CDK a besoin du nœud dans le DOM
+   pour calculer les positions de drop. */
+.member-drag-placeholder--hidden {
+  height: 0 !important;
+  overflow: hidden;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* Masquer UNIQUEMENT l'élément en cours de drag (pas les autres membres).
+   CDK ajoute .cdk-drag-dragging sur le wrapper qui est draggé.
+   On cache son contenu interne (handle + card) mais on garde
+   le nœud DOM pour que CDK suive la position. */
+.member-drag-wrapper.cdk-drag-dragging > .drag-handle,
+.member-drag-wrapper.cdk-drag-dragging > .member-card-fill {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.member-card-fill {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Poignée de drag */
+.drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  flex-shrink: 0;
+  color: var(--color-gray-400);
+  cursor: grab;
+  border-radius: var(--border-radius-sm);
+  transition: color 0.15s ease, background 0.15s ease;
+  font-size: var(--font-size-base);
+}
+
+.drag-handle:hover {
+  color: var(--color-primary);
+  background: var(--color-gray-100);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Zone de dépôt fixe au bas du groupe */
+.drop-zone-target {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  border: 2px dashed var(--color-primary);
+  border-radius: var(--border-radius-md);
+  background: rgba(var(--color-primary-rgb, 33, 150, 243), 0.05);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  pointer-events: none;
+}
+
+/* Animation CDK drag en cours */
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0.2, 0, 0, 1);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
+  .toggle-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
   .groups-list {
     gap: var(--spacing-md);
   }
@@ -100,4 +211,9 @@
     flex: 1;
     min-width: 150px;
   }
+
+  .drag-handle {
+    width: 24px;
+  }
 }
+

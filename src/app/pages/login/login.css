@@ -96,6 +96,11 @@
 .login-error-message {
   text-align: center;
   padding-bottom: var(--spacing-3xl);
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-form {

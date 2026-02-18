@@ -84,4 +84,6 @@ export class NotificationService {
     let res = await lastValueFrom(this.http.get<any>(`${this.apiUrl}/my-subscribed-tasks`, {params: options}))
     return res
   }
+
+  
 }
