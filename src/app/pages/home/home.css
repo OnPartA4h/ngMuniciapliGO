@@ -4,11 +4,15 @@
     margin: 0 auto;
 }
 
-.charts-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin: 32px 0;
+.app-chart-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 32px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
 }
 
 .page-header {
