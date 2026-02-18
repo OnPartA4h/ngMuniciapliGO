@@ -10,5 +10,5 @@ import { CommonModule } from '@angular/common';
 })
 export class StatBox {
     @Input() title!: string;
-    @Input() value!: number | string;
+    @Input() value!: number;
 }

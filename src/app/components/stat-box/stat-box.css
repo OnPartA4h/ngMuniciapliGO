@@ -42,6 +42,10 @@
     font-weight: 400;
 }
 
+.error {
+    color: crimson;
+}
+
 @media (max-width: 900px) {
     .stat-box {
         aspect-ratio: unset;

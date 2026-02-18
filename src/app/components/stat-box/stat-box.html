@@ -1,7 +1,18 @@
 <div class="stat-box">
     <div class="stat-title">{{ title }}</div>
     <div class="stat-value">
+        @if (value !== -1){
+        @if (value > 72){
+        {{ (value / 24) % 1 === 0 ? (value / 24) : (value / 24) | number:'1.1-1' }}
+        <span class="stat-unit">jours</span>
+        }
+        @else {
         {{ value }}
         <span class="stat-unit">heures</span>
+        }
+        }
+        @else {
+        <span class="stat-unit error">No value available</span>
+        }
     </div>
 </div>
