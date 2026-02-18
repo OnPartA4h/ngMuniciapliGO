@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { RoleOption } from '../models/user';
-import { StatusOption, CategoryOption, AssigneAOption } from '../models/problem';
+import { StatusOption, CategoryOption, AssigneAOption, TimeSpanOption } from '../models/problem';
 import { LanguageService } from './language-service';
 
 @Injectable({
@@ -18,6 +18,7 @@ export class GeneralService {
   categories = signal<CategoryOption[]>([]);
   statuses = signal<StatusOption[]>([]);
   assignees = signal<AssigneAOption[]>([]);
+  timeSpans = signal<TimeSpanOption[]>([]);
 
   async getRoles(lang: string): Promise<RoleOption[]> {
     return await lastValueFrom(
@@ -40,6 +41,12 @@ export class GeneralService {
   async getAssigneA(lang: string): Promise<AssigneAOption[]> {
     return await lastValueFrom(
       this.http.get<CategoryOption[]>(`${this.apiUrl}/api/General/assignees/${lang}`)
+    );
+  }
+
+  async getTimeSpans(lang: string): Promise<TimeSpanOption[]> {
+    return await lastValueFrom(
+      this.http.get<CategoryOption[]>(`${this.apiUrl}/api/General/timespans/${lang}`)
     );
   }
 
@@ -82,6 +89,15 @@ export class GeneralService {
     }
   }
 
+  async loadTimeSpans() {
+    try {
+      const lang = this.languageService.getCurrentLanguage();
+      this.timeSpans.set(await this.getTimeSpans(lang));
+    } catch (error) {
+      console.error('Error loading statuses:', error);
+    }
+  }
+
   getStatusLabel(statusKey: number): string {
     const status = this.statuses()[statusKey];
     return status ? status.label : statusKey.toString();
@@ -90,5 +106,10 @@ export class GeneralService {
   getCategoryLabel(categoryKey: number): string {
     const category = this.categories()[categoryKey];
     return category ? category.label : categoryKey.toString();
+  }
+
+  getTimeSpanLabel(spanKey: number): string {
+    const timespan = this.timeSpans()[spanKey];
+    return timespan ? timespan.label : spanKey.toString();
   }
 }

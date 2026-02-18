@@ -3,6 +3,13 @@
         <h1>{{ 'DASHBOARD.TITLE' | translate }}</h1>
         <p>{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
     </div>
+    <div class="filter-group">
+        <select [(ngModel)]="currentTimeSpan" (change)="getStats()">
+            @for (s of generalService.timeSpans(); track $index) {
+            <option [value]="$index">{{ s.label }}</option>
+            }
+        </select>
+    </div>
     <div class="stat-boxes-row">
         <app-stat-box title="Temps de résolution moyen" [value]="stats?.tempsResolution"></app-stat-box>
         <app-stat-box title="Temps de prise en charge moyen" [value]="stats?.tempsPriseEnCharge"></app-stat-box>

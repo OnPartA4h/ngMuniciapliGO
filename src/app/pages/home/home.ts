@@ -5,20 +5,33 @@ import { TranslateModule } from '@ngx-translate/core';
 import { StatBox } from '../../components/stat-box/stat-box';
 import { GeneralService } from '../../services/general-service';
 import { GraphDTO } from '../../models/problem';
+import { LanguageService } from '../../services/language-service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
-  imports: [Chart, TranslateModule, StatBox],
+  imports: [Chart, TranslateModule, StatBox, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home {
   generalService = inject(GeneralService);
-  stats: any;
+  languageService = inject(LanguageService);
   datasets!: ChartData<'line', { x: number; y: number }[]>;
+  currentTimeSpan: number = 0;
+  stats: any;
 
   async ngOnInit() {
-    this.stats = await this.generalService.getStats(2)
+    await Promise.all([
+      this.generalService.loadTimeSpans()
+    ]);
+    this.languageService.onLangChange().subscribe(() => {
+      this.generalService.loadTimeSpans();
+    });
+  }
+
+  async getStats() {
+    this.stats = await this.generalService.getStats(this.currentTimeSpan)
 
     const graph: GraphDTO[] = this.stats.graph;
 

@@ -57,6 +57,10 @@
     height: 100%;
 }
 
+.filter-group {
+    margin-bottom: 16px;
+}
+
 @media (max-width: 900px) {
     .charts-grid {
         grid-template-columns: 1fr;

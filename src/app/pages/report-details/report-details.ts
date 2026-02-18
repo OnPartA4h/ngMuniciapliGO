@@ -46,7 +46,6 @@ export class ReportDetails implements OnInit {
       this.generalService.loadStatuses(),
       this.generalService.loadAssigneA(),
       this.loadProblem(),
-      
     ]);
     this.languageService.onLangChange().subscribe(() => {
       this.generalService.loadCategories();
@@ -179,17 +178,17 @@ export class ReportDetails implements OnInit {
   }
 
   async toggleSubscription() {
-    if (!this.isSubscribed){
+    if (!this.isSubscribed) {
       await this.notifService.subscribe(this.problem.id)
       this.isSubscribed = true
       return
-    } 
+    }
 
     try {
       await this.notifService.unsubscribe(this.problem.id)
       this.isSubscribed = false
     } catch {
-      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.UNSUBSCRIBE_ERROR'), 'OK', { duration: 2000})
+      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.UNSUBSCRIBE_ERROR'), 'OK', { duration: 2000 })
     }
   }
 }

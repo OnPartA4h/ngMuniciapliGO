@@ -17,6 +17,11 @@ export interface AssigneAOption {
   label: string;
 }
 
+export interface TimeSpanOption {
+  key: string;
+  label: string;
+}
+
 export class Problem {
   constructor(
     public id: number,
