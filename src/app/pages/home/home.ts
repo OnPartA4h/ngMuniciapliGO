@@ -4,6 +4,7 @@ import { ChartData, ChartType } from 'chart.js';
 import { TranslateModule } from '@ngx-translate/core';
 import { StatBox } from '../../components/stat-box/stat-box';
 import { GeneralService } from '../../services/general-service';
+import { GraphDTO } from '../../models/problem';
 
 @Component({
   selector: 'app-home',
@@ -14,27 +15,29 @@ import { GeneralService } from '../../services/general-service';
 export class Home {
   generalService = inject(GeneralService);
   stats: any
+  datasets!: ChartData<'bar', number[]>;
 
   async ngOnInit() {
     await Promise.all([
       this.stats = await this.generalService.getStats()
     ]);
-    console.log(this.stats);
-  }
 
-  datasets: ChartData<'bar', number[]> = {
-    labels: ['A', 'B'],
-    datasets: [
-      {
-        label: 'Reported',
-        data: [10, 20],
-        backgroundColor: 'rgba(255, 99, 132, 0.6)'
-      },
-      {
-        label: 'Solved',
-        data: [5, 15],
-        backgroundColor: 'rgba(54, 162, 235, 0.6)'
-      }
-    ]
-  };
+    const graph: GraphDTO[] = this.stats.graph;
+
+    this.datasets = {
+      labels: graph.map(d => d.date),
+      datasets: [
+        {
+          label: 'Reported',
+          data: graph.map(d => d.reportedCount),
+          backgroundColor: 'rgba(255, 99, 132, 0.6)'
+        },
+        {
+          label: 'Solved',
+          data: graph.map(d => d.solvedCount),
+          backgroundColor: 'rgba(54, 162, 235, 0.6)'
+        }
+      ]
+    };
+  }
 }

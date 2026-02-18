@@ -50,3 +50,9 @@ export interface ProblemeEditDTO {
   address: string;
   categorie: number;
 }
+
+export interface GraphDTO {
+  date: string;
+  reportedCount: number;
+  solvedCount: number;
+}
