@@ -167,6 +167,22 @@
     "MESSAGE": "Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{{firstName}} {{lastName}}</strong> ?",
     "WARNING": "Cette action est irréversible."
   },
+  "CREATE_DUPLICATE_GROUP": {
+    "TITLE": "Créer un groupe de doublons",
+    "SUBTITLE": "Créez manuellement un groupe vide pour y déplacer des signalements par glisser-déposer",
+    "NAME": "Nom du groupe",
+    "NAME_PLACEHOLDER": "Ex. : Nids-de-poule rue Saint-Denis",
+    "NAME_HINT": "Donnez un nom descriptif pour identifier facilement ce groupe.",
+    "NAME_REQUIRED": "Le nom du groupe est obligatoire.",
+    "REASON_FR": "Raison (Français)",
+    "REASON_FR_PLACEHOLDER": "Décrivez pourquoi ces signalements sont similaires…",
+    "REASON_EN": "Reason (English)",
+    "REASON_EN_PLACEHOLDER": "Describe why these reports are similar…",
+    "REASON_HINT": "Optionnel — aide les agents à comprendre le regroupement.",
+    "INFO": "Une fois créé, le groupe apparaîtra dans la liste des doublons. Vous pourrez y glisser-déposer des signalements depuis d'autres groupes.",
+    "SUBMIT": "Créer le groupe",
+    "ERROR": "Une erreur est survenue lors de la création du groupe."
+  },
   "CREATE_USER": {
     "TITLE": "Créer un nouvel utilisateur",
     "SUBTITLE": "Remplissez les informations ci-dessous pour créer un compte utilisateur",
@@ -359,7 +375,10 @@
     "DRAG_TO_MOVE": "Glisser pour déplacer vers un autre groupe",
     "DROP_HERE": "Déposer ici",
     "CANNOT_MOVE_PRIMARY": "Le membre principal ne peut pas être déplacé vers un autre groupe",
-    "MOVE_ERROR": "Erreur lors du déplacement du signalement"
+    "MOVE_ERROR": "Erreur lors du déplacement du signalement",
+    "CREATE_GROUP": "Créer un groupe",
+    "EMPTY_GROUP": "Groupe vide",
+    "EMPTY_GROUP_HINT": "Ce groupe est vide. Glissez-déposez des signalements depuis un autre groupe pour les y ajouter."
   },
   "DASHBOARD": {
     "TITLE": "Tableau de bord",

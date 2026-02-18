@@ -1,0 +1,97 @@
+<div class="page-container page-container--narrow">
+  <app-page-header
+    [title]="'CREATE_DUPLICATE_GROUP.TITLE' | translate"
+    [subtitle]="'CREATE_DUPLICATE_GROUP.SUBTITLE' | translate"
+    [showBackButton]="true"
+    (back)="cancel()" />
+
+  <div class="form-card">
+
+    @if (errorMessage()) {
+      <app-form-error [message]="errorMessage()" />
+    }
+
+    <form (ngSubmit)="submit()" #form="ngForm" novalidate>
+
+      <!-- Nom du groupe -->
+      <div class="form-group">
+        <label class="form-label" for="groupName">
+          {{ 'CREATE_DUPLICATE_GROUP.NAME' | translate }}
+          <span class="form-required">*</span>
+        </label>
+        <input
+          id="groupName"
+          type="text"
+          class="form-input"
+          [class.form-input--error]="form.submitted && !name().trim()"
+          [ngModel]="name()"
+          (ngModelChange)="name.set($event)"
+          name="name"
+          [placeholder]="'CREATE_DUPLICATE_GROUP.NAME_PLACEHOLDER' | translate"
+          maxlength="120"
+          required />
+        @if (form.submitted && !name().trim()) {
+          <span class="form-hint form-hint--error">{{ 'CREATE_DUPLICATE_GROUP.NAME_REQUIRED' | translate }}</span>
+        }
+        <span class="form-hint">{{ 'CREATE_DUPLICATE_GROUP.NAME_HINT' | translate }}</span>
+      </div>
+
+      <!-- Raison (Français) -->
+      <div class="form-group">
+        <label class="form-label" for="reasonFR">
+          {{ 'CREATE_DUPLICATE_GROUP.REASON_FR' | translate }}
+        </label>
+        <textarea
+          id="reasonFR"
+          class="form-input form-textarea"
+          [ngModel]="aiReasonFR()"
+          (ngModelChange)="aiReasonFR.set($event)"
+          name="aiReasonFR"
+          [placeholder]="'CREATE_DUPLICATE_GROUP.REASON_FR_PLACEHOLDER' | translate"
+          rows="3"
+          maxlength="500">
+        </textarea>
+        <span class="form-hint">{{ 'CREATE_DUPLICATE_GROUP.REASON_HINT' | translate }}</span>
+      </div>
+
+      <!-- Raison (Anglais) -->
+      <div class="form-group">
+        <label class="form-label" for="reasonEN">
+          {{ 'CREATE_DUPLICATE_GROUP.REASON_EN' | translate }}
+        </label>
+        <textarea
+          id="reasonEN"
+          class="form-input form-textarea"
+          [ngModel]="aiReasonEN()"
+          (ngModelChange)="aiReasonEN.set($event)"
+          name="aiReasonEN"
+          [placeholder]="'CREATE_DUPLICATE_GROUP.REASON_EN_PLACEHOLDER' | translate"
+          rows="3"
+          maxlength="500">
+        </textarea>
+      </div>
+
+      <!-- Info : groupes vides acceptent les drag & drop -->
+      <div class="info-banner">
+        <i class="fas fa-info-circle"></i>
+        <span>{{ 'CREATE_DUPLICATE_GROUP.INFO' | translate }}</span>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="loading()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading()">
+          @if (loading()) {
+            <i class="fas fa-spinner fa-spin"></i>
+          } @else {
+            <i class="fas fa-plus"></i>
+          }
+          {{ 'CREATE_DUPLICATE_GROUP.SUBMIT' | translate }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
