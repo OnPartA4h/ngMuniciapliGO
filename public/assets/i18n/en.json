@@ -344,6 +344,7 @@
     "TAB": "Duplicates",
     "GROUP": "Group",
     "REPORTS": "reports",
+    "REPORT": "Report",
     "SIMILARITY": "Similarity",
     "NO_GROUPS": "No duplicates detected",
     "NO_GROUPS_DESC": "There are currently no duplicate report groups pending review.",
@@ -353,7 +354,12 @@
     "CONFIRM_EXCLUDE": "Are you sure you want to exclude this report from the group?",
     "CONFIRM_ACCEPT": "Are you sure you want to accept this group and merge the reports?",
     "SHOW_CLOSED": "Show closed groups",
-    "GROUP_CLOSED": "Group closed"
+    "GROUP_CLOSED": "Group closed",
+    "DRAG_HINT": "Drag a report onto another group to move it",
+    "DRAG_TO_MOVE": "Drag to move to another group",
+    "DROP_HERE": "Drop here",
+    "CANNOT_MOVE_PRIMARY": "The primary member cannot be moved to another group",
+    "MOVE_ERROR": "Error while moving the report"
   },
   "DASHBOARD": {
     "TITLE": "Dashboard",
