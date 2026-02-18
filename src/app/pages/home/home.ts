@@ -18,9 +18,7 @@ export class Home {
   datasets!: ChartData<'line', { x: number; y: number }[]>;
 
   async ngOnInit() {
-    await Promise.all([
-      this.stats = await this.generalService.getStats()
-    ]);
+    this.stats = await this.generalService.getStats(2)
 
     const graph: GraphDTO[] = this.stats.graph;
 
