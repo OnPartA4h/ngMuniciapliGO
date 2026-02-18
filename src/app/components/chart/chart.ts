@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartData, ChartType } from 'chart.js';
+import { ChartData, ChartOptions, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-chart',
@@ -11,6 +11,22 @@ import { ChartData, ChartType } from 'chart.js';
 })
 
 export class Chart {
-  @Input() chartType: ChartType = 'bar';
+  @Input() chartType: ChartType = 'line';
   @Input() datasets!: ChartData;
+
+  options: ChartOptions<ChartType> = {
+    responsive: true,
+    parsing: false,
+    scales: {
+      x: {
+        type: 'time',
+        time: {
+          unit: 'day'
+        }
+      },
+      y: {
+        beginAtZero: true
+      }
+    }
+  };
 }

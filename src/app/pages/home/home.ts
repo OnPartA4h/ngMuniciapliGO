@@ -14,8 +14,8 @@ import { GraphDTO } from '../../models/problem';
 })
 export class Home {
   generalService = inject(GeneralService);
-  stats: any
-  datasets!: ChartData<'bar', number[]>;
+  stats: any;
+  datasets!: ChartData<'line', { x: number; y: number }[]>;
 
   async ngOnInit() {
     await Promise.all([
@@ -25,16 +25,21 @@ export class Home {
     const graph: GraphDTO[] = this.stats.graph;
 
     this.datasets = {
-      labels: graph.map(d => d.date),
       datasets: [
         {
           label: 'Reported',
-          data: graph.map(d => d.reportedCount),
+          data: graph.map(d => ({
+            x: new Date(d.date).getTime(),
+            y: d.reportedCount
+          })),
           backgroundColor: 'rgba(255, 99, 132, 0.6)'
         },
         {
           label: 'Solved',
-          data: graph.map(d => d.solvedCount),
+          data: graph.map(d => ({
+            x: new Date(d.date).getTime(),
+            y: d.solvedCount
+          })),
           backgroundColor: 'rgba(54, 162, 235, 0.6)'
         }
       ]
