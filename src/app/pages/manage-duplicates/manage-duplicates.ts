@@ -52,6 +52,20 @@ export class ManageDuplicates implements OnInit {
   readonly movingMemberId = signal<number | null>(null);
   readonly dragOverGroupId = signal<number | null>(null);
 
+  private errorTimer: ReturnType<typeof setTimeout> | null = null;
+
+  private showError(message: string) {
+    if (this.errorTimer) clearTimeout(this.errorTimer);
+    this.errorMessage.set(message);
+    this.errorTimer = setTimeout(() => this.errorMessage.set(''), 3000);
+  }
+
+  private showDragError(message: string) {
+    if (this.errorTimer) clearTimeout(this.errorTimer);
+    this.dragError.set(message);
+    this.errorTimer = setTimeout(() => this.dragError.set(''), 3000);
+  }
+
   get navigationTabs(): NavigationTab[] {
     return [
       {
@@ -92,7 +106,7 @@ export class ManageDuplicates implements OnInit {
       this.totalPages.set(response.pagination.totalPages);
       this.totalCount.set(response.pagination.totalCount);
     } catch (e: any) {
-      this.errorMessage.set(e?.error?.message || 'Error loading duplicate groups');
+      this.showError(e?.error?.message || 'Error loading duplicate groups');
       this.groups.set([]);
     }
   }
@@ -139,7 +153,7 @@ export class ManageDuplicates implements OnInit {
         }
       }
     } catch (e: any) {
-      this.errorMessage.set(e?.error?.message || 'Error excluding problem');
+      this.showError(e?.error?.message || 'Error excluding problem');
     }
   }
 
@@ -155,7 +169,7 @@ export class ManageDuplicates implements OnInit {
       this.selectedGroupId.set(null);
       await this.loadGroups(this.currentPage());
     } catch (e: any) {
-      this.errorMessage.set(e?.error?.message || 'Error accepting group');
+      this.showError(e?.error?.message || 'Error accepting group');
     }
   }
 
@@ -179,6 +193,17 @@ export class ManageDuplicates implements OnInit {
     return this.groups().map(g => `group-drop-${g.id}`);
   }
 
+  onDragEnterGroup(groupId: number) {
+    this.dragOverGroupId.set(groupId);
+    if (this.selectedGroupId() !== groupId) {
+      this.selectedGroupId.set(groupId);
+    }
+  }
+
+  onDragExitGroup(groupId: number) {
+    this.dragOverGroupId.set(null);
+  }
+
   async dropMember(event: CdkDragDrop<DuplicateGroupMember[]>, targetGroupId: number) {
     this.dragOverGroupId.set(null);
 
@@ -190,8 +215,7 @@ export class ManageDuplicates implements OnInit {
     const sourceGroupId = parseInt(event.previousContainer.id.replace('group-drop-', ''), 10);
 
     if (member.isPrimary) {
-      this.dragError.set(this.translateService.instant('DUPLICATES.CANNOT_MOVE_PRIMARY'));
-      setTimeout(() => this.dragError.set(''), 4000);
+      this.showDragError(this.translateService.instant('DUPLICATES.CANNOT_MOVE_PRIMARY'));
       return;
     }
 
@@ -231,7 +255,7 @@ export class ManageDuplicates implements OnInit {
         this.selectedGroupId.set(null);
       }
     } catch (e: any) {
-      this.dragError.set(e?.error?.message || this.translateService.instant('DUPLICATES.MOVE_ERROR'));
+      this.showDragError(e?.error?.message || this.translateService.instant('DUPLICATES.MOVE_ERROR'));
       await this.loadGroups(this.currentPage());
     } finally {
       this.movingMemberId.set(null);

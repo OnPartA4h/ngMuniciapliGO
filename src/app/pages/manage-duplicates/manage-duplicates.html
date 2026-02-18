@@ -29,7 +29,7 @@
   }
 
   @if (dragError()) {
-    <div class="error-banner error-banner--drag">
+    <div class="error-banner">
       <i class="fas fa-ban"></i>
       <span>{{ dragError() }}</span>
     </div>
@@ -53,8 +53,8 @@
              [cdkDropListConnectedTo]="getDropListIds()"
              [cdkDropListDisabled]="group.isClosed"
              (cdkDropListDropped)="dropMember($event, group.id)"
-             (cdkDropListEntered)="dragOverGroupId.set(group.id)"
-             (cdkDropListExited)="dragOverGroupId.set(null)">
+             (cdkDropListEntered)="onDragEnterGroup(group.id)"
+             (cdkDropListExited)="onDragExitGroup(group.id)">
 
           <app-duplicate-group-card
             [group]="group"
@@ -79,11 +79,6 @@
                      class="member-drag-wrapper"
                      [class.member-drag-wrapper--moving]="movingMemberId() === member.id">
 
-                  <div *cdkDragPlaceholder class="member-drag-placeholder">
-                    <i class="fas fa-arrows-alt"></i>
-                    {{ 'DUPLICATES.DROP_HERE' | translate }}
-                  </div>
-
                   <div *cdkDragPreview class="member-drag-preview">
                     <i class="fas fa-clone"></i>
                     <span>{{ member.probleme?.titre || ('DUPLICATES.REPORT' | translate) + ' #' + member.problemeId }}</span>
@@ -102,14 +97,14 @@
                     (exclude)="excludeProblem(group.id, member.problemeId, $event)" />
                 </div>
               }
-
-              @if (group.members.length === 0) {
-                <div class="drop-zone-empty">
-                  <i class="fas fa-inbox"></i>
-                  {{ 'DUPLICATES.DROP_HERE' | translate }}
-                </div>
-              }
             </div>
+
+            @if (!group.isClosed && dragOverGroupId() === group.id) {
+              <div class="drop-zone-target">
+                <i class="fas fa-arrow-down"></i>
+                {{ 'DUPLICATES.DROP_HERE' | translate }}
+              </div>
+            }
 
           </app-duplicate-group-card>
         </div>
