@@ -37,3 +37,9 @@ export interface PaginatedDuplicateGroup {
   items: DuplicateGroup[];
   pagination: Pagination;
 }
+
+export interface CreateDuplicateGroupDTO {
+  name: string;
+  aiReasonEN: string | null;
+  aiReasonFR: string | null;
+}
