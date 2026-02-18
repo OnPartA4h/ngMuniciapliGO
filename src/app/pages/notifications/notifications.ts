@@ -197,10 +197,6 @@ export class Notifications implements OnInit, OnDestroy {
   }
 
   async ignoreReport(notification: Notification): Promise<void> {
-    if (!confirm(this.translateService.instant('NOTIFICATIONS.CONFIRM_IGNORE'))) {
-      return;
-    }
-
     try {
       await this.commentService.ignoreCommentReport(notification.problemeId, notification.id);
       
