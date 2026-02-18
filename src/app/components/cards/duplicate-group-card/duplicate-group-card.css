@@ -89,6 +89,25 @@
   cursor: default;
 }
 
+.group-card__empty {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+  border: 2px dashed var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
+.group-card__empty i {
+  color: var(--color-gray-400);
+  font-size: var(--font-size-xl);
+  flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
   .group-card__header {
     padding: var(--spacing-lg);

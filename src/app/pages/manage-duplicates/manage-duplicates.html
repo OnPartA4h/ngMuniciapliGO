@@ -11,10 +11,16 @@
       <input type="checkbox" [checked]="showClosed()" (change)="toggleShowClosed()" class="checkbox-input" />
       <span class="checkbox-text">{{ 'DUPLICATES.SHOW_CLOSED' | translate }}</span>
     </label>
-    <span class="drag-hint">
-      <i class="fas fa-arrows-alt"></i>
-      {{ 'DUPLICATES.DRAG_HINT' | translate }}
-    </span>
+    <div class="toggle-section__actions">
+      <span class="drag-hint">
+        <i class="fas fa-arrows-alt"></i>
+        {{ 'DUPLICATES.DRAG_HINT' | translate }}
+      </span>
+      <a routerLink="/create-duplicate-group" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i>
+        {{ 'DUPLICATES.CREATE_GROUP' | translate }}
+      </a>
+    </div>
   </div>
 
   @if (loading()) {
@@ -35,7 +41,7 @@
     </div>
   }
 
-  @if (!loading() && !errorMessage() && groups().length === 0) {
+  @if (!loading() && groups().length === 0) {
     <app-empty-state
       iconClass="fas fa-check-circle"
       [title]="'DUPLICATES.NO_GROUPS' | translate"
@@ -80,7 +86,7 @@
                      (cdkDragEnded)="isDragging.set(false)">
 
                   <div *cdkDragPlaceholder class="member-drag-placeholder--hidden"></div>
-                  
+
                   <div *cdkDragPreview matchSize="true" class="member-drag-preview">
                     <i class="fas fa-clone"></i>
                     <span>{{ member.probleme?.titre || ('DUPLICATES.REPORT' | translate) + ' #' + member.problemeId }}</span>

@@ -8,11 +8,17 @@
         <i class="fas fa-clone"></i>
         {{ group().name || ('DUPLICATES.GROUP' | translate) + ' #' + group().id }}
       </div>
-      <p class="group-card__reason">{{ getAiReason() }}</p>
-      <div class="group-card__meta">
-        <span class="badge badge-warning">
-          {{ group().members.length }} {{ 'DUPLICATES.REPORTS' | translate }}
-        </span>
+      <p class="group-card__reason">{{ getAiReason() }}</p>        <div class="group-card__meta">
+          @if (group().members.length === 0) {
+            <span class="badge badge-secondary">
+              <i class="fas fa-inbox"></i>
+              {{ 'DUPLICATES.EMPTY_GROUP' | translate }}
+            </span>
+          } @else {
+            <span class="badge badge-warning">
+              {{ group().members.length }} {{ 'DUPLICATES.REPORTS' | translate }}
+            </span>
+          }
         <span class="group-card__date">
           <i class="fas fa-clock"></i>
           {{ group().dateCreation | date:'dd/MM/yyyy HH:mm' }}
@@ -33,6 +39,12 @@
 
   @if (isExpanded()) {
     <div class="group-card__body" (click)="$event.stopPropagation()">
+      @if (group().members.length === 0) {
+        <div class="group-card__empty">
+          <i class="fas fa-inbox"></i>
+          <span>{{ 'DUPLICATES.EMPTY_GROUP_HINT' | translate }}</span>
+        </div>
+      }
       <ng-content />
     </div>
   }

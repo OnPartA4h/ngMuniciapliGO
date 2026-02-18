@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { WhiteService } from '../../services/white-service';
@@ -20,6 +21,7 @@ import { DuplicateMemberCardComponent } from '../../components/cards/duplicate-m
 @Component({
   selector: 'app-manage-duplicates',
   imports: [
+    RouterLink,
     TranslateModule,
     DragDropModule,
     PageHeaderComponent,
@@ -232,7 +234,7 @@ export class ManageDuplicates implements OnInit {
         return g;
       });
 
-      this.groups.set(refreshed.filter(g => g.members.length > 0));
+      this.groups.set(refreshed);
 
       if (updatedSource.members.length === 0 && this.selectedGroupId() === sourceGroupId) {
         this.selectedGroupId.set(null);

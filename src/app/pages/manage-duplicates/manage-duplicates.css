@@ -46,6 +46,17 @@
   color: var(--color-primary);
 }
 
+.toggle-section__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.btn-sm {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: var(--font-size-sm);
+}
+
 /* Error Banner */
 .error-banner {
   display: flex;
