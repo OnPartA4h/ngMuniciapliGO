@@ -1,9 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { WhiteService } from '../../services/white-service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
-import { DuplicateGroup } from '../../models/duplicate-group';
+import { DuplicateGroup, DuplicateGroupMember } from '../../models/duplicate-group';
 import {
   PageHeaderComponent,
   LoadingSpinnerComponent,
@@ -20,6 +21,7 @@ import { DuplicateMemberCardComponent } from '../../components/cards/duplicate-m
   selector: 'app-manage-duplicates',
   imports: [
     TranslateModule,
+    DragDropModule,
     PageHeaderComponent,
     LoadingSpinnerComponent,
     EmptyStateComponent,
@@ -46,6 +48,8 @@ export class ManageDuplicates implements OnInit {
   readonly totalPages = signal(1);
   readonly totalCount = signal(0);
   readonly showClosed = signal(false);
+  readonly dragError = signal('');
+  readonly movingMemberId = signal<number | null>(null);
 
   get navigationTabs(): NavigationTab[] {
     return [
@@ -171,5 +175,73 @@ export class ManageDuplicates implements OnInit {
     this.loading.set(true);
     await this.loadGroups(1);
     this.loading.set(false);
+  }
+
+  /** Retourne les IDs CDK de toutes les listes de membres (pour connecter le drag-drop entre groupes). */
+  getDropListIds(): string[] {
+    return this.groups().map(g => `members-list-${g.id}`);
+  }
+
+  /** Appelé lorsqu'un membre est déposé dans un groupe cible. */
+  async dropMember(event: CdkDragDrop<DuplicateGroupMember[]>, targetGroupId: number) {
+    if (event.previousContainer === event.container) {
+      return;
+    }
+
+    const member: DuplicateGroupMember = event.item.data;
+    // L'ID CDK de la liste source est "members-list-{groupId}"
+    const sourceGroupId = parseInt(event.previousContainer.id.replace('members-list-', ''), 10);
+
+    if (member.isPrimary) {
+      this.dragError.set(this.translateService.instant('DUPLICATES.CANNOT_MOVE_PRIMARY'));
+      setTimeout(() => this.dragError.set(''), 4000);
+      return;
+    }
+
+    this.movingMemberId.set(member.id);
+    this.dragError.set('');
+
+    // Mise à jour optimiste de l'UI
+    const groups = this.groups();
+    const sourceIndex = groups.findIndex(g => g.id === sourceGroupId);
+    const targetIndex = groups.findIndex(g => g.id === targetGroupId);
+
+    if (sourceIndex !== -1 && targetIndex !== -1) {
+      const updatedGroups = groups.map(g => ({ ...g, members: [...g.members] }));
+      const memberToMove = updatedGroups[sourceIndex].members.splice(
+        updatedGroups[sourceIndex].members.findIndex(m => m.id === member.id), 1
+      )[0];
+      updatedGroups[targetIndex].members.push(memberToMove);
+      this.groups.set(updatedGroups);
+    }
+
+    try {
+      await this.whiteService.moveMemberToGroup(member.id, targetGroupId);
+
+      // Rafraîchir les deux groupes concernés
+      const [updatedSource, updatedTarget] = await Promise.all([
+        this.whiteService.getDuplicateGroup(sourceGroupId),
+        this.whiteService.getDuplicateGroup(targetGroupId),
+      ]);
+
+      const refreshed = this.groups().map(g => {
+        if (g.id === sourceGroupId) return updatedSource;
+        if (g.id === targetGroupId) return updatedTarget;
+        return g;
+      });
+
+      // Retirer les groupes sans membres
+      this.groups.set(refreshed.filter(g => g.members.length > 0));
+
+      if (updatedSource.members.length === 0 && this.selectedGroupId() === sourceGroupId) {
+        this.selectedGroupId.set(null);
+      }
+    } catch (e: any) {
+      this.dragError.set(e?.error?.message || 'DUPLICATES.MOVE_ERROR');
+      // Annuler la mise à jour optimiste
+      await this.loadGroups(this.currentPage());
+    } finally {
+      this.movingMemberId.set(null);
+    }
   }
 }

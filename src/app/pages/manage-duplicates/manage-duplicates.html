@@ -14,6 +14,10 @@
       <input type="checkbox" [checked]="showClosed()" (change)="toggleShowClosed()" class="checkbox-input" />
       <span class="checkbox-text">{{ 'DUPLICATES.SHOW_CLOSED' | translate }}</span>
     </label>
+    <span class="drag-hint">
+      <i class="fas fa-arrows-alt"></i>
+      {{ 'DUPLICATES.DRAG_HINT' | translate }}
+    </span>
   </div>
 
   <!-- Loading State -->
@@ -29,6 +33,14 @@
     </div>
   }
 
+  <!-- Drag Error Banner -->
+  @if (dragError()) {
+    <div class="error-banner error-banner--drag">
+      <i class="fas fa-ban"></i>
+      <span>{{ dragError() }}</span>
+    </div>
+  }
+
   <!-- Empty State -->
   @if (!loading() && !errorMessage() && groups().length === 0) {
     <app-empty-state
@@ -37,18 +49,18 @@
       [description]="'DUPLICATES.NO_GROUPS_DESC' | translate" />
   }
 
-  <!-- Groups List -->
+  <!-- Groups List (CDK Drop List Group) -->
   @if (!loading() && groups().length > 0) {
-    <div class="groups-list">
+    <div class="groups-list" cdkDropListGroup>
       @for (group of groups(); track group.id) {
         <app-duplicate-group-card
           [group]="group"
           [isExpanded]="selectedGroupId() === group.id"
           (toggleExpanded)="selectGroup(group)">
-          
+
           <!-- Group Actions -->
           <div class="group-actions">
-            <button class="btn btn-success" 
+            <button class="btn btn-success"
                     (click)="acceptGroup(group.id, $event)"
                     [disabled]="group.isClosed">
               <i class="fas fa-check"></i>
@@ -62,15 +74,58 @@
             }
           </div>
 
-          <!-- Members List -->
-          <div class="members-list">
+          <!-- Members Drop List -->
+          <div class="members-list"
+               cdkDropList
+               [id]="'members-list-' + group.id"
+               [cdkDropListData]="group.members"
+               [cdkDropListConnectedTo]="getDropListIds()"
+               [cdkDropListDisabled]="group.isClosed"
+               (cdkDropListDropped)="dropMember($event, group.id)">
+
             @for (member of group.members; track member.id) {
-              <app-duplicate-member-card
-                [member]="member"
-                [isGroupClosed]="group.isClosed"
-                (exclude)="excludeProblem(group.id, member.problemeId, $event)" />
+              <div cdkDrag
+                   [cdkDragData]="member"
+                   [cdkDragDisabled]="member.isPrimary || group.isClosed"
+                   class="member-drag-wrapper"
+                   [class.member-drag-wrapper--primary]="member.isPrimary"
+                   [class.member-drag-wrapper--moving]="movingMemberId() === member.id">
+
+                <!-- Placeholder pendant le drag -->
+                <div *cdkDragPlaceholder class="member-drag-placeholder">
+                  <i class="fas fa-arrows-alt"></i>
+                  {{ 'DUPLICATES.DROP_HERE' | translate }}
+                </div>
+
+                <!-- Aperçu pendant le drag (preview) -->
+                <div *cdkDragPreview class="member-drag-preview">
+                  <i class="fas fa-clone"></i>
+                  <span>{{ member.probleme?.titre || ('DUPLICATES.REPORT' | translate) + ' #' + member.problemeId }}</span>
+                </div>
+
+                <!-- Poignée de drag -->
+                @if (!member.isPrimary && !group.isClosed) {
+                  <div cdkDragHandle class="drag-handle" [title]="'DUPLICATES.DRAG_TO_MOVE' | translate">
+                    <i class="fas fa-grip-vertical"></i>
+                  </div>
+                }
+
+                <app-duplicate-member-card
+                  [member]="member"
+                  [isGroupClosed]="group.isClosed"
+                  (exclude)="excludeProblem(group.id, member.problemeId, $event)" />
+              </div>
+            }
+
+            <!-- Zone de dépôt vide (toujours visible pour les drops) -->
+            @if (group.members.length === 0) {
+              <div class="drop-zone-empty">
+                <i class="fas fa-inbox"></i>
+                {{ 'DUPLICATES.DROP_HERE' | translate }}
+              </div>
             }
           </div>
+
         </app-duplicate-group-card>
       }
     </div>
