@@ -56,13 +56,22 @@ export class GeneralService {
     );
   }
 
-  async getStats(span: number, assigneA: number | null = null): Promise<any> {
-    let ass = ""
-    if (assigneA) {
-      ass = `?assigneA=${assigneA}`;
+  async getStats(span: number, assigneA: number | null = null, responsableId: string | null = null): Promise<any> {
+    let params: any = {};
+
+    if (assigneA !== undefined && assigneA !== null) {
+      params.assigneA = assigneA;
     }
+
+    if (responsableId) {
+      params.responsableId = responsableId;
+    }
+
     return await lastValueFrom(
-      this.http.get<any>(`${this.apiUrl}/api/Stats/${span}${ass}`)
+      this.http.get<any>(
+        `${this.apiUrl}/api/Stats/${span}`,
+        { params }
+      )
     );
   }
 

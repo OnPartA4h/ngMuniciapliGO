@@ -14,6 +14,23 @@
             <option [value]="$index">{{ s.label }}</option>
             }
         </select>
+        <div class="combobox">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" [placeholder]="'MANAGE_REPORTS.ASSIGN_COL_BLEU' | translate" [(ngModel)]="search"
+                    (ngModelChange)="getColBleus()" (focus)="showSearch = true" />
+            </div>
+            @if (colBleus.length && showSearch) {
+            <div class="dropdown">
+                @for (c of colBleus; track $index) {
+                <div class="dropdown-item" (click)="selectColBleu(c)">
+                    <i class="fas fa-user"></i>
+                    {{ c.label }}
+                </div>
+                }
+            </div>
+            }
+        </div>
     </div>
     <div class="stat-boxes-row">
         <app-stat-box [title]="'DASHBOARD.RESOLUTION' | translate" [value]="stats?.tempsResolution"></app-stat-box>
