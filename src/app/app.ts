@@ -19,7 +19,7 @@ export class App implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   showHeaderFooter = true;
-  private hiddenRoutes = ['/login'];
+  private hiddenRoutes = ['/login','/spin-wheel'];
 
   ngOnInit() {
     // Establish SignalR connection on app initialization if user is authenticated

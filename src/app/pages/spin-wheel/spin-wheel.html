@@ -1,0 +1,93 @@
+<!-- Ambient floating stars -->
+@for (star of ambientStars; track star.x) {
+  <span
+    class="ambient-star"
+    [style.left.px]="star.x"
+    [style.top.px]="star.y"
+    [style.opacity]="star.life"
+  >{{ star.char }}</span>
+}
+
+<!-- Page wrapper -->
+<div class="sw-page">
+
+  <!-- ── Header ──────────────────────────────────────────────────────── -->
+  <div class="sw-header">
+    <div class="sw-header__crown">👑</div>
+    <h1 class="sw-header__title">
+      <span class="title-letter" style="--d:0">S</span>
+      <span class="title-letter" style="--d:1">P</span>
+      <span class="title-letter" style="--d:2">I</span>
+      <span class="title-letter" style="--d:3">N</span>
+      <span class="title-spacer">&nbsp;</span>
+      <span class="title-letter" style="--d:4">&</span>
+      <span class="title-spacer">&nbsp;</span>
+      <span class="title-letter title-letter--gold" style="--d:5">W</span>
+      <span class="title-letter title-letter--gold" style="--d:6">I</span>
+      <span class="title-letter title-letter--gold" style="--d:7">N</span>
+    </h1>
+    <p class="sw-header__sub">🎲 Spin the wheel and claim your prize! 🎲</p>
+  </div>
+
+  <!-- ── Main content ────────────────────────────────────────────────── -->
+  <div class="sw-content">
+
+    <!-- Prizes preview list (left) -->
+    <div class="sw-prizes-list">
+      <h3 class="prizes-list__title">🏅 Prizes</h3>
+      @for (p of svc.prizes; track p.id) {
+        <div class="prize-chip" [style.--prize-color]="p.color">
+          <span class="prize-chip__emoji">{{ p.emoji }}</span>
+          <span class="prize-chip__label">{{ p.label }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Wheel (centre) -->
+    <div class="sw-wheel-area">
+      <app-wheel-canvas (spinComplete)="onSpinComplete($event)" />
+
+      <!-- Spin button -->
+      <button
+        class="sw-spin-btn"
+        [class.sw-spin-btn--spinning]="isSpinning()"
+        [disabled]="isSpinning()"
+        (click)="spin()"
+      >
+        @if (isSpinning()) {
+          <span class="spin-btn-icon">⏳</span>
+          <span>Spinning…</span>
+        } @else {
+          <span class="spin-btn-icon">🎰</span>
+          <span>SPIN!</span>
+        }
+      </button>
+    </div>
+
+    <!-- Result / History (right) -->
+    <div class="sw-right">
+      <!-- Result card -->
+      @if (showResult() && lastPrize()) {
+        <div class="sw-result-card">
+          <div class="result-card__glow"></div>
+          <p class="result-card__label">🎉 You won!</p>
+          <div class="result-card__emoji">{{ lastPrize()!.emoji }}</div>
+          <p class="result-card__prize-name">{{ lastPrize()!.label }}</p>
+        </div>
+      }
+
+      <!-- History -->
+      @if (svc.history().length > 0) {
+        <div class="sw-history">
+          <h3 class="history__title">🕐 Recent spins</h3>
+          @for (r of svc.history(); track r.timestamp) {
+            <div class="history-row">
+              <span class="history-row__emoji">{{ r.prize.emoji }}</span>
+              <span class="history-row__label">{{ r.prize.label }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -32,6 +32,8 @@
     "@microsoft/signalr": "^10.0.0",
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^8.0.0",
+    "@types/canvas-confetti": "^1.9.0",
+    "canvas-confetti": "^1.9.4",
     "chart.js": "^4.5.1",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",

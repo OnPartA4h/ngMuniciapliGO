@@ -1,0 +1,20 @@
+<div class="wheel-wrapper">
+  <!-- Animated outer rings -->
+  <div class="ring ring-1"></div>
+  <div class="ring ring-2"></div>
+  <div class="ring ring-3"></div>
+
+  <!-- Pointer / arrow -->
+  <div class="pointer">
+    <div class="pointer-inner">▼</div>
+  </div>
+
+  <!-- Canvas -->
+  <canvas
+    #wheelCanvas
+    width="500"
+    height="500"
+    class="wheel-canvas"
+    [class.spinning]="isSpinning()"
+  ></canvas>
+</div>

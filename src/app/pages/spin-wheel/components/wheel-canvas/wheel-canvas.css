@@ -1,0 +1,97 @@
+:host {
+  display: block;
+}
+
+.wheel-wrapper {
+  position: relative;
+  width: 520px;
+  height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Animated outer glow rings ─────────────────────────────────────── */
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  animation: ring-spin linear infinite;
+}
+
+.ring-1 {
+  width: 530px;
+  height: 530px;
+  border-top-color:  #FFD700;
+  border-right-color: #FF6B6B;
+  border-bottom-color: #6BCB77;
+  border-left-color: #4D96FF;
+  animation-duration: 3s;
+}
+
+.ring-2 {
+  width: 554px;
+  height: 554px;
+  border-top-color: #CC5DE8;
+  border-right-color: #FF922B;
+  border-bottom-color: #FFD700;
+  border-left-color: #20C997;
+  animation-duration: 5s;
+  animation-direction: reverse;
+}
+
+.ring-3 {
+  width: 578px;
+  height: 578px;
+  border-top-color: #4D96FF;
+  border-right-color: #CC5DE8;
+  border-bottom-color: #FF6B6B;
+  border-left-color: #FF922B;
+  animation-duration: 7s;
+}
+
+@keyframes ring-spin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Canvas ─────────────────────────────────────────────────────────── */
+.wheel-canvas {
+  position: relative;
+  z-index: 2;
+  border-radius: 50%;
+  box-shadow:
+    0 0 40px rgba(255, 215, 0, 0.6),
+    0 0 80px rgba(255, 107, 107, 0.3),
+    0 20px 60px rgba(0, 0, 0, 0.5);
+  transition: filter 0.3s;
+}
+
+.wheel-canvas.spinning {
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.9));
+}
+
+/* ── Pointer ─────────────────────────────────────────────────────────── */
+.pointer {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+}
+
+.pointer-inner {
+  font-size: 44px;
+  line-height: 1;
+  background: linear-gradient(180deg, #FFD700, #FF8C00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: pointer-bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes pointer-bounce {
+  0%, 100% { transform: translateY(0);   }
+  50%       { transform: translateY(6px); }
+}
