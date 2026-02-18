@@ -284,7 +284,10 @@
     "ERROR_UPDATING": "Error updating problem",
     "NOT_FOUND": "Problem Not Found",
     "NOT_FOUND_DESC": "The problem you're looking for doesn't exist or has been deleted.",
-    "GO_BACK": "Go Back"
+    "GO_BACK": "Go Back",
+    "IN_DUPLICATE_GROUP": "This report is in a duplicate group",
+    "IN_DUPLICATE_GROUP_DESC": "This report is part of a duplicate group under review. Go to the duplicates page to manage group members.",
+    "GO_TO_DUPLICATES": "Go to duplicates"
   },
   "LOGIN": {
     "SUBTITLE": "Sign in to your account",
@@ -386,6 +389,9 @@
   },
   "REPORT_DETAILS": {
     "SUBSCRIBE": "Subscribe to notifications",
-    "UNSUBSCRIBE": "Unsubscribe from notifications"
+    "UNSUBSCRIBE": "Unsubscribe from notifications",
+    "IN_DUPLICATE_GROUP": "This report is in a duplicate group",
+    "IN_DUPLICATE_GROUP_DESC": "This report is part of a duplicate group under review. Go to the duplicates page to manage group members.",
+    "GO_TO_DUPLICATES": "Go to duplicates"
   }
 }

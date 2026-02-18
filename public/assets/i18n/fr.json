@@ -284,7 +284,10 @@
     "ERROR_UPDATING": "Erreur lors de la mise à jour du problème",
     "NOT_FOUND": "Problème introuvable",
     "NOT_FOUND_DESC": "Le problème que vous recherchez n'existe pas ou a été supprimé.",
-    "GO_BACK": "Retour"
+    "GO_BACK": "Retour",
+    "IN_DUPLICATE_GROUP": "Ce signalement est dans un groupe de doublons",
+    "IN_DUPLICATE_GROUP_DESC": "Ce rapport fait partie d'un groupe de doublons en cours de révision. Rendez-vous sur la page des doublons pour gérer les membres du groupe.",
+    "GO_TO_DUPLICATES": "Aller aux doublons"
   },
   "LOGIN": {
     "SUBTITLE": "Connectez-vous à votre compte",
@@ -386,6 +389,9 @@
   },
   "REPORT_DETAILS": {
     "SUBSCRIBE": "S'abonner aux notifications",
-    "UNSUBSCRIBE": "Se désabonner des notifications"
+    "UNSUBSCRIBE": "Se désabonner des notifications",
+    "IN_DUPLICATE_GROUP": "Ce signalement est dans un groupe de doublons",
+    "IN_DUPLICATE_GROUP_DESC": "Ce rapport fait partie d'un groupe de doublons en cours de révision. Rendez-vous sur la page des doublons pour gérer les membres du groupe.",
+    "GO_TO_DUPLICATES": "Aller aux doublons"
   }
 }
