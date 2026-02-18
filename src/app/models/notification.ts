@@ -7,6 +7,12 @@ export interface Notification {
   message: string;
   estLue: boolean;
   dateCreation: string;
+
+  commentReportId: number;
+  commentId: number
+  text: string;
+  reason: string;
+  category: number;
 }
 
 export interface PaginatedNotifications {

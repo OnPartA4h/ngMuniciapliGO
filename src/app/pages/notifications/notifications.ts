@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
 import { NotificationHubService } from '../../services/notification-hub.service';
 import { Notification, PaginatedNotifications } from '../../models/notification';
 import { PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent } from '../../components/ui';
+import { CommentService } from '../../services/comment-service';
 
 @Component({
   selector: 'app-notifications',
@@ -17,8 +18,10 @@ import { PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent } fro
 })
 export class Notifications implements OnInit, OnDestroy {
   private notificationService = inject(NotificationService);
+  private commentService = inject(CommentService);
   private notificationHubService = inject(NotificationHubService);
   private router = inject(Router);
+  private translateService = inject(TranslateService);
 
   notifications: Notification[] = [];
   currentPage = 1;
@@ -144,5 +147,76 @@ export class Notifications implements OnInit, OnDestroy {
 
   areAllNotificationsRead(): boolean {
     return this.notifications.length > 0 && this.notifications.every(n => n.estLue);
+  }
+
+  isReportedComment(notification: Notification): boolean {
+    return !!notification.commentReportId && !!notification.reason && !!notification.text;
+  }
+
+  getCategoryLabel(category: number): string {
+    const categoryKeys: Record<number, string> = {
+      0: 'NOTIFICATIONS.CATEGORY_SPAM',
+      1: 'NOTIFICATIONS.CATEGORY_INAPPROPRIATE_LANGUAGE',
+      2: 'NOTIFICATIONS.CATEGORY_HARASSMENT',
+      3: 'NOTIFICATIONS.CATEGORY_HATE_SPEECH',
+      4: 'NOTIFICATIONS.CATEGORY_THREATS',
+      5: 'NOTIFICATIONS.CATEGORY_MISINFORMATION',
+      6: 'NOTIFICATIONS.CATEGORY_OFF_TOPIC',
+      7: 'NOTIFICATIONS.CATEGORY_OTHER'
+    };
+    return categoryKeys[category] ?? 'NOTIFICATIONS.CATEGORY_OTHER';
+  }
+
+  async deleteComment(notification: Notification): Promise<void> {
+    if (!confirm(this.translateService.instant('NOTIFICATIONS.CONFIRM_DELETE'))) {
+      return;
+    }
+
+    try {
+      // Supprimer le commentaire via l'API
+      await this.commentService.deleteComment(
+        notification.problemeId, 
+        notification.commentId, 
+        notification.id
+      );
+      
+      // Retirer la notification de la liste immédiatement
+      this.notifications = this.notifications.filter(n => n.id !== notification.id);
+      this.totalCount--;
+      
+      // Décrémenter le compteur si la notification n'était pas lue
+      if (!notification.estLue) {
+        this.notificationService.decrementUnreadCount();
+      }
+      
+      console.log('Comment deleted successfully');
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      alert(this.translateService.instant('NOTIFICATIONS.ERROR_DELETE'));
+    }
+  }
+
+  async ignoreReport(notification: Notification): Promise<void> {
+    if (!confirm(this.translateService.instant('NOTIFICATIONS.CONFIRM_IGNORE'))) {
+      return;
+    }
+
+    try {
+      await this.commentService.ignoreCommentReport(notification.problemeId, notification.id);
+      
+      // Retirer la notification de la liste immédiatement
+      this.notifications = this.notifications.filter(n => n.id !== notification.id);
+      this.totalCount--;
+      
+      // Décrémenter le compteur si la notification n'était pas lue
+      if (!notification.estLue) {
+        this.notificationService.decrementUnreadCount();
+      }
+      
+      console.log('Report ignored successfully');
+    } catch (error) {
+      console.error('Error ignoring report:', error);
+      alert(this.translateService.instant('NOTIFICATIONS.ERROR_IGNORE'));
+    }
   }
 }

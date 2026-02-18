@@ -48,13 +48,46 @@
           
           <div class="notification-content">
             <div class="notification-header-row">
-              <h3 class="notification-title">{{ notification.problemeTitre }}</h3>
+              <div class="notification-title-row">
+                <h3 class="notification-title">{{ notification.problemeTitre }}</h3>
+                @if (isReportedComment(notification)) {
+                  <span class="category-tag">
+                    <i class="fas fa-flag"></i>
+                    {{ getCategoryLabel(notification.category) | translate }}
+                  </span>
+                }
+              </div>
               <span class="notification-time">{{ getTimeAgo(notification.dateCreation) }}</span>
             </div>
             <p class="notification-message">{{ notification.message }}</p>
+            
+            @if (isReportedComment(notification)) {
+              <blockquote class="comment-quote">
+                <p>{{ notification.text }}</p>
+              </blockquote>
+              @if (notification.reason) {
+                <p class="comment-reason">
+                  <strong>{{ 'NOTIFICATIONS.REPORT_REASON' | translate }}:</strong> {{ notification.reason }}
+                </p>
+              }
+              <div class="comment-actions">
+                <button 
+                  class="btn btn-danger btn-sm" 
+                  (click)="deleteComment(notification); $event.stopPropagation()">
+                  <i class="fas fa-trash"></i>
+                  {{ 'NOTIFICATIONS.DELETE_COMMENT' | translate }}
+                </button>
+                <button 
+                  class="btn btn-secondary btn-sm" 
+                  (click)="ignoreReport(notification); $event.stopPropagation()">
+                  <i class="fas fa-eye-slash"></i>
+                  {{ 'NOTIFICATIONS.IGNORE_REPORT' | translate }}
+                </button>
+              </div>
+            }
           </div>
 
-          @if (!notification.estLue) {
+          @if (!notification.estLue && !isReportedComment(notification)) {
             <button 
               class="mark-read-btn" 
               (click)="markAsRead(notification); $event.stopPropagation()"
