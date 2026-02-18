@@ -23,7 +23,8 @@ export class Home {
 
   async ngOnInit() {
     await Promise.all([
-      this.generalService.loadTimeSpans()
+      this.generalService.loadTimeSpans(),
+      this.getStats()
     ]);
     this.languageService.onLangChange().subscribe(() => {
       this.generalService.loadTimeSpans();
