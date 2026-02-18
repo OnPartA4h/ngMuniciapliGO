@@ -79,10 +79,9 @@
                      (cdkDragStarted)="isDragging.set(true)"
                      (cdkDragEnded)="isDragging.set(false)">
 
-                  <!-- Placeholder vide : l'emplacement original disparaît pendant le drag -->
                   <div *cdkDragPlaceholder class="member-drag-placeholder--hidden"></div>
-
-                  <div *cdkDragPreview class="member-drag-preview">
+                  
+                  <div *cdkDragPreview matchSize="true" class="member-drag-preview">
                     <i class="fas fa-clone"></i>
                     <span>{{ member.probleme?.titre || ('DUPLICATES.REPORT' | translate) + ' #' + member.problemeId }}</span>
                   </div>
