@@ -53,8 +53,7 @@
              [cdkDropListConnectedTo]="getDropListIds()"
              [cdkDropListDisabled]="group.isClosed"
              (cdkDropListDropped)="dropMember($event, group.id)"
-             (cdkDropListEntered)="onDragEnterGroup(group.id)"
-             (cdkDropListExited)="onDragExitGroup(group.id)">
+             (cdkDropListEntered)="onDragEnterGroup(group.id)">
 
           <app-duplicate-group-card
             [group]="group"
@@ -77,7 +76,11 @@
                      [cdkDragData]="member"
                      [cdkDragDisabled]="member.isPrimary || group.isClosed"
                      class="member-drag-wrapper"
-                     [class.member-drag-wrapper--moving]="movingMemberId() === member.id">
+                     (cdkDragStarted)="isDragging.set(true)"
+                     (cdkDragEnded)="isDragging.set(false)">
+
+                  <!-- Placeholder vide : l'emplacement original disparaît pendant le drag -->
+                  <div *cdkDragPlaceholder class="member-drag-placeholder--hidden"></div>
 
                   <div *cdkDragPreview class="member-drag-preview">
                     <i class="fas fa-clone"></i>

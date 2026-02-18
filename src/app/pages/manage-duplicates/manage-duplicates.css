@@ -101,13 +101,12 @@
   align-items: stretch;
   gap: var(--spacing-sm);
   border-radius: var(--border-radius-md);
-  transition: opacity 0.2s ease;
   width: 100%;
 }
 
-.member-drag-wrapper--moving {
-  opacity: 0.4;
-  pointer-events: none;
+/* Placeholder transparent : l'emplacement source disparaît pendant le drag */
+.member-drag-placeholder--hidden {
+  display: none;
 }
 
 .member-card-fill {

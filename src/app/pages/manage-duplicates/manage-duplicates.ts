@@ -49,10 +49,11 @@ export class ManageDuplicates implements OnInit {
   readonly totalCount = signal(0);
   readonly showClosed = signal(false);
   readonly dragError = signal('');
-  readonly movingMemberId = signal<number | null>(null);
+  readonly isDragging = signal(false);
   readonly dragOverGroupId = signal<number | null>(null);
 
   private errorTimer: ReturnType<typeof setTimeout> | null = null;
+  private dragErrorTimer: ReturnType<typeof setTimeout> | null = null;
 
   private showError(message: string) {
     if (this.errorTimer) clearTimeout(this.errorTimer);
@@ -61,9 +62,9 @@ export class ManageDuplicates implements OnInit {
   }
 
   private showDragError(message: string) {
-    if (this.errorTimer) clearTimeout(this.errorTimer);
+    if (this.dragErrorTimer) clearTimeout(this.dragErrorTimer);
     this.dragError.set(message);
-    this.errorTimer = setTimeout(() => this.dragError.set(''), 3000);
+    this.dragErrorTimer = setTimeout(() => this.dragError.set(''), 3000);
   }
 
   get navigationTabs(): NavigationTab[] {
@@ -200,11 +201,8 @@ export class ManageDuplicates implements OnInit {
     }
   }
 
-  onDragExitGroup(groupId: number) {
-    this.dragOverGroupId.set(null);
-  }
-
   async dropMember(event: CdkDragDrop<DuplicateGroupMember[]>, targetGroupId: number) {
+    this.isDragging.set(false);
     this.dragOverGroupId.set(null);
 
     if (event.previousContainer === event.container) {
@@ -212,28 +210,13 @@ export class ManageDuplicates implements OnInit {
     }
 
     const member: DuplicateGroupMember = event.item.data;
-    const sourceGroupId = parseInt(event.previousContainer.id.replace('group-drop-', ''), 10);
 
     if (member.isPrimary) {
       this.showDragError(this.translateService.instant('DUPLICATES.CANNOT_MOVE_PRIMARY'));
       return;
     }
 
-    this.movingMemberId.set(member.id);
-    this.dragError.set('');
-
-    const groups = this.groups();
-    const sourceIndex = groups.findIndex(g => g.id === sourceGroupId);
-    const targetIndex = groups.findIndex(g => g.id === targetGroupId);
-
-    if (sourceIndex !== -1 && targetIndex !== -1) {
-      const updatedGroups = groups.map(g => ({ ...g, members: [...g.members] }));
-      const memberToMove = updatedGroups[sourceIndex].members.splice(
-        updatedGroups[sourceIndex].members.findIndex(m => m.id === member.id), 1
-      )[0];
-      updatedGroups[targetIndex].members.push(memberToMove);
-      this.groups.set(updatedGroups);
-    }
+    const sourceGroupId = parseInt(event.previousContainer.id.replace('group-drop-', ''), 10);
 
     try {
       await this.whiteService.moveMemberToGroup(member.id, targetGroupId);
@@ -256,9 +239,6 @@ export class ManageDuplicates implements OnInit {
       }
     } catch (e: any) {
       this.showDragError(e?.error?.message || this.translateService.instant('DUPLICATES.MOVE_ERROR'));
-      await this.loadGroups(this.currentPage());
-    } finally {
-      this.movingMemberId.set(null);
     }
   }
 }
