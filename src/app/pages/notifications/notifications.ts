@@ -98,9 +98,12 @@ export class Notifications implements OnInit, OnDestroy {
   }
 
   goToReport(notification: Notification): void {
-    // Marquer comme lue avant de naviguer
     this.markAsRead(notification);
-    this.router.navigate(['/report-details', notification.problemeId]);
+
+    if (!this.isReportedComment(notification)){
+      this.router.navigate(['/report-details', notification.problemeId]);
+    }
+    
   }
 
   setFilter(filter: boolean | undefined): void {
@@ -150,7 +153,7 @@ export class Notifications implements OnInit, OnDestroy {
   }
 
   isReportedComment(notification: Notification): boolean {
-    return !!notification.commentReportId && !!notification.reason && !!notification.text;
+    return !!notification.commentReportId;
   }
 
   getCategoryLabel(category: number): string {
