@@ -63,6 +63,13 @@ export class Home {
     await this.getStats();
   }
 
+  async clearColBleu() {
+    if (this.search != "")
+      return;
+    this.currentResponsable = null;
+    await this.getStats();
+  }
+
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
     const target = event.target as HTMLElement;

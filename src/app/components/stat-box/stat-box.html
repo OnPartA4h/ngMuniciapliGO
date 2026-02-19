@@ -2,7 +2,7 @@
     <div class="stat-title">{{ title }}</div>
     <div class="stat-value">
         @if (value !== -1){
-        @if (value > 72){
+        @if (value > 24){
         {{ (value / 24) % 1 === 0 ? (value / 24) : (value / 24) | number:'1.1-1' }}
         <span class="stat-unit">{{ 'DASHBOARD.DAYS' | translate }}</span>
         }
