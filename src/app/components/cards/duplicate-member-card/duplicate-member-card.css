@@ -148,6 +148,7 @@
   transition: all var(--transition-base);
   font-size: var(--font-size-sm);
   padding: 0;
+  z-index: 1;
 }
 
 .member-card__exclude-btn:hover:not(:disabled) {

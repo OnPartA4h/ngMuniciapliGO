@@ -61,3 +61,10 @@
   padding: var(--spacing-xl) var(--spacing-2xl) var(--spacing-2xl);
   border-top: 1px solid var(--color-gray-200);
 }
+
+.modal-footer .btn {
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

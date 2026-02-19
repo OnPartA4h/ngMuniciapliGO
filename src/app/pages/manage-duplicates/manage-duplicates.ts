@@ -17,6 +17,7 @@ import {
 } from '../../components/ui';
 import { DuplicateGroupCardComponent } from '../../components/cards/duplicate-group-card/duplicate-group-card';
 import { DuplicateMemberCardComponent } from '../../components/cards/duplicate-member-card/duplicate-member-card';
+import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-manage-duplicates',
@@ -31,7 +32,8 @@ import { DuplicateMemberCardComponent } from '../../components/cards/duplicate-m
     DuplicateGroupCardComponent,
     DuplicateMemberCardComponent,
     NavigationTabsComponent,
-    AiProcessingStatusComponent
+    AiProcessingStatusComponent,
+    ConfirmModalComponent
   ],
   templateUrl: './manage-duplicates.html',
   styleUrl: './manage-duplicates.css',
@@ -53,6 +55,14 @@ export class ManageDuplicates implements OnInit {
   readonly dragError = signal('');
   readonly isDragging = signal(false);
   readonly dragOverGroupId = signal<number | null>(null);
+
+  // État des modales de confirmation
+  readonly showExcludeModal = signal(false);
+  readonly showAcceptModal = signal(false);
+  readonly confirmModalLoading = signal(false);
+  private pendingExcludeGroupId: number | null = null;
+  private pendingExcludeProblemeId: number | null = null;
+  private pendingAcceptGroupId: number | null = null;
 
   private errorTimer: ReturnType<typeof setTimeout> | null = null;
   private dragErrorTimer: ReturnType<typeof setTimeout> | null = null;
@@ -135,11 +145,17 @@ export class ManageDuplicates implements OnInit {
 
   async excludeProblem(groupId: number, problemeId: number, event: Event) {
     event.stopPropagation();
+    this.pendingExcludeGroupId = groupId;
+    this.pendingExcludeProblemeId = problemeId;
+    this.showExcludeModal.set(true);
+  }
 
-    if (!confirm(this.translateService.instant('DUPLICATES.CONFIRM_EXCLUDE'))) {
-      return;
-    }
+  async confirmExclude() {
+    const groupId = this.pendingExcludeGroupId;
+    const problemeId = this.pendingExcludeProblemeId;
+    if (groupId === null || problemeId === null) return;
 
+    this.confirmModalLoading.set(true);
     try {
       await this.whiteService.excludeProblemFromGroup(groupId, problemeId);
 
@@ -157,23 +173,47 @@ export class ManageDuplicates implements OnInit {
       }
     } catch (e: any) {
       this.showError(e?.error?.message || 'Error excluding problem');
+    } finally {
+      this.confirmModalLoading.set(false);
+      this.showExcludeModal.set(false);
+      this.pendingExcludeGroupId = null;
+      this.pendingExcludeProblemeId = null;
     }
+  }
+
+  cancelExclude() {
+    this.showExcludeModal.set(false);
+    this.pendingExcludeGroupId = null;
+    this.pendingExcludeProblemeId = null;
   }
 
   async acceptGroup(groupId: number, event: Event) {
     event.stopPropagation();
+    this.pendingAcceptGroupId = groupId;
+    this.showAcceptModal.set(true);
+  }
 
-    if (!confirm(this.translateService.instant('DUPLICATES.CONFIRM_ACCEPT'))) {
-      return;
-    }
+  async confirmAccept() {
+    const groupId = this.pendingAcceptGroupId;
+    if (groupId === null) return;
 
+    this.confirmModalLoading.set(true);
     try {
       await this.whiteService.acceptDuplicateGroup(groupId);
       this.selectedGroupId.set(null);
       await this.loadGroups(this.currentPage());
     } catch (e: any) {
       this.showError(e?.error?.message || 'Error accepting group');
+    } finally {
+      this.confirmModalLoading.set(false);
+      this.showAcceptModal.set(false);
+      this.pendingAcceptGroupId = null;
     }
+  }
+
+  cancelAccept() {
+    this.showAcceptModal.set(false);
+    this.pendingAcceptGroupId = null;
   }
 
   async changePage(page: number) {

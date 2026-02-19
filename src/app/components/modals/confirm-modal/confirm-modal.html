@@ -14,9 +14,10 @@
         </button>
         <button class="btn {{ confirmClass() }}" (click)="onConfirm()" [disabled]="isLoading()">
           @if (isLoading()) {
-            <i class="fas fa-spinner fa-spin"></i>
+            <div class="spinner spinner--sm spinner--white"></div>
+          } @else {
+            {{ confirmLabel() | translate }}
           }
-          {{ confirmLabel() | translate }}
         </button>
       </div>
     </div>

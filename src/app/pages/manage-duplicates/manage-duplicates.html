@@ -125,3 +125,24 @@
       (pageChange)="changePage($event)" />
   }
 </div>
+
+<!-- Modale de confirmation : exclure un membre -->
+<app-confirm-modal
+  [isOpen]="showExcludeModal()"
+  [isLoading]="confirmModalLoading()"
+  [title]="'DUPLICATES.CONFIRM_EXCLUDE_TITLE' | translate"
+  [message]="'DUPLICATES.CONFIRM_EXCLUDE' | translate"
+  confirmClass="btn-danger"
+  (confirm)="confirmExclude()"
+  (cancel)="cancelExclude()" />
+
+<!-- Modale de confirmation : accepter un groupe -->
+<app-confirm-modal
+  [isOpen]="showAcceptModal()"
+  [isLoading]="confirmModalLoading()"
+  [title]="'DUPLICATES.CONFIRM_ACCEPT_TITLE' | translate"
+  [message]="'DUPLICATES.CONFIRM_ACCEPT' | translate"
+  confirmClass="btn-success"
+  confirmLabel="DUPLICATES.ACCEPT_GROUP"
+  (confirm)="confirmAccept()"
+  (cancel)="cancelAccept()" />
