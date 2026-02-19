@@ -90,15 +90,12 @@ export class EditProblem implements OnInit {
       const problem = await this.whiteService.getProblem(this.problemId);
       this.problem.set(problem);
 
-      // Pre-fill form with problem data
-      // Determine the select option value (category key) that matches the numeric index from the backend
-      const categoryKey = this.categories()[problem.categorie]?.key ?? String(problem.categorie);
-
+      // Patch with the numeric index directly – the select uses $index as value
       this.editForm.patchValue({
-        titre: problem.titre,
+        titre:       problem.titre,
         description: problem.description || '',
-        address: problem.address,
-        categorie: categoryKey
+        address:     problem.address,
+        categorie:   problem.categorie,   // already a number matching the enum
       });
     } catch (error) {
       console.error('Error loading problem:', error);
@@ -119,10 +116,10 @@ export class EditProblem implements OnInit {
 
     try {
       const dto: ProblemeEditDTO = {
-        titre: this.editForm.value.titre,
+        titre:       this.editForm.value.titre,
         description: this.editForm.value.description || undefined,
-        address: this.editForm.value.address,
-        categorie: parseInt(this.editForm.value.categorie, 10)
+        address:     this.editForm.value.address,
+        categorie:   Number(this.editForm.value.categorie),  // ensure it's a number
       };
 
       const updatedProblem = await this.whiteService.editProblem(this.problemId, dto);

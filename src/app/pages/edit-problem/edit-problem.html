@@ -120,8 +120,8 @@
               [class.error]="hasError('categorie')"
             >
               <option value="" disabled>{{ 'EDIT_PROBLEM.CATEGORY_PLACEHOLDER' | translate }}</option>
-              @for (cat of categories(); track cat.key) {
-                <option [value]="cat.key">{{ cat.label }}</option>
+              @for (cat of categories(); track cat.key; let i = $index) {
+                <option [value]="i">{{ cat.label }}</option>
               }
             </select>
           }
