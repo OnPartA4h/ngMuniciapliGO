@@ -1,0 +1,24 @@
+@if (isOpen()) {
+  <div class="modal-backdrop" (click)="handleBackdropClick($event)">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <i class="fas fa-question-circle icon-confirm"></i>
+        <h2>{{ title() }}</h2>
+      </div>
+      <div class="modal-body">
+        <p>{{ message() }}</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="onCancel()" [disabled]="isLoading()">
+          {{ cancelLabel() | translate }}
+        </button>
+        <button class="btn {{ confirmClass() }}" (click)="onConfirm()" [disabled]="isLoading()">
+          @if (isLoading()) {
+            <i class="fas fa-spinner fa-spin"></i>
+          }
+          {{ confirmLabel() | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
