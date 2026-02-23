@@ -1,0 +1,187 @@
+<div class="page-container page-container--narrow">
+  <!-- Header -->
+  <div class="chats-header">
+    <div>
+      <h1 class="page-header__title">{{ 'CHAT.TITLE' | translate }}</h1>
+      <p class="page-header__subtitle">{{ 'CHAT.SUBTITLE' | translate }}</p>
+    </div>
+    <button class="btn btn-primary" (click)="toggleNewChatPanel()">
+      <i class="fas" [class.fa-plus]="!showNewChatPanel()" [class.fa-times]="showNewChatPanel()"></i>
+      {{ (showNewChatPanel() ? 'COMMON.CANCEL' : 'CHAT.NEW_CHAT') | translate }}
+    </button>
+  </div>
+
+  <!-- ─── Panneau nouveau chat ─────────────────────────────────────────── -->
+  @if (showNewChatPanel()) {
+    <div class="new-chat-panel">
+      <!-- Toggle direct / groupe -->
+      <div class="mode-toggle">
+        <button class="mode-btn" [class.active]="!isGroupMode()" (click)="isGroupMode() && toggleGroupMode()">
+          <i class="fas fa-user"></i>
+          {{ 'CHAT.DIRECT' | translate }}
+        </button>
+        <button class="mode-btn" [class.active]="isGroupMode()" (click)="!isGroupMode() && toggleGroupMode()">
+          <i class="fas fa-users"></i>
+          {{ 'CHAT.GROUP' | translate }}
+        </button>
+      </div>
+
+      <!-- Nom du groupe (mode groupe seulement) -->
+      @if (isGroupMode()) {
+        <div class="group-name-input">
+          <i class="fas fa-pen"></i>
+          <input
+            type="text"
+            [placeholder]="'CHAT.GROUP_NAME_PLACEHOLDER' | translate"
+            [ngModel]="groupName()"
+            (ngModelChange)="groupName.set($event)" />
+        </div>
+      }
+
+      <!-- Utilisateurs sélectionnés (mode groupe) -->
+      @if (isGroupMode() && selectedUsers().length > 0) {
+        <div class="selected-users">
+          @for (user of selectedUsers(); track user.id) {
+            <div class="selected-chip">
+              <span>{{ user.fullName }}</span>
+              <button class="chip-remove" (click)="removeSelectedUser(user)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Barre de recherche -->
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input
+          type="text"
+          [placeholder]="'CHAT.SEARCH_USERS_PLACEHOLDER' | translate"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="onSearchInput($event)" />
+        @if (isSearching()) {
+          <div class="spinner spinner--sm"></div>
+        }
+      </div>
+
+      <!-- Résultats de recherche -->
+      @if (searchResults().length > 0) {
+        <div class="search-results">
+          @for (user of searchResults(); track user.id) {
+            <button class="search-result-item" (click)="selectUser(user)" [disabled]="isCreating()">
+              <div class="avatar avatar--sm">
+                <span>{{ getInitials(user.fullName) }}</span>
+              </div>
+              <div class="search-result-info">
+                <span class="search-result-name">{{ user.fullName }}</span>
+                <span class="search-result-role">{{ getRoleLabel(user.role) }}</span>
+              </div>
+              @if (isGroupMode()) {
+                <i class="fas fa-plus-circle add-icon"></i>
+              } @else {
+                <i class="fas fa-comment add-icon"></i>
+              }
+            </button>
+          }
+        </div>
+      }
+
+      @if (searchQuery().length > 0 && searchResults().length === 0 && !isSearching()) {
+        <p class="no-results">{{ 'CHAT.NO_USERS_FOUND' | translate }}</p>
+      }
+
+      <!-- Bouton créer le groupe -->
+      @if (isGroupMode() && selectedUsers().length >= 2) {
+        <button
+          class="btn btn-primary btn-full create-group-btn"
+          (click)="createGroupChat()"
+          [disabled]="isCreating() || !groupName().trim()">
+          @if (isCreating()) {
+            <div class="spinner spinner--sm spinner--white"></div>
+          } @else {
+            <i class="fas fa-users"></i>
+          }
+          {{ 'CHAT.CREATE_GROUP' | translate }} ({{ selectedUsers().length }})
+        </button>
+      }
+    </div>
+  }
+
+  <!-- ─── Filtres ──────────────────────────────────────────────────────── -->
+  <div class="filter-tabs">
+    <button class="filter-tab" [class.active]="filter() === 'all'" (click)="setFilter('all')">
+      {{ 'CHAT.FILTER_ALL' | translate }}
+      @if (totalUnread() > 0) {
+        <span class="filter-tab__count">{{ totalUnread() }}</span>
+      }
+    </button>
+    <button class="filter-tab" [class.active]="filter() === 'direct'" (click)="setFilter('direct')">
+      <i class="fas fa-user"></i>
+      {{ 'CHAT.DIRECT' | translate }}
+    </button>
+    <button class="filter-tab" [class.active]="filter() === 'group'" (click)="setFilter('group')">
+      <i class="fas fa-users"></i>
+      {{ 'CHAT.GROUP' | translate }}
+    </button>
+  </div>
+
+  <!-- ─── Liste de chats ──────────────────────────────────────────────── -->
+  @if (isLoading()) {
+    <app-loading-spinner />
+  }
+
+  @if (!isLoading() && filteredChats().length === 0) {
+    <app-empty-state
+      [iconClass]="'fas fa-comments'"
+      [title]="'CHAT.NO_CHATS' | translate"
+      [description]="'CHAT.NO_CHATS_DESC' | translate" />
+  }
+
+  @if (!isLoading() && filteredChats().length > 0) {
+    <div class="chat-list">
+      @for (chat of filteredChats(); track chat.id) {
+        <div class="chat-item" [class.unread]="chat.unreadCount > 0" (click)="openChat(chat)">
+          <!-- Avatar -->
+          <div class="chat-avatar" [class.group-avatar]="chat.type === ChatType.Group">
+            @if (chat.otherUserPictureUrl) {
+              <img [src]="chat.otherUserPictureUrl" alt="" />
+            } @else {
+              <span class="avatar-initials">{{ getInitials(chat.displayName) }}</span>
+              @if (chat.type === ChatType.Group) {
+                <i class="fas fa-users group-icon"></i>
+              }
+            }
+          </div>
+
+          <!-- Contenu -->
+          <div class="chat-content">
+            <div class="chat-top-row">
+              <span class="chat-name">{{ chat.displayName }}</span>
+              @if (chat.lastMessage) {
+                <span class="chat-time">{{ getTimeLabel(chat.lastMessage.createdAt) }}</span>
+              }
+            </div>
+            <div class="chat-bottom-row">
+              <p class="chat-last-message">
+                @if (chat.lastMessage) {
+                  @if (chat.lastMessage.isSystemMessage) {
+                    <i class="fas fa-info-circle system-icon"></i>
+                  } @else if (chat.type === ChatType.Group && chat.lastMessage.senderName) {
+                    <strong>{{ chat.lastMessage.senderName.split(' ')[0] }}:</strong>
+                  }
+                  {{ truncateMessage(chat.lastMessage.content) }}
+                } @else {
+                  <span class="no-message">{{ 'CHAT.NO_MESSAGES_YET' | translate }}</span>
+                }
+              </p>
+              @if (chat.unreadCount > 0) {
+                <span class="unread-badge">{{ chat.unreadCount > 99 ? '99+' : chat.unreadCount }}</span>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
