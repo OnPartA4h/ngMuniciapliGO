@@ -1,11 +1,21 @@
+/**
+ * Doit correspondre au backend C# :
+ *   public enum ChatType { Direct, Group }
+ * JSON par défaut → 0, 1 (entiers).
+ */
 export enum ChatType {
-  Direct = 'Direct',
-  Group  = 'Group',
+  Direct = 0,
+  Group  = 1,
 }
 
+/**
+ * Doit correspondre au backend C# :
+ *   public enum ChatMemberRole { Member, Admin }
+ * JSON par défaut → 0, 1 (entiers).
+ */
 export enum ChatMemberRole {
-  Member = 'Member',
-  Admin  = 'Admin',
+  Member = 0,
+  Admin  = 1,
 }
 
 // Response DTOs

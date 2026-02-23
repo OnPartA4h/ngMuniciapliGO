@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ChatService } from '../../services/chat-service';
 import { ChatHubService } from '../../services/chat-hub.service';
@@ -24,6 +25,7 @@ export class Chats implements OnInit, OnDestroy {
   private languageService = inject(LanguageService);
   private router = inject(Router);
   private translate = inject(TranslateService);
+  private subs: Subscription[] = [];
 
   // Exposer ChatType pour le template
   readonly ChatType = ChatType;
@@ -66,17 +68,22 @@ export class Chats implements OnInit, OnDestroy {
     await Promise.all([this.loadChats(), this.loadRoles()]);
 
     // Recharger les rôles quand la langue change
-    this.languageService.onLangChange().subscribe(() => this.loadRoles());
+    this.subs.push(
+      this.languageService.onLangChange().subscribe(() => this.loadRoles())
+    );
 
-    // Temps réel : nouveau message → on recharge la liste
-    this.chatHubService.onNewMessage = () => this.loadChats();
-    this.chatHubService.onAddedToChat = () => this.loadChats();
-    this.chatHubService.onRemovedFromChat = () => this.loadChats();
-    this.chatHubService.onGroupRenamed = () => this.loadChats();
+    // Temps réel via Subjects
+    this.subs.push(
+      this.chatHubService.newMessage$.subscribe(() => this.loadChats()),
+      this.chatHubService.addedToChat$.subscribe(() => this.loadChats()),
+      this.chatHubService.removedFromChat$.subscribe(() => this.loadChats()),
+      this.chatHubService.groupRenamed$.subscribe(() => this.loadChats()),
+    );
   }
 
   ngOnDestroy(): void {
     if (this.searchDebounceTimer) clearTimeout(this.searchDebounceTimer);
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   // ── Chargement ────────────────────────────────────────────────────────────

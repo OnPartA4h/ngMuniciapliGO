@@ -1,4 +1,5 @@
 import { Injectable, NgZone, inject, signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 import { environment } from '../../environments/environment';
 import { ChatDto, ChatMemberDto, ChatMessageDto } from '../models/chat';
@@ -53,24 +54,24 @@ export class ChatHubService {
 
   readonly isConnected = signal<boolean>(false);
 
-  // ── Callbacks enregistrés par les consommateurs ───────────────────────────
+  // ── Subjects observables (multi-abonnement) ───────────────────────────────
 
-  onNewMessage?: (message: ChatMessageDto) => void;
-  onMessageEdited?: (message: ChatMessageDto) => void;
-  onMessageDeleted?: (event: MessageDeletedEvent) => void;
-  onReadReceipt?: (event: ReadReceiptEvent) => void;
-  onReactionToggled?: (message: ChatMessageDto) => void;
+  readonly newMessage$        = new Subject<ChatMessageDto>();
+  readonly messageEdited$     = new Subject<ChatMessageDto>();
+  readonly messageDeleted$    = new Subject<MessageDeletedEvent>();
+  readonly readReceipt$       = new Subject<ReadReceiptEvent>();
+  readonly reactionToggled$   = new Subject<ChatMessageDto>();
 
-  onMemberAdded?: (event: MemberAddedEvent) => void;
-  onMemberRemoved?: (event: MemberRemovedEvent) => void;
-  onAddedToChat?: (chat: ChatDto) => void;
-  onRemovedFromChat?: (event: { chatId: string }) => void;
-  onGroupRenamed?: (event: GroupRenamedEvent) => void;
+  readonly memberAdded$       = new Subject<MemberAddedEvent>();
+  readonly memberRemoved$     = new Subject<MemberRemovedEvent>();
+  readonly addedToChat$       = new Subject<ChatDto>();
+  readonly removedFromChat$   = new Subject<{ chatId: string }>();
+  readonly groupRenamed$      = new Subject<GroupRenamedEvent>();
 
-  onTypingStart?: (event: TypingEvent) => void;
-  onTypingStop?: (event: TypingEvent) => void;
-  onUserOnline?: (event: UserPresenceEvent) => void;
-  onUserOffline?: (event: UserPresenceEvent) => void;
+  readonly typingStart$       = new Subject<TypingEvent>();
+  readonly typingStop$        = new Subject<TypingEvent>();
+  readonly userOnline$        = new Subject<UserPresenceEvent>();
+  readonly userOffline$       = new Subject<UserPresenceEvent>();
 
   // ── Connexion ─────────────────────────────────────────────────────────────
 
@@ -184,46 +185,46 @@ export class ChatHubService {
     if (!this.hubConnection) return;
 
     this.hubConnection.on('NewMessage', (msg: ChatMessageDto) =>
-      this.ngZone.run(() => this.onNewMessage?.(msg)));
+      this.ngZone.run(() => this.newMessage$.next(msg)));
 
     this.hubConnection.on('MessageEdited', (msg: ChatMessageDto) =>
-      this.ngZone.run(() => this.onMessageEdited?.(msg)));
+      this.ngZone.run(() => this.messageEdited$.next(msg)));
 
     this.hubConnection.on('MessageDeleted', (event: MessageDeletedEvent) =>
-      this.ngZone.run(() => this.onMessageDeleted?.(event)));
+      this.ngZone.run(() => this.messageDeleted$.next(event)));
 
     this.hubConnection.on('ReadReceipt', (event: ReadReceiptEvent) =>
-      this.ngZone.run(() => this.onReadReceipt?.(event)));
+      this.ngZone.run(() => this.readReceipt$.next(event)));
 
     this.hubConnection.on('ReactionToggled', (msg: ChatMessageDto) =>
-      this.ngZone.run(() => this.onReactionToggled?.(msg)));
+      this.ngZone.run(() => this.reactionToggled$.next(msg)));
 
     this.hubConnection.on('MemberAdded', (event: MemberAddedEvent) =>
-      this.ngZone.run(() => this.onMemberAdded?.(event)));
+      this.ngZone.run(() => this.memberAdded$.next(event)));
 
     this.hubConnection.on('MemberRemoved', (event: MemberRemovedEvent) =>
-      this.ngZone.run(() => this.onMemberRemoved?.(event)));
+      this.ngZone.run(() => this.memberRemoved$.next(event)));
 
     this.hubConnection.on('AddedToChat', (chat: ChatDto) =>
-      this.ngZone.run(() => this.onAddedToChat?.(chat)));
+      this.ngZone.run(() => this.addedToChat$.next(chat)));
 
     this.hubConnection.on('RemovedFromChat', (event: { chatId: string }) =>
-      this.ngZone.run(() => this.onRemovedFromChat?.(event)));
+      this.ngZone.run(() => this.removedFromChat$.next(event)));
 
     this.hubConnection.on('GroupRenamed', (event: GroupRenamedEvent) =>
-      this.ngZone.run(() => this.onGroupRenamed?.(event)));
+      this.ngZone.run(() => this.groupRenamed$.next(event)));
 
     this.hubConnection.on('TypingStart', (event: TypingEvent) =>
-      this.ngZone.run(() => this.onTypingStart?.(event)));
+      this.ngZone.run(() => this.typingStart$.next(event)));
 
     this.hubConnection.on('TypingStop', (event: TypingEvent) =>
-      this.ngZone.run(() => this.onTypingStop?.(event)));
+      this.ngZone.run(() => this.typingStop$.next(event)));
 
     this.hubConnection.on('UserOnline', (event: UserPresenceEvent) =>
-      this.ngZone.run(() => this.onUserOnline?.(event)));
+      this.ngZone.run(() => this.userOnline$.next(event)));
 
     this.hubConnection.on('UserOffline', (event: UserPresenceEvent) =>
-      this.ngZone.run(() => this.onUserOffline?.(event)));
+      this.ngZone.run(() => this.userOffline$.next(event)));
   }
 
   private async invoke(method: string, ...args: any[]): Promise<void> {

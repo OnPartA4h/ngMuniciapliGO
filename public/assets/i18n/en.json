@@ -453,8 +453,12 @@
     "ADD_MEMBER": "Add a member",
     "REMOVE_MEMBER": "Remove member",
     "LEAVE_GROUP": "Leave group",
+    "LEAVE_CONFIRM": "Are you sure you want to leave this group?",
+    "REMOVE_CONFIRM": "Remove {{name}} from the group?",
+    "DELETE_CONFIRM": "Delete this message?",
     "YOU": "(you)",
     "MEMBER": "Member",
+    "ADMIN": "Admin",
     "LOAD_MORE": "Load older messages",
     "NO_MESSAGES": "No messages yet. Say hello!",
     "MESSAGE_PLACEHOLDER": "Type a message…",
@@ -465,6 +469,11 @@
     "TODAY": "Today",
     "YESTERDAY": "Yesterday",
     "TYPING_ONE": "{{name}} is typing…",
-    "TYPING_MANY": "Several people are typing…"
+    "TYPING_MANY": "Several people are typing…",
+    "MEMBER_SINCE": "Member since",
+    "CREATED_ON": "Created on",
+    "SEND_ERROR": "Failed to send message. Please try again.",
+    "CONNECTION_LOST": "Connection lost. Reconnecting…",
+    "CONNECTION_RESTORED": "Connection restored"
   }
 }

@@ -453,8 +453,12 @@
     "ADD_MEMBER": "Ajouter un membre",
     "REMOVE_MEMBER": "Retirer le membre",
     "LEAVE_GROUP": "Quitter le groupe",
+    "LEAVE_CONFIRM": "Êtes-vous sûr de vouloir quitter ce groupe ?",
+    "REMOVE_CONFIRM": "Retirer {{name}} du groupe ?",
+    "DELETE_CONFIRM": "Supprimer ce message ?",
     "YOU": "(vous)",
     "MEMBER": "Membre",
+    "ADMIN": "Admin",
     "LOAD_MORE": "Charger les messages précédents",
     "NO_MESSAGES": "Aucun message pour l'instant. Dites bonjour !",
     "MESSAGE_PLACEHOLDER": "Écrire un message…",
@@ -465,6 +469,11 @@
     "TODAY": "Aujourd'hui",
     "YESTERDAY": "Hier",
     "TYPING_ONE": "{{name}} est en train d'écrire…",
-    "TYPING_MANY": "Plusieurs personnes écrivent…"
+    "TYPING_MANY": "Plusieurs personnes écrivent…",
+    "MEMBER_SINCE": "Membre depuis",
+    "CREATED_ON": "Créé le",
+    "SEND_ERROR": "Échec de l'envoi du message. Veuillez réessayer.",
+    "CONNECTION_LOST": "Connexion perdue. Reconnexion en cours…",
+    "CONNECTION_RESTORED": "Connexion rétablie"
   }
 }
