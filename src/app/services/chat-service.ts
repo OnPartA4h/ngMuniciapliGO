@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ChatDto, ChatSummaryDto } from '../models/chat';
+import { ChatDto, ChatSummaryDto, UserSearchResultDto } from '../models/chat';
 import {
   AddMemberRequest,
   AddReactionRequest,
@@ -82,6 +82,20 @@ export class ChatService {
   async leaveChat(chatId: string): Promise<void> {
     await lastValueFrom(
       this.http.post<void>(`${this.base}/${chatId}/leave`, null)
+    );
+  }
+
+  // ── Recherche d'utilisateurs ─────────────────────────────────────────────────
+
+  /**
+   * Recherche des utilisateurs par nom/email pour la création d'un chat direct ou groupe.
+   * Correspond à GET /api/Chat/users/search?q={query}
+   */
+  async searchUsers(query: string): Promise<UserSearchResultDto[]> {
+    return await lastValueFrom(
+      this.http.get<UserSearchResultDto[]>(`${this.base}/users/search`, {
+        params: { q: query },
+      })
     );
   }
 }

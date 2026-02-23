@@ -58,3 +58,10 @@ export interface ChatSummaryDto {
   unreadCount:number;
   createdAt:string; // ISO date
 }
+
+/** Résultat de la recherche d'utilisateurs pour la création d'un chat. */
+export interface UserSearchResultDto {
+  id:string;
+  fullName:string;
+  role:string;
+}
