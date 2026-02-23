@@ -29,22 +29,27 @@
         <div class="comment-item__body">
             <p>{{c.text}}</p>
             <div class="comment-item__media comment-item__media--grid-2">
-                <div class="comment-media-thumb">
-                    <img [src]="c.photoUrl" alt="Photo 1" />
-                </div>
+                @if (c.photoUrl){
+                    <div class="comment-media-thumb">
+                        <img [src]="c.photoUrl" alt="Photo 1" />
+                    </div>
+                }
             </div>
         </div>
 
         <!-- Réponses collapsables -->
         @if (c.replies.length > 0) {
             <div class="comment-replies">
-            <button class="comment-replies__toggle">
-            <i class="fas fa-chevron-right comment-replies__chevron"></i>
-            <i class="fas fa-reply"></i>
-            {{c.replies.length}} réponses
+            <button class="comment-replies__toggle"
+                [class.comment-replies__toggle--open]="isRepliesOpen(c.id)"
+                (click)="toggleReplies(c.id)">
+              <i class="fas fa-chevron-right comment-replies__chevron"></i>
+              <i class="fas fa-reply"></i>
+              {{c.replies.length}} réponse{{c.replies.length > 1 ? 's' : ''}}
             </button>
 
-            <div class="comment-replies__list comment-replies__list--collapsed">
+            @if (isRepliesOpen(c.id)) {
+            <div class="comment-replies__list">
             @for (r of c.replies; track $index) {
                 <div class="reply-item">
                     <div class="comment-item__header">
@@ -63,16 +68,18 @@
                     <div class="comment-item__body">
                     <p>{{r.text}}</p>
                     <div class="comment-item__media">
-                        <div class="comment-media-thumb comment-media-thumb--gif">
-                        <img [src]="r.photoUrl" alt="GIF" />
-                        <span class="media-tag">GIF</span>
-                        </div>
+                        @if (c.photoUrl){
+                            <div class="comment-media-thumb">
+                                <img [src]="r.photoUrl" alt="GIF" />
+                            </div>
+                        }
                     </div>
                     </div>
                 </div>
             }
             
             </div>
+            }
         </div>
         }
         

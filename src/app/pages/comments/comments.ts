@@ -4,7 +4,6 @@ import { PageHeaderComponent } from '../../components/ui/page-header/page-header
 import { CommentService } from '../../services/comment-service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UserComment } from '../../models/userComment';
-import { sign } from 'chart.js/helpers';
 
 @Component({
   selector: 'app-comments',
@@ -18,6 +17,7 @@ export class Comments implements OnInit{
   private route = inject(ActivatedRoute)
 
   comments = signal<UserComment[]>([])
+  openReplies = new Set<number>();
   problemId: number = -1
 
   async ngOnInit(){
@@ -32,6 +32,18 @@ export class Comments implements OnInit{
 
   goBack() {
     this.location.back();
+  }
+
+  toggleReplies(commentId: number) {
+    if (this.openReplies.has(commentId)) {
+      this.openReplies.delete(commentId);
+    } else {
+      this.openReplies.add(commentId);
+    }
+  }
+
+  isRepliesOpen(commentId: number): boolean {
+    return this.openReplies.has(commentId);
   }
 
   async getComments() {
