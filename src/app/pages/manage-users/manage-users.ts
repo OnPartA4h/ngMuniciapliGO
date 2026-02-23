@@ -71,11 +71,11 @@ export class ManageUsers implements OnInit {
         this.searchQuery() || undefined
       );
 
-      this.users.set(response.users);
+      this.users.set(response.items);
       this.currentPage.set(response.pagination.currentPage);
       this.pageSize.set(response.pagination.pageSize);
       this.totalPages.set(response.pagination.totalPages);
-      this.totalUsers.set(response.pagination.totalUsers);
+      this.totalUsers.set(response.pagination.totalCount);
     } catch (error) {
       console.error('Error loading users:', error);
     } finally {

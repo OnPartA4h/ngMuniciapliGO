@@ -87,11 +87,8 @@ export class Login {
   }
 
   verifyPermissions(){
-    if (!this.roles.includes("Admin") && !this.roles.includes("ColBlanc")) {
-        console.log("NOT ADMIN OR COL BLANC!!!!");
-        this.errorMessage = this.translateService.instant('LOGIN.INSUFFICIENT_PERMISSIONS');
-        return;
-      }
+    if (this.roles.includes("Admin") || this.roles.includes("ColBlanc")) return
+    this.errorMessage = this.translateService.instant('LOGIN.INSUFFICIENT_PERMISSIONS');
   }
 
   async handleRedirection() {
