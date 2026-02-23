@@ -15,6 +15,7 @@ export const routes: Routes = [
   { path: 'manage-users', loadComponent: () => import('./pages/manage-users/manage-users').then(m => m.ManageUsers), canActivate: [authGuard, adminGuard] },
   { path: 'create-user', loadComponent: () => import('./pages/create-user/create-user').then(m => m.CreateUser), canActivate: [authGuard, adminGuard] },
   { path: 'report-details/:id', loadComponent: () => import('./pages/report-details/report-details').then(m => m.ReportDetails), canActivate: [authGuard] },
+  { path: 'comments/:id', loadComponent: () => import('./pages/comments/comments').then(m => m.Comments), canActivate: [authGuard]},
   { path: 'edit-problem/:id', loadComponent: () => import('./pages/edit-problem/edit-problem').then(m => m.EditProblem), canActivate: [authGuard, whiteGuard] },
   { path: 'profile', loadComponent: () => import('./pages/profile/profile').then(m => m.Profile), canActivate: [authGuard] },
   { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications').then(m => m.Notifications), canActivate: [authGuard] },

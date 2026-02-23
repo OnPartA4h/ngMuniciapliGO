@@ -132,6 +132,13 @@
                         </div>
                         {{problem.nbLikes}}
                     </span>
+                    <span>
+                        <div class="property">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                            Number of comments
+                        </div>
+                        {{problem.nbComments}}
+                    </span>
                     <div class="report-header">
                         <span class="badge badge-info">
                             {{ this.generalService.getStatusLabel(problem.statut) }}

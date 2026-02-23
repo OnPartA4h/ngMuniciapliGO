@@ -1,0 +1,82 @@
+<div class="page-container">
+
+  <app-page-header
+    title="Commentaires"
+    subtitle="Nid-de-poule rue Sherbrooke — 12 commentaires"
+    [showBackButton]="true"
+    (back)="goBack()">
+  </app-page-header>
+
+  <!-- Liste des commentaires -->
+  <div class="comments-list">
+
+    <!-- ── Commentaire 1 : texte + 2 images + réponses collapsables ── -->
+     @for (c of comments(); track $index){
+        <div class="comment-item">
+        <div class="comment-item__header">
+            <div class="comment-item__avatar">
+            <img [src]="c.authorProfilePictureUrl" alt="" />
+            </div>
+            <div class="comment-item__meta">
+            <span class="comment-item__name">{{c.authorFirstName}} {{c.authorLastName}}</span>
+            <span class="comment-item__time">{{c.dateCreation}}</span>
+            </div>
+            <button class="btn btn-danger btn-sm comment-delete-btn">
+            <i class="fas fa-trash"></i>
+            Supprimer
+            </button>
+        </div>
+        <div class="comment-item__body">
+            <p>{{c.text}}</p>
+            <div class="comment-item__media comment-item__media--grid-2">
+                <div class="comment-media-thumb">
+                    <img [src]="c.photoUrl" alt="Photo 1" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Réponses collapsables -->
+        @if (c.replies.length > 0) {
+            <div class="comment-replies">
+            <button class="comment-replies__toggle">
+            <i class="fas fa-chevron-right comment-replies__chevron"></i>
+            <i class="fas fa-reply"></i>
+            {{c.replies.length}} réponses
+            </button>
+
+            <div class="comment-replies__list comment-replies__list--collapsed">
+            @for (r of c.replies; track $index) {
+                <div class="reply-item">
+                    <div class="comment-item__header">
+                    <div class="comment-item__avatar comment-item__avatar--sm">
+                        <img [src]="r.authorProfilePictureUrl" alt="" />
+                    </div>
+                    <div class="comment-item__meta">
+                        <span class="comment-item__name">{{c.authorFirstName}} {{c.authorLastName}}</span>
+                        <span class="comment-item__time">{{c.dateCreation}}</span>
+                    </div>
+                    <button class="btn btn-danger btn-sm comment-delete-btn">
+                        <i class="fas fa-trash"></i>
+                        Supprimer
+                    </button>
+                    </div>
+                    <div class="comment-item__body">
+                    <p>{{r.text}}</p>
+                    <div class="comment-item__media">
+                        <div class="comment-media-thumb comment-media-thumb--gif">
+                        <img [src]="r.photoUrl" alt="GIF" />
+                        <span class="media-tag">GIF</span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            }
+            
+            </div>
+        </div>
+        }
+        
+    </div>
+     }
+  </div>
+</div>
