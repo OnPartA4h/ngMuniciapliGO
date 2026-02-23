@@ -37,26 +37,16 @@ export class AdminService {
     return response;
   }
 
-  async changeRole(userId: string, roleName: string): Promise<{ message?: string; roles: string[]; token?: string }> {
-    const response = await lastValueFrom(
-      this.http.put<{ message?: string; roles: string[]; token?: string }>(
-        `${this.apiUrl}/api/Admin/users/${userId}/change-role`, 
-        JSON.stringify(roleName), 
+  async changeRole(userId: string, roleName: string): Promise<{ message?: string; roles: string[] }> {
+    return await lastValueFrom(
+      this.http.put<{ message?: string; roles: string[] }>(
+        `${this.apiUrl}/api/Admin/users/${userId}/change-role`,
+        JSON.stringify(roleName),
         {
           headers: { 'Content-Type': 'application/json' }
         }
       )
     );
-
-    console.log(response);
-    const currentUserId: string | null = localStorage.getItem("userId");
-    
-    if (userId == currentUserId && response.token) {
-      localStorage.setItem("roles", JSON.stringify(response.roles));
-      localStorage.setItem("token", response.token);
-    }
-    
-    return response;
   }
 
   async deleteUser(userId: string): Promise<void> {

@@ -45,10 +45,11 @@
             <div class="details-box">
                 <div class="details-box__top-row">
                     <div class="page-header">
-                        <h2>{{ problem?.titre }}</h2>
+                        <h2>{{ problem.titre }}</h2>
                         <p>{{ problem.description }}</p>
                     </div>
-                    <button class="btn-subscribe" [class.subscribed]="isSubscribed" (click)="toggleSubscription()" [title]="isSubscribed ? ('REPORT_DETAILS.UNSUBSCRIBE' | translate) : ('REPORT_DETAILS.SUBSCRIBE' | translate)">
+                    <button class="btn-subscribe" [class.subscribed]="isSubscribed" (click)="toggleSubscription()"
+                        [title]="isSubscribed ? ('REPORT_DETAILS.UNSUBSCRIBE' | translate) : ('REPORT_DETAILS.SUBSCRIBE' | translate)">
                         <i class="fas" [class.fa-bell]="isSubscribed" [class.fa-bell-slash]="!isSubscribed"></i>
                     </button>
                 </div>
@@ -123,7 +124,9 @@
                             <i class="fas fa-flag"></i>
                             {{"MANAGE_REPORTS.DEMANDEUR" | translate}}
                         </div>
+                        @if (problem.citoyenDemandeur != null){
                         {{problem.citoyenDemandeur.firstName + ' ' + problem.citoyenDemandeur.lastName}}
+                        }
                     </span>
                     <span>
                         <div class="property">
@@ -159,64 +162,66 @@
                 </a>
                 <!-- Message si le rapport est dans un groupe de doublons ouvert -->
                 @if (problem.isInOpenDuplicateGroup) {
-                  <div class="duplicate-group-notice">
+                <div class="duplicate-group-notice">
                     <i class="fas fa-clone"></i>
                     <div>
-                      <p class="duplicate-group-notice__title">{{ 'REPORT_DETAILS.IN_DUPLICATE_GROUP' | translate }}</p>
-                      <p class="duplicate-group-notice__desc">{{ 'REPORT_DETAILS.IN_DUPLICATE_GROUP_DESC' | translate }}</p>
+                        <p class="duplicate-group-notice__title">{{ 'REPORT_DETAILS.IN_DUPLICATE_GROUP' | translate }}
+                        </p>
+                        <p class="duplicate-group-notice__desc">{{ 'REPORT_DETAILS.IN_DUPLICATE_GROUP_DESC' | translate
+                            }}</p>
                     </div>
-                  </div>
-                  <a routerLink="/manage-duplicates" class="btn btn-primary">
+                </div>
+                <a routerLink="/manage-duplicates" class="btn btn-primary">
                     <i class="fas fa-arrow-right"></i>
                     {{ 'REPORT_DETAILS.GO_TO_DUPLICATES' | translate }}
-                  </a>
+                </a>
 
                 } @else {
-                  <!-- Accepter -->
-                  @if (problem.statut === 0) {
-                  <button class="btn btn-primary details-btn-refuse" (click)="refuseProblem()">
+                <!-- Accepter -->
+                @if (problem.statut === 0) {
+                <button class="btn btn-primary details-btn-refuse" (click)="refuseProblem()">
                     <i class="fas fa-times" style="margin-right: 8px;"></i>
                     {{ 'MANAGE_REPORTS.REFUSER' | translate }}
-                  </button>
-                  <button class="btn btn-primary details-btn-accept" (click)="acceptProblem()">
+                </button>
+                <button class="btn btn-primary details-btn-accept" (click)="acceptProblem()">
                     <i class="fas fa-check" style="margin-right: 8px;"></i>
                     {{ 'MANAGE_REPORTS.ACCEPTER' | translate }}
-                  </button>
-                  <div class="divider"></div>
-                  }
-                  <!-- Accepter un fix -->
-                  @if (problem.statut === 5) {
-                  <div class="search-box">
+                </button>
+                <div class="divider"></div>
+                }
+                <!-- Accepter un fix -->
+                @if (problem.statut === 5) {
+                <div class="search-box">
                     <input type="text" [placeholder]="'MANAGE_REPORTS.MESSAGE_REFUS' | translate"
-                      [(ngModel)]="message_refus" (ngModelChange)="getColBleus()" />
-                  </div>
-                  <button class="btn btn-primary details-btn-refuse" (click)="refuseFix()">
+                        [(ngModel)]="message_refus" (ngModelChange)="getColBleus()" />
+                </div>
+                <button class="btn btn-primary details-btn-refuse" (click)="refuseFix()">
                     <i class="fas fa-times" style="margin-right: 8px;"></i>
                     {{ 'MANAGE_REPORTS.REFUSER' | translate }}
-                  </button>
-                  <button class="btn btn-primary details-btn-accept" (click)="acceptFix()">
+                </button>
+                <button class="btn btn-primary details-btn-accept" (click)="acceptFix()">
                     <i class="fas fa-check" style="margin-right: 8px;"></i>
                     {{ 'MANAGE_REPORTS.ACCEPTER' | translate }}
-                  </button>
-                  }
-                  <!-- Assign -->
-                  @if ([0, 1, 3].includes(problem.statut)){
-                  <div class="search-box">
+                </button>
+                }
+                <!-- Assign -->
+                @if ([0, 1, 3].includes(problem.statut)){
+                <div class="search-box">
                     <i class="fas fa-search"></i>
                     <input type="text" [placeholder]="'MANAGE_REPORTS.ASSIGN_COL_BLEU' | translate" [(ngModel)]="search"
-                      (ngModelChange)="getColBleus()" />
-                  </div>
-                  @for (c of colBleus; track $index) {
-                  <button class="btn pagination-btn" (click)="assignColBleu(c.key)">
+                        (ngModelChange)="getColBleus()" />
+                </div>
+                @for (c of colBleus; track $index) {
+                <button class="btn pagination-btn" (click)="assignColBleu(c.key)">
                     <i class="fas fa-user" style="margin-right: 8px;"></i>
                     {{c.label}}
-                  </button>
-                  }
-                  <button class="btn btn-primary btn-primary" (click)="assignCitoyen()">
+                </button>
+                }
+                <button class="btn btn-primary btn-primary" (click)="assignCitoyen()">
                     <i class="fas fa-user" style="margin-right: 8px;"></i>
                     {{"MANAGE_REPORTS.ASSIGN_CITOYEN" | translate}}
-                  </button>
-                  }
+                </button>
+                }
                 }
             </div>
         </div>
@@ -229,7 +234,7 @@
     </div>
     }
 
-    @if (showPhotoModal()) {
+    @if (showPhotoModal() && problem !== null) {
     <div class="photo-modal-backdrop" (click)="closePhotoModal()">
         <div class="photo-modal" (click)="$event.stopPropagation()">
             <button class="photo-modal-close" (click)="closePhotoModal()">

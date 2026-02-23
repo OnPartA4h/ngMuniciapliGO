@@ -3,6 +3,12 @@ export interface RoleOption {
   label: string;
 }
 
+export interface ColBleuOption {
+  key: string;
+  label: string;
+}
+
+
 export interface User {
   id: string;
   firstName: string;

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
-import { StatusOption, CategoryOption, AssigneAOption } from '../../models/problem';
+import { StatusOption, CategoryOption, AssigneAOption, Problem } from '../../models/problem';
 
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 import { WhiteService } from '../../services/white-service';
@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { NotificationService } from '../../services/notification.service';
+import { ColBleuOption } from '../../models/user';
 
 @Component({
   selector: 'app-report-details',
@@ -30,12 +31,12 @@ export class ReportDetails implements OnInit {
   private translate = inject(TranslateService);
   private notifService = inject(NotificationService)
 
-  problem: any = null;
+  problem: Problem | null = null;
   isLoading = true;
   photoIndex = signal<number>(0);
   resolutionPhotoIndex = signal<number>(0);
   showPhotoModal = signal<boolean>(false);
-  colBleus: any[] = [];
+  colBleus: ColBleuOption[] = [];
   search = "";
   message_refus = ""
   isSubscribed = false;
@@ -72,6 +73,10 @@ export class ReportDetails implements OnInit {
   }
 
   async acceptProblem() {
+    if (this.problem == null) {
+      return;
+    }
+
     try {
       this.problem = await this.whiteService.acceptProblem(this.problem.id);
       this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ACCEPTER_SUCCESS'), 'OK', { duration: 3000 });
@@ -83,6 +88,10 @@ export class ReportDetails implements OnInit {
   }
 
   async refuseProblem() {
+    if (this.problem == null) {
+      return;
+    }
+
     try {
       await this.whiteService.refuseProblem(this.problem.id);
       this.snackbar.open(this.translate.instant('MANAGE_REPORTS.REFUSER_SUCCESS'), 'OK', { duration: 3000 });
@@ -94,6 +103,10 @@ export class ReportDetails implements OnInit {
   }
 
   async acceptFix() {
+    if (this.problem == null) {
+      return;
+    }
+
     try {
       await this.whiteService.acceptFix(this.problem.id);
       this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ACCEPTER_FIX_SUCCESS'), 'OK', { duration: 3000 });
@@ -105,6 +118,10 @@ export class ReportDetails implements OnInit {
   }
 
   async refuseFix() {
+    if (this.problem == null) {
+      return;
+    }
+
     try {
       await this.whiteService.refuseFix(this.problem.id, this.message_refus);
       this.snackbar.open(this.translate.instant('MANAGE_REPORTS.REFUSER_FIX_SUCCESS'), 'OK', { duration: 3000 });
@@ -116,6 +133,10 @@ export class ReportDetails implements OnInit {
   }
 
   async assignCitoyen() {
+    if (this.problem == null) {
+      return;
+    }
+
     try {
       this.problem = await this.whiteService.assignProblemCitoyen(this.problem.id);
       this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ASSIGN_SUCCESS_CITOYEN'), 'OK', { duration: 3000 });
@@ -126,6 +147,10 @@ export class ReportDetails implements OnInit {
   }
 
   async assignColBleu(colBleuId: string) {
+    if (this.problem == null) {
+      return;
+    }
+
     try {
       this.problem = await this.whiteService.assignProblemColbleu(this.problem.id, colBleuId);
       let name = this.problem?.responsable?.firstName + ' ' + this.problem?.responsable?.lastName;
@@ -178,6 +203,10 @@ export class ReportDetails implements OnInit {
   }
 
   async toggleSubscription() {
+    if (this.problem == null) {
+      return;
+    }
+
     if (!this.isSubscribed) {
       await this.notifService.subscribe(this.problem.id)
       this.isSubscribed = true
