@@ -17,7 +17,7 @@
         <div class="combobox">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" [placeholder]="'MANAGE_REPORTS.ASSIGN_COL_BLEU' | translate" [(ngModel)]="search"
+                <input type="text" [placeholder]="'DASHBOARD.FIND_COLBLEU' | translate" [(ngModel)]="search"
                     (ngModelChange)="getColBleus()" (focus)="showSearch = true" (keyup.enter)="clearColBleu()" />
             </div>
             @if (colBleus.length && showSearch) {

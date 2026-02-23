@@ -417,7 +417,8 @@
     "GRAPH_TITLE": "Problems evolution",
     "ASSIGNATION": "Average time until assignment",
     "PRISE_EN_CHARGE": "Average time until starting",
-    "RESOLUTION": "Average time until resolve"
+    "RESOLUTION": "Average time until resolve",
+    "FIND_COLBLEU": "Find a blue collar..."
   },
   "REPORT_DETAILS": {
     "SUBSCRIBE": "Subscribe to notifications",

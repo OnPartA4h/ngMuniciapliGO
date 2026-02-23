@@ -84,7 +84,7 @@ export class Home {
 
     filters.assigneA = this.currentAssigneA;
     filters.responsableId = this.currentResponsable;
-    filters.minDate = null;
+    filters.minDate = this.getMinDate();
     filters.maxDate = null;
     filters.categorieId = null;
     filters.districtId = null;
@@ -115,5 +115,19 @@ export class Home {
         }
       ]
     };
+  }
+
+  getMinDate(): Date {
+    const now = new Date();
+    switch (this.currentTimeSpan) {
+      case 0:
+        return new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+      case 1:
+        return new Date(now.getTime() - 31 * 24 * 60 * 60 * 1000);
+      case 2:
+        return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      default:
+        return now;
+    }
   }
 }
