@@ -5,10 +5,12 @@ import { CommentService } from '../../services/comment-service';
 import { ActivatedRoute, ParamMap, RouterLink } from '@angular/router';
 import { UserComment } from '../../models/userComment';
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
+import { Pagination } from '../../models/pagination';
+import { PaginationComponent } from '../../components/ui/pagination/pagination';
 
 @Component({
   selector: 'app-comments',
-  imports: [PageHeaderComponent, DaysAgoPipe, RouterLink],
+  imports: [PageHeaderComponent, DaysAgoPipe, RouterLink, PaginationComponent],
   templateUrl: './comments.html',
   styleUrl: './comments.css',
 })
@@ -19,6 +21,7 @@ export class Comments implements OnInit{
   comments = signal<UserComment[]>([])
   openReplies = new Set<number>();
   problemId: number = -1
+  pagination: Pagination | null = null;
 
   async ngOnInit(){
     this.route.paramMap.subscribe((params: ParamMap) => {
@@ -41,8 +44,13 @@ export class Comments implements OnInit{
     return this.openReplies.has(commentId);
   }
 
-  async getComments() {
-    let data: any = await this.commentsService.getComments(this.problemId)
+  async getComments(page: number = 1) {
+    let data: any = await this.commentsService.getComments(this.problemId, page)
     this.comments.set(data.items)
+    this.pagination = data.pagination || null;
+  }
+
+  async onPageChange(page: number) {
+    await this.getComments(page);
   }
 }

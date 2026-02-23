@@ -24,11 +24,11 @@ export class CommentService {
     return res;
   }
 
-  async getComments(problemId: number): Promise<UserComment[]> {
-    let res = await lastValueFrom(this.http.get<UserComment[]>(`${this.apiUrl}/api/Probleme/${problemId}/comments`))
+  async getComments(problemId: number, page: number = 1): Promise<any> {
+    let url = `${this.apiUrl}/api/Probleme/${problemId}/comments?page=${page}`;
+    let res = await lastValueFrom(this.http.get<any>(url));
     console.log(res);
-
-    return(res)
+    return res;
   }
 
   

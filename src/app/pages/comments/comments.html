@@ -86,4 +86,11 @@
     </div>
      }
   </div>
+  @if (pagination && pagination.totalPages > 1) {
+    <app-pagination
+      [currentPage]="pagination.currentPage"
+      [totalPages]="pagination.totalPages"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
+  }
 </div>
