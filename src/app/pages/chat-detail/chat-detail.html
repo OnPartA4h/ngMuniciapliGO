@@ -6,9 +6,13 @@
     </a>
 
     @if (chat(); as c) {
-      <div class="header-info" (click)="isGroup() && toggleInfoPanel()">
+      <div class="header-info" (click)="toggleInfoPanel()" style="cursor: pointer">
         <div class="header-avatar" [class.group]="isGroup()">
-          <span>{{ getInitials(chatDisplayName()) }}</span>
+          @if (!isGroup() && otherMember()?.profilePictureUrl) {
+            <img [src]="otherMember()!.profilePictureUrl!" alt="" class="header-avatar-img" />
+          } @else {
+            <span>{{ getInitials(chatDisplayName()) }}</span>
+          }
         </div>
         <div class="header-text">
           <span class="header-name">{{ chatDisplayName() }}</span>
@@ -22,11 +26,9 @@
       </div>
 
       <div class="header-actions">
-        @if (isGroup()) {
-          <button class="icon-btn" (click)="toggleInfoPanel()" [attr.aria-label]="'CHAT_DETAIL.INFO' | translate">
-            <i class="fas fa-info-circle"></i>
-          </button>
-        }
+        <button class="icon-btn" (click)="toggleInfoPanel()" [attr.aria-label]="'CHAT_DETAIL.INFO' | translate">
+          <i class="fas fa-info-circle"></i>
+        </button>
       </div>
     }
   </div>
@@ -171,7 +173,7 @@
       }
     </div>
 
-    <!-- ─── Panneau d'info (groupe) ──────────────────────────────────── -->
+    <!-- ─── Panneau d'info ─────────────────────────────────────────────── -->
     @if (showInfoPanel() && chat(); as c) {
       <div class="info-panel">
         <div class="info-panel-header">
@@ -182,107 +184,140 @@
         </div>
 
         <div class="info-panel-body">
-          <!-- Nom du groupe -->
-          <div class="info-section">
-            <label>{{ 'CHAT_DETAIL.GROUP_NAME' | translate }}</label>
-            @if (isRenaming()) {
-              <div class="rename-row">
-                <input
-                  type="text"
-                  [ngModel]="renameValue()"
-                  (ngModelChange)="renameValue.set($event)"
-                  (keyup.enter)="saveRename()"
-                  (keyup.escape)="cancelRenaming()"
-                  class="rename-input" />
-                <button class="icon-btn sm" (click)="saveRename()"><i class="fas fa-check"></i></button>
-                <button class="icon-btn sm" (click)="cancelRenaming()"><i class="fas fa-times"></i></button>
+          @if (isGroup()) {
+            <!-- ── Groupe : Nom du groupe ────────────────────────────── -->
+            <div class="info-section">
+              <label>{{ 'CHAT_DETAIL.GROUP_NAME' | translate }}</label>
+              @if (isRenaming()) {
+                <div class="rename-row">
+                  <input
+                    type="text"
+                    [ngModel]="renameValue()"
+                    (ngModelChange)="renameValue.set($event)"
+                    (keyup.enter)="saveRename()"
+                    (keyup.escape)="cancelRenaming()"
+                    class="rename-input" />
+                  <button class="icon-btn sm" (click)="saveRename()"><i class="fas fa-check"></i></button>
+                  <button class="icon-btn sm" (click)="cancelRenaming()"><i class="fas fa-times"></i></button>
+                </div>
+              } @else {
+                <div class="rename-row">
+                  <span>{{ c.name }}</span>
+                  @if (isAdmin()) {
+                    <button class="icon-btn sm" (click)="startRenaming()"><i class="fas fa-pen"></i></button>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- ── Groupe : Membres ──────────────────────────────────── -->
+            <div class="info-section">
+              <label>{{ 'CHAT_DETAIL.MEMBERS' | translate }} ({{ c.members.length }})</label>
+              <div class="members-list">
+                @for (member of c.members; track member.userId) {
+                  <div class="member-item">
+                    <div class="member-avatar">
+                      @if (member.profilePictureUrl) {
+                        <img [src]="member.profilePictureUrl" alt="" />
+                      } @else {
+                        <span>{{ getInitials(member.displayName) }}</span>
+                      }
+                    </div>
+                    <div class="member-info">
+                      <span class="member-name">
+                        {{ member.displayName }}
+                        @if (member.userId === currentUserId()) {
+                          <span class="you-tag">{{ 'CHAT_DETAIL.YOU' | translate }}</span>
+                        }
+                      </span>
+                      <span class="member-role" [class.admin-role]="member.role === ChatMemberRole.Admin">
+                        {{ member.role === ChatMemberRole.Admin ? ('CHAT_DETAIL.ADMIN' | translate) : ('CHAT_DETAIL.MEMBER' | translate) }}
+                      </span>
+                    </div>
+                    @if (isAdmin() && member.userId !== currentUserId()) {
+                      <button class="icon-btn sm danger" (click)="removeMember(member)" [title]="'CHAT_DETAIL.REMOVE_MEMBER' | translate">
+                        <i class="fas fa-user-minus"></i>
+                      </button>
+                    }
+                  </div>
+                }
               </div>
-            } @else {
-              <div class="rename-row">
-                <span>{{ c.name }}</span>
-                @if (isAdmin()) {
-                  <button class="icon-btn sm" (click)="startRenaming()"><i class="fas fa-pen"></i></button>
+            </div>
+
+            <!-- ── Groupe : Ajouter un membre (admin) ───────────────── -->
+            @if (isAdmin()) {
+              <div class="info-section">
+                <label>{{ 'CHAT_DETAIL.ADD_MEMBER' | translate }}</label>
+                <div class="search-box search-box--sm">
+                  <i class="fas fa-search"></i>
+                  <input
+                    type="text"
+                    [placeholder]="'CHAT.SEARCH_USERS_PLACEHOLDER' | translate"
+                    [ngModel]="memberSearchQuery()"
+                    (ngModelChange)="onMemberSearchInput($event)" />
+                  @if (isMemberSearching()) {
+                    <div class="spinner spinner--sm"></div>
+                  }
+                </div>
+                @if (memberSearchResults().length > 0) {
+                  <div class="member-search-results">
+                    @for (user of memberSearchResults(); track user.id) {
+                      <button class="member-search-item" (click)="addMember(user)">
+                        <div class="member-avatar sm">
+                          <span>{{ getInitials(user.fullName) }}</span>
+                        </div>
+                        <div class="member-info">
+                          <span class="member-name">{{ user.fullName }}</span>
+                          <span class="member-role">{{ getRoleLabel(user.role) }}</span>
+                        </div>
+                        <i class="fas fa-plus-circle add-icon"></i>
+                      </button>
+                    }
+                  </div>
                 }
               </div>
             }
-          </div>
 
-          <!-- Membres -->
-          <div class="info-section">
-            <label>{{ 'CHAT_DETAIL.MEMBERS' | translate }} ({{ c.members.length }})</label>
-            <div class="members-list">
-              @for (member of c.members; track member.userId) {
-                <div class="member-item">
-                  <div class="member-avatar">
-                    @if (member.profilePictureUrl) {
-                      <img [src]="member.profilePictureUrl" alt="" />
-                    } @else {
-                      <span>{{ getInitials(member.displayName) }}</span>
-                    }
-                  </div>
-                  <div class="member-info">
-                    <span class="member-name">
-                      {{ member.displayName }}
-                      @if (member.userId === currentUserId()) {
-                        <span class="you-tag">{{ 'CHAT_DETAIL.YOU' | translate }}</span>
-                      }
-                    </span>
-                    <span class="member-role">{{ member.role === ChatMemberRole.Admin ? 'Admin' : ('CHAT_DETAIL.MEMBER' | translate) }}</span>
-                  </div>
-                  @if (isAdmin() && member.userId !== currentUserId()) {
-                    <button class="icon-btn sm danger" (click)="removeMember(member)" [title]="'CHAT_DETAIL.REMOVE_MEMBER' | translate">
-                      <i class="fas fa-user-minus"></i>
-                    </button>
-                  }
-                </div>
-              }
-            </div>
-          </div>
-
-          <!-- Ajouter un membre (admin) -->
-          @if (isAdmin()) {
+            <!-- ── Groupe : Quitter ──────────────────────────────────── -->
             <div class="info-section">
-              <label>{{ 'CHAT_DETAIL.ADD_MEMBER' | translate }}</label>
-              <div class="search-box search-box--sm">
-                <i class="fas fa-search"></i>
-                <input
-                  type="text"
-                  [placeholder]="'CHAT.SEARCH_USERS_PLACEHOLDER' | translate"
-                  [ngModel]="memberSearchQuery()"
-                  (ngModelChange)="onMemberSearchInput($event)" />
-                @if (isMemberSearching()) {
-                  <div class="spinner spinner--sm"></div>
-                }
-              </div>
-              @if (memberSearchResults().length > 0) {
-                <div class="member-search-results">
-                  @for (user of memberSearchResults(); track user.id) {
-                    <button class="member-search-item" (click)="addMember(user)">
-                      <div class="member-avatar sm">
-                        <span>{{ getInitials(user.fullName) }}</span>
-                      </div>
-                      <span class="member-name">{{ user.fullName }}</span>
-                      <i class="fas fa-plus-circle add-icon"></i>
-                    </button>
+              <label>{{ 'CHAT_DETAIL.CREATED_ON' | translate }}</label>
+              <span class="info-value">{{ getDateLabel(c.createdAt) }}</span>
+            </div>
+
+            <div class="info-section">
+              <button class="btn btn-danger btn-full" (click)="leaveChat()">
+                <i class="fas fa-sign-out-alt"></i>
+                {{ 'CHAT_DETAIL.LEAVE_GROUP' | translate }}
+              </button>
+            </div>
+          } @else {
+            <!-- ── Direct : Profil de l'autre utilisateur ────────────── -->
+            @if (otherMember(); as other) {
+              <div class="info-section direct-profile">
+                <div class="direct-avatar-large">
+                  @if (other.profilePictureUrl) {
+                    <img [src]="other.profilePictureUrl" alt="" />
+                  } @else {
+                    <span>{{ getInitials(other.displayName) }}</span>
                   }
                 </div>
-              }
-            </div>
+                <span class="direct-name">{{ other.displayName }}</span>
+                <span class="direct-joined">{{ 'CHAT_DETAIL.MEMBER_SINCE' | translate }} {{ getDateLabel(other.joinedAt) }}</span>
+              </div>
+            }
           }
-
-          <!-- Quitter le groupe -->
-          <div class="info-section">
-            <button class="btn btn-danger btn-full" (click)="leaveChat()">
-              <i class="fas fa-sign-out-alt"></i>
-              {{ 'CHAT_DETAIL.LEAVE_GROUP' | translate }}
-            </button>
-          </div>
         </div>
       </div>
     }
   </div>
 
   <!-- ─── Zone de saisie ─────────────────────────────────────────────── -->
+  @if (!chatHub.isConnected()) {
+    <div class="connection-banner">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ 'CHAT_DETAIL.CONNECTION_LOST' | translate }}
+    </div>
+  }
   <div class="input-area">
     <input
       type="text"

@@ -73,6 +73,14 @@
   background: linear-gradient(135deg, #1565c0 0%, #7b1fa2 100%);
 }
 
+.header-avatar img,
+.header-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
 .header-text {
   display: flex;
   flex-direction: column;
@@ -525,6 +533,29 @@
 
 /* ── Zone de saisie ──────────────────────────────────────────────────────── */
 
+.connection-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: #fff3cd;
+  color: #856404;
+  font-size: 13px;
+  font-weight: 500;
+  border-top: 1px solid #ffc107;
+  animation: fadeIn 0.3s ease;
+}
+
+.connection-banner i {
+  font-size: 14px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 .input-area {
   display: flex;
   align-items: center;
@@ -639,6 +670,11 @@
   color: var(--color-text-secondary);
 }
 
+.info-value {
+  font-size: 14px;
+  color: var(--color-text-primary);
+}
+
 /* ── Rename ──────────────────────────────────────────────────────────────── */
 
 .rename-row {
@@ -739,15 +775,93 @@
   color: var(--color-text-secondary);
 }
 
+.member-role.admin-role {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
 /* ── Recherche de membres (ajout) ────────────────────────────────────────── */
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  background: var(--color-gray-100);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.search-box:focus-within {
+  border-color: var(--color-primary);
+  background: var(--color-white);
+}
+
+.search-box i {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  outline: none;
+}
 
 .search-box--sm {
   border-radius: 10px;
   font-size: 13px;
+  padding: var(--spacing-sm) var(--spacing-md);
 }
 
 .search-box--sm input {
   font-size: 13px;
+}
+
+/* ── Profil direct (chat 1-to-1) ─────────────────────────────────────────── */
+
+.direct-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-2xl) 0;
+}
+
+.direct-avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1565c0, #1e88e5);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+.direct-avatar-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.direct-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.direct-joined {
+  font-size: 13px;
+  color: var(--color-text-secondary);
 }
 
 .member-search-results {

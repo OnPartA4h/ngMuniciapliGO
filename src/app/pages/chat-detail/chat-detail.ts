@@ -4,10 +4,11 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ChatService } from '../../services/chat-service';
 import { MessageService } from '../../services/message-service';
-import { ChatHubService, TypingEvent, MessageDeletedEvent, GroupRenamedEvent, MemberAddedEvent, MemberRemovedEvent } from '../../services/chat-hub.service';
+import { ChatHubService } from '../../services/chat-hub.service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import {
@@ -29,10 +30,11 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   private router = inject(Router);
   private chatService = inject(ChatService);
   private messageService = inject(MessageService);
-  private chatHub = inject(ChatHubService);
+  readonly chatHub = inject(ChatHubService);
   private generalService = inject(GeneralService);
   private languageService = inject(LanguageService);
   private translate = inject(TranslateService);
+  private subs: Subscription[] = [];
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef<HTMLDivElement>;
 
@@ -66,7 +68,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   // ── Typing ────────────────────────────────────────────────────────────────
   typingUsers = signal<string[]>([]);
   private typingTimer: ReturnType<typeof setTimeout> | null = null;
-  private isTyping = false;
+  private isTypingFlag = false;
 
   // ── Rôles ─────────────────────────────────────────────────────────────────
   roles = signal<RoleOption[]>([]);
@@ -96,6 +98,12 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
     return other?.displayName ?? '';
   });
 
+  otherMember = computed(() => {
+    const c = this.chat();
+    if (!c || c.type !== ChatType.Direct) return null;
+    return c.members.find(m => m.userId !== this.currentUserId()) ?? null;
+  });
+
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 
   async ngOnInit(): Promise<void> {
@@ -107,84 +115,87 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
 
     await Promise.all([this.loadChat(), this.loadMessages(), this.loadRoles()]);
 
-    this.languageService.onLangChange().subscribe(() => this.loadRoles());
+    this.subs.push(
+      this.languageService.onLangChange().subscribe(() => this.loadRoles())
+    );
 
     // Rejoindre le chat via SignalR
     await this.chatHub.joinChat(this.chatId);
 
-    // Handlers temps réel
-    this.chatHub.onNewMessage = (msg) => {
-      if (msg.chatId === this.chatId) {
-        this.messages.update(list => [...list, msg]);
-        this.shouldScrollToBottom = true;
-        // Marquer comme lu
-        this.messageService.markAsRead(this.chatId, msg.id).catch(() => {});
-      }
-    };
-
-    this.chatHub.onMessageEdited = (msg) => {
-      if (msg.chatId === this.chatId) {
-        this.messages.update(list =>
-          list.map(m => m.id === msg.id ? msg : m)
-        );
-      }
-    };
-
-    this.chatHub.onMessageDeleted = (event: MessageDeletedEvent) => {
-      if (event.chatId === this.chatId) {
-        this.messages.update(list =>
-          list.map(m => m.id === event.messageId ? { ...m, isDeleted: true, content: '' } : m)
-        );
-      }
-    };
-
-    this.chatHub.onReactionToggled = (msg) => {
-      if (msg.chatId === this.chatId) {
-        this.messages.update(list =>
-          list.map(m => m.id === msg.id ? msg : m)
-        );
-      }
-    };
-
-    this.chatHub.onTypingStart = (event: TypingEvent) => {
-      if (event.chatId === this.chatId && event.userId !== this.currentUserId()) {
-        this.typingUsers.update(list =>
-          list.includes(event.userId) ? list : [...list, event.userId]
-        );
-      }
-    };
-
-    this.chatHub.onTypingStop = (event: TypingEvent) => {
-      if (event.chatId === this.chatId) {
-        this.typingUsers.update(list => list.filter(id => id !== event.userId));
-      }
-    };
-
-    this.chatHub.onMemberAdded = (event: MemberAddedEvent) => {
-      if (event.chatId === this.chatId) this.loadChat();
-    };
-
-    this.chatHub.onMemberRemoved = (event: MemberRemovedEvent) => {
-      if (event.chatId === this.chatId) {
-        if (event.userId === this.currentUserId()) {
-          this.router.navigate(['/chats']);
-        } else {
-          this.loadChat();
+    // Handlers temps réel via Subjects
+    this.subs.push(
+      this.chatHub.newMessage$.subscribe(msg => {
+        if (msg.chatId === this.chatId) {
+          // Éviter les doublons (le message envoyé par soi-même est aussi reçu via SignalR)
+          const exists = this.messages().some(m => m.id === msg.id);
+          if (!exists) {
+            this.messages.update(list => [...list, msg]);
+          }
+          this.shouldScrollToBottom = true;
+          this.messageService.markAsRead(this.chatId, msg.id).catch(() => {});
         }
-      }
-    };
+      }),
 
-    this.chatHub.onGroupRenamed = (event: GroupRenamedEvent) => {
-      if (event.chatId === this.chatId) {
-        this.chat.update(c => c ? { ...c, name: event.newName } : c);
-      }
-    };
+      this.chatHub.messageEdited$.subscribe(msg => {
+        if (msg.chatId === this.chatId) {
+          this.messages.update(list => list.map(m => m.id === msg.id ? msg : m));
+        }
+      }),
 
-    this.chatHub.onRemovedFromChat = (event) => {
-      if (event.chatId === this.chatId) {
-        this.router.navigate(['/chats']);
-      }
-    };
+      this.chatHub.messageDeleted$.subscribe(event => {
+        if (event.chatId === this.chatId) {
+          this.messages.update(list =>
+            list.map(m => m.id === event.messageId ? { ...m, isDeleted: true, content: '' } : m)
+          );
+        }
+      }),
+
+      this.chatHub.reactionToggled$.subscribe(msg => {
+        if (msg.chatId === this.chatId) {
+          this.messages.update(list => list.map(m => m.id === msg.id ? msg : m));
+        }
+      }),
+
+      this.chatHub.typingStart$.subscribe(event => {
+        if (event.chatId === this.chatId && event.userId !== this.currentUserId()) {
+          this.typingUsers.update(list =>
+            list.includes(event.userId) ? list : [...list, event.userId]
+          );
+        }
+      }),
+
+      this.chatHub.typingStop$.subscribe(event => {
+        if (event.chatId === this.chatId) {
+          this.typingUsers.update(list => list.filter(id => id !== event.userId));
+        }
+      }),
+
+      this.chatHub.memberAdded$.subscribe(event => {
+        if (event.chatId === this.chatId) this.loadChat();
+      }),
+
+      this.chatHub.memberRemoved$.subscribe(event => {
+        if (event.chatId === this.chatId) {
+          if (event.userId === this.currentUserId()) {
+            this.router.navigate(['/chats']);
+          } else {
+            this.loadChat();
+          }
+        }
+      }),
+
+      this.chatHub.groupRenamed$.subscribe(event => {
+        if (event.chatId === this.chatId) {
+          this.chat.update(c => c ? { ...c, name: event.newName } : c);
+        }
+      }),
+
+      this.chatHub.removedFromChat$.subscribe(event => {
+        if (event.chatId === this.chatId) {
+          this.router.navigate(['/chats']);
+        }
+      }),
+    );
   }
 
   ngAfterViewChecked(): void {
@@ -195,6 +206,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async ngOnDestroy(): Promise<void> {
+    this.subs.forEach(s => s.unsubscribe());
     if (this.memberSearchTimer) clearTimeout(this.memberSearchTimer);
     if (this.typingTimer) clearTimeout(this.typingTimer);
     if (this.chatId) {
@@ -269,13 +281,16 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
 
     try {
       this.isSending.set(true);
-      const msg = await this.messageService.sendMessage(this.chatId, { content });
-      this.messages.update(list => [...list, msg]);
       this.newMessage.set('');
-      this.shouldScrollToBottom = true;
       this.stopTyping();
+      await this.messageService.sendMessage(this.chatId, { content });
+      // ⚠ Ne PAS ajouter le message localement :
+      // SignalR le renvoie via « NewMessage » et le handler l'ajoute automatiquement.
+      this.shouldScrollToBottom = true;
     } catch (error) {
       console.error('Error sending message:', error);
+      // Remettre le contenu pour que l'utilisateur puisse réessayer
+      this.newMessage.set(content);
     } finally {
       this.isSending.set(false);
     }
@@ -310,8 +325,12 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   // ── Suppression de message ────────────────────────────────────────────────
 
   async deleteMessage(msg: ChatMessageDto): Promise<void> {
+    const confirmed = confirm(this.translate.instant('CHAT_DETAIL.DELETE_CONFIRM'));
+    if (!confirmed) return;
+
     try {
       await this.messageService.deleteMessage(this.chatId, msg.id);
+      // SignalR enverra MessageDeleted, mais on met à jour immédiatement pour le feedback
       this.messages.update(list =>
         list.map(m => m.id === msg.id ? { ...m, isDeleted: true, content: '' } : m)
       );
@@ -334,8 +353,8 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   // ── Typing ────────────────────────────────────────────────────────────────
 
   onMessageInput(): void {
-    if (!this.isTyping) {
-      this.isTyping = true;
+    if (!this.isTypingFlag) {
+      this.isTypingFlag = true;
       this.chatHub.typingStart(this.chatId);
     }
     if (this.typingTimer) clearTimeout(this.typingTimer);
@@ -343,8 +362,8 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   private stopTyping(): void {
-    if (this.isTyping) {
-      this.isTyping = false;
+    if (this.isTypingFlag) {
+      this.isTypingFlag = false;
       this.chatHub.typingStop(this.chatId);
     }
     if (this.typingTimer) {
@@ -429,6 +448,11 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async removeMember(member: ChatMemberDto): Promise<void> {
+    const confirmed = confirm(
+      this.translate.instant('CHAT_DETAIL.REMOVE_CONFIRM', { name: member.displayName })
+    );
+    if (!confirmed) return;
+
     try {
       await this.chatService.removeMember(this.chatId, member.userId);
       await this.loadChat();
@@ -438,6 +462,9 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async leaveChat(): Promise<void> {
+    const confirmed = confirm(this.translate.instant('CHAT_DETAIL.LEAVE_CONFIRM'));
+    if (!confirmed) return;
+
     try {
       await this.chatService.leaveChat(this.chatId);
       this.router.navigate(['/chats']);
