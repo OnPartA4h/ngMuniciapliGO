@@ -8,6 +8,7 @@ import { GraphDTO } from '../../models/problem';
 import { LanguageService } from '../../services/language-service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user-service';
+import { StatsFilterDTO } from '../../models/statsFilterDTO';
 
 @Component({
   selector: 'app-home',
@@ -79,7 +80,16 @@ export class Home {
   }
 
   async getStats() {
-    this.stats = await this.generalService.getStats(this.currentTimeSpan, this.currentAssigneA, this.currentResponsable);
+    let filters: StatsFilterDTO = {} as StatsFilterDTO;
+
+    filters.assigneA = this.currentAssigneA;
+    filters.responsableId = this.currentResponsable;
+    filters.minDate = null;
+    filters.maxDate = null;
+    filters.categorieId = null;
+    filters.districtId = null;
+
+    this.stats = await this.generalService.getStats(filters);
 
     const graph: GraphDTO[] = this.stats.graph;
 

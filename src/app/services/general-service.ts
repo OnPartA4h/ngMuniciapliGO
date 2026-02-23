@@ -7,6 +7,7 @@ import { StatusOption, CategoryOption, AssigneAOption, TimeSpanOption } from '..
 import { LanguageService } from './language-service';
 import { District } from '../models/district';
 import { HtmlParser } from '@angular/compiler';
+import { StatsFilterDTO } from '../models/statsFilterDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -42,13 +43,13 @@ export class GeneralService {
 
   async getAssigneA(lang: string): Promise<AssigneAOption[]> {
     return await lastValueFrom(
-      this.http.get<CategoryOption[]>(`${this.apiUrl}/api/General/assignees/${lang}`)
+      this.http.get<AssigneAOption[]>(`${this.apiUrl}/api/General/assignees/${lang}`)
     );
   }
 
   async getTimeSpans(lang: string): Promise<TimeSpanOption[]> {
     return await lastValueFrom(
-      this.http.get<CategoryOption[]>(`${this.apiUrl}/api/General/timespans/${lang}`)
+      this.http.get<TimeSpanOption[]>(`${this.apiUrl}/api/General/timespans/${lang}`)
     );
   }
 
@@ -58,21 +59,12 @@ export class GeneralService {
     );
   }
 
-  async getStats(span: number, assigneA: number | null = null, responsableId: string | null = null): Promise<any> {
-    let params: any = {};
-
-    if (assigneA !== undefined && assigneA !== null) {
-      params.assigneA = assigneA;
-    }
-
-    if (responsableId) {
-      params.responsableId = responsableId;
-    }
-
+  async getStats(statsFilterDTO: StatsFilterDTO): Promise<any> {
+    console.log(statsFilterDTO);
     return await lastValueFrom(
-      this.http.get<any>(
-        `${this.apiUrl}/api/Stats/${span}`,
-        { params }
+      this.http.post<any>(
+        `${this.apiUrl}/api/Stats/`,
+        statsFilterDTO
       )
     );
   }

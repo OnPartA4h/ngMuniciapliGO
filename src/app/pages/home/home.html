@@ -6,12 +6,12 @@
     <div class="filter-group">
         <select [(ngModel)]="currentTimeSpan" (change)="getStats()">
             @for (s of generalService.timeSpans(); track $index) {
-            <option [value]="$index">{{ s.label }}</option>
+            <option [ngValue]=$index>{{ s.label }}</option>
             }
         </select>
         <select [(ngModel)]="currentAssigneA" (change)="getStats()">
             @for (s of generalService.assignees(); track $index) {
-            <option [value]="$index">{{ s.label }}</option>
+            <option [ngValue]=$index>{{ s.label }}</option>
             }
         </select>
         <div class="combobox">

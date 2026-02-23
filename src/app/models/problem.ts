@@ -3,17 +3,17 @@ import { Photo } from "./photo";
 import { User } from "./user";
 
 export interface StatusOption {
-  key: string;
+  key: number;
   label: string;
 }
 
 export interface CategoryOption {
-  key: string;
+  key: number;
   label: string;
 }
 
 export interface AssigneAOption {
-  key: string;
+  key: number;
   label: string;
 }
 
