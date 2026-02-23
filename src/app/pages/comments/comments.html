@@ -1,10 +1,10 @@
 <div class="page-container">
 
   <app-page-header
+    [routerLink]="['/report-details', problemId]"
     title="Commentaires"
     subtitle="Nid-de-poule rue Sherbrooke — 12 commentaires"
-    [showBackButton]="true"
-    (back)="goBack()">
+    [showBackButton]="true">
   </app-page-header>
 
   <!-- Liste des commentaires -->
@@ -19,7 +19,7 @@
             </div>
             <div class="comment-item__meta">
             <span class="comment-item__name">{{c.authorFirstName}} {{c.authorLastName}}</span>
-            <span class="comment-item__time">{{c.dateCreation}}</span>
+            <span class="comment-item__time">Il y a {{c.dateCreation | daysAgo}} jours</span>
             </div>
             <button class="btn btn-danger btn-sm comment-delete-btn">
             <i class="fas fa-trash"></i>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="comment-item__meta">
                         <span class="comment-item__name">{{c.authorFirstName}} {{c.authorLastName}}</span>
-                        <span class="comment-item__time">{{c.dateCreation}}</span>
+                        <span class="comment-item__time">il y a {{c.dateCreation | daysAgo}} jours</span>
                     </div>
                     <button class="btn btn-danger btn-sm comment-delete-btn">
                         <i class="fas fa-trash"></i>

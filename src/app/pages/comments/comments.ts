@@ -2,17 +2,17 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { Location } from '@angular/common';
 import { PageHeaderComponent } from '../../components/ui/page-header/page-header';
 import { CommentService } from '../../services/comment-service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, RouterLink } from '@angular/router';
 import { UserComment } from '../../models/userComment';
+import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 
 @Component({
   selector: 'app-comments',
-  imports: [PageHeaderComponent],
+  imports: [PageHeaderComponent, DaysAgoPipe, RouterLink],
   templateUrl: './comments.html',
   styleUrl: './comments.css',
 })
 export class Comments implements OnInit{
-  private location = inject(Location);
   private commentsService = inject(CommentService)
   private route = inject(ActivatedRoute)
 
@@ -27,11 +27,6 @@ export class Comments implements OnInit{
     })
 
     await this.getComments()
-  }
-  
-
-  goBack() {
-    this.location.back();
   }
 
   toggleReplies(commentId: number) {

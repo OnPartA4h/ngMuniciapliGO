@@ -135,9 +135,15 @@
                     <span>
                         <div class="property">
                             <i class="fa-solid fa-thumbs-up"></i>
-                            Number of comments
+                            Nombre de commentaires
                         </div>
-                        {{problem.nbComments}}
+                        <span style="display: flex; align-items: center; gap: 8px;">
+                            {{problem.nbComments}}
+                            <a class="btn btn-outline-primary btn-sm" [routerLink]="['/comments', problem.id]" title="Voir les commentaires">
+                                see comments
+                                <i class="fas fa-comments"></i>
+                            </a>
+                        </span>
                     </span>
                     <div class="report-header">
                         <span class="badge badge-info">
