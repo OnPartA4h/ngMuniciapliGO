@@ -5,10 +5,11 @@ import { AuthService } from '../../services/auth-service';
 import { LanguageService } from '../../services/language-service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NotificationBell } from '../notification-bell/notification-bell';
+import { ChatBell } from '../chat-bell/chat-bell';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive, TranslateModule, NotificationBell],
+  imports: [RouterLink, RouterLinkActive, TranslateModule, NotificationBell, ChatBell],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
