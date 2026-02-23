@@ -30,6 +30,7 @@ export class Map implements AfterViewInit, OnDestroy {
   DEFAULT_LNG: number = -73.5181
   DEFAULT_RADIUS: number = 1000
   FALLBACK_COORDS: L.LatLngExpression = [this.DEFAULT_LAT, this.DEFAULT_LNG];
+  DISTRICT_HOVER_DELAY: number = 1000
 
   DISTRICT_COLORS = [
     '#3B82F6', // Blue 
@@ -359,29 +360,64 @@ export class Map implements AfterViewInit, OnDestroy {
       className: 'district-popup'
     });
 
-    polygon.on('mousedown', (e: L.LeafletMouseEvent) => {
-      if (e.originalEvent.button === 1) { 
-        e.originalEvent.preventDefault();
-        polygon.openPopup(e.latlng);
-      }
-    });
-
-    polygon.on('click', (e: L.LeafletMouseEvent) => {
+    polygon.on('click', () => {
       polygon.closePopup();
     });
 
-    polygon.on('mouseover', () => {
+    setTimeout(() => {
+      const element = polygon.getElement();
+      if (element) {
+        element.addEventListener('auxclick', (e: Event) => {
+          const mouseEvent = e as MouseEvent;
+          if (mouseEvent.button === 1) { 
+            mouseEvent.preventDefault();
+            mouseEvent.stopPropagation();
+            const bounds = polygon.getBounds();
+            this.map?.fitBounds(bounds, {
+              padding: [50, 50],
+              maxZoom: 15
+            });
+          }
+        });
+      }
+    }, 0);
+
+    let hoverTimeout: number = 0
+
+    polygon.on('mouseover', (e) => {
+      polygon.closePopup()
+      clearTimeout(hoverTimeout)
+
       polygon.setStyle({
         fillOpacity: 0.5,
         weight: 3
       });
+
+      hoverTimeout = setTimeout(() => {
+        const bounds = polygon.getBounds();
+        const center = bounds.getCenter();
+
+        polygon.openPopup(center);
+      }, this.DISTRICT_HOVER_DELAY)
     });
 
-    polygon.on('mouseout', () => {
+    polygon.on('mouseout', (e) => {
+      const popupElement = polygon.getPopup()?.getElement();
+      const relatedTarget = (e.originalEvent as MouseEvent).relatedTarget as HTMLElement;
+  
+      if (popupElement && relatedTarget && popupElement.contains(relatedTarget)) {
+        return;
+      }
+      
+      polygon.closePopup()
+      clearTimeout(hoverTimeout);
+      
       polygon.setStyle({
         fillOpacity: 0.3,
         weight: 2
       });
+
+      
     });
 
     return polygon;

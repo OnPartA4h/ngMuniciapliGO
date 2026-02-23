@@ -1,0 +1,96 @@
+<div class="page-container">
+
+  <app-page-header
+    [routerLink]="['/report-details', problemId]"
+    title="Commentaires"
+    subtitle="Nid-de-poule rue Sherbrooke — 12 commentaires"
+    [showBackButton]="true">
+  </app-page-header>
+
+  <!-- Liste des commentaires -->
+  <div class="comments-list">
+
+    <!-- ── Commentaire 1 : texte + 2 images + réponses collapsables ── -->
+     @for (c of comments(); track $index){
+        <div class="comment-item">
+        <div class="comment-item__header">
+            <div class="comment-item__avatar">
+            <img [src]="c.authorProfilePictureUrl" alt="" />
+            </div>
+            <div class="comment-item__meta">
+            <span class="comment-item__name">{{c.authorFirstName}} {{c.authorLastName}}</span>
+            <span class="comment-item__time">Il y a {{c.dateCreation | daysAgo}} jours</span>
+            </div>
+            <button class="btn btn-danger btn-sm comment-delete-btn">
+            <i class="fas fa-trash"></i>
+            Supprimer
+            </button>
+        </div>
+        <div class="comment-item__body">
+            <p>{{c.text}}</p>
+            <div class="comment-item__media comment-item__media--grid-2">
+                @if (c.photoUrl){
+                    <div class="comment-media-thumb">
+                        <img [src]="c.photoUrl" alt="Photo 1" />
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Réponses collapsables -->
+        @if (c.replies.length > 0) {
+            <div class="comment-replies">
+            <button class="comment-replies__toggle"
+                [class.comment-replies__toggle--open]="isRepliesOpen(c.id)"
+                (click)="toggleReplies(c.id)">
+              <i class="fas fa-chevron-right comment-replies__chevron"></i>
+              <i class="fas fa-reply"></i>
+              {{c.replies.length}} réponse{{c.replies.length > 1 ? 's' : ''}}
+            </button>
+
+            @if (isRepliesOpen(c.id)) {
+            <div class="comment-replies__list">
+            @for (r of c.replies; track $index) {
+                <div class="reply-item">
+                    <div class="comment-item__header">
+                    <div class="comment-item__avatar comment-item__avatar--sm">
+                        <img [src]="r.authorProfilePictureUrl" alt="" />
+                    </div>
+                    <div class="comment-item__meta">
+                        <span class="comment-item__name">{{c.authorFirstName}} {{c.authorLastName}}</span>
+                        <span class="comment-item__time">il y a {{c.dateCreation | daysAgo}} jours</span>
+                    </div>
+                    <button class="btn btn-danger btn-sm comment-delete-btn">
+                        <i class="fas fa-trash"></i>
+                        Supprimer
+                    </button>
+                    </div>
+                    <div class="comment-item__body">
+                    <p>{{r.text}}</p>
+                    <div class="comment-item__media">
+                        @if (c.photoUrl){
+                            <div class="comment-media-thumb">
+                                <img [src]="r.photoUrl" alt="GIF" />
+                            </div>
+                        }
+                    </div>
+                    </div>
+                </div>
+            }
+            
+            </div>
+            }
+        </div>
+        }
+        
+    </div>
+     }
+  </div>
+  @if (pagination && pagination.totalPages > 1) {
+    <app-pagination
+      [currentPage]="pagination.currentPage"
+      [totalPages]="pagination.totalPages"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
+  }
+</div>
