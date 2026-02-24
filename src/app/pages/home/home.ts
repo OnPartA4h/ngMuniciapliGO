@@ -9,10 +9,11 @@ import { LanguageService } from '../../services/language-service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user-service';
 import { StatsFilterDTO } from '../../models/statsFilterDTO';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-home',
-  imports: [Chart, TranslateModule, StatBox, FormsModule],
+  imports: [Chart, TranslateModule, StatBox, FormsModule, DatePickerModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -28,6 +29,7 @@ export class Home {
   currentDistrict: number | null = null;
   currentCategory: number | null = null;
   currentResponsable: string | null = null;
+  rangeDates: Date[] | undefined;
   stats: any;
 
   search: string = "";

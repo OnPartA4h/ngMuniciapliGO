@@ -2,6 +2,7 @@ import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListen
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideTranslateService, TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { providePrimeNG } from 'primeng/config';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 
@@ -18,6 +19,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([ApiInterceptor])
     ),
+    providePrimeNG(),
     provideEnvironmentNgxMask(),
     provideCharts(withDefaultRegisterables()),
     importProvidersFrom(

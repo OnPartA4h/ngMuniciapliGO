@@ -574,7 +574,8 @@ textarea::placeholder {
   align-items: center;
 }
 
-.filter-group select {
+.filter-group select,
+.filter-group .datepicker {
   padding: var(--spacing-md) var(--spacing-lg);
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius-md);
@@ -586,7 +587,8 @@ textarea::placeholder {
   transition: border-color var(--transition-base);
 }
 
-.filter-group select:focus {
+.filter-group select:focus,
+.filter-group .datepicker:focus {
   border-color: var(--border-color-focus);
 }
 

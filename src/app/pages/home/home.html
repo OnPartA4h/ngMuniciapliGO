@@ -4,11 +4,10 @@
         <p>{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
     </div>
     <div class="filter-group">
-        <select [(ngModel)]="currentTimeSpan" (change)="getStats()">
-            @for (s of generalService.timeSpans(); track $index) {
-            <option [ngValue]=$index>{{ s.label }}</option>
-            }
-        </select>
+        <div class="datepicker">
+            <p-datepicker [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true"
+                placeholder="Date - Date" />
+        </div>
         <select [(ngModel)]="currentDistrict" (change)="getStats()">
             <option [ngValue]=null>{{ 'DASHBOARD.DISTRICTS' | translate }}</option>
             @for (s of generalService.districtNames(); track $index) {
