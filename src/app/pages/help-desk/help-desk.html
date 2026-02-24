@@ -7,17 +7,17 @@
 
   <div class="helpdesk-layout">
     <!-- Colonne utilisateur -->
-    <div class="helpdesk-user-panel">
+    <div class="helpdesk-user-panel" [routerLink]="['/profile', client?.id]">
       <div class="helpdesk-user-card">
         <div class="helpdesk-user-avatar">
-          <img [src]="supportAgent?.profilePictureUrl" alt="Avatar utilisateur" />
+          <img [src]="client?.profilePictureUrl" alt="Avatar utilisateur" />
         </div>
         <div class="helpdesk-user-info">
-          <h2>{{supportAgent?.firstName}} {{supportAgent?.lastName}}</h2>
+          <h2>{{client?.firstName}} {{client?.lastName}}</h2>
           <div class="helpdesk-user-meta">
-            <span><i class="fas fa-envelope"></i> {{supportAgent?.email}}</span>
-            <span><i class="fas fa-phone"></i> {{supportAgent?.phoneNumber | phoneNumber}}</span>
-            <span><i class="fas fa-map-marker-alt"></i> {{supportAgent?.streetNumber}} {{supportAgent?.streetName}}, {{supportAgent?.city}}</span>
+            <span><i class="fas fa-envelope"></i> {{client?.email}}</span>
+            <span><i class="fas fa-phone"></i> {{client?.phoneNumber | phoneNumber}}</span>
+            <span><i class="fas fa-map-marker-alt"></i> {{client?.streetNumber}} {{client?.streetName}}, {{client?.city}}</span>
           </div>
         </div>
       </div>
@@ -26,9 +26,9 @@
           <i class="fas fa-headset"></i> Appel en cours
         </div>
         <div class="helpdesk-call-details">
-          <span><b>Agent :</b> Marc Bouchard</span>
-          <span><b>Début :</b> 14:32</span>
-          <span><b>Durée :</b> 02:15</span>
+          <span><b>Agent :</b> {{supportAgent?.firstName}} {{supportAgent?.lastName}}</span>
+          <span><b>Début :</b> {{phoneCall()?.createdAt | date:'HH:mm'}}</span>
+          <span><b>Durée :</b> {{phoneCall()!.createdAt | duration}}</span>
           <span><b>Statut :</b> En cours</span>
         </div>
       </div>

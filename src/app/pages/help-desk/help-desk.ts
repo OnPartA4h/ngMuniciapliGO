@@ -10,11 +10,14 @@ import { UserService } from '../../services/user-service';
 import { User } from '../../models/user';
 import { PhoneNumberPipe } from '../../pipes/phone-number-pipe';
 import { PhoneCall } from '../../models/phoneCall';
+import { DatePipe } from '@angular/common';
+import { DurationPipe } from '../../pipes/duration.pipe';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-help-desk',
   standalone: true,
-  imports: [PageHeaderComponent, ReportListComponent, FormsModule, PhoneNumberPipe],
+  imports: [PageHeaderComponent, ReportListComponent, FormsModule, PhoneNumberPipe, DatePipe, DurationPipe, RouterLink],
   templateUrl: './help-desk.html',
   styleUrl: './help-desk.css',
 })
@@ -24,9 +27,11 @@ export class HelpDesk implements OnInit{
   userService = inject(UserService)
 
   problems = signal<Problem[]>([])
+  phoneCall = signal<PhoneCall | null>(null)
   pagination: Pagination | null = null
   supportAgent: User | null = null
-  phoneCall = signal<PhoneCall | null>(null)
+  client: User | null = null
+  
 
   currentSearch: string | null = null;
   loading = true;
@@ -59,6 +64,7 @@ export class HelpDesk implements OnInit{
 
   async getPhoneCall() {
     this.phoneCall.set(await this.supportService.getPhoneCall())
+    this.client = this.phoneCall()!.client
   }
 
   async onPageChange(page: number) {

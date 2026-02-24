@@ -1,3 +1,5 @@
+import { User } from "./user"
+
 export interface PhoneCall {
     id: number
     callSid: string
@@ -8,4 +10,5 @@ export interface PhoneCall {
     callStatus: string
 
     clientId: string
+    client: User
 }

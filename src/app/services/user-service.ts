@@ -23,6 +23,13 @@ export class UserService {
     return profile;
   }
 
+  async getPublicProfile(id: string): Promise<User> {
+    let res = await lastValueFrom(this.http.get<User>(`${this.apiUrl}/api/User/profile/${id}`))
+    console.log(res);
+    
+    return res
+  }
+
   async updateUser(dto: UpdateUserDto): Promise<{ message: string; user: User }> {
     const response = await lastValueFrom(
       this.http.put<{ message: string; user: User }>(`${this.apiUrl}/api/User/me`, dto)
