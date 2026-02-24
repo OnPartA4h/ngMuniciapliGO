@@ -29,7 +29,7 @@
             <div class="search-box">
                 <i class="fas fa-search"></i>
                 <input type="text" [placeholder]="'DASHBOARD.FIND_COLBLEU' | translate" [ngModel]="search()"
-                    (ngModelChange)="search.set($event); getColBleus()" (focus)="showSearch.set(true)"
+                    [maxLength]="128" (ngModelChange)="search.set($event); getColBleus()" (focus)="showSearch.set(true)"
                     (keyup.enter)="clearColBleu()" />
             </div>
             @if (colBleus().length && showSearch()) {
