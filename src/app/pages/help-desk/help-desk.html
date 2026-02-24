@@ -13,11 +13,11 @@
           <img src="https://i.pravatar.cc/72?img=5" alt="Avatar utilisateur" />
         </div>
         <div class="helpdesk-user-info">
-          <h2>Sophie Lavoie</h2>
+          <h2>{{supportAgent?.firstName}} {{supportAgent?.lastName}}</h2>
           <div class="helpdesk-user-meta">
-            <span><i class="fas fa-envelope"></i> sophie.lavoie@email.com</span>
-            <span><i class="fas fa-phone"></i> 514-555-1234</span>
-            <span><i class="fas fa-map-marker-alt"></i> 123 rue Sherbrooke, Montréal</span>
+            <span><i class="fas fa-envelope"></i> {{supportAgent?.email}}</span>
+            <span><i class="fas fa-phone"></i> {{supportAgent?.phoneNumber | phoneNumber}}</span>
+            <span><i class="fas fa-map-marker-alt"></i> {{supportAgent?.streetNumber}} {{supportAgent?.streetName}}, {{supportAgent?.city}}</span>
           </div>
         </div>
       </div>

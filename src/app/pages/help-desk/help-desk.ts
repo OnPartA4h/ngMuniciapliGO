@@ -6,31 +6,37 @@ import { Pagination } from '../../models/pagination';
 import { ReportListComponent } from '../../components/tables/report-list/report-list';
 import { GeneralService } from '../../services/general-service';
 import { FormsModule } from '@angular/forms';
+import { UserService } from '../../services/user-service';
+import { User } from '../../models/user';
+import { PhoneNumberPipe } from '../../pipes/phone-number-pipe';
 
 @Component({
   selector: 'app-help-desk',
   standalone: true,
-  imports: [PageHeaderComponent, ReportListComponent, FormsModule],
+  imports: [PageHeaderComponent, ReportListComponent, FormsModule, PhoneNumberPipe],
   templateUrl: './help-desk.html',
   styleUrl: './help-desk.css',
 })
 export class HelpDesk implements OnInit{
   supportService = inject(SupportService)
   generalService = inject(GeneralService);
+  userService = inject(UserService)
 
   problems = signal<Problem[]>([])
   pagination: Pagination | null = null
+  supportAgent: User | null = null
 
   currentSearch: string | null = null;
   loading = true;
 
   async ngOnInit() {
     this.loading = true
+    this.supportAgent = await this.userService.getProfile()
     await Promise.all([
       this.generalService.loadCategories(),
       this.generalService.loadStatuses(),
       this.generalService.loadAssigneA(),
-      this.getProblems()
+      this.getProblems(),
     ]);
     this.loading = false
   }
@@ -52,14 +58,6 @@ export class HelpDesk implements OnInit{
     await this.getProblems(page);
   }
 
-  user = {
-    firstName: 'Sophie',
-    lastName: 'Lavoie',
-    email: 'sophie.lavoie@email.com',
-    phone: '514-555-1234',
-    address: '123 rue Sherbrooke, Montréal',
-    profilePictureUrl: 'https://i.pravatar.cc/72?img=5',
-  };
   agent = {
     firstName: 'Marc',
     lastName: 'Bouchard',
