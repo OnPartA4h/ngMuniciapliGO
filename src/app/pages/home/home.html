@@ -5,22 +5,22 @@
     </div>
     <div class="filter-group">
         <div class="datepicker">
-            <p-datepicker [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true"
-                placeholder="Date - Date" />
+            <p-datepicker [ngModel]="rangeDates()" (ngModelChange)="updateDateRange($event)" selectionMode="range"
+                [readonlyInput]="true" placeholder="Date - Date" />
         </div>
-        <select [(ngModel)]="currentDistrict" (change)="getStats()">
+        <select [ngModel]="currentDistrict()" (ngModelChange)="currentDistrict.set($event); getStats()">
             <option [ngValue]=null>{{ 'DASHBOARD.DISTRICTS' | translate }}</option>
             @for (s of generalService.districtNames(); track $index) {
             <option [ngValue]=s.id>{{ s.name }}</option>
             }
         </select>
-        <select [(ngModel)]="currentCategory" (change)="getStats()">
+        <select [ngModel]="currentCategory()" (ngModelChange)="currentCategory.set($event); getStats()">
             <option [ngValue]=null>{{ 'DASHBOARD.CATEGORIES' | translate }}</option>
             @for (s of generalService.categories(); track $index) {
             <option [ngValue]=$index>{{ s.label }}</option>
             }
         </select>
-        <select [(ngModel)]="currentAssigneA" (change)="getStats()">
+        <select [ngModel]="currentAssigneA()" (ngModelChange)="currentAssigneA.set($event); getStats()">
             @for (s of generalService.assignees(); track $index) {
             <option [ngValue]=$index>{{ s.label }}</option>
             }
@@ -28,12 +28,13 @@
         <div class="combobox">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" [placeholder]="'DASHBOARD.FIND_COLBLEU' | translate" [(ngModel)]="search"
-                    (ngModelChange)="getColBleus()" (focus)="showSearch = true" (keyup.enter)="clearColBleu()" />
+                <input type="text" [placeholder]="'DASHBOARD.FIND_COLBLEU' | translate" [ngModel]="search()"
+                    (ngModelChange)="search.set($event); getColBleus()" (focus)="showSearch.set(true)"
+                    (keyup.enter)="clearColBleu()" />
             </div>
-            @if (colBleus.length && showSearch) {
+            @if (colBleus().length && showSearch()) {
             <div class="dropdown">
-                @for (c of colBleus; track $index) {
+                @for (c of colBleus(); track $index) {
                 <div class="dropdown-item" (click)="selectColBleu(c)">
                     <i class="fas fa-user"></i>
                     {{ c.label }}
@@ -44,18 +45,18 @@
         </div>
     </div>
     <div class="stat-boxes-row">
-        <app-stat-box [title]="'DASHBOARD.RESOLUTION' | translate" [value]="stats?.tempsResolution"></app-stat-box>
+        <app-stat-box [title]="'DASHBOARD.RESOLUTION' | translate" [value]="stats()?.tempsResolution"></app-stat-box>
         <app-stat-box [title]="'DASHBOARD.PRISE_EN_CHARGE' | translate"
-            [value]="stats?.tempsPriseEnCharge"></app-stat-box>
-        <app-stat-box [title]="'DASHBOARD.ASSIGNATION' | translate" [value]="stats?.tempsAssignation"></app-stat-box>
+            [value]="stats()?.tempsPriseEnCharge"></app-stat-box>
+        <app-stat-box [title]="'DASHBOARD.ASSIGNATION' | translate" [value]="stats()?.tempsAssignation"></app-stat-box>
     </div>
     <div class="app-chart-container">
         <div class="stat-title">{{ 'DASHBOARD.GRAPH_TITLE' | translate }}</div>
-        @if(stats?.graph?.length === 0){
+        @if(stats()?.graph?.length === 0){
         <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
         }
         @else {
-        <app-chart [datasets]="datasets" [chartType]="'line'"></app-chart>
+        <app-chart [datasets]="datasets()" [chartType]="'line'"></app-chart>
         }
     </div>
 </div>

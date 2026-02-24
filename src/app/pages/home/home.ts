@@ -1,4 +1,4 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, inject, signal, computed } from '@angular/core';
 import { Chart } from '../../components/chart/chart';
 import { ChartData, ChartType } from 'chart.js';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -23,19 +23,18 @@ export class Home {
   userService = inject(UserService);
   private translate = inject(TranslateService);
 
-  datasets!: ChartData<'line', { x: number; y: number }[]>;
-  currentTimeSpan: number = 0;
-  currentAssigneA: number = 0;
-  currentDistrict: number | null = null;
-  currentCategory: number | null = null;
-  currentResponsable: string | null = null;
-  rangeDates: Date[] | undefined;
-  stats: any;
-
-  search: string = "";
-  showSearch: boolean = false;
-  colBleus: any[] = [];
-  colBleuIndex: number = 0;
+  datasets = signal<ChartData<'line', { x: number; y: number }[]>>(undefined as any);
+  currentTimeSpan = signal<number>(0);
+  currentAssigneA = signal<number>(0);
+  currentDistrict = signal<number | null>(null);
+  currentCategory = signal<number | null>(null);
+  currentResponsable = signal<string | null>(null);
+  rangeDates = signal<Date[] | undefined>(undefined);
+  stats = signal<any>(null);
+  search = signal<string>("");
+  showSearch = signal<boolean>(false);
+  colBleus = signal<any[]>([]);
+  colBleuIndex = signal<number>(0);
 
   async ngOnInit() {
     await Promise.all([
@@ -53,28 +52,27 @@ export class Home {
   }
 
   async getColBleus() {
-    if (this.search == "") {
-      this.colBleus = [];
-      this.currentResponsable = ""
+    if (this.search() === "") {
+      this.colBleus.set([]);
+      this.currentResponsable.set("")
     }
     else {
-      this.colBleus = await this.userService.getColBleus(this.search);
+      const result = await this.userService.getColBleus(this.search());
+      this.colBleus.set(result);
     }
   }
 
   async selectColBleu(colBleu: any) {
-    this.search = colBleu.label;
-    this.showSearch = false;
-
-    this.currentResponsable = colBleu.key;
-
+    this.search.set(colBleu.label);
+    this.showSearch.set(false);
+    this.currentResponsable.set(colBleu.key);
     await this.getStats();
   }
 
   async clearColBleu() {
-    if (this.search != "")
+    if (this.search() !== "")
       return;
-    this.currentResponsable = null;
+    this.currentResponsable.set(null);
     await this.getStats();
   }
 
@@ -82,25 +80,29 @@ export class Home {
   onClickOutside(event: Event) {
     const target = event.target as HTMLElement;
     if (!target.closest('.combobox')) {
-      this.showSearch = false;
+      this.showSearch.set(false);
     }
   }
 
   async getStats() {
     let filters: StatsFilterDTO = {} as StatsFilterDTO;
 
-    filters.assigneA = this.currentAssigneA;
-    filters.responsableId = this.currentResponsable;
-    filters.minDate = this.getMinDate();
-    filters.maxDate = null;
-    filters.categorieId = this.currentCategory;
-    filters.districtId = this.currentDistrict;
+    if (this.rangeDates() !== undefined) {
+      filters.minDate = this.rangeDates()![0];
+      filters.maxDate = this.rangeDates()![1];
+    }
 
-    this.stats = await this.generalService.getStats(filters);
+    filters.assigneA = this.currentAssigneA();
+    filters.responsableId = this.currentResponsable();
+    filters.categorieId = this.currentCategory();
+    filters.districtId = this.currentDistrict();
 
-    const graph: GraphDTO[] = this.stats.graph;
+    const statsResult = await this.generalService.getStats(filters);
+    this.stats.set(statsResult);
 
-    this.datasets = {
+    const graph: GraphDTO[] = statsResult.graph;
+
+    this.datasets.set({
       datasets: [
         {
           label: this.translate.instant("DASHBOARD.REPORTED"),
@@ -121,12 +123,17 @@ export class Home {
           borderColor: 'rgba(35, 189, 94, 0.3)'
         }
       ]
-    };
+    });
+  }
+
+  updateDateRange(x: any) {
+    this.rangeDates.set(x);
+    this.getStats();
   }
 
   getMinDate(): Date {
     const now = new Date();
-    switch (this.currentTimeSpan) {
+    switch (this.currentTimeSpan()) {
       case 0:
         return new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
       case 1:
