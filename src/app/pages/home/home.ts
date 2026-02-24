@@ -23,8 +23,8 @@ export class Home {
   userService = inject(UserService);
   private translate = inject(TranslateService);
 
-  datasets = signal<ChartData<'line', { x: number; y: number }[]>>(undefined as any);
-  datasetsResolution = signal<ChartData<'bar', { x: number; y: number }[]>>(undefined as any);
+  datasets = signal<ChartData<'bar', { x: number; y: number }[]>>(undefined as any);
+  datasetsResolution = signal<ChartData<'line', { x: number; y: number }[]>>(undefined as any);
   currentTimeSpan = signal<number>(0);
   currentAssigneA = signal<number>(0);
   currentDistrict = signal<number | null>(null);
@@ -116,7 +116,7 @@ export class Home {
             y: d.reportedCount
           })),
           backgroundColor: 'rgba(44, 157, 233, 0.8)',
-          borderColor: 'rgba(54, 162, 235, 0.3)'
+          borderColor: 'rgba(44, 143, 209, 0.3)'
         },
         {
           label: this.translate.instant("DASHBOARD.SOLVED"),

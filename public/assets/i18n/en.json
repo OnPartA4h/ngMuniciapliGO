@@ -418,7 +418,7 @@
     "PRISE": "Starting",
     "ASS": "Assignment",
     "GRAPH_TITLE": "Problems evolution",
-    "GRAPH_AVG_TITLE": "Average time per week",
+    "GRAPH_AVG_TITLE": "Average time per week (hours)",
     "ASSIGNATION": "Average time until assignment",
     "PRISE_EN_CHARGE": "Average time until starting",
     "RESOLUTION": "Average time until resolve",

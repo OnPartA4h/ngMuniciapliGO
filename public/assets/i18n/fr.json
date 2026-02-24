@@ -418,7 +418,7 @@
     "PRISE": "Prise en charge",
     "ASS": "Assignation",
     "GRAPH_TITLE": "Évolution des problèmes dans le temps",
-    "GRAPH_AVG_TITLE": "Temps moyen par semaine",
+    "GRAPH_AVG_TITLE": "Temps moyen par semaine (heures)",
     "ASSIGNATION": "Temps d'assignation moyen",
     "PRISE_EN_CHARGE": "Temps de prise en charge moyen",
     "RESOLUTION": "Temps de résolution moyen",
