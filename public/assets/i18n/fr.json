@@ -37,7 +37,9 @@
     "EMAIL_CONFIRMED": "Email confirmé",
     "EMAIL_NOT_CONFIRMED": "Email non confirmé",
     "MUST_RESET_PASSWORD": "Doit réinitialiser le mot de passe",
-    "PASSWORD_OK": "Mot de passe OK"
+    "PASSWORD_OK": "Mot de passe OK",
+    "ERROR_OFFLINE": "Pas de connexion internet. Vérifiez votre réseau et réessayez.",
+    "ERROR_GENERIC": "Une erreur est survenue. Veuillez réessayer."
   },
   "NOTIFICATIONS": {
     "TITLE": "Notifications",

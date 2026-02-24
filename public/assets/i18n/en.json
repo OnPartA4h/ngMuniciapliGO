@@ -37,7 +37,9 @@
     "EMAIL_CONFIRMED": "Email Confirmed",
     "EMAIL_NOT_CONFIRMED": "Email Not Confirmed",
     "MUST_RESET_PASSWORD": "Must Reset Password",
-    "PASSWORD_OK": "Password OK"
+    "PASSWORD_OK": "Password OK",
+    "ERROR_OFFLINE": "No internet connection. Please check your network and try again.",
+    "ERROR_GENERIC": "An error occurred. Please try again."
   },
   "NOTIFICATIONS": {
     "TITLE": "Notifications",
