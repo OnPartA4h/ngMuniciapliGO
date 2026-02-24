@@ -87,8 +87,9 @@ export class Login {
   }
 
   verifyPermissions(){
-    if (this.roles.includes("Admin") || this.roles.includes("ColBlanc")) return
+    if (this.roles.includes("Admin") || this.roles.includes("ColBlanc") || this.roles.includes("Support")) return
     this.errorMessage = this.translateService.instant('LOGIN.INSUFFICIENT_PERMISSIONS');
+    this.authService.logout()
   }
 
   async handleRedirection() {
@@ -100,6 +101,12 @@ export class Login {
 
     if (this.roles.includes('ColBlanc') && this.token){
       this.router.navigate(['/manage-reports'])
+      await this.authService.connectToNotificationHub();
+      return
+    }
+
+    if (this.roles.includes('Support') && this.token) {
+      this.router.navigate(['/help-desk'])
       await this.authService.connectToNotificationHub();
       return
     }

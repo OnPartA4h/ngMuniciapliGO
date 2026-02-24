@@ -8,9 +8,12 @@
       {{ 'DASHBOARD.TITLE' | translate }}
     </a>
 
-    <a routerLink="/map" routerLinkActive="active">
-      {{ 'HEADER.MAP' | translate }}
-    </a>
+    @if (userRoles().includes('ColBlanc') || userRoles().includes('Admin')) {
+      <a routerLink="/map" routerLinkActive="active">
+        {{ 'HEADER.MAP' | translate }}
+      </a>
+    }
+    
 
     @if (userRoles().includes('ColBlanc') || userRoles().includes('Admin')) {
     <a routerLink="/manage-reports" routerLinkActive="active">
@@ -21,6 +24,12 @@
     @if (userRoles().includes('Admin')) {
     <a routerLink="/manage-users" routerLinkActive="active">
       {{ 'HEADER.MANAGE_USERS' | translate }}
+    </a>
+    }
+
+    @if (userRoles().includes('Support')) {
+    <a routerLink="/help-desk" routerLinkActive="active">
+      {{ "Help desk"}}
     </a>
     }
   </nav>

@@ -5,11 +5,12 @@ import { Problem } from '../../models/problem';
 import { Pagination } from '../../models/pagination';
 import { ReportListComponent } from '../../components/tables/report-list/report-list';
 import { GeneralService } from '../../services/general-service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-help-desk',
   standalone: true,
-  imports: [PageHeaderComponent, ReportListComponent],
+  imports: [PageHeaderComponent, ReportListComponent, FormsModule],
   templateUrl: './help-desk.html',
   styleUrl: './help-desk.css',
 })

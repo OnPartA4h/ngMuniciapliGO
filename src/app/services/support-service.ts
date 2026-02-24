@@ -12,7 +12,7 @@ export class SupportService {
   private apiUrl = `${environment.apiUrl}`;
 
   async getProblems(options?: any): Promise<Problem[]> {
-    let res = await lastValueFrom(this.http.get<Problem[]>(`${this.apiUrl}/api/ColBlanc/problems`, { params: options as any }));
+    let res = await lastValueFrom(this.http.get<Problem[]>(`${this.apiUrl}/api/Support/GetProblemes`, { params: options as any }));
     console.log(res);
     
     return res;

@@ -37,8 +37,11 @@
     <!-- Colonne problèmes -->
     <div class="helpdesk-problems-panel">
       <div class="helpdesk-search-bar">
-        <input type="text" placeholder="Rechercher un problème..." />
-        <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+        <form>
+            <input type="text" placeholder="Rechercher un problème..." [(ngModel)]="currentSearch" name="currentSearch"/>
+            <button type="submit" (click)="getProblems()" class="btn btn-primary"><i class="fas fa-search"></i></button>
+        </form>
+        
       </div>
       <div class="helpdesk-problems-list">
         <app-report-list [problems]="problems()"
