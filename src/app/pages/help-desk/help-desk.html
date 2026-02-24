@@ -10,7 +10,7 @@
     <div class="helpdesk-user-panel">
       <div class="helpdesk-user-card">
         <div class="helpdesk-user-avatar">
-          <img src="https://i.pravatar.cc/72?img=5" alt="Avatar utilisateur" />
+          <img [src]="supportAgent?.profilePictureUrl" alt="Avatar utilisateur" />
         </div>
         <div class="helpdesk-user-info">
           <h2>{{supportAgent?.firstName}} {{supportAgent?.lastName}}</h2>

@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user-service';
 import { User } from '../../models/user';
 import { PhoneNumberPipe } from '../../pipes/phone-number-pipe';
+import { PhoneCall } from '../../models/phoneCall';
 
 @Component({
   selector: 'app-help-desk',
@@ -25,6 +26,7 @@ export class HelpDesk implements OnInit{
   problems = signal<Problem[]>([])
   pagination: Pagination | null = null
   supportAgent: User | null = null
+  phoneCall = signal<PhoneCall | null>(null)
 
   currentSearch: string | null = null;
   loading = true;
@@ -36,6 +38,7 @@ export class HelpDesk implements OnInit{
       this.generalService.loadCategories(),
       this.generalService.loadStatuses(),
       this.generalService.loadAssigneA(),
+      this.getPhoneCall(),
       this.getProblems(),
     ]);
     this.loading = false
@@ -52,6 +55,10 @@ export class HelpDesk implements OnInit{
 
     this.pagination = x.pagination
     this.problems.set(x.items);
+  }
+
+  async getPhoneCall() {
+    this.phoneCall.set(await this.supportService.getPhoneCall())
   }
 
   async onPageChange(page: number) {

@@ -20,6 +20,7 @@ export const routes: Routes = [
   { path: 'comments/:id', loadComponent: () => import('./pages/comments/comments').then(m => m.Comments), canActivate: [authGuard]},
   { path: 'edit-problem/:id', loadComponent: () => import('./pages/edit-problem/edit-problem').then(m => m.EditProblem), canActivate: [authGuard, whiteGuard] },
   { path: 'profile', loadComponent: () => import('./pages/profile/profile').then(m => m.Profile), canActivate: [authGuard] },
+  { path: 'profile/:id', loadComponent: () => import('./pages/profile/profile').then(m => m.Profile), canActivate: [authGuard, supportGuard] },
   { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications').then(m => m.Notifications), canActivate: [authGuard] },
   { path: 'chats', loadComponent: () => import('./pages/chats/chats').then(m => m.Chats), canActivate: [authGuard] },
   { path: 'chats/:id', loadComponent: () => import('./pages/chat-detail/chat-detail').then(m => m.ChatDetail), canActivate: [authGuard] },
