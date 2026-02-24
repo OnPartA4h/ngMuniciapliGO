@@ -325,7 +325,7 @@
     "ERROR_MESSAGE": "Invalid credentials. Please try again.",
     "INVALID_CREDENTIALS": "Invalid credentials",
     "SERVER_ERROR": "Server error",
-    "SOMETHING_WENT_WRONG": "Something went wrong",
+    "SOMETHING_WENT_WRONG": "Something went wrong, try again later",
     "INSUFFICIENT_PERMISSIONS": "You do not have the necessary permissions to access this application"
   },
   "PROVINCES": {

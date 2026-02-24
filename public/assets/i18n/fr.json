@@ -325,7 +325,7 @@
     "ERROR_MESSAGE": "Identifiants invalides. Veuillez réessayer.",
     "INVALID_CREDENTIALS": "Identifiants invalides",
     "SERVER_ERROR": "Erreur du serveur",
-    "SOMETHING_WENT_WRONG": "Une erreur s'est produite",
+    "SOMETHING_WENT_WRONG": "Une erreur s'est produite, réessayer plus tard",
     "INSUFFICIENT_PERMISSIONS": "Vous n'avez pas les permissions nécessaires pour accéder à cette application"
   },
   "PROVINCES": {

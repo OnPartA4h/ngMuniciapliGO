@@ -1,0 +1,51 @@
+<div class="page-container">
+  <app-page-header
+    title="Assistance / Help Desk"
+    subtitle="Gestion des appels et des problèmes utilisateurs"
+    [showBackButton]="true">
+  </app-page-header>
+
+  <div class="helpdesk-layout">
+    <!-- Colonne utilisateur -->
+    <div class="helpdesk-user-panel">
+      <div class="helpdesk-user-card">
+        <div class="helpdesk-user-avatar">
+          <img src="https://i.pravatar.cc/72?img=5" alt="Avatar utilisateur" />
+        </div>
+        <div class="helpdesk-user-info">
+          <h2>Sophie Lavoie</h2>
+          <div class="helpdesk-user-meta">
+            <span><i class="fas fa-envelope"></i> sophie.lavoie@email.com</span>
+            <span><i class="fas fa-phone"></i> 514-555-1234</span>
+            <span><i class="fas fa-map-marker-alt"></i> 123 rue Sherbrooke, Montréal</span>
+          </div>
+        </div>
+      </div>
+      <div class="helpdesk-call-info">
+        <div class="helpdesk-call-header">
+          <i class="fas fa-headset"></i> Appel en cours
+        </div>
+        <div class="helpdesk-call-details">
+          <span><b>Agent :</b> Marc Bouchard</span>
+          <span><b>Début :</b> 14:32</span>
+          <span><b>Durée :</b> 02:15</span>
+          <span><b>Statut :</b> En cours</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne problèmes -->
+    <div class="helpdesk-problems-panel">
+      <div class="helpdesk-search-bar">
+        <input type="text" placeholder="Rechercher un problème..." />
+        <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="helpdesk-problems-list">
+        <app-report-list [problems]="problems()"
+        [pagination]="pagination"
+        [loading]="loading"
+        (pageChange)="onPageChange($event)" />
+      </div>
+    </div>
+  </div>
+</div>

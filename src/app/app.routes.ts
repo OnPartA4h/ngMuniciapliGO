@@ -9,6 +9,7 @@ export const routes: Routes = [
   { path: 'map', loadComponent: () => import('./pages/map/map').then(m => m.Map), canActivate: [authGuard] },
   { path: 'home', loadComponent: () => import('./pages/home/home').then(m => m.Home), canActivate: [authGuard] },
   { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.Login), canActivate: [loginGuard] },
+  { path: 'landing', loadComponent: () => import('./pages/landing/landing').then(m => m.Landing) },
   { path: 'manage-reports', loadComponent: () => import('./pages/manage-reports/manage-reports').then(m => m.ManageReports), canActivate: [authGuard, whiteGuard] },
   { path: 'manage-duplicates', loadComponent: () => import('./pages/manage-duplicates/manage-duplicates').then(m => m.ManageDuplicates), canActivate: [authGuard, whiteGuard] },
   { path: 'create-duplicate-group', loadComponent: () => import('./pages/create-duplicate-group/create-duplicate-group').then(m => m.CreateDuplicateGroup), canActivate: [authGuard, whiteGuard] },
@@ -21,7 +22,7 @@ export const routes: Routes = [
   { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications').then(m => m.Notifications), canActivate: [authGuard] },
   { path: 'chats', loadComponent: () => import('./pages/chats/chats').then(m => m.Chats), canActivate: [authGuard] },
   { path: 'chats/:id', loadComponent: () => import('./pages/chat-detail/chat-detail').then(m => m.ChatDetail), canActivate: [authGuard] },
-  { path: 'landing', loadComponent: () => import('./pages/landing/landing').then(m => m.Landing) },
+  { path: 'help-desk', loadComponent: () => import('./pages/help-desk/help-desk').then(m => m.HelpDesk), canActivate: [authGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
 ];
