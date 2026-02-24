@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5169'
+  apiUrl: 'http://localhost:5169',
+  vitrineUrl: 'http://localhost:4201'
 };

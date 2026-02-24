@@ -32,6 +32,14 @@
       <span>{{ getCurrentLanguage() }}</span>
     </button>
 
+    <!-- Vitrine Editor Button (Admin & ColBlanc) -->
+    @if (isConnected() && (userRoles().includes('Admin') || userRoles().includes('ColBlanc'))) {
+    <button class="btn-vitrine" (click)="openVitrine()" title="{{ 'HEADER.VITRINE_TOOLTIP' | translate }}">
+      <i class="fas fa-external-link-alt"></i>
+      <span>{{ 'HEADER.VITRINE' | translate }}</span>
+    </button>
+    }
+
     <!-- Notification Bell (when connected) -->
     @if (isConnected()) {
     <app-chat-bell />

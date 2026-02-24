@@ -2,10 +2,12 @@
   "HEADER": {
     "HOME": "Accueil",
     "MAP": "Carte",
-    "MANAGE_REPORTS": "Gérer les signalements",
+    "MANAGE_REPORTS": "Gérer les problèmes",
     "MANAGE_USERS": "Gérer les utilisateurs",
     "LOGIN": "Connexion",
-    "LOGOUT": "Déconnexion"
+    "LOGOUT": "Déconnexion",
+    "VITRINE": "Modifier la vitrine",
+    "VITRINE_TOOLTIP": "Ouvrir l'éditeur de la vitrine (s'ouvre dans un nouvel onglet)"
   },
   "COMMON": {
     "YES": "Oui",

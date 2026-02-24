@@ -5,7 +5,9 @@
     "MANAGE_REPORTS": "Manage Problems",
     "MANAGE_USERS": "Manage Users",
     "LOGIN": "Login",
-    "LOGOUT": "Logout"
+    "LOGOUT": "Logout",
+    "VITRINE": "Edit vitrine",
+    "VITRINE_TOOLTIP": "Open the public vitrine editor (opens in a new tab)"
   },
   "COMMON": {
     "YES": "Yes",
