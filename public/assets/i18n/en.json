@@ -328,7 +328,8 @@
     "INVALID_CREDENTIALS": "Invalid credentials",
     "SERVER_ERROR": "Server error",
     "SOMETHING_WENT_WRONG": "Something went wrong",
-    "INSUFFICIENT_PERMISSIONS": "You do not have the necessary permissions to access this application"
+    "INSUFFICIENT_PERMISSIONS": "You do not have the necessary permissions to access this application",
+    "SESSION_EXPIRED": "Your session has expired. Please sign in again."
   },
   "PROVINCES": {
     "ON": "Ontario",

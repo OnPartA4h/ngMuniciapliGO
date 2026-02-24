@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -13,10 +13,11 @@ import { ForgotPasswordModal } from '../../components/modals/forgot-password-mod
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
+export class Login implements OnInit {
   authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   router = inject(Router);
+  private route = inject(ActivatedRoute);
   private translateService = inject(TranslateService);
   
   formGroup: FormGroup;
@@ -24,6 +25,7 @@ export class Login {
   showForgotPasswordModal = false;
   currentPassword = '';
   isLoading = false;
+  sessionExpired = false;
 
   roles: string[] = []
   token: string | null = null
@@ -38,9 +40,18 @@ export class Login {
     )
   }
 
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['sessionExpired'] === 'true') {
+        this.sessionExpired = true;
+      }
+    });
+  }
+
   async login() {
     if (!this.formGroup.valid) return
     
+    this.sessionExpired = false;
     this.isLoading = true;
     
     let email = this.formGroup.get('email')?.value
