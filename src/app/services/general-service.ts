@@ -61,7 +61,6 @@ export class GeneralService {
   }
 
   async getStats(statsFilterDTO: StatsFilterDTO): Promise<any> {
-    console.log(statsFilterDTO);
     return await lastValueFrom(
       this.http.post<any>(
         `${this.apiUrl}/api/Stats/`,

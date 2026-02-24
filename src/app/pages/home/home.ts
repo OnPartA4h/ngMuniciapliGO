@@ -4,7 +4,7 @@ import { ChartData, ChartType } from 'chart.js';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StatBox } from '../../components/stat-box/stat-box';
 import { GeneralService } from '../../services/general-service';
-import { GraphDTO } from '../../models/problem';
+import { GraphAverageDTO, GraphDTO } from '../../models/problem';
 import { LanguageService } from '../../services/language-service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user-service';
@@ -24,6 +24,7 @@ export class Home {
   private translate = inject(TranslateService);
 
   datasets = signal<ChartData<'line', { x: number; y: number }[]>>(undefined as any);
+  datasetsResolution = signal<ChartData<'bar', { x: number; y: number }[]>>(undefined as any);
   currentTimeSpan = signal<number>(0);
   currentAssigneA = signal<number>(0);
   currentDistrict = signal<number | null>(null);
@@ -98,10 +99,14 @@ export class Home {
     filters.districtId = this.currentDistrict();
 
     const statsResult = await this.generalService.getStats(filters);
+    console.log(statsResult);
     this.stats.set(statsResult);
 
-    const graph: GraphDTO[] = statsResult.graph;
+    this.setGraph(statsResult.graph);
+    this.setMoyenne(statsResult.graphAverage);
+  }
 
+  setGraph(graph: GraphDTO[]) {
     this.datasets.set({
       datasets: [
         {
@@ -118,6 +123,40 @@ export class Home {
           data: graph.map(d => ({
             x: new Date(d.date).getTime(),
             y: d.solvedCount
+          })),
+          backgroundColor: 'rgba(35, 189, 94, 0.8)',
+          borderColor: 'rgba(35, 189, 94, 0.3)'
+        }
+      ]
+    });
+  }
+
+  setMoyenne(graph: GraphAverageDTO[]) {
+    this.datasetsResolution.set({
+      datasets: [
+        {
+          label: this.translate.instant("DASHBOARD.ASS"),
+          data: graph.map(d => ({
+            x: new Date(d.date).getTime(),
+            y: d.assignation
+          })),
+          backgroundColor: 'rgba(128, 72, 233, 0.8)',
+          borderColor: 'rgba(94, 37, 199, 0.3)'
+        },
+        {
+          label: this.translate.instant("DASHBOARD.PRISE"),
+          data: graph.map(d => ({
+            x: new Date(d.date).getTime(),
+            y: d.priseEnCharge
+          })),
+          backgroundColor: 'rgba(44, 157, 233, 0.8)',
+          borderColor: 'rgba(44, 143, 209, 0.3)'
+        },
+        {
+          label: this.translate.instant("DASHBOARD.RES"),
+          data: graph.map(d => ({
+            x: new Date(d.date).getTime(),
+            y: d.resolution
           })),
           backgroundColor: 'rgba(35, 189, 94, 0.8)',
           borderColor: 'rgba(35, 189, 94, 0.3)'

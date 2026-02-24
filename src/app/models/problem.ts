@@ -61,3 +61,10 @@ export interface GraphDTO {
   reportedCount: number;
   solvedCount: number;
 }
+
+export interface GraphAverageDTO {
+  date: string;
+  resolution: number;
+  priseEnCharge: number;
+  assignation: number;
+}

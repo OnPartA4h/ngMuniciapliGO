@@ -1,14 +1,28 @@
 .container {
     padding: var(--spacing-3xl);
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
+.charts-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin: 32px 0;
+    align-items: stretch;
+    box-sizing: border-box;
+}
+
 .app-chart-container {
+    box-sizing: border-box;
+    flex: 1 1 calc(50% - 16px);
+    max-width: calc(50% - 16px);
+    min-width: 280px;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     padding: 32px 32px;
+    margin-bottom: 32px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -139,7 +153,12 @@
 
 @media (max-width: 900px) {
     .charts-grid {
-        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .app-chart-container {
+        flex: 1 1 100%;
+        max-width: 100%;
     }
 
     .stat-boxes-row {

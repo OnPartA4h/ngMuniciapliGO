@@ -50,13 +50,24 @@
             [value]="stats()?.tempsPriseEnCharge"></app-stat-box>
         <app-stat-box [title]="'DASHBOARD.ASSIGNATION' | translate" [value]="stats()?.tempsAssignation"></app-stat-box>
     </div>
-    <div class="app-chart-container">
-        <div class="stat-title">{{ 'DASHBOARD.GRAPH_TITLE' | translate }}</div>
-        @if(stats()?.graph?.length === 0){
-        <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
-        }
-        @else {
-        <app-chart [datasets]="datasets()" [chartType]="'line'"></app-chart>
-        }
+    <div class="charts-grid">
+        <div class="app-chart-container">
+            <div class="stat-title">{{ 'DASHBOARD.GRAPH_TITLE' | translate }}</div>
+            @if(stats()?.graph?.length === 0){
+            <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
+            }
+            @else {
+            <app-chart [datasets]="datasets()" [chartType]="'line'"></app-chart>
+            }
+        </div>
+        <div class="app-chart-container">
+            <div class="stat-title">{{ 'DASHBOARD.GRAPH_AVG_TITLE' | translate }}</div>
+            @if(stats()?.graph?.length === 0){
+            <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
+            }
+            @else {
+            <app-chart [datasets]="datasetsResolution()" [chartType]="'bar'"></app-chart>
+            }
+        </div>
     </div>
 </div>
