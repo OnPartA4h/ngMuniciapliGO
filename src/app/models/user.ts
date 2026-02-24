@@ -55,6 +55,7 @@ export interface PaginatedUsersResponse {
 }
 
 export interface UpdateUserDto {
+  userId?: string | null
   firstName: string;
   lastName: string;
   phoneNumber: string;

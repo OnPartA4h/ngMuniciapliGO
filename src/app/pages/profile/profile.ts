@@ -51,6 +51,7 @@ export class Profile implements OnInit {
 
   profile = signal<User | null>(null);
   roles = signal<RoleOption[]>([]);
+  userId = signal<string | null>(null)
   
   isLoading = signal(true);
   isSavingInfo = signal(false);
@@ -95,6 +96,7 @@ export class Profile implements OnInit {
       let profileData: any
       let userId = this.route.snapshot.paramMap.get('id')
       if (userId){
+        this.userId.set(userId)
         profileData = await this.userService.getPublicProfile(userId)
       } else {
         profileData = await this.userService.getProfile();
@@ -146,6 +148,9 @@ export class Profile implements OnInit {
 
   // --- Personal Info API call ---
   async onSavePersonalInfo(dto: UpdateUserDto) {
+    if (this.userId()){
+      dto.userId = this.userId()
+    }
     this.isSavingInfo.set(true);
     this.infoSuccessMessage.set(null);
     this.infoErrorMessage.set(null);
