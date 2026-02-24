@@ -420,7 +420,8 @@
     "RESOLUTION": "Average time until resolve",
     "FIND_COLBLEU": "Find a blue collar...",
     "DISTRICTS": "All districts",
-    "CATEGORIES": "All categories"
+    "CATEGORIES": "All categories",
+    "ALL_DATES": "All dates"
   },
   "REPORT_DETAILS": {
     "SUBSCRIBE": "Subscribe to notifications",

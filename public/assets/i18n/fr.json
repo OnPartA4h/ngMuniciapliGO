@@ -420,7 +420,8 @@
     "RESOLUTION": "Temps de résolution moyen",
     "FIND_COLBLEU": "Chercher un col bleu...",
     "DISTRICTS": "Tous les districts",
-    "CATEGORIES": "Toutes les catégories"
+    "CATEGORIES": "Toutes les catégories",
+    "ALL_DATES": "Toutes les dates"
   },
   "REPORT_DETAILS": {
     "SUBSCRIBE": "S'abonner aux notifications",

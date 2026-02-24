@@ -6,7 +6,7 @@
     <div class="filter-group">
         <div class="datepicker">
             <p-datepicker [ngModel]="rangeDates()" (ngModelChange)="updateDateRange($event)" selectionMode="range"
-                [readonlyInput]="true" placeholder="Date - Date" />
+                [readonlyInput]="true" [placeholder]="'DASHBOARD.ALL_DATES' | translate" />
         </div>
         <select [ngModel]="currentDistrict()" (ngModelChange)="currentDistrict.set($event); getStats()">
             <option [ngValue]=null>{{ 'DASHBOARD.DISTRICTS' | translate }}</option>
