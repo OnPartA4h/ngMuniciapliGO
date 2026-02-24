@@ -25,6 +25,8 @@ export class Home {
   datasets!: ChartData<'line', { x: number; y: number }[]>;
   currentTimeSpan: number = 0;
   currentAssigneA: number = 0;
+  currentDistrict: number | null = null;
+  currentCategory: number | null = null;
   currentResponsable: string | null = null;
   stats: any;
 
@@ -37,11 +39,14 @@ export class Home {
     await Promise.all([
       this.generalService.loadTimeSpans(),
       this.generalService.loadAssigneA(),
+      this.generalService.loadDistrictNames(),
+      this.generalService.loadCategories(),
       this.getStats()
     ]);
     this.languageService.onLangChange().subscribe(() => {
       this.generalService.loadTimeSpans();
       this.generalService.loadAssigneA();
+      this.generalService.loadCategories()
     });
   }
 
@@ -86,8 +91,8 @@ export class Home {
     filters.responsableId = this.currentResponsable;
     filters.minDate = this.getMinDate();
     filters.maxDate = null;
-    filters.categorieId = null;
-    filters.districtId = null;
+    filters.categorieId = this.currentCategory;
+    filters.districtId = this.currentDistrict;
 
     this.stats = await this.generalService.getStats(filters);
 

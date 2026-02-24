@@ -6,5 +6,12 @@ export class District {
         public arrondissement: string,
         public colorIndex: number,
         public coordinates: number[][][]
-    ) {}
+    ) { }
+}
+
+export interface DistrictNames {
+    id: number;
+    number: number;
+    name: string;
+    arrondissement: string;
 }

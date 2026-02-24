@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { RoleOption } from '../models/user';
 import { StatusOption, CategoryOption, AssigneAOption, TimeSpanOption } from '../models/problem';
 import { LanguageService } from './language-service';
-import { District } from '../models/district';
+import { District, DistrictNames } from '../models/district';
 import { HtmlParser } from '@angular/compiler';
 import { StatsFilterDTO } from '../models/statsFilterDTO';
 
@@ -22,6 +22,7 @@ export class GeneralService {
   statuses = signal<StatusOption[]>([]);
   assignees = signal<AssigneAOption[]>([]);
   timeSpans = signal<TimeSpanOption[]>([]);
+  districtNames = signal<DistrictNames[]>([]);
 
   async getRoles(lang: string): Promise<RoleOption[]> {
     return await lastValueFrom(
@@ -71,9 +72,22 @@ export class GeneralService {
 
   async getDistricts(): Promise<District[]> {
     let res = await lastValueFrom(this.http.get<District[]>(`${this.apiUrl}/api/General/districts`))
-    console.log(res);
 
     return res
+  }
+
+  async getDistrictNames(): Promise<DistrictNames[]> {
+    let res = await lastValueFrom(this.http.get<DistrictNames[]>(`${this.apiUrl}/api/General/district-names`))
+
+    return res
+  }
+
+  async loadDistrictNames() {
+    try {
+      this.districtNames.set(await this.getDistrictNames());
+    } catch (error) {
+      console.error('Error loading categories:', error);
+    }
   }
 
   async loadCategories() {

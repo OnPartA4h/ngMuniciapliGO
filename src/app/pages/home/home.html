@@ -9,6 +9,18 @@
             <option [ngValue]=$index>{{ s.label }}</option>
             }
         </select>
+        <select [(ngModel)]="currentDistrict" (change)="getStats()">
+            <option [ngValue]=null>{{ 'DASHBOARD.DISTRICTS' | translate }}</option>
+            @for (s of generalService.districtNames(); track $index) {
+            <option [ngValue]=s.id>{{ s.name }}</option>
+            }
+        </select>
+        <select [(ngModel)]="currentCategory" (change)="getStats()">
+            <option [ngValue]=null>{{ 'DASHBOARD.CATEGORIES' | translate }}</option>
+            @for (s of generalService.categories(); track $index) {
+            <option [ngValue]=$index>{{ s.label }}</option>
+            }
+        </select>
         <select [(ngModel)]="currentAssigneA" (change)="getStats()">
             @for (s of generalService.assignees(); track $index) {
             <option [ngValue]=$index>{{ s.label }}</option>
