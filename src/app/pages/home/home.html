@@ -70,7 +70,7 @@
             }
         </div>
         <div class="app-chart-container">
-            <div class="stat-title">Problèmes résolus par district</div>
+            <div class="stat-title">{{ 'DASHBOARD.GRAPH_DISTRICT_TITLE' | translate }}</div>
             @if(stats()?.graph?.length === 0){
             <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
             }
@@ -79,7 +79,7 @@
             }
         </div>
         <div class="app-chart-container">
-            <div class="stat-title">Problèmes résolus par catégorie</div>
+            <div class="stat-title">{{ 'DASHBOARD.GRAPH_CATEGORY_TITLE' | translate }}</div>
             @if(stats()?.graph?.length === 0){
             <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
             }
