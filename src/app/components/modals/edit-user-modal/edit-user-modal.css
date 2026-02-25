@@ -118,6 +118,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0; /* permet le wrapping dans le flex container */
 }
 
 .profile-info h3 {
@@ -125,12 +126,16 @@
   color: var(--color-text-primary);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .profile-info .email {
   margin: 0 0 var(--spacing-md) 0;
   color: var(--color-text-secondary);
   font-size: var(--font-size-base);
+  word-break: break-all;
+  overflow-wrap: anywhere;
 }
 
 .status-badges {
@@ -189,6 +194,8 @@
   font-size: var(--font-size-base);
   color: var(--color-text-primary);
   font-weight: var(--font-weight-medium);
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .address-section {
@@ -377,6 +384,29 @@
 .success-message i {
   font-size: var(--font-size-lg);
   flex-shrink: 0;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-error-light);
+  color: var(--color-error);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-lg);
+  font-weight: var(--font-weight-medium);
+  animation: slideIn 0.3s ease;
+}
+
+.error-message i {
+  font-size: var(--font-size-lg);
+  flex-shrink: 0;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {

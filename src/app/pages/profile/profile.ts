@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, viewChild, signal } from '@angular/core';
 
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth-service';
 import { GeneralService } from '../../services/general-service';
@@ -42,6 +42,7 @@ export class Profile implements OnInit {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute)
   private notifService = inject(NotificationService);
   generalServicePublic = inject(GeneralService);
 
@@ -50,6 +51,7 @@ export class Profile implements OnInit {
 
   profile = signal<User | null>(null);
   roles = signal<RoleOption[]>([]);
+  userId = signal<string | null>(null)
   
   isLoading = signal(true);
   isSavingInfo = signal(false);
@@ -91,7 +93,15 @@ export class Profile implements OnInit {
 
   async loadProfile() {
     try {
-      const profileData = await this.userService.getProfile();
+      let profileData: any
+      let userId = this.route.snapshot.paramMap.get('id')
+      if (userId){
+        this.userId.set(userId)
+        profileData = await this.userService.getPublicProfile(userId)
+      } else {
+        profileData = await this.userService.getProfile();
+      }
+      
       this.profile.set(profileData);
       
       if (profileData?.profilePictureUrl) {
@@ -138,6 +148,9 @@ export class Profile implements OnInit {
 
   // --- Personal Info API call ---
   async onSavePersonalInfo(dto: UpdateUserDto) {
+    if (this.userId()){
+      dto.userId = this.userId()
+    }
     this.isSavingInfo.set(true);
     this.infoSuccessMessage.set(null);
     this.infoErrorMessage.set(null);

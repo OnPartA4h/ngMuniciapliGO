@@ -1,0 +1,339 @@
+<div class="chat-detail-container">
+  <!-- ─── En-tête ──────────────────────────────────────────────────────── -->
+  <div class="chat-header">
+    <a routerLink="/chats" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+
+    @if (chat(); as c) {
+      <div class="header-info" (click)="toggleInfoPanel()" style="cursor: pointer">
+        <div class="header-avatar" [class.group]="isGroup()">
+          @if (!isGroup() && otherMember()?.profilePictureUrl) {
+            <img [src]="otherMember()!.profilePictureUrl!" alt="" class="header-avatar-img" />
+          } @else {
+            <span>{{ getInitials(chatDisplayName()) }}</span>
+          }
+        </div>
+        <div class="header-text">
+          <span class="header-name">{{ chatDisplayName() }}</span>
+          @if (isGroup()) {
+            <span class="header-members">{{ c.members.length }} {{ 'CHAT_DETAIL.MEMBERS' | translate }}</span>
+          }
+          @if (typingUsers().length > 0) {
+            <span class="header-typing">{{ getTypingLabel() }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="icon-btn" (click)="toggleInfoPanel()" [attr.aria-label]="'CHAT_DETAIL.INFO' | translate">
+          <i class="fas fa-info-circle"></i>
+        </button>
+      </div>
+    }
+  </div>
+
+  <div class="chat-body-wrapper">
+    <!-- ─── Zone de messages ─────────────────────────────────────────── -->
+    <div class="messages-area" #messagesContainer (scroll)="onMessagesScroll($event)">
+      @if (isLoading()) {
+        <app-loading-spinner />
+      }
+
+      @if (!isLoading()) {
+        @if (hasMoreMessages() && messages().length >= 50) {
+          <div class="load-more">
+            <button class="btn btn-outline btn-sm" (click)="loadOlderMessages()" [disabled]="isLoadingMore()">
+              @if (isLoadingMore()) {
+                <div class="spinner spinner--sm"></div>
+              } @else {
+                <i class="fas fa-arrow-up"></i>
+              }
+              {{ 'CHAT_DETAIL.LOAD_MORE' | translate }}
+            </button>
+          </div>
+        }
+
+        @for (msg of messages(); track msg.id; let i = $index) {
+          <!-- Séparateur de date -->
+          @if (showDateSeparator(i)) {
+            <div class="date-separator">
+              <span>{{ getDateLabel(msg.createdAt) }}</span>
+            </div>
+          }
+
+          <!-- Message système -->
+          @if (msg.isSystemMessage) {
+            <div class="system-message">
+              <i class="fas fa-info-circle"></i>
+              <span>{{ msg.content }}</span>
+            </div>
+          } @else {
+            <!-- Message normal -->
+            <div class="message-row" [class.own]="isOwnMessage(msg)" [class.deleted]="msg.isDeleted">
+              <!-- Avatar (messages des autres uniquement) -->
+              @if (!isOwnMessage(msg)) {
+                <div class="msg-avatar">
+                  @if (msg.senderPictureUrl) {
+                    <img [src]="msg.senderPictureUrl" alt="" />
+                  } @else {
+                    <span>{{ getInitials(msg.senderName ?? '') }}</span>
+                  }
+                </div>
+              }
+
+              <div class="msg-bubble-wrapper">
+                <!-- Nom de l'expéditeur (groupe, autres) -->
+                @if (!isOwnMessage(msg) && isGroup() && msg.senderName) {
+                  <span class="msg-sender">{{ msg.senderName }}</span>
+                }
+
+                <div class="msg-bubble" [class.own]="isOwnMessage(msg)">
+                  @if (msg.isDeleted) {
+                    <span class="deleted-text">
+                      <i class="fas fa-ban"></i>
+                      {{ 'CHAT_DETAIL.MESSAGE_DELETED' | translate }}
+                    </span>
+                  } @else {
+                    <!-- Mode édition -->
+                    @if (editingMessageId() === msg.id) {
+                      <div class="edit-inline">
+                        <input
+                          type="text"
+                          [ngModel]="editingContent()"
+                          (ngModelChange)="editingContent.set($event)"
+                          (keyup.enter)="saveEdit()"
+                          (keyup.escape)="cancelEditing()"
+                          class="edit-input" />
+                        <div class="edit-actions">
+                          <button class="edit-btn save" (click)="saveEdit()">
+                            <i class="fas fa-check"></i>
+                          </button>
+                          <button class="edit-btn cancel" (click)="cancelEditing()">
+                            <i class="fas fa-times"></i>
+                          </button>
+                        </div>
+                      </div>
+                    } @else {
+                      <p class="msg-content">{{ msg.content }}</p>
+                      @if (msg.editedAt) {
+                        <span class="msg-edited">{{ 'CHAT_DETAIL.EDITED' | translate }}</span>
+                      }
+                    }
+
+                    <!-- Réactions -->
+                    @if (msg.reactions && msg.reactions.length > 0) {
+                      <div class="msg-reactions">
+                        @for (reaction of msg.reactions; track reaction.emoji + reaction.userId) {
+                          <button class="reaction-chip"
+                            [class.own-reaction]="reaction.userId === currentUserId()"
+                            (click)="toggleReaction(msg, reaction.emoji)"
+                            [title]="reaction.displayName">
+                            {{ reaction.emoji }}
+                          </button>
+                        }
+                      </div>
+                    }
+                  }
+                </div>
+
+                <div class="msg-meta">
+                  <span class="msg-time">{{ getTimeString(msg.createdAt) }}</span>
+
+                  <!-- Actions du message -->
+                  @if (!msg.isDeleted && editingMessageId() !== msg.id) {
+                    <div class="msg-actions">
+                      @for (emoji of quickEmojis; track emoji) {
+                        <button class="action-btn reaction-btn" (click)="toggleReaction(msg, emoji)" [title]="emoji">
+                          {{ emoji }}
+                        </button>
+                      }
+                      @if (isOwnMessage(msg)) {
+                        <button class="action-btn" (click)="startEditing(msg)" [title]="'CHAT_DETAIL.EDIT' | translate">
+                          <i class="fas fa-pen"></i>
+                        </button>
+                        <button class="action-btn danger" (click)="deleteMessage(msg)" [title]="'CHAT_DETAIL.DELETE' | translate">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        }
+
+        @if (messages().length === 0) {
+          <div class="empty-chat">
+            <i class="fas fa-comments"></i>
+            <p>{{ 'CHAT_DETAIL.NO_MESSAGES' | translate }}</p>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- ─── Panneau d'info ─────────────────────────────────────────────── -->
+    @if (showInfoPanel() && chat(); as c) {
+      <div class="info-panel">
+        <div class="info-panel-header">
+          <h3>{{ 'CHAT_DETAIL.INFO' | translate }}</h3>
+          <button class="icon-btn" (click)="toggleInfoPanel()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="info-panel-body">
+          @if (isGroup()) {
+            <!-- ── Groupe : Nom du groupe ────────────────────────────── -->
+            <div class="info-section">
+              <label>{{ 'CHAT_DETAIL.GROUP_NAME' | translate }}</label>
+              @if (isRenaming()) {
+                <div class="rename-row">
+                  <input
+                    type="text"
+                    [ngModel]="renameValue()"
+                    (ngModelChange)="renameValue.set($event)"
+                    (keyup.enter)="saveRename()"
+                    (keyup.escape)="cancelRenaming()"
+                    class="rename-input" />
+                  <button class="icon-btn sm" (click)="saveRename()"><i class="fas fa-check"></i></button>
+                  <button class="icon-btn sm" (click)="cancelRenaming()"><i class="fas fa-times"></i></button>
+                </div>
+              } @else {
+                <div class="rename-row">
+                  <span>{{ c.name }}</span>
+                  @if (isAdmin()) {
+                    <button class="icon-btn sm" (click)="startRenaming()"><i class="fas fa-pen"></i></button>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- ── Groupe : Membres ──────────────────────────────────── -->
+            <div class="info-section">
+              <label>{{ 'CHAT_DETAIL.MEMBERS' | translate }} ({{ c.members.length }})</label>
+              <div class="members-list">
+                @for (member of c.members; track member.userId) {
+                  <div class="member-item">
+                    <div class="member-avatar">
+                      @if (member.profilePictureUrl) {
+                        <img [src]="member.profilePictureUrl" alt="" />
+                      } @else {
+                        <span>{{ getInitials(member.displayName) }}</span>
+                      }
+                    </div>
+                    <div class="member-info">
+                      <span class="member-name">
+                        {{ member.displayName }}
+                        @if (member.userId === currentUserId()) {
+                          <span class="you-tag">{{ 'CHAT_DETAIL.YOU' | translate }}</span>
+                        }
+                      </span>
+                      <span class="member-role" [class.admin-role]="member.role === ChatMemberRole.Admin">
+                        {{ member.role === ChatMemberRole.Admin ? ('CHAT_DETAIL.ADMIN' | translate) : ('CHAT_DETAIL.MEMBER' | translate) }}
+                      </span>
+                    </div>
+                    @if (isAdmin() && member.userId !== currentUserId()) {
+                      <button class="icon-btn sm danger" (click)="removeMember(member)" [title]="'CHAT_DETAIL.REMOVE_MEMBER' | translate">
+                        <i class="fas fa-user-minus"></i>
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- ── Groupe : Ajouter un membre (admin) ───────────────── -->
+            @if (isAdmin()) {
+              <div class="info-section">
+                <label>{{ 'CHAT_DETAIL.ADD_MEMBER' | translate }}</label>
+                <div class="search-box search-box--sm">
+                  <i class="fas fa-search"></i>
+                  <input
+                    type="text"
+                    [placeholder]="'CHAT.SEARCH_USERS_PLACEHOLDER' | translate"
+                    [ngModel]="memberSearchQuery()"
+                    (ngModelChange)="onMemberSearchInput($event)" />
+                  @if (isMemberSearching()) {
+                    <div class="spinner spinner--sm"></div>
+                  }
+                </div>
+                @if (memberSearchResults().length > 0) {
+                  <div class="member-search-results">
+                    @for (user of memberSearchResults(); track user.id) {
+                      <button class="member-search-item" (click)="addMember(user)">
+                        <div class="member-avatar sm">
+                          <span>{{ getInitials(user.fullName) }}</span>
+                        </div>
+                        <div class="member-info">
+                          <span class="member-name">{{ user.fullName }}</span>
+                          <span class="member-role">{{ getRoleLabel(user.role) }}</span>
+                        </div>
+                        <i class="fas fa-plus-circle add-icon"></i>
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- ── Groupe : Quitter ──────────────────────────────────── -->
+            <div class="info-section">
+              <label>{{ 'CHAT_DETAIL.CREATED_ON' | translate }}</label>
+              <span class="info-value">{{ getDateLabel(c.createdAt) }}</span>
+            </div>
+
+            <div class="info-section">
+              <button class="btn btn-danger btn-full" (click)="leaveChat()">
+                <i class="fas fa-sign-out-alt"></i>
+                {{ 'CHAT_DETAIL.LEAVE_GROUP' | translate }}
+              </button>
+            </div>
+          } @else {
+            <!-- ── Direct : Profil de l'autre utilisateur ────────────── -->
+            @if (otherMember(); as other) {
+              <div class="info-section direct-profile">
+                <div class="direct-avatar-large">
+                  @if (other.profilePictureUrl) {
+                    <img [src]="other.profilePictureUrl" alt="" />
+                  } @else {
+                    <span>{{ getInitials(other.displayName) }}</span>
+                  }
+                </div>
+                <span class="direct-name">{{ other.displayName }}</span>
+                <span class="direct-joined">{{ 'CHAT_DETAIL.MEMBER_SINCE' | translate }} {{ getDateLabel(other.joinedAt) }}</span>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- ─── Zone de saisie ─────────────────────────────────────────────── -->
+  @if (!chatHub.isConnected()) {
+    <div class="connection-banner">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ 'CHAT_DETAIL.CONNECTION_LOST' | translate }}
+    </div>
+  }
+  <div class="input-area">
+    <input
+      type="text"
+      class="message-input"
+      [placeholder]="'CHAT_DETAIL.MESSAGE_PLACEHOLDER' | translate"
+      [ngModel]="newMessage()"
+      (ngModelChange)="newMessage.set($event)"
+      (input)="onMessageInput()"
+      (keyup.enter)="sendMessage()"
+      [disabled]="isSending()" />
+    <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage().trim() || isSending()">
+      @if (isSending()) {
+        <div class="spinner spinner--sm spinner--white"></div>
+      } @else {
+        <i class="fas fa-paper-plane"></i>
+      }
+    </button>
+  </div>
+</div>

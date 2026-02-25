@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { NotificationHubService } from './notification-hub.service';
+import { ChatHubService } from './chat-hub.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,7 @@ export class AuthService {
 
   private loginResponse: any = null;
   private notificationHubService = inject(NotificationHubService);
+  private chatHubService = inject(ChatHubService);
 
   async login(email: string, password: string) {
     const dto = {
@@ -69,8 +71,9 @@ export class AuthService {
 
     try {
       await this.notificationHubService.startConnection(token);
+      await this.chatHubService.startConnection(token);
     } catch (error) {
-      console.error('Failed to connect to notification hub:', error);
+      console.error('Failed to connect to SignalR hubs:', error);
     }
   }
 
@@ -102,6 +105,9 @@ export class AuthService {
     // Disconnect from SignalR
     this.notificationHubService.stopConnection().catch(err => {
       console.error('Error disconnecting from notification hub:', err);
+    });
+    this.chatHubService.stopConnection().catch(err => {
+      console.error('Error disconnecting from chat hub:', err);
     });
 
     this.router.navigate(['/login']);

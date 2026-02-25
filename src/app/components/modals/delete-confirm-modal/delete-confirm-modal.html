@@ -9,6 +9,13 @@
         <div class="modal-body">
           <p [innerHTML]="'DELETE_CONFIRM_MODAL.MESSAGE' | translate: {firstName: u.firstName, lastName: u.lastName}"></p>
           <p class="warning-text">{{ 'DELETE_CONFIRM_MODAL.WARNING' | translate }}</p>
+
+          @if (errorMessage()) {
+            <div class="error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              <span>{{ errorMessage() }}</span>
+            </div>
+          }
         </div>
       }
       <div class="modal-footer">

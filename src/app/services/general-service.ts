@@ -135,6 +135,11 @@ export class GeneralService {
     return category ? category.label : categoryKey.toString();
   }
 
+  getAssigneeLabel(assigneeKey: number): string {
+    const assignee = this.assignees()[assigneeKey];
+    return assignee ? assignee.label : assigneeKey.toString();
+  }
+
   getTimeSpanLabel(spanKey: number): string {
     const timespan = this.timeSpans()[spanKey];
     return timespan ? timespan.label : spanKey.toString();

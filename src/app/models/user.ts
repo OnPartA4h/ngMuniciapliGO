@@ -45,16 +45,17 @@ export interface CreateUserResponseDto {
 }
 
 export interface PaginatedUsersResponse {
-  users: User[];
+  items: User[];
   pagination: {
     currentPage: number;
     pageSize: number;
     totalPages: number;
-    totalUsers: number;
+    totalCount: number;
   };
 }
 
 export interface UpdateUserDto {
+  userId?: string | null
   firstName: string;
   lastName: string;
   phoneNumber: string;

@@ -1,0 +1,128 @@
+@if (isOpen()) {
+  <div class="export-modal-backdrop" (click)="onBackdropClick($event)">
+    <div class="export-modal-container" (click)="$event.stopPropagation()">
+
+      <!-- Header -->
+      <div class="export-modal-header">
+        <div class="export-modal-title-group">
+          <i class="fas fa-file-export export-modal-icon"></i>
+          <h2>{{ 'EXPORT.TITLE' | translate }}</h2>
+        </div>
+        <button class="export-modal-close" (click)="onClose()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="export-modal-body">
+
+        <!-- Format -->
+        <section class="export-section">
+          <h3 class="export-section-title">
+            <i class="fas fa-file-alt"></i>
+            {{ 'EXPORT.FORMAT_LABEL' | translate }}
+          </h3>
+          <div class="export-format-grid">
+            @for (fmt of SUPPORTED_FORMATS; track fmt) {
+              <button
+                class="export-format-btn"
+                [ngClass]="{ active: selectedFormat === fmt }"
+                (click)="selectedFormat = fmt">
+                @switch (fmt) {
+                  @case ('excel') { <i class="fas fa-file-excel"></i> }
+                  @case ('csv')   { <i class="fas fa-file-csv"></i> }
+                  @case ('json')  { <i class="fas fa-file-code"></i> }
+                  @case ('pdf')   { <i class="fas fa-file-pdf"></i> }
+                }
+                <span>{{ fmt.toUpperCase() }}</span>
+              </button>
+            }
+          </div>
+        </section>
+
+        <!-- Intervalle de dates -->
+        <section class="export-section">
+          <h3 class="export-section-title">
+            <i class="fas fa-calendar-alt"></i>
+            {{ 'EXPORT.DATE_RANGE_LABEL' | translate }}
+          </h3>
+          <div class="export-date-range">
+            <div class="export-date-field">
+              <label>{{ 'EXPORT.DATE_FROM' | translate }}</label>
+              <input type="date" [(ngModel)]="dateFrom" [max]="dateTo || ''" />
+            </div>
+            <span class="export-date-sep"><i class="fas fa-arrow-right"></i></span>
+            <div class="export-date-field">
+              <label>{{ 'EXPORT.DATE_TO' | translate }}</label>
+              <input type="date" [(ngModel)]="dateTo" [min]="dateFrom || ''" />
+            </div>
+          </div>
+          <p class="export-count-hint">
+            <i class="fas fa-info-circle"></i>
+            {{ 'EXPORT.RECORDS_COUNT' | translate: { count: filteredCount } }}
+          </p>
+        </section>
+
+        <!-- Sélection des champs -->
+        <section class="export-section">
+          <div class="export-fields-header">
+            <h3 class="export-section-title">
+              <i class="fas fa-columns"></i>
+              {{ 'EXPORT.FIELDS_LABEL' | translate }}
+              <span class="export-fields-badge">{{ selectedFieldsCount }}/{{ fields.length }}</span>
+            </h3>
+            <div class="export-fields-actions">
+              <button class="btn-link" (click)="selectAllFields()">
+                {{ 'EXPORT.SELECT_ALL' | translate }}
+              </button>
+              <span class="export-sep">|</span>
+              <button class="btn-link" (click)="deselectAllFields()">
+                {{ 'EXPORT.DESELECT_ALL' | translate }}
+              </button>
+            </div>
+          </div>
+          <div class="export-fields-grid">
+            @for (field of fields; track field.key) {
+              <label class="export-field-checkbox" [ngClass]="{ checked: field.selected }">
+                <input type="checkbox" [(ngModel)]="field.selected" />
+                <span>{{ field.labelKey | translate }}</span>
+              </label>
+            }
+          </div>
+        </section>
+
+        <!-- Messages -->
+        @if (errorKey) {
+          <div class="export-alert export-alert--error">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ errorKey | translate }}
+          </div>
+        }
+        @if (successKey) {
+          <div class="export-alert export-alert--success">
+            <i class="fas fa-check-circle"></i>
+            {{ successKey | translate }}
+          </div>
+        }
+
+      </div>
+
+      <!-- Footer -->
+      <div class="export-modal-footer">
+        <button class="btn btn-secondary" (click)="onClose()" [disabled]="isExporting">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button class="btn btn-primary" (click)="doExport()" [disabled]="isExporting || filteredCount === 0">
+          @if (isExporting) {
+            <div class="spinner spinner--sm spinner--white"></div>
+            {{ 'EXPORT.EXPORTING' | translate }}
+          } @else {
+            <i class="fas fa-download"></i>
+            {{ 'EXPORT.EXPORT_BTN' | translate }}
+          }
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

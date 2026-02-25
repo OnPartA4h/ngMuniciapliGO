@@ -2,6 +2,7 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Header } from './components/header/header';
 import { AuthService } from './services/auth-service';
+import { ChatHubService } from './services/chat-hub.service';
 
 import { filter } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -16,15 +17,22 @@ import { Subject } from 'rxjs';
 export class App implements OnInit, OnDestroy {
   private router = inject(Router);
   private authService = inject(AuthService);
+  private chatHubService = inject(ChatHubService);
   private destroy$ = new Subject<void>();
 
   showHeaderFooter = true;
   private hiddenRoutes = ['/login'];
 
   ngOnInit() {
-    // Establish SignalR connection on app initialization if user is authenticated
+    // Establish SignalR connections on app initialization if user is authenticated
     if (this.authService.isAuthenticated()) {
-      this.authService.connectToNotificationHub();
+      const token = this.authService.token();
+      if (token) {
+        this.authService.connectToNotificationHub();
+        this.chatHubService.startConnection(token).catch(err =>
+          console.error('Failed to connect to chat hub on reload:', err)
+        );
+      }
     }
 
     this.router.events

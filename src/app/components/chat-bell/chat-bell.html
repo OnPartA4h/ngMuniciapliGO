@@ -1,0 +1,6 @@
+<button class="chat-bell" (click)="goToChats()" aria-label="Chat">
+  <i class="fas fa-comment-dots"></i>
+  @if (totalUnread() > 0) {
+    <span class="badge">{{ totalUnread() > 99 ? '99+' : totalUnread() }}</span>
+  }
+</button>

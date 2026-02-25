@@ -1,0 +1,57 @@
+<div class="page-container">
+  <app-page-header
+    title="Assistance / Help Desk"
+    subtitle="Gestion des appels et des problèmes utilisateurs"
+    [showBackButton]="true">
+  </app-page-header>
+
+  <div class="helpdesk-layout">
+    <!-- Colonne utilisateur -->
+    <div class="helpdesk-user-panel">
+      <div class="helpdesk-user-card" [routerLink]="['/profile', client?.id]">
+        <div class="helpdesk-user-avatar">
+          <img [src]="client?.profilePictureUrl" alt="Avatar utilisateur" />
+        </div>
+        <div class="helpdesk-user-info">
+          <h2>{{client?.firstName}} {{client?.lastName}}</h2>
+          <div class="helpdesk-user-meta">
+            <span><i class="fas fa-envelope"></i> {{client?.email}}</span>
+            <span><i class="fas fa-phone"></i> {{client?.phoneNumber | phoneNumber}}</span>
+            <span><i class="fas fa-map-marker-alt"></i> {{client?.streetNumber}} {{client?.streetName}}, {{client?.city}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="helpdesk-call-info">
+        <div class="helpdesk-call-header">
+          <i class="fas fa-headset"></i> Appel en cours
+        </div>
+        <div class="helpdesk-call-details">
+          <span><b>Agent :</b> {{supportAgent?.firstName}} {{supportAgent?.lastName}}</span>
+          <span><b>Début :</b> {{phoneCall()?.createdAt | date:'HH:mm'}}</span>
+          <span><b>Durée :</b> {{phoneCall()!.createdAt | duration}}</span>
+          <span><b>Statut :</b> En cours</span>
+        </div>
+        <button class="btn btn-danger helpdesk-end-call-btn" (click)="endCall()">
+          <i class="fas fa-phone-slash"></i> Terminer l'appel
+        </button>
+      </div>
+    </div>
+
+    <!-- Colonne problèmes -->
+    <div class="helpdesk-problems-panel">
+      <div class="helpdesk-search-bar">
+        <form>
+            <input type="text" placeholder="Rechercher un problème..." [(ngModel)]="currentSearch" name="currentSearch"/>
+            <button type="submit" (click)="getProblems()" class="btn btn-primary"><i class="fas fa-search"></i></button>
+        </form>
+        
+      </div>
+      <div class="helpdesk-problems-list">
+        <app-report-list [problems]="problems()"
+        [pagination]="pagination"
+        [loading]="loading"
+        (pageChange)="onPageChange($event)" />
+      </div>
+    </div>
+  </div>
+</div>

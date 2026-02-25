@@ -29,6 +29,8 @@ export class EditUserModal implements OnInit {
   isLoading = signal(false);
   showDeleteConfirm = signal(false);
   successMessage = signal<string | null>(null);
+  errorMessage = signal<string | null>(null);
+  deleteErrorMessage = signal<string | null>(null);
   currentUserId = signal<string | null>(null);
 
   ngOnInit() {
@@ -51,6 +53,8 @@ export class EditUserModal implements OnInit {
     this.showDeleteConfirm.set(false);
     this.isLoading.set(false);
     this.successMessage.set(null);
+    this.errorMessage.set(null);
+    this.deleteErrorMessage.set(null);
     this.close.emit(undefined);
   }
 
@@ -61,11 +65,16 @@ export class EditUserModal implements OnInit {
 
     try {
       this.isLoading.set(true);
+      this.errorMessage.set(null);
       const response = await this.adminService.changeRole(user.id, role.key);
       user.roles = response.roles;
       this.displaySuccessMessage(user);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error changing role:', error);
+      const isOffline = !navigator.onLine || error?.status === 0;
+      this.errorMessage.set(
+        this.translate.instant(isOffline ? 'COMMON.ERROR_OFFLINE' : 'COMMON.ERROR_GENERIC')
+      );
     } finally {
       this.isLoading.set(false);
     }
@@ -85,11 +94,13 @@ export class EditUserModal implements OnInit {
 
   openDeleteConfirm() {
     if (this.isCurrentUser()) return;
+    this.deleteErrorMessage.set(null);
     this.showDeleteConfirm.set(true);
   }
 
   cancelDelete() {
     this.showDeleteConfirm.set(false);
+    this.deleteErrorMessage.set(null);
   }
 
   async confirmDelete() {
@@ -98,11 +109,17 @@ export class EditUserModal implements OnInit {
 
     try {
       this.isLoading.set(true);
+      this.deleteErrorMessage.set(null);
       await this.adminService.deleteUser(user.id);
       this.userDeleted.emit(undefined);
       this.closeModal();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting user:', error);
+      const isOffline = !navigator.onLine || error?.status === 0;
+      this.deleteErrorMessage.set(
+        this.translate.instant(isOffline ? 'COMMON.ERROR_OFFLINE' : 'COMMON.ERROR_GENERIC')
+      );
+    } finally {
       this.isLoading.set(false);
     }
   }

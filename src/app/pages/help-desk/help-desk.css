@@ -1,0 +1,161 @@
+/* =============================
+   HELP DESK PAGE DESIGN
+   ============================= */
+
+.page-container {
+  padding: var(--spacing-3xl) var(--spacing-xl);
+}
+
+.helpdesk-layout {
+  display: flex;
+  gap: var(--spacing-2xl);
+  margin-top: var(--spacing-xl);
+}
+
+.helpdesk-user-panel {
+  flex: 0 0 340px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.helpdesk-user-card {
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-xl);
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+
+.helpdesk-user-avatar img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--color-gray-200);
+}
+
+.helpdesk-user-info h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.3rem;
+  font-weight: var(--font-weight-semibold);
+}
+
+.helpdesk-user-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-sm);
+}
+
+.helpdesk-call-info {
+  background: var(--color-primary-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  color: var(--color-primary);
+  font-size: var(--font-size-base);
+}
+
+.helpdesk-call-header {
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.helpdesk-call-details span {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.helpdesk-problems-panel {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.helpdesk-search-bar {
+  width: 100%;
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  
+}
+
+.helpdesk-search-bar form {
+  width: 100%;
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.helpdesk-search-bar input[type="text"] {
+  flex: 1 1 0;
+  width: 100%;
+  min-width: 0;
+  border-radius: 5px;
+  border: solid 1px var(--border-color);
+  padding: 0 10px;
+}
+
+.helpdesk-problems-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.helpdesk-problem-item {
+  background: var(--color-white);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-xs);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.helpdesk-problem-title {
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.helpdesk-problem-meta {
+  display: flex;
+  gap: var(--spacing-lg);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-sm);
+}
+
+.helpdesk-problem-actions {
+  margin-top: var(--spacing-sm);
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.helpdesk-end-call-btn {
+  margin-top: var(--spacing-lg);
+  width: 100%;
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+@media (max-width: 900px) {
+  .helpdesk-layout {
+    flex-direction: column;
+  }
+  .helpdesk-user-panel {
+    flex: 1 1 0;
+    flex-direction: row;
+    gap: var(--spacing-lg);
+  }
+}

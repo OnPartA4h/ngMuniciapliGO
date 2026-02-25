@@ -45,7 +45,8 @@ export class Problem {
     public resolutionDescription: string | null,
     public rejectionReason: string | null,
     public isInOpenDuplicateGroup: boolean,
-    public nbLikes: number
+    public nbLikes: number,
+    public nbComments: number
   ) { }
 }
 

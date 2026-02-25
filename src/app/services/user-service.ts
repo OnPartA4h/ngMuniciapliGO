@@ -18,9 +18,18 @@ export class UserService {
 
   async getProfile(): Promise<User> {
     const profile = await lastValueFrom(this.http.get<User>(`${this.apiUrl}/api/User/me`));
+    console.log(profile);
+    
     // Update the profile picture signal in AuthService
     this.authService.setProfilePictureUrl(profile.profilePictureUrl || null);
     return profile;
+  }
+
+  async getPublicProfile(id: string): Promise<User> {
+    let res = await lastValueFrom(this.http.get<User>(`${this.apiUrl}/api/User/profile/${id}/support`))
+    console.log(res);
+    
+    return res
   }
 
   async updateUser(dto: UpdateUserDto): Promise<{ message: string; user: User }> {

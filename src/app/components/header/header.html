@@ -8,9 +8,12 @@
       {{ 'DASHBOARD.TITLE' | translate }}
     </a>
 
-    <a routerLink="/map" routerLinkActive="active">
-      {{ 'HEADER.MAP' | translate }}
-    </a>
+    @if (userRoles().includes('ColBlanc') || userRoles().includes('Admin')) {
+      <a routerLink="/map" routerLinkActive="active">
+        {{ 'HEADER.MAP' | translate }}
+      </a>
+    }
+    
 
     @if (userRoles().includes('ColBlanc') || userRoles().includes('Admin')) {
     <a routerLink="/manage-reports" routerLinkActive="active">
@@ -23,6 +26,12 @@
       {{ 'HEADER.MANAGE_USERS' | translate }}
     </a>
     }
+
+    @if (userRoles().includes('Support')) {
+    <a routerLink="/help-desk" routerLinkActive="active">
+      {{ "Help desk"}}
+    </a>
+    }
   </nav>
 
   <div class="header-actions">
@@ -32,8 +41,17 @@
       <span>{{ getCurrentLanguage() }}</span>
     </button>
 
+    <!-- Vitrine Editor Button (Admin & ColBlanc) -->
+    @if (isConnected() && (userRoles().includes('Admin') || userRoles().includes('ColBlanc'))) {
+    <button class="btn-vitrine" (click)="openVitrine()" title="{{ 'HEADER.VITRINE_TOOLTIP' | translate }}">
+      <i class="fas fa-external-link-alt"></i>
+      <span>{{ 'HEADER.VITRINE' | translate }}</span>
+    </button>
+    }
+
     <!-- Notification Bell (when connected) -->
     @if (isConnected()) {
+    <app-chat-bell />
     <app-notification-bell />
     }
 

@@ -20,10 +20,16 @@
         <i class="fas" [ngClass]="showFilters ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
       </button>
     </div>
-    <button class="btn btn-secondary" (click)="getAllReports()">
-      <i class="fas fa-search"></i>
-      {{ 'COMMON.SEARCH' | translate }}
-    </button>
+    <div class="search-actions">
+      <button class="btn btn-secondary" (click)="getAllReports()">
+        <i class="fas fa-search"></i>
+        {{ 'COMMON.SEARCH' | translate }}
+      </button>
+      <button class="btn btn-primary btn-export" (click)="showExportModal = true">
+        <i class="fas fa-file-export"></i>
+        {{ 'EXPORT.BTN_LABEL' | translate }}
+      </button>
+    </div>
   </div>
 
   @if (showFilters) {
@@ -65,4 +71,9 @@
     [pagination]="pagination"
     [loading]="loading"
     (pageChange)="onPageChange($event)" />
+
+  <app-export-modal
+    [isOpen]="showExportModal"
+    [problems]="problems"
+    (close)="showExportModal = false" />
 </div>
