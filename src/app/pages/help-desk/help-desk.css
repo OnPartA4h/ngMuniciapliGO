@@ -138,6 +138,17 @@
   gap: var(--spacing-sm);
 }
 
+.helpdesk-end-call-btn {
+  margin-top: var(--spacing-lg);
+  width: 100%;
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 @media (max-width: 900px) {
   .helpdesk-layout {
     flex-direction: column;

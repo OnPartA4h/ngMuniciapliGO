@@ -71,6 +71,10 @@ export class HelpDesk implements OnInit{
     await this.getProblems(page);
   }
 
+  async endCall() {
+    this.supportService.endCall(this.phoneCall()!.id)
+  }
+
   agent = {
     firstName: 'Marc',
     lastName: 'Bouchard',

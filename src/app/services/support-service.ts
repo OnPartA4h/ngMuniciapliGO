@@ -25,4 +25,9 @@ export class SupportService {
     
     return res
   }
+
+  async endCall(id: number) {
+    let res = await lastValueFrom(this.http.delete<any>(`${this.apiUrl}/api/Support/DeletePhoneCall/${id}`))
+    console.log(res);
+  }
 }
