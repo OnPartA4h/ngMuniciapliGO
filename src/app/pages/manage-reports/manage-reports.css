@@ -16,6 +16,13 @@
   margin-bottom: 1rem;
 }
 
+.search-actions {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
 .btn-toggle-filters {
   margin-left: var(--spacing-md);
   padding: var(--spacing-md) var(--spacing-lg);

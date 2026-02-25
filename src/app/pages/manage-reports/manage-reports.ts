@@ -9,10 +9,11 @@ import { Pagination } from '../../models/pagination';
 import { FormsModule } from '@angular/forms';
 import { PageHeaderComponent, NavigationTabsComponent, NavigationTab, AiProcessingStatusComponent } from '../../components/ui';
 import { ReportListComponent } from '../../components/tables/report-list/report-list';
+import { ExportModalComponent } from '../../components/modals/export-modal/export-modal';
 
 @Component({
   selector: 'app-manage-reports',
-  imports: [TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent, NavigationTabsComponent, AiProcessingStatusComponent, NgClass],
+  imports: [TranslateModule, FormsModule, PageHeaderComponent, ReportListComponent, NavigationTabsComponent, AiProcessingStatusComponent, NgClass, ExportModalComponent],
   templateUrl: './manage-reports.html',
   styleUrl: './manage-reports.css',
 })
@@ -23,6 +24,7 @@ export class ManageReports implements OnInit {
 
   loading = true;
   showFilters = false;
+  showExportModal = false;
 
   categories = signal<CategoryOption[]>([]);
   statuses = signal<StatusOption[]>([]);
