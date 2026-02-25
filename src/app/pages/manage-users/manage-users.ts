@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -17,10 +17,12 @@ import { UsersTableComponent } from '../../components/tables/users-table/users-t
   templateUrl: './manage-users.html',
   styleUrl: './manage-users.css',
 })
-export class ManageUsers implements OnInit {
+export class ManageUsers implements OnInit, OnDestroy {
   private adminService = inject(AdminService);
   private generalService = inject(GeneralService);
   private languageService = inject(LanguageService);
+
+  readonly MAX_SEARCH_LENGTH = 125;
 
   users = signal<User[]>([]);
   availableRoles = signal<RoleOption[]>([]);
@@ -42,6 +44,8 @@ export class ManageUsers implements OnInit {
   // Loading state
   isLoading = signal(false);
 
+  private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+
   async ngOnInit() {
     await Promise.all([
       this.loadRoles(),
@@ -50,6 +54,10 @@ export class ManageUsers implements OnInit {
     this.languageService.onLangChange().subscribe(() => {
       this.loadRoles();
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchDebounceTimer) clearTimeout(this.searchDebounceTimer);
   }
 
   async loadRoles() {
@@ -86,6 +94,16 @@ export class ManageUsers implements OnInit {
   async onSearch() {
     this.currentPage.set(1);
     await this.loadUsers();
+  }
+
+  onSearchInput(value: string): void {
+    this.searchQuery.set(value);
+
+    if (this.searchDebounceTimer) clearTimeout(this.searchDebounceTimer);
+    this.searchDebounceTimer = setTimeout(() => {
+      this.currentPage.set(1);
+      this.loadUsers();
+    }, 400);
   }
 
   async onRoleFilterChange() {

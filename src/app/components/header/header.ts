@@ -6,6 +6,7 @@ import { LanguageService } from '../../services/language-service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NotificationBell } from '../notification-bell/notification-bell';
 import { ChatBell } from '../chat-bell/chat-bell';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -33,5 +34,11 @@ export class Header {
 
   getCurrentLanguage(): string {
     return this.languageService.getCurrentLanguage().toUpperCase();
+  }
+
+  openVitrine() {
+    const token = this.authService.token();
+    const url = `${environment.vitrineUrl}/?token=${encodeURIComponent(token ?? '')}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 }

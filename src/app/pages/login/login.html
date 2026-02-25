@@ -10,6 +10,10 @@
         <p>{{ 'LOGIN.SUBTITLE' | translate }}</p>
       </div>
 
+      @if (sessionExpired) {
+        <div class="form-alert form-alert--warning login-error-message">{{ 'LOGIN.SESSION_EXPIRED' | translate }}</div>
+      }
+
       @if (errorMessage != '') {
         <div class="form-alert form-alert--error login-error-message">{{errorMessage}}</div>
       }

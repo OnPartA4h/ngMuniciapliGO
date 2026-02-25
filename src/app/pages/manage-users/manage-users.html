@@ -12,9 +12,11 @@
   <div class="filter-bar">
     <div class="search-box">
       <i class="fas fa-search"></i>
-      <input type="text" [placeholder]="'MANAGE_USERS.SEARCH_PLACEHOLDER' | translate" 
+      <input type="text"
+        [placeholder]="'MANAGE_USERS.SEARCH_PLACEHOLDER' | translate"
         [ngModel]="searchQuery()"
-        (ngModelChange)="searchQuery.set($event)"
+        (ngModelChange)="onSearchInput($event)"
+        [maxlength]="MAX_SEARCH_LENGTH"
         (keyup.enter)="onSearch()" />
     </div>
     <div class="filter-group">

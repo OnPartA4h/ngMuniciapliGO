@@ -2,10 +2,12 @@
   "HEADER": {
     "HOME": "Accueil",
     "MAP": "Carte",
-    "MANAGE_REPORTS": "Gérer les signalements",
+    "MANAGE_REPORTS": "Gérer les problèmes",
     "MANAGE_USERS": "Gérer les utilisateurs",
     "LOGIN": "Connexion",
-    "LOGOUT": "Déconnexion"
+    "LOGOUT": "Déconnexion",
+    "VITRINE": "Modifier la vitrine",
+    "VITRINE_TOOLTIP": "Ouvrir l'éditeur de la vitrine (s'ouvre dans un nouvel onglet)"
   },
   "COMMON": {
     "YES": "Oui",
@@ -37,7 +39,9 @@
     "EMAIL_CONFIRMED": "Email confirmé",
     "EMAIL_NOT_CONFIRMED": "Email non confirmé",
     "MUST_RESET_PASSWORD": "Doit réinitialiser le mot de passe",
-    "PASSWORD_OK": "Mot de passe OK"
+    "PASSWORD_OK": "Mot de passe OK",
+    "ERROR_OFFLINE": "Pas de connexion internet. Vérifiez votre réseau et réessayez.",
+    "ERROR_GENERIC": "Une erreur est survenue. Veuillez réessayer."
   },
   "NOTIFICATIONS": {
     "TITLE": "Notifications",
@@ -325,6 +329,7 @@
     "ERROR_MESSAGE": "Identifiants invalides. Veuillez réessayer.",
     "INVALID_CREDENTIALS": "Identifiants invalides",
     "SERVER_ERROR": "Erreur du serveur",
+    "SESSION_EXPIRED": "Votre session a expiré. Veuillez vous reconnecter."
     "SOMETHING_WENT_WRONG": "Une erreur s'est produite, réessayer plus tard",
     "INSUFFICIENT_PERMISSIONS": "Vous n'avez pas les permissions nécessaires pour accéder à cette application"
   },
@@ -475,5 +480,42 @@
     "SEND_ERROR": "Échec de l'envoi du message. Veuillez réessayer.",
     "CONNECTION_LOST": "Connexion perdue. Reconnexion en cours…",
     "CONNECTION_RESTORED": "Connexion rétablie"
+  },
+  "EXPORT": {
+    "BTN_LABEL": "Exporter",
+    "TITLE": "Exporter les signalements",
+    "FORMAT_LABEL": "Format d'export",
+    "DATE_RANGE_LABEL": "Intervalle de dates (dateCreation)",
+    "DATE_FROM": "Du",
+    "DATE_TO": "Au",
+    "RECORDS_COUNT": "{{count}} signalement(s) dans la sélection",
+    "FIELDS_LABEL": "Champs à inclure",
+    "SELECT_ALL": "Tout sélectionner",
+    "DESELECT_ALL": "Tout désélectionner",
+    "EXPORT_BTN": "Exporter",
+    "EXPORTING": "Export en cours...",
+    "SUCCESS": "Fichier exporté avec succès !",
+    "ERROR_UNSUPPORTED_FORMAT": "Format non supporté. Veuillez choisir parmi : Excel, CSV, JSON, PDF.",
+    "ERROR_NO_FIELDS": "Veuillez sélectionner au moins un champ à exporter.",
+    "ERROR_GENERIC": "Une erreur est survenue lors de l'export.",
+    "PDF_TITLE": "Liste des signalements",
+    "GENERATED_ON": "Généré le",
+    "FIELD_ID": "ID",
+    "FIELD_TITRE": "Titre",
+    "FIELD_DESCRIPTION": "Description",
+    "FIELD_ADDRESS": "Adresse",
+    "FIELD_STATUT": "Statut",
+    "FIELD_CATEGORIE": "Catégorie",
+    "FIELD_DATE_CREATION": "Date de création",
+    "FIELD_DATE_RESOLUTION": "Date de résolution",
+    "FIELD_LATITUDE": "Latitude",
+    "FIELD_LONGITUDE": "Longitude",
+    "FIELD_ASSIGNEA": "Assigné à",
+    "FIELD_DEMANDEUR": "Demandeur",
+    "FIELD_RESPONSABLE": "Responsable",
+    "FIELD_RESOLUTION_DESC": "Description résolution",
+    "FIELD_REJECTION": "Raison de refus",
+    "FIELD_LIKES": "J'aime",
+    "FIELD_PHOTO": "Photo (lien)"
   }
 }

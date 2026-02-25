@@ -5,7 +5,9 @@
     "MANAGE_REPORTS": "Manage Problems",
     "MANAGE_USERS": "Manage Users",
     "LOGIN": "Login",
-    "LOGOUT": "Logout"
+    "LOGOUT": "Logout",
+    "VITRINE": "Edit vitrine",
+    "VITRINE_TOOLTIP": "Open the public vitrine editor (opens in a new tab)"
   },
   "COMMON": {
     "YES": "Yes",
@@ -37,7 +39,9 @@
     "EMAIL_CONFIRMED": "Email Confirmed",
     "EMAIL_NOT_CONFIRMED": "Email Not Confirmed",
     "MUST_RESET_PASSWORD": "Must Reset Password",
-    "PASSWORD_OK": "Password OK"
+    "PASSWORD_OK": "Password OK",
+    "ERROR_OFFLINE": "No internet connection. Please check your network and try again.",
+    "ERROR_GENERIC": "An error occurred. Please try again."
   },
   "NOTIFICATIONS": {
     "TITLE": "Notifications",
@@ -325,6 +329,7 @@
     "ERROR_MESSAGE": "Invalid credentials. Please try again.",
     "INVALID_CREDENTIALS": "Invalid credentials",
     "SERVER_ERROR": "Server error",
+    "SESSION_EXPIRED": "Your session has expired. Please sign in again."
     "SOMETHING_WENT_WRONG": "Something went wrong, try again later",
     "INSUFFICIENT_PERMISSIONS": "You do not have the necessary permissions to access this application"
   },
@@ -475,5 +480,42 @@
     "SEND_ERROR": "Failed to send message. Please try again.",
     "CONNECTION_LOST": "Connection lost. Reconnecting…",
     "CONNECTION_RESTORED": "Connection restored"
+  },
+  "EXPORT": {
+    "BTN_LABEL": "Export",
+    "TITLE": "Export Problems",
+    "FORMAT_LABEL": "Export format",
+    "DATE_RANGE_LABEL": "Date range (dateCreation)",
+    "DATE_FROM": "From",
+    "DATE_TO": "To",
+    "RECORDS_COUNT": "{{count}} record(s) in selection",
+    "FIELDS_LABEL": "Fields to include",
+    "SELECT_ALL": "Select all",
+    "DESELECT_ALL": "Deselect all",
+    "EXPORT_BTN": "Export",
+    "EXPORTING": "Exporting...",
+    "SUCCESS": "File exported successfully!",
+    "ERROR_UNSUPPORTED_FORMAT": "Unsupported format. Please choose from: Excel, CSV, JSON, PDF.",
+    "ERROR_NO_FIELDS": "Please select at least one field to export.",
+    "ERROR_GENERIC": "An error occurred during export.",
+    "PDF_TITLE": "Problems List",
+    "GENERATED_ON": "Generated on",
+    "FIELD_ID": "ID",
+    "FIELD_TITRE": "Title",
+    "FIELD_DESCRIPTION": "Description",
+    "FIELD_ADDRESS": "Address",
+    "FIELD_STATUT": "Status",
+    "FIELD_CATEGORIE": "Category",
+    "FIELD_DATE_CREATION": "Creation Date",
+    "FIELD_DATE_RESOLUTION": "Resolution Date",
+    "FIELD_LATITUDE": "Latitude",
+    "FIELD_LONGITUDE": "Longitude",
+    "FIELD_ASSIGNEA": "Assigned To",
+    "FIELD_DEMANDEUR": "Requester",
+    "FIELD_RESPONSABLE": "Responsible",
+    "FIELD_RESOLUTION_DESC": "Resolution Description",
+    "FIELD_REJECTION": "Rejection Reason",
+    "FIELD_LIKES": "Likes",
+    "FIELD_PHOTO": "Photo (link)"
   }
 }
