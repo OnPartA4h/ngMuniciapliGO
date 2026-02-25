@@ -4,7 +4,7 @@ import { ChartData, ChartType } from 'chart.js';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StatBox } from '../../components/stat-box/stat-box';
 import { GeneralService } from '../../services/general-service';
-import { GraphAverageDTO, GraphDTO } from '../../models/problem';
+import { GraphAverageDTO, GraphCategorieDTO, GraphDistrictDTO, GraphDTO } from '../../models/problem';
 import { LanguageService } from '../../services/language-service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user-service';
@@ -23,8 +23,10 @@ export class Home {
   userService = inject(UserService);
   private translate = inject(TranslateService);
 
-  datasets = signal<ChartData<'bar', { x: number; y: number }[]>>(undefined as any);
-  datasetsResolution = signal<ChartData<'line', { x: number; y: number }[]>>(undefined as any);
+  datasets = signal<ChartData<'line', { x: number; y: number }[]>>(undefined as any);
+  datasetsResolution = signal<ChartData<'bar', { x: number; y: number }[]>>(undefined as any);
+  datasetsDistricts = signal<ChartData<'line', { x: number; y: number }[]>>(undefined as any);
+  datasetsCategories = signal<ChartData<'line', { x: number; y: number }[]>>(undefined as any);
   currentTimeSpan = signal<number>(0);
   currentAssigneA = signal<number>(0);
   currentDistrict = signal<number | null>(null);
@@ -104,6 +106,8 @@ export class Home {
 
     this.setGraph(statsResult.graph);
     this.setMoyenne(statsResult.graphAverage);
+    this.setDistricts(statsResult.graphDistrict);
+    this.setCategories(statsResult.graphCategorie);
   }
 
   setGraph(graph: GraphDTO[]) {
@@ -163,6 +167,48 @@ export class Home {
         }
       ]
     });
+  }
+
+  setDistricts(graph: GraphDistrictDTO[]) {
+    const districtDatasets = [];
+    const districts = this.generalService.districtNames();
+    const total = Math.max(1, districts.length);
+    for (let i = 0; i < districts.length; i++) {
+      const district = districts[i];
+      const hue = Math.round((i / total) * 300) + 20;
+      districtDatasets.push({
+        label: district.name,
+        data: (graph || []).map(d => {
+          const counts = d.countPerDistrict as any;
+          const val = (counts && (counts[district.id] ?? counts[String(district.id)])) ?? 0;
+          return { x: new Date(d.date).getTime(), y: val };
+        }),
+        backgroundColor: `hsla(${hue}, 50%, 50%, 0.8)`,
+        borderColor: `hsla(${hue}, 50%, 50%, 0.3)`
+      });
+    }
+    this.datasetsDistricts.set({ datasets: districtDatasets });
+  }
+
+  setCategories(graph: GraphCategorieDTO[]) {
+    const catDatasets = [];
+    const categories = this.generalService.categories();
+    const total = Math.max(1, categories.length);
+    for (let i = 0; i < categories.length; i++) {
+      const c = categories[i];
+      const hue = Math.round((i / total) * 300) + 20;
+      catDatasets.push({
+        label: c.label,
+        data: (graph || []).map(d => {
+          const counts = d.countPerCategorie as any;
+          const val = (counts && (counts[i] ?? counts[String(i)])) ?? 0;
+          return { x: new Date(d.date).getTime(), y: val };
+        }),
+        backgroundColor: `hsla(${hue}, 50%, 50%, 0.8)`,
+        borderColor: `hsla(${hue}, 50%, 50%, 0.3)`
+      });
+    }
+    this.datasetsCategories.set({ datasets: catDatasets });
   }
 
   updateDateRange(x: any) {

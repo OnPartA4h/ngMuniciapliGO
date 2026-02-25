@@ -57,7 +57,7 @@
             <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
             }
             @else {
-            <app-chart [datasets]="datasets()" [chartType]="'bar'"></app-chart>
+            <app-chart [datasets]="datasets()" [chartType]="'line'"></app-chart>
             }
         </div>
         <div class="app-chart-container">
@@ -66,7 +66,25 @@
             <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
             }
             @else {
-            <app-chart [datasets]="datasetsResolution()" [chartType]="'line'"></app-chart>
+            <app-chart [datasets]="datasetsResolution()" [chartType]="'bar'"></app-chart>
+            }
+        </div>
+        <div class="app-chart-container">
+            <div class="stat-title">Problèmes résolus par district</div>
+            @if(stats()?.graph?.length === 0){
+            <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
+            }
+            @else {
+            <app-chart [datasets]="datasetsDistricts()" [chartType]="'line'"></app-chart>
+            }
+        </div>
+        <div class="app-chart-container">
+            <div class="stat-title">Problèmes résolus par catégorie</div>
+            @if(stats()?.graph?.length === 0){
+            <span class="stat-unit error">{{ 'DASHBOARD.ERROR' | translate }}</span>
+            }
+            @else {
+            <app-chart [datasets]="datasetsCategories()" [chartType]="'line'"></app-chart>
             }
         </div>
     </div>

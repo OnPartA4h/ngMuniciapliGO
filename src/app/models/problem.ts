@@ -68,3 +68,13 @@ export interface GraphAverageDTO {
   priseEnCharge: number;
   assignation: number;
 }
+
+export interface GraphDistrictDTO {
+  date: string;
+  countPerDistrict: Record<number, number>;
+}
+
+export interface GraphCategorieDTO {
+  date: string;
+  countPerCategorie: Record<number, number>;
+}
