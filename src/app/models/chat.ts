@@ -79,6 +79,8 @@ export interface ChatSummaryDto {
   displayName: string;
   /** Avatar of the other participant (direct chats only). */
   otherUserPictureUrl: string | null;
+  /** ID of the other participant (direct chats only). */
+  otherUserId: string | null;
   lastMessage: ChatMessageDto | null;
   /** Number of messages the current user hasn't read yet. */
   unreadCount: number;

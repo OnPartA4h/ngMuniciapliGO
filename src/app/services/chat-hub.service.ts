@@ -57,6 +57,9 @@ export class ChatHubService {
 
   readonly isConnected = signal<boolean>(false);
 
+  // ── Presence tracking (set of online user IDs) ────────────────────────
+  readonly onlineUsers = signal<Set<string>>(new Set());
+
   // ── Subjects observables (multi-abonnement) ───────────────────────────────
 
   readonly newMessage$        = new Subject<ChatMessageDto>();
@@ -112,12 +115,14 @@ export class ChatHubService {
       });
     });
 
-    this.hubConnection.onreconnected(() => {
+    this.hubConnection.onreconnected(async () => {
       this.ngZone.run(() => {
         console.log('Reconnected to chat hub');
         this.isConnected.set(true);
         this.reconnectAttempts = 0;
       });
+      // Re-fetch the online users list after reconnect so both sides stay in sync
+      await this.fetchOnlineUsers();
     });
 
     this.hubConnection.onclose(() => {
@@ -136,6 +141,8 @@ export class ChatHubService {
         this.isConnected.set(true);
         this.reconnectAttempts = 0;
       });
+      // Fetch the initial list of online users from the server
+      await this.fetchOnlineUsers();
     } catch (err) {
       this.ngZone.run(() => {
         console.error('Error connecting to chat hub:', err);
@@ -187,6 +194,10 @@ export class ChatHubService {
     return this.hubConnection?.state === signalR.HubConnectionState.Connected;
   }
 
+  isUserOnline(userId: string): boolean {
+    return this.onlineUsers().has(userId);
+  }
+
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   private registerHandlers(): void {
@@ -229,10 +240,16 @@ export class ChatHubService {
       this.ngZone.run(() => this.typingStop$.next(event)));
 
     this.hubConnection.on('UserOnline', (event: UserPresenceEvent) =>
-      this.ngZone.run(() => this.userOnline$.next(event)));
+      this.ngZone.run(() => {
+        this.onlineUsers.update(set => { const s = new Set(set); s.add(event.userId); return s; });
+        this.userOnline$.next(event);
+      }));
 
     this.hubConnection.on('UserOffline', (event: UserPresenceEvent) =>
-      this.ngZone.run(() => this.userOffline$.next(event)));
+      this.ngZone.run(() => {
+        this.onlineUsers.update(set => { const s = new Set(set); s.delete(event.userId); return s; });
+        this.userOffline$.next(event);
+      }));
 
     // ── Call handlers ────────────────────────────────────────────────────
     this.hubConnection.on('IncomingCall', (event: IncomingCallEvent) =>
@@ -254,6 +271,26 @@ export class ChatHubService {
       await this.hubConnection!.invoke(method, ...args);
     } catch (err) {
       console.error(`ChatHub: error invoking '${method}':`, err);
+    }
+  }
+
+  /**
+   * Ask the server for the full list of currently-online user IDs.
+   * The hub should expose a 'GetOnlineUsers' method that returns string[].
+   * If it doesn't exist yet, we silently ignore the error so the app
+   * keeps working with the event-based approach as a fallback.
+   */
+  private async fetchOnlineUsers(): Promise<void> {
+    if (!this.isConnectionActive()) return;
+    try {
+      const userIds: string[] = await this.hubConnection!.invoke('GetOnlineUsers');
+      this.ngZone.run(() => {
+        this.onlineUsers.set(new Set(userIds));
+      });
+      console.log('Fetched online users:', userIds.length);
+    } catch (err) {
+      // The server might not have this method yet – that's OK
+      console.warn('ChatHub: GetOnlineUsers not available, relying on events only.', err);
     }
   }
 

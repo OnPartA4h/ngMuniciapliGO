@@ -30,6 +30,44 @@
   opacity: 0.8;
 }
 
+/* ── Call Rejected ────────────────────────────────────────────────────────── */
+
+.call-rejected {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px;
+  text-align: center;
+}
+
+.rejected-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e53935, #ef5350);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  animation: rejectPulse 1.5s ease;
+}
+
+@keyframes rejectPulse {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.rejected-text {
+  font-size: 20px;
+  font-weight: 600;
+  opacity: 0.9;
+  margin: 0;
+}
+
 /* ── Connecting ───────────────────────────────────────────────────────────── */
 
 .call-connecting {
@@ -62,6 +100,27 @@
 .call-target-name {
   font-size: 24px;
   font-weight: 700;
+}
+
+.btn-cancel-connecting {
+  margin-top: 16px;
+  padding: 10px 28px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
+  background: transparent;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel-connecting:hover {
+  background: rgba(229, 57, 53, 0.3);
+  border-color: #ef5350;
 }
 
 /* ── Video area ───────────────────────────────────────────────────────────── */
@@ -134,10 +193,19 @@
   inset: 0;
   background: #2d2d44;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   font-size: 32px;
   color: rgba(255, 255, 255, 0.5);
+}
+
+.no-camera-label {
+  font-size: 11px;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Audio call */
@@ -149,6 +217,77 @@
   justify-content: center;
   gap: 20px;
   height: 100%;
+}
+
+/* ── Group participants bar ───────────────────────────────────────────────── */
+
+.group-participants-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.participants-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.participants-label i {
+  font-size: 14px;
+}
+
+.participants-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.participant-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.participant-avatar-sm {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #42a5f5, #1e88e5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-transform: uppercase;
+}
+
+.participant-avatar-sm img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.participant-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
 }
 
 /* ── Info bar ─────────────────────────────────────────────────────────────── */
@@ -232,5 +371,13 @@
   .control-btn.hangup {
     width: 56px;
     height: 56px;
+  }
+
+  .group-participants-bar {
+    padding: 8px 12px;
+  }
+
+  .participant-chip {
+    font-size: 11px;
   }
 }

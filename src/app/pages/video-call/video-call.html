@@ -1,17 +1,37 @@
 <div class="video-call-container">
-  @if (error()) {
+  <!-- ── Call Rejected ──────────────────────────────────────────────────── -->
+  @if (callRejected()) {
+    <div class="call-rejected">
+      <div class="rejected-icon">
+        <i class="fas fa-phone-slash"></i>
+      </div>
+      <p class="rejected-text">{{ 'CALL.REJECTED' | translate }}</p>
+      <span class="call-target-name">{{ chatName() }}</span>
+      <button class="btn btn-primary" (click)="hangUp()">{{ 'CALL.CLOSE' | translate }}</button>
+    </div>
+  }
+  <!-- ── Error ──────────────────────────────────────────────────────────── -->
+  @else if (error()) {
     <div class="call-error">
       <i class="fas fa-exclamation-triangle"></i>
       <p>{{ error() }}</p>
       <button class="btn btn-primary" (click)="hangUp()">{{ 'CALL.CLOSE' | translate }}</button>
     </div>
-  } @else if (isConnecting()) {
+  }
+  <!-- ── Connecting ─────────────────────────────────────────────────────── -->
+  @else if (isConnecting()) {
     <div class="call-connecting">
       <div class="connecting-spinner"></div>
       <p>{{ 'CALL.CONNECTING' | translate }}</p>
       <span class="call-target-name">{{ chatName() }}</span>
+      <button class="btn btn-outline btn-cancel-connecting" (click)="hangUp()">
+        <i class="fas fa-phone-slash"></i>
+        {{ 'CALL.CANCEL' | translate }}
+      </button>
     </div>
-  } @else {
+  }
+  <!-- ── Active Call ────────────────────────────────────────────────────── -->
+  @else {
     <!-- Video area -->
     <div class="call-video-area">
       @if (isVideo) {
@@ -28,6 +48,9 @@
           @if (isVideoOff()) {
             <div class="video-off-placeholder">
               <i class="fas fa-video-slash"></i>
+              @if (!hasCamera()) {
+                <span class="no-camera-label">{{ 'CALL.NO_CAMERA' | translate }}</span>
+              }
             </div>
           }
         </div>
@@ -40,6 +63,30 @@
         </div>
       }
     </div>
+
+    <!-- Group call participants -->
+    @if (isGroupCall && connectedParticipants().length > 0) {
+      <div class="group-participants-bar">
+        <span class="participants-label">
+          <i class="fas fa-users"></i>
+          {{ connectedParticipants().length }} {{ 'CALL.CONNECTED' | translate }}
+        </span>
+        <div class="participants-list">
+          @for (p of connectedParticipants(); track p.userId) {
+            <div class="participant-chip">
+              <div class="participant-avatar-sm">
+                @if (p.profilePictureUrl) {
+                  <img [src]="p.profilePictureUrl" alt="" />
+                } @else {
+                  <span>{{ getInitials(p.displayName) }}</span>
+                }
+              </div>
+              <span class="participant-name">{{ p.displayName }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
 
     <!-- Call info bar -->
     <div class="call-info-bar">
