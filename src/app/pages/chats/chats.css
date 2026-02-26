@@ -278,13 +278,13 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   position: relative;
-  overflow: hidden;
 }
 
 .chat-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
 }
 
 .chat-avatar .avatar-initials {
@@ -301,14 +301,15 @@
   right: -2px;
   background: var(--color-white);
   color: var(--color-primary);
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 10px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 0 0 2px var(--color-white), var(--shadow-sm);
+  z-index: 1;
 }
 
 /* Chat content */

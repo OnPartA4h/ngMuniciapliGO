@@ -75,9 +75,14 @@ export class Chats implements OnInit, OnDestroy {
     // Temps réel via Subjects
     this.subs.push(
       this.chatHubService.newMessage$.subscribe(() => this.loadChats()),
+      this.chatHubService.messageEdited$.subscribe(() => this.loadChats()),
+      this.chatHubService.messageDeleted$.subscribe(() => this.loadChats()),
       this.chatHubService.addedToChat$.subscribe(() => this.loadChats()),
       this.chatHubService.removedFromChat$.subscribe(() => this.loadChats()),
       this.chatHubService.groupRenamed$.subscribe(() => this.loadChats()),
+      this.chatHubService.memberAdded$.subscribe(() => this.loadChats()),
+      this.chatHubService.memberRemoved$.subscribe(() => this.loadChats()),
+      this.chatHubService.readReceipt$.subscribe(() => this.loadChats()),
     );
   }
 
