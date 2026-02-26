@@ -24,6 +24,7 @@ export const routes: Routes = [
   { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications').then(m => m.Notifications), canActivate: [authGuard] },
   { path: 'chats', loadComponent: () => import('./pages/chats/chats').then(m => m.Chats), canActivate: [authGuard] },
   { path: 'chats/:id', loadComponent: () => import('./pages/chat-detail/chat-detail').then(m => m.ChatDetail), canActivate: [authGuard] },
+  { path: 'call', loadComponent: () => import('./pages/video-call/video-call').then(m => m.VideoCall), canActivate: [authGuard] },
   { path: 'help-desk', loadComponent: () => import('./pages/help-desk/help-desk').then(m => m.HelpDesk), canActivate: [authGuard, supportGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }

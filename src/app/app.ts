@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Header } from './components/header/header';
+import { IncomingCallComponent } from './components/incoming-call/incoming-call';
 import { AuthService } from './services/auth-service';
 import { ChatHubService } from './services/chat-hub.service';
 
@@ -10,7 +11,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, Header],
+  imports: [RouterOutlet, Header, IncomingCallComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
 })
@@ -21,7 +22,7 @@ export class App implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   showHeaderFooter = true;
-  private hiddenRoutes = ['/login'];
+  private hiddenRoutes = ['/login', '/call'];
 
   ngOnInit() {
     // Establish SignalR connections on app initialization if user is authenticated
