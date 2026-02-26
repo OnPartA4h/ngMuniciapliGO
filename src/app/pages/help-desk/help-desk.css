@@ -59,6 +59,24 @@
   font-size: var(--font-size-base);
 }
 
+.helpdesk-call-info--empty {
+  background: var(--color-gray-100);
+  color: var(--color-text-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  text-align: center;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.helpdesk-call-info--empty i {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
 .helpdesk-call-header {
   font-weight: var(--font-weight-semibold);
   margin-bottom: var(--spacing-sm);
@@ -147,6 +165,31 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+
+.helpdesk-add-user {
+  margin-top: var(--spacing-lg);
+  width: 100%;
+}
+
+.helpdesk-add-user form {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.helpdesk-add-user-input {
+  flex: 1 1 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-gray-300);
+  font-size: var(--font-size-base);
+}
+
+.helpdesk-add-user-btn {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 @media (max-width: 900px) {

@@ -87,9 +87,11 @@ export class AuthService {
 
   async forgotPassword(email: string): Promise<void> {
     const dto = { email };
-    await lastValueFrom(
+    let res = await lastValueFrom(
       this.http.post<void>(`${this.apiUrl}/api/Auth/forgot-password`, dto)
     );
+    console.log(res);
+    
   }
 
   logout() {

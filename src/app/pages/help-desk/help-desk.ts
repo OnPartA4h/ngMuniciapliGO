@@ -10,14 +10,14 @@ import { UserService } from '../../services/user-service';
 import { User } from '../../models/user';
 import { PhoneNumberPipe } from '../../pipes/phone-number-pipe';
 import { PhoneCall } from '../../models/phoneCall';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { DurationPipe } from '../../pipes/duration.pipe';
 import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-help-desk',
   standalone: true,
-  imports: [PageHeaderComponent, ReportListComponent, FormsModule, PhoneNumberPipe, DatePipe, DurationPipe, RouterLink],
+  imports: [PageHeaderComponent, ReportListComponent, FormsModule, PhoneNumberPipe, DatePipe, DurationPipe, RouterLink, CommonModule],
   templateUrl: './help-desk.html',
   styleUrl: './help-desk.css',
 })
@@ -35,6 +35,7 @@ export class HelpDesk implements OnInit{
 
   currentSearch: string | null = null;
   loading = true;
+  userSearch: string = '';
 
   async ngOnInit() {
     this.loading = true
@@ -72,7 +73,20 @@ export class HelpDesk implements OnInit{
   }
 
   async endCall() {
-    this.supportService.endCall(this.phoneCall()!.id)
+    await this.supportService.endCall(this.phoneCall()!.id)
+    this.phoneCall.set(null)
+  }
+
+  async addUserToCall() {
+    try {
+      let newCall = await this.supportService.addUserToCall(this.phoneCall()!.id, this.userSearch)
+      this.phoneCall.set(newCall)
+      this.client = this.phoneCall()!.client
+    } catch {
+      console.log('get me out of here');
+    }
+    
+    this.userSearch = '';
   }
 
   agent = {
