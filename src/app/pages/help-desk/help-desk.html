@@ -8,7 +8,9 @@
   <div class="helpdesk-layout">
     <!-- Colonne utilisateur -->
     <div class="helpdesk-user-panel">
-      <div class="helpdesk-user-card" [routerLink]="['/profile', client?.id]">
+      
+      <ng-container *ngIf="phoneCall(); else noCall">
+        <div class="helpdesk-user-card" [routerLink]="['/profile', client?.id]">
         <div class="helpdesk-user-avatar">
           <img [src]="client?.profilePictureUrl" alt="Avatar utilisateur" />
         </div>
@@ -21,20 +23,33 @@
           </div>
         </div>
       </div>
-      <div class="helpdesk-call-info">
-        <div class="helpdesk-call-header">
-          <i class="fas fa-headset"></i> Appel en cours
+      
+        <div class="helpdesk-call-info">
+          <div class="helpdesk-call-header">
+            <i class="fas fa-headset"></i> Appel en cours
+          </div>
+
+          <div class="helpdesk-call-details">
+            <span><b>Agent :</b> {{supportAgent?.firstName}} {{supportAgent?.lastName}}</span>
+            <span><b>Début :</b> {{phoneCall()?.createdAt | date:'HH:mm'}}</span>
+            <span><b>Durée :</b> {{phoneCall()!.createdAt | duration}}</span>
+            <span><b>Statut :</b> En cours</span>
+          </div>
+
+          <button
+            class="btn btn-danger helpdesk-end-call-btn"
+            (click)="endCall()">
+            <i class="fas fa-phone-slash"></i> Terminer l'appel
+          </button>
         </div>
-        <div class="helpdesk-call-details">
-          <span><b>Agent :</b> {{supportAgent?.firstName}} {{supportAgent?.lastName}}</span>
-          <span><b>Début :</b> {{phoneCall()?.createdAt | date:'HH:mm'}}</span>
-          <span><b>Durée :</b> {{phoneCall()!.createdAt | duration}}</span>
-          <span><b>Statut :</b> En cours</span>
+      </ng-container>
+      <ng-template #noCall>
+        <div class="helpdesk-call-info--empty">
+          <i class="fas fa-phone-slash"></i>
+          <span>Aucun appel en cours</span>
+          <small>En attente d’un appel utilisateur</small>
         </div>
-        <button class="btn btn-danger helpdesk-end-call-btn" (click)="endCall()">
-          <i class="fas fa-phone-slash"></i> Terminer l'appel
-        </button>
-      </div>
+      </ng-template>
     </div>
 
     <!-- Colonne problèmes -->

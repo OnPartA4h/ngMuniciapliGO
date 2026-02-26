@@ -10,14 +10,14 @@ import { UserService } from '../../services/user-service';
 import { User } from '../../models/user';
 import { PhoneNumberPipe } from '../../pipes/phone-number-pipe';
 import { PhoneCall } from '../../models/phoneCall';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { DurationPipe } from '../../pipes/duration.pipe';
 import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-help-desk',
   standalone: true,
-  imports: [PageHeaderComponent, ReportListComponent, FormsModule, PhoneNumberPipe, DatePipe, DurationPipe, RouterLink],
+  imports: [PageHeaderComponent, ReportListComponent, FormsModule, PhoneNumberPipe, DatePipe, DurationPipe, RouterLink, CommonModule],
   templateUrl: './help-desk.html',
   styleUrl: './help-desk.css',
 })
@@ -72,7 +72,8 @@ export class HelpDesk implements OnInit{
   }
 
   async endCall() {
-    this.supportService.endCall(this.phoneCall()!.id)
+    await this.supportService.endCall(this.phoneCall()!.id)
+    this.phoneCall.set(null)
   }
 
   agent = {
