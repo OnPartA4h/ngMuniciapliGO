@@ -197,7 +197,11 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       }),
 
       this.chatHub.memberAdded$.subscribe(event => {
-        if (event.chatId === this.chatId) this.loadChat();
+        if (event.chatId === this.chatId) {
+          // Recharger les membres ET les messages (le serveur génère un message système)
+          this.loadChat();
+          this.reloadLatestMessages();
+        }
       }),
 
       this.chatHub.memberRemoved$.subscribe(event => {
@@ -205,7 +209,9 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
           if (event.userId === this.currentUserId()) {
             this.router.navigate(['/chats']);
           } else {
+            // Recharger les membres ET les messages (le serveur génère un message système)
             this.loadChat();
+            this.reloadLatestMessages();
           }
         }
       }),
@@ -213,6 +219,8 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       this.chatHub.groupRenamed$.subscribe(event => {
         if (event.chatId === this.chatId) {
           this.chat.update(c => c ? { ...c, name: event.newName } : c);
+          // Le renommage génère aussi un message système
+          this.reloadLatestMessages();
         }
       }),
 
@@ -291,6 +299,29 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       console.error('Error loading older messages:', error);
     } finally {
       this.isLoadingMore.set(false);
+    }
+  }
+
+  /**
+   * Recharge les messages les plus récents et fusionne les nouveaux sans
+   * perdre ceux déjà affichés. Utilisé quand un événement SignalR de groupe
+   * (membre ajouté/retiré, renommage) génère un message système côté serveur
+   * qui n'arriverait pas forcément via newMessage$.
+   */
+  private async reloadLatestMessages(): Promise<void> {
+    try {
+      const fresh = await this.messageService.getMessages(this.chatId);
+      const freshReversed = fresh.reverse();
+      const existingIds = new Set(this.messages().map(m => m.id));
+      const newOnes = freshReversed.filter(m => !existingIds.has(m.id));
+      if (newOnes.length > 0) {
+        this.messages.update(list => [...list, ...newOnes]);
+        this.shouldScrollToBottom = true;
+        const last = newOnes[newOnes.length - 1];
+        this.messageService.markAsRead(this.chatId, last.id).catch(() => {});
+      }
+    } catch (error) {
+      console.error('Error reloading latest messages:', error);
     }
   }
 
