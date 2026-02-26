@@ -1,0 +1,25 @@
+@if (incomingCall(); as call) {
+  <div class="incoming-call-overlay">
+    <div class="incoming-call-card">
+      <div class="call-icon-wrapper" [class.video]="call.isVideo">
+        <i class="fas" [class.fa-video]="call.isVideo" [class.fa-phone]="!call.isVideo"></i>
+      </div>
+
+      <div class="call-info">
+        <span class="caller-name">{{ call.callerName }}</span>
+        <span class="call-type">
+          {{ (call.isVideo ? 'CALL.INCOMING_VIDEO' : 'CALL.INCOMING_AUDIO') | translate }}
+        </span>
+      </div>
+
+      <div class="call-actions">
+        <button class="call-btn reject" (click)="reject()" [title]="'CALL.REJECT' | translate">
+          <i class="fas fa-phone-slash"></i>
+        </button>
+        <button class="call-btn accept" (click)="accept()" [title]="'CALL.ACCEPT' | translate">
+          <i class="fas" [class.fa-video]="call.isVideo" [class.fa-phone]="!call.isVideo"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+}
