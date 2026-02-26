@@ -8,12 +8,13 @@ import { Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ChatService } from '../../services/chat-service';
 import { MessageService } from '../../services/message-service';
+import { VideoCallService } from '../../services/video-call.service';
 import { ChatHubService } from '../../services/chat-hub.service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import {
   ChatDto, ChatType, ChatMemberDto, ChatMemberRole,
-  ChatMessageDto, UserSearchResultDto
+  ChatMessageDto, UserSearchResultDto, ReplyToDto
 } from '../../models/chat';
 import { RoleOption } from '../../models/user';
 import { LoadingSpinnerComponent } from '../../components/ui';
@@ -30,6 +31,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   private router = inject(Router);
   private chatService = inject(ChatService);
   private messageService = inject(MessageService);
+  private videoCallService = inject(VideoCallService);
   readonly chatHub = inject(ChatHubService);
   private generalService = inject(GeneralService);
   private languageService = inject(LanguageService);
@@ -37,6 +39,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   private subs: Subscription[] = [];
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   readonly ChatType = ChatType;
   readonly ChatMemberRole = ChatMemberRole;
@@ -55,6 +58,29 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   isSending = signal(false);
   editingMessageId = signal<string | null>(null);
   editingContent = signal('');
+
+  // ── Reply-to ──────────────────────────────────────────────────────────────
+  replyingTo = signal<ChatMessageDto | null>(null);
+
+  // ── Pièces jointes ────────────────────────────────────────────────────────
+  selectedFile = signal<File | null>(null);
+  filePreviewUrl = signal<string | null>(null);
+  isUploading = signal(false);
+
+  // ── Message vocal ─────────────────────────────────────────────────────────
+  isRecording = signal(false);
+  recordingDuration = signal(0);
+  private mediaRecorder: MediaRecorder | null = null;
+  private recordedChunks: Blob[] = [];
+  private recordingInterval: ReturnType<typeof setInterval> | null = null;
+
+  // ── Recherche dans le chat ────────────────────────────────────────────────
+  showSearch = signal(false);
+  searchQuery = signal('');
+  searchResults = signal<ChatMessageDto[]>([]);
+  isSearching = signal(false);
+  private searchTimer: ReturnType<typeof setTimeout> | null = null;
+  highlightedMessageId = signal<string | null>(null);
 
   // ── Panneau info / membres ────────────────────────────────────────────────
   showInfoPanel = signal(false);
@@ -208,7 +234,11 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   async ngOnDestroy(): Promise<void> {
     this.subs.forEach(s => s.unsubscribe());
     if (this.memberSearchTimer) clearTimeout(this.memberSearchTimer);
+    if (this.searchTimer) clearTimeout(this.searchTimer);
     if (this.typingTimer) clearTimeout(this.typingTimer);
+    if (this.recordingInterval) clearInterval(this.recordingInterval);
+    this.stopRecording(true);
+    this.clearFileSelection();
     if (this.chatId) {
       await this.chatHub.leaveChat(this.chatId);
     }
@@ -276,6 +306,14 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   // ── Envoi de message ──────────────────────────────────────────────────────
 
   async sendMessage(): Promise<void> {
+    const file = this.selectedFile();
+
+    // Si un fichier est sélectionné, on l'envoie via upload
+    if (file) {
+      await this.sendFileMessage();
+      return;
+    }
+
     const content = this.newMessage().trim();
     if (!content || this.isSending()) return;
 
@@ -283,17 +321,225 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       this.isSending.set(true);
       this.newMessage.set('');
       this.stopTyping();
-      await this.messageService.sendMessage(this.chatId, { content });
-      // ⚠ Ne PAS ajouter le message localement :
-      // SignalR le renvoie via « NewMessage » et le handler l'ajoute automatiquement.
+
+      const replyTo = this.replyingTo();
+      await this.messageService.sendMessage(this.chatId, {
+        content,
+        replyToMessageId: replyTo?.id,
+      });
+      this.replyingTo.set(null);
       this.shouldScrollToBottom = true;
     } catch (error) {
       console.error('Error sending message:', error);
-      // Remettre le contenu pour que l'utilisateur puisse réessayer
-      this.newMessage.set(content);
+      this.newMessage.set(this.newMessage() || content);
     } finally {
       this.isSending.set(false);
     }
+  }
+
+  // ── Pièces jointes / Upload ───────────────────────────────────────────────
+
+  triggerFileInput(): void {
+    this.fileInput?.nativeElement?.click();
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.selectedFile.set(file);
+
+    // Générer un aperçu pour les images
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => this.filePreviewUrl.set(e.target?.result as string);
+      reader.readAsDataURL(file);
+    } else {
+      this.filePreviewUrl.set(null);
+    }
+  }
+
+  clearFileSelection(): void {
+    this.selectedFile.set(null);
+    this.filePreviewUrl.set(null);
+    if (this.fileInput?.nativeElement) {
+      this.fileInput.nativeElement.value = '';
+    }
+  }
+
+  private async sendFileMessage(): Promise<void> {
+    const file = this.selectedFile();
+    if (!file || this.isUploading()) return;
+
+    try {
+      this.isUploading.set(true);
+      this.isSending.set(true);
+      const caption = this.newMessage().trim() || undefined;
+      await this.messageService.sendFileMessage(this.chatId, file, caption);
+      this.clearFileSelection();
+      this.newMessage.set('');
+      this.replyingTo.set(null);
+      this.shouldScrollToBottom = true;
+    } catch (error) {
+      console.error('Error sending file message:', error);
+    } finally {
+      this.isUploading.set(false);
+      this.isSending.set(false);
+    }
+  }
+
+  // ── Reply-to ──────────────────────────────────────────────────────────────
+
+  startReply(msg: ChatMessageDto): void {
+    this.replyingTo.set(msg);
+  }
+
+  cancelReply(): void {
+    this.replyingTo.set(null);
+  }
+
+  getReplyPreviewContent(msg: ChatMessageDto): string {
+    if (msg.isVoiceMessage) return this.translate.instant('CHAT_DETAIL.VOICE_MESSAGE');
+    if (msg.attachmentUrl) return this.translate.instant('CHAT_DETAIL.ATTACHMENT');
+    return msg.content?.length > 80 ? msg.content.substring(0, 80) + '…' : msg.content;
+  }
+
+  // ── Message vocal ─────────────────────────────────────────────────────────
+
+  async startRecording(): Promise<void> {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+      this.recordedChunks = [];
+
+      this.mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          this.recordedChunks.push(e.data);
+        }
+      };
+
+      this.mediaRecorder.onstop = () => {
+        stream.getTracks().forEach(t => t.stop());
+      };
+
+      this.mediaRecorder.start(100); // Collect data every 100ms
+      this.isRecording.set(true);
+      this.recordingDuration.set(0);
+
+      this.recordingInterval = setInterval(() => {
+        this.recordingDuration.update(d => d + 1);
+      }, 1000);
+    } catch (error) {
+      console.error('Error starting recording:', error);
+    }
+  }
+
+  async stopRecording(discard = false): Promise<void> {
+    if (!this.mediaRecorder || this.mediaRecorder.state === 'inactive') return;
+
+    if (this.recordingInterval) {
+      clearInterval(this.recordingInterval);
+      this.recordingInterval = null;
+    }
+
+    return new Promise<void>((resolve) => {
+      if (!this.mediaRecorder) { resolve(); return; }
+
+      this.mediaRecorder.onstop = async () => {
+        this.mediaRecorder!.stream.getTracks().forEach(t => t.stop());
+        this.isRecording.set(false);
+
+        if (!discard && this.recordedChunks.length > 0) {
+          const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
+          const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
+          try {
+            this.isSending.set(true);
+            await this.messageService.sendFileMessage(this.chatId, file);
+            this.shouldScrollToBottom = true;
+          } catch (error) {
+            console.error('Error sending voice message:', error);
+          } finally {
+            this.isSending.set(false);
+          }
+        }
+
+        this.recordedChunks = [];
+        this.recordingDuration.set(0);
+        resolve();
+      };
+
+      this.mediaRecorder.stop();
+    });
+  }
+
+  cancelRecording(): void {
+    this.stopRecording(true);
+  }
+
+  formatRecordingDuration(): string {
+    const d = this.recordingDuration();
+    const min = Math.floor(d / 60);
+    const sec = d % 60;
+    return `${min}:${sec.toString().padStart(2, '0')}`;
+  }
+
+  // ── Recherche dans le chat ────────────────────────────────────────────────
+
+  toggleSearch(): void {
+    this.showSearch.update(v => !v);
+    if (!this.showSearch()) {
+      this.searchQuery.set('');
+      this.searchResults.set([]);
+      this.highlightedMessageId.set(null);
+    }
+  }
+
+  onSearchInput(query: string): void {
+    this.searchQuery.set(query);
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+    if (!query.trim()) {
+      this.searchResults.set([]);
+      this.highlightedMessageId.set(null);
+      return;
+    }
+    this.searchTimer = setTimeout(() => this.performSearch(query), 400);
+  }
+
+  private async performSearch(query: string): Promise<void> {
+    try {
+      this.isSearching.set(true);
+      const results = await this.messageService.searchMessages(this.chatId, query);
+      this.searchResults.set(results);
+    } catch (error) {
+      console.error('Error searching messages:', error);
+    } finally {
+      this.isSearching.set(false);
+    }
+  }
+
+  scrollToMessage(msgId: string): void {
+    this.highlightedMessageId.set(msgId);
+    const el = document.getElementById('msg-' + msgId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Remove highlight after 2 seconds
+      setTimeout(() => this.highlightedMessageId.set(null), 2500);
+    }
+  }
+
+  // ── Appels audio/vidéo ────────────────────────────────────────────────────
+
+  startCall(isVideo: boolean): void {
+    const params = new URLSearchParams({
+      chatId: this.chatId,
+      isVideo: String(isVideo),
+    });
+    window.open(
+      `/call?${params.toString()}`,
+      '_blank',
+      'width=900,height=700,menubar=no,toolbar=no'
+    );
   }
 
   // ── Édition de message ────────────────────────────────────────────────────
@@ -330,7 +576,6 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
 
     try {
       await this.messageService.deleteMessage(this.chatId, msg.id);
-      // SignalR enverra MessageDeleted, mais on met à jour immédiatement pour le feedback
       this.messages.update(list =>
         list.map(m => m.id === msg.id ? { ...m, isDeleted: true, content: '' } : m)
       );
@@ -391,7 +636,6 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
     this.memberSearchResults.set([]);
   }
 
-  // Rename
   startRenaming(): void {
     this.renameValue.set(this.chat()?.name ?? '');
     this.isRenaming.set(true);
@@ -413,7 +657,6 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  // Add member search
   onMemberSearchInput(query: string): void {
     this.memberSearchQuery.set(query);
     if (this.memberSearchTimer) clearTimeout(this.memberSearchTimer);
@@ -511,6 +754,29 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
 
   getTimeString(iso: string): string {
     return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  getVoiceDurationLabel(seconds: number | null): string {
+    if (!seconds) return '0:00';
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    return `${min}:${sec.toString().padStart(2, '0')}`;
+  }
+
+  getAttachmentIcon(type: string | null): string {
+    if (!type) return 'fas fa-file';
+    if (type.startsWith('image/')) return 'fas fa-image';
+    if (type.startsWith('audio/')) return 'fas fa-microphone';
+    if (type.startsWith('video/')) return 'fas fa-video';
+    if (type.includes('pdf')) return 'fas fa-file-pdf';
+    if (type.includes('word') || type.includes('document')) return 'fas fa-file-word';
+    if (type.includes('sheet') || type.includes('excel')) return 'fas fa-file-excel';
+    return 'fas fa-file';
+  }
+
+  getFileName(url: string | null): string {
+    if (!url) return '';
+    return url.split('/').pop()?.split('?')[0] ?? 'file';
   }
 
   getRoleLabel(roleKey: string): string {
