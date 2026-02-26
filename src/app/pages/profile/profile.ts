@@ -113,6 +113,10 @@ export class Profile implements OnInit {
     }
   }
 
+  async sendResetPasswordEmail() {
+    await this.authService.forgotPassword(this.profile()!.email)
+  }
+
   async loadRoles() {
     try {
       const lang = this.languageService.getCurrentLanguage();

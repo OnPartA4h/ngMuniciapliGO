@@ -152,7 +152,8 @@
           <app-profile-password-form [isSaving]="isSavingPassword()"
             [successMessage]="passwordSuccessMessage()"
             [errorMessage]="passwordErrorMessage()"
-            (formSubmit)="onSavePassword($event)" />
+            (formSubmit)="onSavePassword($event)"
+            (forgotPassword)="sendResetPasswordEmail()" />
         </div>
       </div>
     </div>

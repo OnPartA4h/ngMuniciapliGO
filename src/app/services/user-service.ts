@@ -50,6 +50,8 @@ export class UserService {
     const response = await lastValueFrom(
       this.http.post<{ message: string }>(`${this.apiUrl}/api/User/request-email-change`, dto)
     );
+    console.log(response);
+    
     return response;
   }
 
@@ -57,6 +59,8 @@ export class UserService {
     const response = await lastValueFrom(
       this.http.post<{ message: string }>(`${this.apiUrl}/api/User/verify-email-change`, dto)
     );
+    console.log(response);
+    
     return response;
   }
 
