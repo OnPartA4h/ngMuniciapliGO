@@ -36,10 +36,15 @@ export class App implements OnInit, OnDestroy {
       }
     }
 
+    // Check the initial URL immediately (before first NavigationEnd fires)
+    const initialUrl = this.router.url.split('?')[0];
+    this.showHeaderFooter = !this.hiddenRoutes.some(r => initialUrl.startsWith(r));
+
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        this.showHeaderFooter = !this.hiddenRoutes.includes(event.urlAfterRedirects);
+        const url = event.urlAfterRedirects.split('?')[0]; // strip query params
+        this.showHeaderFooter = !this.hiddenRoutes.some(r => url.startsWith(r));
       });
   }
 

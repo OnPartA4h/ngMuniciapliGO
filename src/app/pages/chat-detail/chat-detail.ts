@@ -1,6 +1,6 @@
 import {
   Component, OnInit, OnDestroy, AfterViewChecked,
-  inject, signal, computed, ViewChild, ElementRef
+  inject, signal, computed, ViewChild, ElementRef, ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -37,6 +37,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   private generalService = inject(GeneralService);
   private languageService = inject(LanguageService);
   private translate = inject(TranslateService);
+  private cdr = inject(ChangeDetectorRef);
   private subs: Subscription[] = [];
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef<HTMLDivElement>;
@@ -247,8 +248,9 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
 
   ngAfterViewChecked(): void {
     if (this.shouldScrollToBottom) {
-      this.scrollToBottom();
       this.shouldScrollToBottom = false;
+      // Use setTimeout(0) to ensure the browser has painted the DOM before scrolling
+      setTimeout(() => this.scrollToBottom(), 0);
     }
   }
 
@@ -295,6 +297,11 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       console.error('Error loading messages:', error);
     } finally {
       this.isLoading.set(false);
+      // Force multiple scroll attempts after the view has fully re-rendered with messages visible.
+      // Some browsers/frameworks need extra frames before scrollHeight is accurate.
+      setTimeout(() => this.scrollToBottom(), 50);
+      setTimeout(() => this.scrollToBottom(), 200);
+      setTimeout(() => this.scrollToBottom(), 500);
     }
   }
 
@@ -887,7 +894,13 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
     try {
       if (this.messagesContainer) {
         const el = this.messagesContainer.nativeElement;
+        // Disable smooth scrolling temporarily for instant jump
+        el.style.scrollBehavior = 'auto';
         el.scrollTop = el.scrollHeight;
+        // Re-enable smooth scrolling after the jump
+        requestAnimationFrame(() => {
+          el.style.scrollBehavior = '';
+        });
       }
     } catch (_) {}
   }

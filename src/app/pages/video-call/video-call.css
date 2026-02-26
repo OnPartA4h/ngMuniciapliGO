@@ -295,6 +295,8 @@
 .call-info-bar {
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 12px;
   padding: 8px;
 }
 
@@ -303,6 +305,47 @@
   font-weight: 600;
   opacity: 0.8;
   font-variant-numeric: tabular-nums;
+}
+
+.call-connected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4caf50;
+}
+
+.connected-dot {
+  font-size: 8px;
+  color: #4caf50;
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.call-waiting {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.waiting-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* ── Controls ─────────────────────────────────────────────────────────────── */

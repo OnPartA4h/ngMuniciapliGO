@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -55,6 +55,10 @@ export class Chats implements OnInit, OnDestroy {
   typingByChatId = signal<Map<string, Set<string>>>(new Map());
   private typingTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
+  // ── Online presence (reactive copy of the hub's set) ──────────────────
+  /** Local reactive copy of online users, so the template re-renders when presence changes. */
+  onlineUsersSnapshot = signal<Set<string>>(new Set());
+
   // ── Computed ──────────────────────────────────────────────────────────────
   filteredChats = computed(() => {
     const all = this.chats();
@@ -67,6 +71,14 @@ export class Chats implements OnInit, OnDestroy {
   totalUnread = computed(() =>
     this.chats().reduce((sum, c) => sum + c.unreadCount, 0)
   );
+
+  constructor() {
+    // Sync the local snapshot whenever the hub's onlineUsers signal changes.
+    // Using an effect ensures the template picks up changes automatically.
+    effect(() => {
+      this.onlineUsersSnapshot.set(this.chatHubService.onlineUsers());
+    });
+  }
 
   async ngOnInit(): Promise<void> {
     await Promise.all([this.loadChats(), this.loadRoles()]);
@@ -152,7 +164,7 @@ export class Chats implements OnInit, OnDestroy {
 
   isUserOnline(userId: string | null): boolean {
     if (!userId) return false;
-    return this.chatHubService.isUserOnline(userId);
+    return this.onlineUsersSnapshot().has(userId);
   }
 
   // ── Chargement ────────────────────────────────────────────────────────────

@@ -120,9 +120,8 @@ export class ChatHubService {
         console.log('Reconnected to chat hub');
         this.isConnected.set(true);
         this.reconnectAttempts = 0;
+        // The server automatically sends ChatOnlineUsers snapshots on reconnect
       });
-      // Re-fetch the online users list after reconnect so both sides stay in sync
-      await this.fetchOnlineUsers();
     });
 
     this.hubConnection.onclose(() => {
@@ -140,9 +139,8 @@ export class ChatHubService {
         console.log('Connected to chat hub');
         this.isConnected.set(true);
         this.reconnectAttempts = 0;
+        // The server automatically sends ChatOnlineUsers snapshots on connect
       });
-      // Fetch the initial list of online users from the server
-      await this.fetchOnlineUsers();
     } catch (err) {
       this.ngZone.run(() => {
         console.error('Error connecting to chat hub:', err);
@@ -251,6 +249,16 @@ export class ChatHubService {
         this.userOffline$.next(event);
       }));
 
+    // ── Presence snapshot sent by the server on connect/reconnect/joinChat ──
+    this.hubConnection.on('ChatOnlineUsers', (event: { chatId: string; userIds: string[] }) =>
+      this.ngZone.run(() => {
+        this.onlineUsers.update(set => {
+          const s = new Set(set);
+          event.userIds.forEach(id => s.add(id));
+          return s;
+        });
+      }));
+
     // ── Call handlers ────────────────────────────────────────────────────
     this.hubConnection.on('IncomingCall', (event: IncomingCallEvent) =>
       this.ngZone.run(() => this.incomingCall$.next(event)));
@@ -271,26 +279,6 @@ export class ChatHubService {
       await this.hubConnection!.invoke(method, ...args);
     } catch (err) {
       console.error(`ChatHub: error invoking '${method}':`, err);
-    }
-  }
-
-  /**
-   * Ask the server for the full list of currently-online user IDs.
-   * The hub should expose a 'GetOnlineUsers' method that returns string[].
-   * If it doesn't exist yet, we silently ignore the error so the app
-   * keeps working with the event-based approach as a fallback.
-   */
-  private async fetchOnlineUsers(): Promise<void> {
-    if (!this.isConnectionActive()) return;
-    try {
-      const userIds: string[] = await this.hubConnection!.invoke('GetOnlineUsers');
-      this.ngZone.run(() => {
-        this.onlineUsers.set(new Set(userIds));
-      });
-      console.log('Fetched online users:', userIds.length);
-    } catch (err) {
-      // The server might not have this method yet – that's OK
-      console.warn('ChatHub: GetOnlineUsers not available, relying on events only.', err);
     }
   }
 

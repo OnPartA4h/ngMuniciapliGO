@@ -58,10 +58,11 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
     this.stopRingtone();
     this.clearAutoRejectTimer();
 
-    // Open video call window
+    // Open video call window — mark joining=true so the timer starts right away
     const params = new URLSearchParams({
       chatId: call.chatId,
       isVideo: String(call.isVideo),
+      joining: 'true',
     });
     window.open(
       `/call?${params.toString()}`,
@@ -98,6 +99,10 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
     }
   }
 
+  private _audioCtx: AudioContext | null = null;
+  private _osc: OscillatorNode | null = null;
+  private _ringtoneTimeout: ReturnType<typeof setTimeout> | null = null;
+
   private playRingtone(): void {
     // Use system audio API for a simple ringtone effect
     try {
@@ -111,21 +116,29 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start();
-      // Stop after 30 seconds max
-      setTimeout(() => {
-        try { osc.stop(); ctx.close(); } catch { /* ignore */ }
-      }, 30000);
-      (this as any)._audioCtx = ctx;
-      (this as any)._osc = osc;
+      this._audioCtx = ctx;
+      this._osc = osc;
+      // Safety: stop after 30 seconds max
+      this._ringtoneTimeout = setTimeout(() => this.stopRingtone(), 30000);
     } catch { /* silently fail */ }
   }
 
   private stopRingtone(): void {
+    if (this._ringtoneTimeout) {
+      clearTimeout(this._ringtoneTimeout);
+      this._ringtoneTimeout = null;
+    }
     try {
-      (this as any)?._osc?.stop();
-      (this as any)?._audioCtx?.close();
-      (this as any)._osc = null;
-      (this as any)._audioCtx = null;
-    } catch { /* silently fail */ }
+      if (this._osc) {
+        this._osc.stop();
+        this._osc = null;
+      }
+    } catch { /* ignore - oscillator may already be stopped */ }
+    try {
+      if (this._audioCtx && this._audioCtx.state !== 'closed') {
+        this._audioCtx.close();
+      }
+      this._audioCtx = null;
+    } catch { /* ignore - context may already be closed */ }
   }
 }

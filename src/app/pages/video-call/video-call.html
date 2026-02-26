@@ -90,7 +90,18 @@
 
     <!-- Call info bar -->
     <div class="call-info-bar">
-      <span class="call-duration">{{ formatDuration(callDuration()) }}</span>
+      @if (remoteJoined()) {
+        <span class="call-connected-badge">
+          <i class="fas fa-circle connected-dot"></i>
+          {{ 'CALL.CONNECTED' | translate }}
+        </span>
+        <span class="call-duration">{{ formatDuration(callDuration()) }}</span>
+      } @else {
+        <span class="call-waiting">
+          <div class="waiting-spinner"></div>
+          {{ 'CALL.CONNECTING' | translate }}
+        </span>
+      }
     </div>
 
     <!-- Controls -->

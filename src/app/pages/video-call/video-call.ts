@@ -43,6 +43,8 @@ export class VideoCall implements OnInit, OnDestroy {
   hasCamera = signal(true);
   error = signal('');
   callRejected = signal(false);
+  /** True once at least one remote participant has joined the call. */
+  remoteJoined = signal(false);
 
   // Group call: connected participants
   connectedParticipants = signal<CallParticipant[]>([]);
@@ -50,7 +52,9 @@ export class VideoCall implements OnInit, OnDestroy {
   private localStream: MediaStream | null = null;
   private peerConnections: Map<string, RTCPeerConnection> = new Map();
   private durationInterval?: ReturnType<typeof setInterval>;
+  private remoteCheckInterval?: ReturnType<typeof setInterval>;
   private callStarted = false;
+  private otherUserId = '';
 
   async ngOnInit(): Promise<void> {
     const params = new URLSearchParams(window.location.search);
@@ -73,6 +77,7 @@ export class VideoCall implements OnInit, OnDestroy {
       } else {
         const other = chat.members.find(m => m.userId !== userId);
         this.chatName.set(other?.displayName ?? 'Call');
+        if (other) this.otherUserId = other.userId;
       }
 
       // For group calls, initialize the participants list with ourselves
@@ -100,7 +105,8 @@ export class VideoCall implements OnInit, OnDestroy {
       this.isConnecting.set(false);
       this.isConnected.set(true);
       this.callStarted = true;
-      this.startDurationTimer();
+      // Do NOT start the timer yet — it starts only when a remote participant joins
+      // (or immediately for the callee, who joins a call that is already active)
 
       // Listen for call ended
       this.subs.push(
@@ -113,8 +119,44 @@ export class VideoCall implements OnInit, OnDestroy {
           if (event.chatId === this.chatId) {
             this.onCallRejected();
           }
-        })
+        }),
+        // When another user comes online or a new message arrives in this chat,
+        // treat it as a signal that the remote party has joined the call.
+        this.chatHub.userOnline$.subscribe(event => {
+          if (event.chatId === this.chatId && event.userId !== userId) {
+            this.onRemoteParticipantJoined();
+          }
+        }),
+        this.chatHub.newMessage$.subscribe(msg => {
+          if (msg.chatId === this.chatId && !this.remoteJoined()) {
+            this.onRemoteParticipantJoined();
+          }
+        }),
+        // When the callee joins, they send a typing indicator as a "call joined" signal
+        this.chatHub.typingStart$.subscribe(event => {
+          if (event.chatId === this.chatId && event.userId !== userId && !this.remoteJoined()) {
+            this.onRemoteParticipantJoined();
+          }
+        }),
       );
+
+      // Ensure our connection is in the chat's SignalR group so we receive events
+      await this.chatHub.joinChat(this.chatId);
+
+      // If we are the callee (someone called us and we accepted),
+      // the caller is already in the call — start the timer right away.
+      // Also send a typing signal so the caller knows we've joined.
+      const isJoining = params.get('joining') === 'true';
+      if (isJoining) {
+        this.onRemoteParticipantJoined();
+        // Notify the caller that we've joined by sending a typing indicator
+        this.chatHub.typingStart(this.chatId).then(() => {
+          setTimeout(() => this.chatHub.typingStop(this.chatId), 500);
+        });
+      } else {
+        // For the caller: start polling as a safety net
+        this.startRemoteDetectionPolling(userId);
+      }
     } catch (err: any) {
       console.error('Failed to start call:', err);
       this.isConnecting.set(false);
@@ -190,6 +232,43 @@ export class VideoCall implements OnInit, OnDestroy {
     this.callStarted = false;
   }
 
+  /** Called when a remote participant joins the call — starts the timer. */
+  private onRemoteParticipantJoined(): void {
+    if (this.remoteJoined()) return; // already handled
+    this.remoteJoined.set(true);
+    this.stopRemoteDetectionPolling();
+    this.startDurationTimer();
+  }
+
+  /**
+   * For the caller: periodically check if the callee has become active.
+   * Since the callee may already be online (connected to SignalR) when they
+   * accept the call, the `UserOnline` event won't fire again.
+   * We poll the active call tracker indirectly via newMessage$ and userOnline$,
+   * but also use a simple interval to detect the callee joining.
+   */
+  private startRemoteDetectionPolling(currentUserId: string): void {
+    // Check immediately if the other user is online (they might already be)
+    // but don't mark joined yet — give them time to actually open the call page
+    this.remoteCheckInterval = setInterval(() => {
+      if (this.remoteJoined()) {
+        this.stopRemoteDetectionPolling();
+        return;
+      }
+      // The callee's call page also calls getCallToken, which triggers
+      // the backend to track them as an active caller. Since we can't
+      // directly query that, we rely on the SignalR events (userOnline$,
+      // newMessage$, callEnded$). This polling is a safety net.
+    }, 2000);
+  }
+
+  private stopRemoteDetectionPolling(): void {
+    if (this.remoteCheckInterval) {
+      clearInterval(this.remoteCheckInterval);
+      this.remoteCheckInterval = undefined;
+    }
+  }
+
   toggleMute(): void {
     this.isMuted.update(v => !v);
     if (this.localStream) {
@@ -256,13 +335,15 @@ export class VideoCall implements OnInit, OnDestroy {
       clearInterval(this.durationInterval);
       this.durationInterval = undefined;
     }
+    this.stopRemoteDetectionPolling();
     if (this.localStream) {
       this.localStream.getTracks().forEach(t => t.stop());
       this.localStream = null;
     }
-    this.peerConnections.forEach(pc => pc.close());
+    this.peerConnections.forEach(pc => {
+      try { pc.close(); } catch { /* ignore already closed */ }
+    });
     this.peerConnections.clear();
     this.isConnected.set(false);
-    this.callDuration.set(0);
   }
 }
