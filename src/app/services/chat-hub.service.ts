@@ -2,7 +2,10 @@ import { Injectable, NgZone, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 import { environment } from '../../environments/environment';
-import { ChatDto, ChatMemberDto, ChatMessageDto } from '../models/chat';
+import {
+  ChatDto, ChatMemberDto, ChatMessageDto,
+  IncomingCallEvent, CallEndedEvent, CallRejectedEvent
+} from '../models/chat';
 
 export interface ReadReceiptEvent {
   chatId: string;
@@ -72,6 +75,11 @@ export class ChatHubService {
   readonly typingStop$        = new Subject<TypingEvent>();
   readonly userOnline$        = new Subject<UserPresenceEvent>();
   readonly userOffline$       = new Subject<UserPresenceEvent>();
+
+  // ── Call Subjects ──────────────────────────────────────────────────────
+  readonly incomingCall$      = new Subject<IncomingCallEvent>();
+  readonly callEnded$         = new Subject<CallEndedEvent>();
+  readonly callRejected$      = new Subject<CallRejectedEvent>();
 
   // ── Connexion ─────────────────────────────────────────────────────────────
 
@@ -225,6 +233,16 @@ export class ChatHubService {
 
     this.hubConnection.on('UserOffline', (event: UserPresenceEvent) =>
       this.ngZone.run(() => this.userOffline$.next(event)));
+
+    // ── Call handlers ────────────────────────────────────────────────────
+    this.hubConnection.on('IncomingCall', (event: IncomingCallEvent) =>
+      this.ngZone.run(() => this.incomingCall$.next(event)));
+
+    this.hubConnection.on('CallEnded', (event: CallEndedEvent) =>
+      this.ngZone.run(() => this.callEnded$.next(event)));
+
+    this.hubConnection.on('CallRejected', (event: CallRejectedEvent) =>
+      this.ngZone.run(() => this.callRejected$.next(event)));
   }
 
   private async invoke(method: string, ...args: any[]): Promise<void> {
