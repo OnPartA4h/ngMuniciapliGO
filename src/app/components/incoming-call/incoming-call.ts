@@ -18,13 +18,20 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
   private subs: Subscription[] = [];
 
   incomingCall = signal<IncomingCallEvent | null>(null);
-  private ringtoneAudio?: HTMLAudioElement;
+  private autoRejectTimer?: ReturnType<typeof setTimeout>;
 
   ngOnInit(): void {
     this.subs.push(
       this.chatHub.incomingCall$.subscribe(event => {
         this.incomingCall.set(event);
         this.playRingtone();
+        // Auto-reject after 30 seconds if no response (like real apps)
+        this.clearAutoRejectTimer();
+        this.autoRejectTimer = setTimeout(() => {
+          if (this.incomingCall()) {
+            this.reject();
+          }
+        }, 30000);
       }),
       this.chatHub.callEnded$.subscribe(event => {
         if (this.incomingCall()?.chatId === event.chatId) {
@@ -41,6 +48,7 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.forEach(s => s.unsubscribe());
+    this.clearAutoRejectTimer();
     this.stopRingtone();
   }
 
@@ -48,6 +56,7 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
     const call = this.incomingCall();
     if (!call) return;
     this.stopRingtone();
+    this.clearAutoRejectTimer();
 
     // Open video call window
     const params = new URLSearchParams({
@@ -66,6 +75,7 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
     const call = this.incomingCall();
     if (!call) return;
     this.stopRingtone();
+    this.clearAutoRejectTimer();
 
     try {
       await this.videoCallService.rejectCall(call.chatId);
@@ -77,12 +87,21 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
 
   private dismiss(): void {
     this.stopRingtone();
+    this.clearAutoRejectTimer();
     this.incomingCall.set(null);
+  }
+
+  private clearAutoRejectTimer(): void {
+    if (this.autoRejectTimer) {
+      clearTimeout(this.autoRejectTimer);
+      this.autoRejectTimer = undefined;
+    }
   }
 
   private playRingtone(): void {
     // Use system audio API for a simple ringtone effect
     try {
+      this.stopRingtone(); // Stop any existing ringtone first
       const ctx = new AudioContext();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -93,7 +112,9 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
       gain.connect(ctx.destination);
       osc.start();
       // Stop after 30 seconds max
-      setTimeout(() => { osc.stop(); ctx.close(); }, 30000);
+      setTimeout(() => {
+        try { osc.stop(); ctx.close(); } catch { /* ignore */ }
+      }, 30000);
       (this as any)._audioCtx = ctx;
       (this as any)._osc = osc;
     } catch { /* silently fail */ }
@@ -103,6 +124,8 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
     try {
       (this as any)?._osc?.stop();
       (this as any)?._audioCtx?.close();
+      (this as any)._osc = null;
+      (this as any)._audioCtx = null;
     } catch { /* silently fail */ }
   }
 }

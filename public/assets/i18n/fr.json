@@ -459,7 +459,9 @@
     "JUST_NOW": "À l'instant",
     "MINUTES_AGO": "Il y a {{count}} min",
     "HOURS_AGO": "Il y a {{count}} h",
-    "DAYS_AGO": "Il y a {{count}} j"
+    "DAYS_AGO": "Il y a {{count}} j",
+    "ONLINE": "En ligne",
+    "TYPING": "écrit…"
   },
   "CHAT_DETAIL": {
     "MEMBERS": "membres",
@@ -513,14 +515,23 @@
     "UNMUTE": "Activer le micro",
     "CAMERA_ON": "Activer la caméra",
     "CAMERA_OFF": "Couper la caméra",
-    "CALL_ERROR": "L'appel a échoué. Veuillez réessayer."
+    "CALL_ERROR": "L'appel a échoué. Veuillez réessayer.",
+    "ONLINE": "En ligne",
+    "OFFLINE": "Hors ligne",
+    "RECORDING_ERROR": "Impossible d'accéder au microphone. Vérifiez les permissions de votre appareil.",
+    "RECORDING_NO_DEVICE": "Aucun microphone trouvé. Veuillez connecter un microphone et réessayer.",
+    "RECORDING_PERMISSION_DENIED": "Accès au microphone refusé. Autorisez l'accès au microphone dans les paramètres de votre navigateur."
   },
   "CALL": {
     "INCOMING_AUDIO": "Appel audio entrant…",
     "INCOMING_VIDEO": "Appel vidéo entrant…",
     "ACCEPT": "Accepter",
     "REJECT": "Refuser",
+    "REJECTED": "L'appel a été refusé",
+    "CANCEL": "Annuler",
     "CONNECTING": "Connexion en cours…",
+    "CONNECTED": "connecté(s)",
+    "NO_CAMERA": "Aucune caméra disponible",
     "HANG_UP": "Raccrocher",
     "MUTE": "Couper le micro",
     "UNMUTE": "Activer le micro",

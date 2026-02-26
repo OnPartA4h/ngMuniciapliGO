@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LowerCasePipe } from '@angular/common';
 import { ChatService } from '../../services/chat-service';
 import { MessageService } from '../../services/message-service';
 import { VideoCallService } from '../../services/video-call.service';
@@ -22,7 +23,7 @@ import { LoadingSpinnerComponent } from '../../components/ui';
 @Component({
   selector: 'app-chat-detail',
   standalone: true,
-  imports: [FormsModule, TranslateModule, RouterLink, LoadingSpinnerComponent],
+  imports: [FormsModule, TranslateModule, RouterLink, LoadingSpinnerComponent, LowerCasePipe],
   templateUrl: './chat-detail.html',
   styleUrl: './chat-detail.css',
 })
@@ -130,6 +131,16 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
     return c.members.find(m => m.userId !== this.currentUserId()) ?? null;
   });
 
+  /** Is the other user in a direct chat online? */
+  isOtherOnline = computed(() => {
+    const other = this.otherMember();
+    if (!other) return false;
+    return this.chatHub.isUserOnline(other.userId);
+  });
+
+  // ── Error toast ───────────────────────────────────────────────────────
+  recordingError = signal<string | null>(null);
+
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 
   async ngOnInit(): Promise<void> {
@@ -187,6 +198,8 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
           this.typingUsers.update(list =>
             list.includes(event.userId) ? list : [...list, event.userId]
           );
+          // Scroll to bottom so the typing indicator is visible
+          this.shouldScrollToBottom = true;
         }
       }),
 
@@ -439,9 +452,33 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   // ── Message vocal ─────────────────────────────────────────────────────────
 
   async startRecording(): Promise<void> {
+    // Clear previous error
+    this.recordingError.set(null);
+
+    // First check if mediaDevices API is available (requires HTTPS or localhost)
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      this.recordingError.set(this.translate.instant('CHAT_DETAIL.RECORDING_ERROR'));
+      this.autoHideRecordingError();
+      return;
+    }
+
     try {
+      // Check for available audio input devices before requesting the stream
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const audioInputs = devices.filter(d => d.kind === 'audioinput');
+      if (audioInputs.length === 0) {
+        this.recordingError.set(this.translate.instant('CHAT_DETAIL.RECORDING_NO_DEVICE'));
+        this.autoHideRecordingError();
+        return;
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      this.mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+
+      // Determine best supported mimeType
+      const mimeType = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4']
+        .find(mt => MediaRecorder.isTypeSupported(mt)) ?? '';
+
+      this.mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
       this.recordedChunks = [];
 
       this.mediaRecorder.ondataavailable = (e) => {
@@ -454,16 +491,29 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
         stream.getTracks().forEach(t => t.stop());
       };
 
-      this.mediaRecorder.start(100); // Collect data every 100ms
+      this.mediaRecorder.start(100);
       this.isRecording.set(true);
       this.recordingDuration.set(0);
 
       this.recordingInterval = setInterval(() => {
         this.recordingDuration.update(d => d + 1);
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error starting recording:', error);
+
+      if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+        this.recordingError.set(this.translate.instant('CHAT_DETAIL.RECORDING_NO_DEVICE'));
+      } else if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+        this.recordingError.set(this.translate.instant('CHAT_DETAIL.RECORDING_PERMISSION_DENIED'));
+      } else {
+        this.recordingError.set(this.translate.instant('CHAT_DETAIL.RECORDING_ERROR'));
+      }
+      this.autoHideRecordingError();
     }
+  }
+
+  private autoHideRecordingError(): void {
+    setTimeout(() => this.recordingError.set(null), 6000);
   }
 
   async stopRecording(discard = false): Promise<void> {
@@ -818,6 +868,19 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   getMemberDisplayName(userId: string): string {
     const member = this.chat()?.members.find(m => m.userId === userId);
     return member?.displayName ?? '';
+  }
+
+  isMemberOnline(userId: string): boolean {
+    return this.chatHub.isUserOnline(userId);
+  }
+
+  /** Count of online members (excluding self) for group chats. */
+  onlineMemberCount(): number {
+    const c = this.chat();
+    if (!c) return 0;
+    return c.members.filter(
+      m => m.userId !== this.currentUserId() && this.chatHub.isUserOnline(m.userId)
+    ).length;
   }
 
   private scrollToBottom(): void {
