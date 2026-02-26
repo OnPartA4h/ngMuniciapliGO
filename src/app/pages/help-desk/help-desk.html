@@ -42,6 +42,14 @@
             <i class="fas fa-phone-slash"></i> Terminer l'appel
           </button>
         </div>
+        <div class="helpdesk-add-user">
+          <form (submit)="$event.preventDefault(); addUserToCall()">
+            <input type="text" placeholder="Ajouter un utilisateur à l'appel..." [(ngModel)]="userSearch" name="userSearch" class="helpdesk-add-user-input" />
+            <button type="submit" class="btn btn-primary helpdesk-add-user-btn">
+              <i class="fas fa-user-plus"></i> Ajouter à l'appel
+            </button>
+          </form>
+        </div>
       </ng-container>
       <ng-template #noCall>
         <div class="helpdesk-call-info--empty">

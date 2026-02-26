@@ -35,6 +35,7 @@ export class HelpDesk implements OnInit{
 
   currentSearch: string | null = null;
   loading = true;
+  userSearch: string = '';
 
   async ngOnInit() {
     this.loading = true
@@ -74,6 +75,18 @@ export class HelpDesk implements OnInit{
   async endCall() {
     await this.supportService.endCall(this.phoneCall()!.id)
     this.phoneCall.set(null)
+  }
+
+  async addUserToCall() {
+    try {
+      let newCall = await this.supportService.addUserToCall(this.phoneCall()!.id, this.userSearch)
+      this.phoneCall.set(newCall)
+      this.client = this.phoneCall()!.client
+    } catch {
+      console.log('get me out of here');
+    }
+    
+    this.userSearch = '';
   }
 
   agent = {
