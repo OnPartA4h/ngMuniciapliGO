@@ -23,7 +23,7 @@ export class AuthService {
   );
   readonly roles : Signal<string[]> = this.rolesSignal.asReadonly();
 
-  private profilePictureSignal : WritableSignal<string|null> = signal(null);
+  private profilePictureSignal : WritableSignal<string|null> = signal(localStorage.getItem("profilePictureUrl"));
   readonly profilePictureUrl : Signal<string|null> = this.profilePictureSignal.asReadonly();
 
   private loginResponse: any = null;
@@ -44,7 +44,13 @@ export class AuthService {
       this.updateSignals(response)
 
       // Update profile picture signal from login response
-      this.profilePictureSignal.set(response.user.profilePictureUrl || null);
+      const pfpUrl = response.user.profilePictureUrl || null;
+      this.profilePictureSignal.set(pfpUrl);
+      if (pfpUrl) {
+        localStorage.setItem("profilePictureUrl", pfpUrl);
+      } else {
+        localStorage.removeItem("profilePictureUrl");
+      }
 
       // Store the login response for mustResetPassword check
       this.loginResponse = response;
@@ -79,6 +85,11 @@ export class AuthService {
 
   setProfilePictureUrl(url: string | null) {
     this.profilePictureSignal.set(url);
+    if (url) {
+      localStorage.setItem("profilePictureUrl", url);
+    } else {
+      localStorage.removeItem("profilePictureUrl");
+    }
   }
 
   getLoginResponse() {
@@ -96,6 +107,7 @@ export class AuthService {
     localStorage.removeItem("token");
     localStorage.removeItem("roles")
     localStorage.removeItem("userId")
+    localStorage.removeItem("profilePictureUrl")
     
     this.tokenSignal.set(null)
     this.rolesSignal.set([])

@@ -246,6 +246,7 @@ export class Profile implements OnInit {
       const file = new File([croppedBlob], 'profile-picture.jpg', { type: 'image/jpeg' });
       const response = await this.userService.uploadProfilePicture(file);
       this.profileImageUrl.set(response.profilePictureUrl);
+      this.authService.setProfilePictureUrl(response.profilePictureUrl);
       const profileData = await this.userService.getProfile();
       this.profile.set(profileData);
       this.infoSuccessMessage.set(this.translateService.instant('PROFILE.PHOTO_UPLOADED'));
@@ -283,6 +284,7 @@ export class Profile implements OnInit {
     try {
       await this.userService.deleteProfilePicture();
       this.profileImageUrl.set(null);
+      this.authService.setProfilePictureUrl(null);
       const profileData = await this.userService.getProfile();
       this.profile.set(profileData);
       this.infoSuccessMessage.set(this.translateService.instant('PROFILE.PHOTO_DELETED'));
