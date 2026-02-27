@@ -7,3 +7,6 @@ export { FormErrorComponent } from './form-error/form-error';
 export { NavigationTabsComponent } from './navigation-tabs/navigation-tabs';
 export type { NavigationTab } from './navigation-tabs/navigation-tabs';
 export { AiProcessingStatusComponent } from './ai-processing-status/ai-processing-status';
+export { ToastComponent } from './toast/toast';
+export { ToastService } from './toast/toast.service';
+export type { Toast } from './toast/toast.service';

@@ -2,6 +2,7 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Header } from './components/header/header';
 import { IncomingCallComponent } from './components/incoming-call/incoming-call';
+import { ToastComponent } from './components/ui/toast/toast';
 import { AuthService } from './services/auth-service';
 import { ChatHubService } from './services/chat-hub.service';
 
@@ -11,7 +12,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, Header, IncomingCallComponent],
+  imports: [RouterOutlet, Header, IncomingCallComponent, ToastComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
 })

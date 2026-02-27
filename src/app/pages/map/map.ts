@@ -8,14 +8,14 @@ import { MapSidebar } from '../../components/map-sidebar/map-sidebar';
 import { FormsModule } from '@angular/forms';
 import { MapConfigModal } from '../../components/modals/map-config-modal/map-config-modal';
 import { categoryIcons, categoryEnumMap } from '../../models/categoryIcons';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ToastService } from '../../components/ui';
 import { GeneralService } from '../../services/general-service';
 import { District } from '../../models/district';
 
 @Component({
   selector: 'app-map',
-  imports: [MapSidebar, FormsModule, MapConfigModal, MatSnackBarModule, TranslateModule],
+  imports: [MapSidebar, FormsModule, MapConfigModal, TranslateModule],
   standalone: true,
   templateUrl: './map.html',
   styleUrl: './map.css',
@@ -23,7 +23,7 @@ import { District } from '../../models/district';
 export class Map implements AfterViewInit, OnDestroy {
   whiteService = inject(WhiteService);
   generalService = inject(GeneralService)
-  private snackbar = inject(MatSnackBar);
+  private toast = inject(ToastService);
   private translate = inject(TranslateService);
 
   DEFAULT_LAT: number = 45.5312
@@ -134,21 +134,11 @@ export class Map implements AfterViewInit, OnDestroy {
       
       if (fetchedProblems.length <= 0){
         const message = this.translate.instant('MAP.NO_PROBLEMS_FOUND');
-        this.snackbar.open(message, this.translate.instant('COMMON.CLOSE'), {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-          panelClass: ['info-snackbar']
-        });
+        this.toast.info(message);
       }
     } catch (error) {
       const message = this.translate.instant('MAP.ERROR_LOADING_PROBLEMS');
-      this.snackbar.open(message, this.translate.instant('COMMON.CLOSE'), {
-        duration: 2000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['error-snackbar']
-      });
+      this.toast.error(message);
       this.problems.set([]);
     }
   }
