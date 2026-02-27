@@ -521,7 +521,13 @@
     "OFFLINE": "Hors ligne",
     "RECORDING_ERROR": "Impossible d'accéder au microphone. Vérifiez les permissions de votre appareil.",
     "RECORDING_NO_DEVICE": "Aucun microphone trouvé. Veuillez connecter un microphone et réessayer.",
-    "RECORDING_PERMISSION_DENIED": "Accès au microphone refusé. Autorisez l'accès au microphone dans les paramètres de votre navigateur."
+    "RECORDING_PERMISSION_DENIED": "Accès au microphone refusé. Autorisez l'accès au microphone dans les paramètres de votre navigateur.",
+    "RECORDING": "Enregistrement…",
+    "STOP_RECORDING": "Arrêter l'enregistrement",
+    "VOICE_READY": "Prêt à envoyer",
+    "PHOTO": "Photo",
+    "VIDEO": "Vidéo",
+    "AUDIO": "Audio"
   },
   "CALL": {
     "INCOMING_AUDIO": "Appel audio entrant…",

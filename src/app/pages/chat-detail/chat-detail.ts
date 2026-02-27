@@ -73,9 +73,13 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   // ── Message vocal ─────────────────────────────────────────────────────────
   isRecording = signal(false);
   recordingDuration = signal(0);
+  /** True quand l'enregistrement est terminé et en attente d'envoi ou d'annulation. */
+  hasRecordedVoice = signal(false);
   private mediaRecorder: MediaRecorder | null = null;
   private recordedChunks: Blob[] = [];
   private recordingInterval: ReturnType<typeof setInterval> | null = null;
+  /** Blob audio prêt à l'envoi (après stopRecordingOnly). */
+  private pendingVoiceBlob: Blob | null = null;
 
   // ── Recherche dans le chat ────────────────────────────────────────────────
   showSearch = signal(false);
@@ -101,6 +105,9 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
 
   // ── Rôles ─────────────────────────────────────────────────────────────────
   roles = signal<RoleOption[]>([]);
+
+  // ── Appel en cours d'initiation (anti double-clic) ────────────────────────
+  isCallStarting = signal(false);
 
   // ── Rename ────────────────────────────────────────────────────────────────
   isRenaming = signal(false);
@@ -471,7 +478,6 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
     // Clear previous error
     this.recordingError.set(null);
 
-    // First check if mediaDevices API is available (requires HTTPS or localhost)
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       this.recordingError.set(this.translate.instant('CHAT_DETAIL.RECORDING_ERROR'));
       this.autoHideRecordingError();
@@ -479,7 +485,6 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     try {
-      // Check for available audio input devices before requesting the stream
       const devices = await navigator.mediaDevices.enumerateDevices();
       const audioInputs = devices.filter(d => d.kind === 'audioinput');
       if (audioInputs.length === 0) {
@@ -489,18 +494,15 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       }
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-      // Determine best supported mimeType
       const mimeType = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4']
         .find(mt => MediaRecorder.isTypeSupported(mt)) ?? '';
 
       this.mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
       this.recordedChunks = [];
+      this.pendingVoiceBlob = null;
 
       this.mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          this.recordedChunks.push(e.data);
-        }
+        if (e.data.size > 0) this.recordedChunks.push(e.data);
       };
 
       this.mediaRecorder.onstop = () => {
@@ -509,6 +511,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
 
       this.mediaRecorder.start(100);
       this.isRecording.set(true);
+      this.hasRecordedVoice.set(false);
       this.recordingDuration.set(0);
 
       this.recordingInterval = setInterval(() => {
@@ -516,7 +519,6 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       }, 1000);
     } catch (error: any) {
       console.error('Error starting recording:', error);
-
       if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
         this.recordingError.set(this.translate.instant('CHAT_DETAIL.RECORDING_NO_DEVICE'));
       } else if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
@@ -532,46 +534,95 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
     setTimeout(() => this.recordingError.set(null), 6000);
   }
 
-  async stopRecording(discard = false): Promise<void> {
+  /**
+   * Arrête l'enregistrement et met le blob en attente.
+   * N'envoie PAS automatiquement — l'utilisateur doit cliquer sur "Envoyer".
+   */
+  stopRecordingOnly(): void {
     if (!this.mediaRecorder || this.mediaRecorder.state === 'inactive') return;
-
     if (this.recordingInterval) {
       clearInterval(this.recordingInterval);
       this.recordingInterval = null;
     }
+    this.mediaRecorder.onstop = () => {
+      this.mediaRecorder!.stream.getTracks().forEach(t => t.stop());
+      this.isRecording.set(false);
+      if (this.recordedChunks.length > 0) {
+        this.pendingVoiceBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
+        this.hasRecordedVoice.set(true);
+      }
+    };
+    this.mediaRecorder.stop();
+  }
 
+  /** Envoie le blob vocal en attente. */
+  async sendPendingVoice(): Promise<void> {
+    const blob = this.pendingVoiceBlob;
+    if (!blob) return;
+    const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
+    this.pendingVoiceBlob = null;
+    this.hasRecordedVoice.set(false);
+    this.recordedChunks = [];
+    this.recordingDuration.set(0);
+    try {
+      this.isSending.set(true);
+      await this.messageService.sendFileMessage(this.chatId, file);
+      this.shouldScrollToBottom = true;
+    } catch (error) {
+      console.error('Error sending voice message:', error);
+    } finally {
+      this.isSending.set(false);
+    }
+  }
+
+  /** Annule l'enregistrement en cours ou supprime le vocal en attente. */
+  cancelRecording(): void {
+    if (this.recordingInterval) {
+      clearInterval(this.recordingInterval);
+      this.recordingInterval = null;
+    }
+    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+      this.mediaRecorder.onstop = () => {
+        this.mediaRecorder!.stream.getTracks().forEach(t => t.stop());
+        this.isRecording.set(false);
+        this.hasRecordedVoice.set(false);
+        this.pendingVoiceBlob = null;
+        this.recordedChunks = [];
+        this.recordingDuration.set(0);
+      };
+      this.mediaRecorder.stop();
+    } else {
+      this.isRecording.set(false);
+      this.hasRecordedVoice.set(false);
+      this.pendingVoiceBlob = null;
+      this.recordedChunks = [];
+      this.recordingDuration.set(0);
+    }
+  }
+
+  /**
+   * Compatibilité : ancienne méthode appelée dans ngOnDestroy.
+   * Arrête proprement sans envoyer.
+   */
+  async stopRecording(discard = false): Promise<void> {
+    if (!this.mediaRecorder || this.mediaRecorder.state === 'inactive') return;
+    if (this.recordingInterval) {
+      clearInterval(this.recordingInterval);
+      this.recordingInterval = null;
+    }
     return new Promise<void>((resolve) => {
       if (!this.mediaRecorder) { resolve(); return; }
-
       this.mediaRecorder.onstop = async () => {
         this.mediaRecorder!.stream.getTracks().forEach(t => t.stop());
         this.isRecording.set(false);
-
-        if (!discard && this.recordedChunks.length > 0) {
-          const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
-          const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
-          try {
-            this.isSending.set(true);
-            await this.messageService.sendFileMessage(this.chatId, file);
-            this.shouldScrollToBottom = true;
-          } catch (error) {
-            console.error('Error sending voice message:', error);
-          } finally {
-            this.isSending.set(false);
-          }
-        }
-
+        this.hasRecordedVoice.set(false);
+        this.pendingVoiceBlob = null;
         this.recordedChunks = [];
         this.recordingDuration.set(0);
         resolve();
       };
-
       this.mediaRecorder.stop();
     });
-  }
-
-  cancelRecording(): void {
-    this.stopRecording(true);
   }
 
   formatRecordingDuration(): string {
@@ -579,6 +630,39 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
     const min = Math.floor(d / 60);
     const sec = d % 60;
     return `${min}:${sec.toString().padStart(2, '0')}`;
+  }
+
+  // ── GIF helpers ───────────────────────────────────────────────────────────
+
+  /**
+   * Détecte le format [gif]URL[/gif] dans le contenu d'un message.
+   */
+  isGifMessage(content: string | null): boolean {
+    if (!content) return false;
+    return /^\[gif\].+\[\/gif\]$/.test(content.trim());
+  }
+
+  extractGifUrl(content: string): string {
+    const match = content.trim().match(/^\[gif\](.+)\[\/gif\]$/);
+    return match ? match[1] : '';
+  }
+
+  /**
+   * Retourne un texte d'aperçu pour la liste des chats (dernier message).
+   */
+  getLastMessagePreview(msg: ChatMessageDto | null): string {
+    if (!msg) return '';
+    if (msg.isSystemMessage) return msg.content;
+    if (msg.isVoiceMessage) return '🎤 ' + this.translate.instant('CHAT_DETAIL.VOICE_MESSAGE');
+    if (msg.attachmentType?.startsWith('image/') || msg.attachmentType?.startsWith('image')) {
+      if (msg.attachmentType?.includes('gif')) return '🎞️ GIF';
+      return '🖼️ ' + this.translate.instant('CHAT_DETAIL.PHOTO');
+    }
+    if (msg.attachmentType?.startsWith('video/')) return '🎬 ' + this.translate.instant('CHAT_DETAIL.VIDEO');
+    if (msg.attachmentType?.startsWith('audio/')) return '🎵 ' + this.translate.instant('CHAT_DETAIL.AUDIO');
+    if (msg.attachmentUrl) return '📎 ' + this.translate.instant('CHAT_DETAIL.ATTACHMENT');
+    if (this.isGifMessage(msg.content)) return '🎞️ GIF';
+    return msg.content;
   }
 
   // ── Recherche dans le chat ────────────────────────────────────────────────
@@ -627,16 +711,33 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
 
   // ── Appels audio/vidéo ────────────────────────────────────────────────────
 
-  startCall(isVideo: boolean): void {
-    const params = new URLSearchParams({
-      chatId: this.chatId,
-      isVideo: String(isVideo),
-    });
-    window.open(
-      `/call?${params.toString()}`,
-      '_blank',
-      'width=900,height=700,menubar=no,toolbar=no'
-    );
+  /**
+   * Initie un appel (§6.1 du protocole).
+   * Ordre obligatoire : POST /call/token → afficher UI sortante → connecter Twilio.
+   * C'est l'appel à /token qui déclenche IncomingCall chez les autres membres.
+   */
+  async startCall(isVideo: boolean): Promise<void> {
+    if (this.isCallStarting()) return; // évite les doubles-clics
+    this.isCallStarting.set(true);
+    try {
+      const resp = await this.videoCallService.getCallToken(this.chatId, isVideo);
+      const params = new URLSearchParams({
+        chatId:   this.chatId,
+        isVideo:  String(isVideo),
+        roomName: resp.roomName,  // UUID stable reçu du serveur
+        token:    resp.token,     // token Twilio pour rejoindre la room
+        joining:  'false',        // on est le caller
+      });
+      window.open(
+        `/call?${params.toString()}`,
+        '_blank',
+        'width=900,height=700,menubar=no,toolbar=no'
+      );
+    } catch (err) {
+      console.error('Failed to initiate call:', err);
+    } finally {
+      this.isCallStarting.set(false);
+    }
   }
 
   // ── Édition de message ────────────────────────────────────────────────────

@@ -53,4 +53,17 @@ export class Comments implements OnInit{
   async onPageChange(page: number) {
     await this.getComments(page);
   }
+
+  /**
+   * Détecte si une URL pointe vers un GIF (extension .gif ou domaine Giphy/Tenor).
+   */
+  isGifUrl(url: string): boolean {
+    if (!url) return false;
+    const lower = url.toLowerCase();
+    return lower.endsWith('.gif')
+      || lower.includes('giphy.com')
+      || lower.includes('tenor.com')
+      || lower.includes('media.giphy')
+      || lower.includes('/gifs/');
+  }
 }

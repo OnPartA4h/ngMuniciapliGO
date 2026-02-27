@@ -521,7 +521,13 @@
     "OFFLINE": "Offline",
     "RECORDING_ERROR": "Could not access microphone. Please check your device permissions.",
     "RECORDING_NO_DEVICE": "No microphone found. Please connect a microphone and try again.",
-    "RECORDING_PERMISSION_DENIED": "Microphone access denied. Please allow microphone access in your browser settings."
+    "RECORDING_PERMISSION_DENIED": "Microphone access denied. Please allow microphone access in your browser settings.",
+    "RECORDING": "Recording…",
+    "STOP_RECORDING": "Stop recording",
+    "VOICE_READY": "Ready to send",
+    "PHOTO": "Photo",
+    "VIDEO": "Video",
+    "AUDIO": "Audio"
   },
   "CALL": {
     "INCOMING_AUDIO": "Audio call incoming…",

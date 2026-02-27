@@ -7,7 +7,7 @@ import { ChatService } from '../../services/chat-service';
 import { ChatHubService } from '../../services/chat-hub.service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
-import { ChatSummaryDto, ChatType, UserSearchResultDto } from '../../models/chat';
+import { ChatSummaryDto, ChatMessageDto, ChatType, UserSearchResultDto } from '../../models/chat';
 import { RoleOption } from '../../models/user';
 import { LoadingSpinnerComponent, EmptyStateComponent } from '../../components/ui';
 
@@ -339,5 +339,25 @@ export class Chats implements OnInit, OnDestroy {
   truncateMessage(content: string, maxLength: number = 50): string {
     if (!content) return '';
     return content.length > maxLength ? content.substring(0, maxLength) + '…' : content;
+  }
+
+  /**
+   * Retourne un texte d'aperçu pour le dernier message dans la liste des chats.
+   * Si c'est un GIF, une image, un vocal ou un fichier audio, affiche un label lisible.
+   */
+  getLastMessagePreview(msg: ChatMessageDto | null): string {
+    if (!msg) return '';
+    if (msg.isSystemMessage) return this.truncateMessage(msg.content);
+    if (msg.isVoiceMessage) return '🎤 ' + this.translate.instant('CHAT_DETAIL.VOICE_MESSAGE');
+    if (msg.attachmentType?.startsWith('image/')) {
+      if (msg.attachmentType.includes('gif')) return '🎞️ GIF';
+      return '🖼️ ' + this.translate.instant('CHAT_DETAIL.PHOTO');
+    }
+    if (msg.attachmentType?.startsWith('video/')) return '🎬 ' + this.translate.instant('CHAT_DETAIL.VIDEO');
+    if (msg.attachmentType?.startsWith('audio/')) return '🎵 ' + this.translate.instant('CHAT_DETAIL.AUDIO');
+    if (msg.attachmentUrl) return '📎 ' + this.translate.instant('CHAT_DETAIL.ATTACHMENT');
+    // Détection GIF inline [gif]url[/gif]
+    if (/^\[gif\].+\[\/gif\]$/.test((msg.content ?? '').trim())) return '🎞️ GIF';
+    return this.truncateMessage(msg.content);
   }
 }

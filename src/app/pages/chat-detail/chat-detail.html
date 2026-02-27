@@ -176,10 +176,18 @@
                     <!-- ── Message vocal ────────────────────────────── -->
                     @if (msg.isVoiceMessage && msg.attachmentUrl) {
                       <div class="voice-message-player">
-                        <audio [src]="msg.attachmentUrl" controls class="voice-audio"></audio>
+                        <i class="fas fa-microphone voice-mic-icon"></i>
+                        <audio [src]="msg.attachmentUrl" controls preload="none" class="voice-audio"></audio>
                         @if (msg.voiceDurationSeconds) {
                           <span class="voice-duration">{{ getVoiceDurationLabel(msg.voiceDurationSeconds) }}</span>
                         }
+                      </div>
+                    }
+
+                    <!-- ── GIF inline [gif]url[/gif] ──────────────── -->
+                    @else if (msg.attachmentUrl === null && isGifMessage(msg.content)) {
+                      <div class="attachment-gif">
+                        <img [src]="extractGifUrl(msg.content)" alt="GIF" loading="lazy" />
                       </div>
                     }
 
@@ -187,8 +195,19 @@
                     @else if (msg.attachmentUrl && msg.attachmentType?.startsWith('image/')) {
                       <div class="attachment-image">
                         <a [href]="msg.attachmentUrl" target="_blank" rel="noopener">
-                          <img [src]="msg.attachmentUrl" alt="attachment" />
+                          <img [src]="msg.attachmentUrl" alt="attachment" loading="lazy" />
                         </a>
+                      </div>
+                      @if (msg.content) {
+                        <p class="msg-content">{{ msg.content }}</p>
+                      }
+                    }
+
+                    <!-- ── Pièce jointe (audio autre) ─────────────── -->
+                    @else if (msg.attachmentUrl && msg.attachmentType?.startsWith('audio/')) {
+                      <div class="voice-message-player">
+                        <i class="fas fa-music voice-mic-icon"></i>
+                        <audio [src]="msg.attachmentUrl" controls preload="none" class="voice-audio"></audio>
                       </div>
                       @if (msg.content) {
                         <p class="msg-content">{{ msg.content }}</p>
@@ -209,7 +228,7 @@
                       }
                     }
 
-                    <!-- ── Contenu texte ───────────────────────────── -->
+                    <!-- ── Contenu texte / GIF texte ──────────────── -->
                     @else {
                       <!-- Mode édition -->
                       @if (editingMessageId() === msg.id) {
@@ -229,6 +248,11 @@
                               <i class="fas fa-times"></i>
                             </button>
                           </div>
+                        </div>
+                      } @else if (isGifMessage(msg.content)) {
+                        <!-- GIF inline [gif]url[/gif] dans le contenu texte -->
+                        <div class="attachment-gif">
+                          <img [src]="extractGifUrl(msg.content)" alt="GIF" loading="lazy" />
                         </div>
                       } @else {
                         <p class="msg-content">{{ msg.content }}</p>
@@ -532,24 +556,54 @@
     <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none"
       accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip" />
 
-    <!-- Enregistrement vocal en cours -->
+    <!-- ── État : enregistrement en cours ──────────────────────────────── -->
     @if (isRecording()) {
       <div class="recording-bar">
         <div class="recording-indicator">
           <span class="recording-dot"></span>
           <span class="recording-time">{{ formatRecordingDuration() }}</span>
+          <span class="recording-label">{{ 'CHAT_DETAIL.RECORDING' | translate }}</span>
         </div>
         <div class="recording-actions">
-          <button class="icon-btn danger" (click)="cancelRecording()" [title]="'COMMON.CANCEL' | translate">
+          <!-- Supprimer l'enregistrement -->
+          <button class="rec-btn rec-btn--delete" (click)="cancelRecording()" [title]="'COMMON.CANCEL' | translate">
             <i class="fas fa-trash"></i>
           </button>
-          <button class="send-btn" (click)="stopRecording()" [title]="'CHAT_DETAIL.SEND_VOICE' | translate">
-            <i class="fas fa-paper-plane"></i>
+          <!-- Arrêter (→ passe à l'état "prêt à envoyer") -->
+          <button class="rec-btn rec-btn--stop" (click)="stopRecordingOnly()" [title]="'CHAT_DETAIL.STOP_RECORDING' | translate">
+            <i class="fas fa-stop"></i>
           </button>
         </div>
       </div>
-    } @else {
-      <!-- Boutons d'action + saisie -->
+    }
+
+    <!-- ── État : vocal enregistré, en attente d'envoi ────────────────── -->
+    @else if (hasRecordedVoice()) {
+      <div class="recording-bar recording-bar--preview">
+        <div class="recording-indicator">
+          <i class="fas fa-microphone" style="color: var(--primary)"></i>
+          <span class="recording-time">{{ formatRecordingDuration() }}</span>
+          <span class="recording-label">{{ 'CHAT_DETAIL.VOICE_READY' | translate }}</span>
+        </div>
+        <div class="recording-actions">
+          <!-- Supprimer -->
+          <button class="rec-btn rec-btn--delete" (click)="cancelRecording()" [title]="'COMMON.CANCEL' | translate">
+            <i class="fas fa-trash"></i>
+          </button>
+          <!-- Envoyer -->
+          <button class="rec-btn rec-btn--send" (click)="sendPendingVoice()" [disabled]="isSending()" [title]="'CHAT_DETAIL.SEND_VOICE' | translate">
+            @if (isSending()) {
+              <div class="spinner spinner--sm spinner--white"></div>
+            } @else {
+              <i class="fas fa-paper-plane"></i>
+            }
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- ── État : saisie normale ───────────────────────────────────────── -->
+    @else {
       <button class="icon-btn input-action-btn" (click)="triggerFileInput()" [title]="'CHAT_DETAIL.ATTACH_FILE' | translate">
         <i class="fas fa-paperclip"></i>
       </button>
@@ -573,6 +627,7 @@
           }
         </button>
       } @else {
+        <!-- Bouton micro : un simple clic démarre l'enregistrement -->
         <button class="icon-btn input-action-btn mic-btn" (click)="startRecording()" [title]="'CHAT_DETAIL.VOICE_MESSAGE' | translate">
           <i class="fas fa-microphone"></i>
         </button>
