@@ -2,28 +2,31 @@
   position: relative;
   background: transparent;
   border: none;
-  color: var(--color-primary);
-  font-size: 24px;
+  color: var(--color-gray-500);
+  font-size: 18px;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 0;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  border-radius: 8px;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  border-radius: var(--border-radius-sm);
+  flex-shrink: 0;
 }
 
 .chat-bell:hover {
-  background: rgba(30, 64, 175, 0.1);
-  transform: scale(1.1);
+  background: var(--color-gray-100);
+  color: var(--color-primary);
 }
 
 .chat-bell:active {
-  transform: scale(0.95);
+  background: var(--color-primary-light);
 }
 
 .chat-bell i {
-  transition: transform 0.3s ease;
+  transition: color var(--transition-fast);
 }
 
 .badge {

@@ -73,64 +73,69 @@ nav a.active {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: 4px;
   flex-shrink: 0;
 }
 
 /* Séparateur vertical */
 .header-divider {
   width: 1px;
-  height: 24px;
+  height: 20px;
   background: var(--color-gray-200);
-  margin: 0 var(--spacing-xs);
+  margin: 0 4px;
 }
 
-/* Langue toggle — compact, texte seul */
+/* Langue toggle — même taille que les icônes */
 .btn-language {
   background: transparent;
-  border: 1.5px solid var(--color-gray-300);
-  color: var(--color-text-secondary);
-  padding: 0 10px;
-  height: 32px;
+  border: 1px solid var(--color-gray-300);
+  color: var(--color-gray-500);
+  padding: 0;
+  width: 36px;
+  height: 36px;
   border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-xs);
+  font-size: 11px;
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.5px;
   cursor: pointer;
-  transition: all var(--transition-fast);
-  min-width: 38px;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-language:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
-  background: var(--color-primary-light);
+  background: var(--color-gray-100);
 }
 
-/* Profile Avatar */
+/* Profile Avatar — 36×36px comme tous les autres */
 .profile-avatar {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: var(--color-primary-light);
   color: var(--color-primary);
   text-decoration: none;
-  transition: all var(--transition-fast);
+  transition: box-shadow var(--transition-fast), opacity var(--transition-fast);
   border: 2px solid transparent;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .profile-avatar:hover {
-  transform: scale(1.05);
+  opacity: 0.85;
   border-color: var(--color-primary);
 }
 
 .profile-avatar.active {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.2);
+  box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.15);
 }
 
 .profile-avatar i {
@@ -149,16 +154,17 @@ nav a.active {
   align-items: center;
   gap: var(--spacing-xs);
   background: transparent;
-  border: 1.5px solid var(--color-secondary, #f59e0b);
+  border: 1px solid var(--color-secondary, #f59e0b);
   color: var(--color-secondary, #f59e0b);
   padding: 0 var(--spacing-md);
-  height: 32px;
+  height: 36px;
   border-radius: var(--border-radius-sm);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: background var(--transition-fast), color var(--transition-fast);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-vitrine:hover {
@@ -185,23 +191,35 @@ nav a.active {
   font-weight: var(--font-weight-semibold);
   border: none;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: background var(--transition-fast);
   white-space: nowrap;
 }
 
 .btn-login:hover {
   background: var(--color-primary-dark);
-  box-shadow: var(--shadow-primary);
 }
 
-/* Logout — icon-button cohérent avec bells */
+/* Logout — 36×36px, même style que bells */
 .btn-logout {
-  color: var(--color-text-secondary) !important;
+  background: transparent;
+  border: none;
+  color: var(--color-gray-500);
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  flex-shrink: 0;
+  font-size: 18px;
 }
 
 .btn-logout:hover {
-  color: var(--color-error, #d32f2f) !important;
-  background: rgba(211, 47, 47, 0.08) !important;
+  background: var(--color-gray-100);
+  color: var(--color-error, #d32f2f);
 }
 
 /* Responsive */

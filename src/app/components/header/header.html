@@ -41,7 +41,7 @@
 
     <!-- Vitrine Editor Button (Admin & ColBlanc) -->
     @if (isConnected() && (userRoles().includes('Admin') || userRoles().includes('ColBlanc'))) {
-      <button class="btn-vitrine" (click)="openVitrine()" [matTooltip]="'HEADER.VITRINE_TOOLTIP' | translate">
+      <button class="btn-vitrine" (click)="openVitrine()" title="{{ 'HEADER.VITRINE_TOOLTIP' | translate }}">
         <i class="fas fa-external-link-alt"></i>
         <span>{{ 'HEADER.VITRINE' | translate }}</span>
       </button>
@@ -59,7 +59,7 @@
     }
 
     <!-- Langue toggle — texte uniquement -->
-    <button class="btn-language" (click)="toggleLanguage()" [matTooltip]="'HEADER.CHANGE_LANGUAGE' | translate">
+    <button class="btn-language" (click)="toggleLanguage()" title="{{ 'HEADER.CHANGE_LANGUAGE' | translate }}">
       {{ getCurrentLanguage() }}
     </button>
 
@@ -81,10 +81,10 @@
       </a>
     }
 
-    <!-- Déconnexion — icon-button style bell -->
+    <!-- Déconnexion -->
     @if (isConnected()) {
-      <button mat-icon-button class="btn-logout" (click)="logout()" [matTooltip]="'HEADER.LOGOUT' | translate">
-        <mat-icon>logout</mat-icon>
+      <button class="btn-logout" (click)="logout()" title="{{ 'HEADER.LOGOUT' | translate }}">
+        <i class="fas fa-sign-out-alt"></i>
       </button>
     }
 
