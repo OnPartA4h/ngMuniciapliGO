@@ -1,3 +1,11 @@
+/* ── Host: sticky container for banner + header ───────────────────────── */
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
 header {
   background: var(--color-white);
   padding: 0 var(--spacing-3xl);
@@ -6,10 +14,76 @@ header {
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  position: sticky;
-  top: 0;
-  z-index: var(--z-sticky);
   border-bottom: 1px solid var(--color-gray-200);
+}
+
+/* ── Active call banner ──────────────────────────────────────────────────── */
+
+.active-call-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px var(--spacing-3xl);
+  background: linear-gradient(90deg, #2e7d32, #43a047);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  user-select: none;
+}
+
+.active-call-banner:hover {
+  background: linear-gradient(90deg, #1b5e20, #2e7d32);
+}
+
+.active-call-banner i {
+  font-size: 14px;
+  animation: callIconPulse 2s ease-in-out infinite;
+}
+
+.call-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a5d6a7;
+  animation: callDotPulse 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes callDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+@keyframes callIconPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.call-banner-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.call-banner-timer {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.call-banner-action {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Logo */
@@ -236,6 +310,10 @@ nav a.active {
 @media (max-width: 768px) {
   header {
     padding: 0 var(--spacing-lg);
+  }
+
+  .active-call-banner {
+    padding: 6px var(--spacing-lg);
   }
 
   nav {

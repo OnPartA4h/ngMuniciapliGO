@@ -2,6 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { LanguageService } from '../../services/language-service';
+import { ActiveCallService } from '../../services/active-call.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NotificationBell } from '../notification-bell/notification-bell';
 import { ChatBell } from '../chat-bell/chat-bell';
@@ -16,6 +17,7 @@ import { environment } from '../../../environments/environment';
 export class Header {
   authService = inject(AuthService);
   languageService = inject(LanguageService);
+  activeCallService = inject(ActiveCallService);
 
   // Utiliser un computed pour réagir aux changements du signal token
   isConnected = computed(() => !!this.authService.token());
@@ -39,5 +41,15 @@ export class Header {
     const token = this.authService.token();
     const url = `${environment.vitrineUrl}/?token=${encodeURIComponent(token ?? '')}`;
     window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  focusCall(): void {
+    this.activeCallService.focusCallWindow();
+  }
+
+  formatCallDuration(seconds: number): string {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
   }
 }

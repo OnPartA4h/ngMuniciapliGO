@@ -9,7 +9,9 @@
     "VITRINE": "Modifier la vitrine",
     "VITRINE_TOOLTIP": "Ouvrir l'éditeur de la vitrine (s'ouvre dans un nouvel onglet)",
     "HELP_DESK": "Assistance",
-    "CHANGE_LANGUAGE": "Changer la langue"
+    "CHANGE_LANGUAGE": "Changer la langue",
+    "CALL_IN_PROGRESS": "Appel en cours",
+    "RETURN_TO_CALL": "Revenir à l'appel"
   },
   "COMMON": {
     "NO_INTERNET": "Veuillez vérifier votre connexion internet.",

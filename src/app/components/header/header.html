@@ -1,3 +1,17 @@
+<!-- Active Call Banner — outside header so it doesn't break flex layout -->
+@if (activeCallService.isCallActive()) {
+  <div class="active-call-banner" (click)="focusCall()">
+    <span class="call-pulse-dot"></span>
+    <i class="fas fa-phone-alt"></i>
+    <span class="call-banner-text">
+      {{ 'HEADER.CALL_IN_PROGRESS' | translate }}
+      — {{ activeCallService.callPeerName() }}
+    </span>
+    <span class="call-banner-timer">{{ formatCallDuration(activeCallService.callDuration()) }}</span>
+    <span class="call-banner-action">{{ 'HEADER.RETURN_TO_CALL' | translate }}</span>
+  </div>
+}
+
 <header>
   <!-- Logo -->
   <a routerLink="/home" class="logo">
