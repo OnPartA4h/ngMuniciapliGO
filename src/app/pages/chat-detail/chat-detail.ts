@@ -39,6 +39,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   private generalService = inject(GeneralService);
   private languageService = inject(LanguageService);
   private translate = inject(TranslateService);
+  private toast = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
   private subs: Subscription[] = [];
 
@@ -399,6 +400,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       this.shouldScrollToBottom = true;
     } catch (error) {
       console.error('Error sending message:', error);
+      this.toast.error(this.translate.instant('CHAT_DETAIL.SEND_ERROR'));
       this.newMessage.set(this.newMessage() || content);
     } finally {
       this.isSending.set(false);
@@ -452,6 +454,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       this.shouldScrollToBottom = true;
     } catch (error) {
       console.error('Error sending file message:', error);
+      this.toast.error(this.translate.instant('CHAT_DETAIL.SEND_ERROR'));
     } finally {
       this.isUploading.set(false);
       this.isSending.set(false);
@@ -737,6 +740,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       );
     } catch (err) {
       console.error('Failed to initiate call:', err);
+      this.toast.error(this.translate.instant('CHAT_DETAIL.CALL_START_ERROR'));
     } finally {
       this.isCallStarting.set(false);
     }
@@ -765,6 +769,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       this.cancelEditing();
     } catch (error) {
       console.error('Error editing message:', error);
+      this.toast.error(this.translate.instant('CHAT_DETAIL.EDIT_ERROR'));
     }
   }
 
@@ -783,6 +788,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
         );
       } catch (error) {
         console.error('Error deleting message:', error);
+        this.toast.error(this.translate.instant('CHAT_DETAIL.DELETE_ERROR'));
       }
     };
     this.confirmModalOpen.set(true);
@@ -858,6 +864,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       this.isRenaming.set(false);
     } catch (error) {
       console.error('Error renaming group:', error);
+      this.toast.error(this.translate.instant('CHAT_DETAIL.RENAME_ERROR'));
     }
   }
 
@@ -891,6 +898,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
       await this.loadChat();
     } catch (error) {
       console.error('Error adding member:', error);
+      this.toast.error(this.translate.instant('CHAT_DETAIL.ADD_MEMBER_ERROR'));
     }
   }
 
@@ -907,6 +915,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
         await this.loadChat();
       } catch (error) {
         console.error('Error removing member:', error);
+        this.toast.error(this.translate.instant('CHAT_DETAIL.REMOVE_MEMBER_ERROR'));
       }
     };
     this.confirmModalOpen.set(true);
@@ -923,6 +932,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
         this.router.navigate(['/chats']);
       } catch (error) {
         console.error('Error leaving chat:', error);
+        this.toast.error(this.translate.instant('CHAT_DETAIL.LEAVE_ERROR'));
       }
     };
     this.confirmModalOpen.set(true);

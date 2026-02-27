@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { WhiteService } from '../../services/white-service';
-import { PageHeaderComponent, FormErrorComponent } from '../../components/ui';
+import { PageHeaderComponent, FormErrorComponent, ToastService } from '../../components/ui';
 import { CreateDuplicateGroupDTO } from '../../models/duplicate-group';
 
 @Component({
@@ -15,6 +15,8 @@ import { CreateDuplicateGroupDTO } from '../../models/duplicate-group';
 export class CreateDuplicateGroup {
   private whiteService = inject(WhiteService);
   private router = inject(Router);
+  private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   readonly name = signal('');
   readonly aiReasonFR = signal('');
@@ -39,9 +41,11 @@ export class CreateDuplicateGroup {
         aiReasonEN: this.aiReasonEN().trim(),
       };
       await this.whiteService.createDuplicateGroup(dto);
+      this.toast.success(this.translate.instant('CREATE_DUPLICATE_GROUP.SUCCESS'));
       this.router.navigate(['/manage-duplicates']);
     } catch (e: any) {
-      this.errorMessage.set(e?.error?.message || 'CREATE_DUPLICATE_GROUP.ERROR');
+      this.errorMessage.set(e?.error?.message || this.translate.instant('CREATE_DUPLICATE_GROUP.ERROR'));
+      this.toast.error(this.translate.instant('CREATE_DUPLICATE_GROUP.ERROR'));
       this.loading.set(false);
     }
   }

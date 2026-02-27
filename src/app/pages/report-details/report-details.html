@@ -14,7 +14,7 @@
             <div class="details-carousel">
                 <div class="details-carousel-img">
                     @if(problem.photos && problem.photos.length > 0){
-                    <img class="photo-probleme" [src]="problem.photos[photoIndex()]?.url" alt="Photo du problème">
+                    <img class="photo-probleme" [src]="problem.photos[photoIndex()]?.url" [alt]="'REPORT_DETAILS.PHOTO_ALT' | translate">
                     }
                     @else {
                     <i class="fas fa-image"></i>
@@ -75,7 +75,7 @@
         <div class="details-side">
             <div class="details-box">
                 <div class="details-badges">
-                    <h2>Information</h2>
+                    <h2>{{ 'REPORT_DETAILS.INFORMATION' | translate }}</h2>
                     <span>
                         <div class="property">
                             <i class="fas fa-map-marker-alt"></i>
@@ -135,14 +135,14 @@
                     <span>
                         <div class="property">
                             <i class="fas fa-comments"></i>
-                            Nombre de commentaires
+                            {{ 'REPORT_DETAILS.COMMENT_COUNT' | translate }}
                         </div>
                         <span style="display: flex; align-items: center; gap: 8px;">
                             {{problem.nbComments}}
                             <a class="btn btn-sm btn-outline" [routerLink]="['/comments', problem.id]"
-                                title="Voir les commentaires">
+                                [title]="'REPORT_DETAILS.VIEW_COMMENTS' | translate">
                                 <i class="fas fa-comments"></i>
-                                Voir
+                                {{ 'REPORT_DETAILS.VIEW' | translate }}
                             </a>
                         </span>
                     </span>
@@ -241,7 +241,7 @@
                 <button class="photo-modal-nav" (click)="prevResolutionPhoto()">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <img [src]="problem.resolutionPhotos[resolutionPhotoIndex()]?.url" alt="Photo de résolution"
+                <img [src]="problem.resolutionPhotos[resolutionPhotoIndex()]?.url" [alt]="'REPORT_DETAILS.RESOLUTION_PHOTO_ALT' | translate"
                     class="photo-modal-img">
                 <button class="photo-modal-nav" (click)="nextResolutionPhoto()">
                     <i class="fas fa-chevron-right"></i>

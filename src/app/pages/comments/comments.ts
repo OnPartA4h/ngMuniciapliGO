@@ -7,10 +7,11 @@ import { UserComment } from '../../models/userComment';
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 import { Pagination } from '../../models/pagination';
 import { PaginationComponent } from '../../components/ui/pagination/pagination';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-comments',
-  imports: [PageHeaderComponent, DaysAgoPipe, RouterLink, PaginationComponent],
+  imports: [PageHeaderComponent, DaysAgoPipe, RouterLink, PaginationComponent, TranslateModule],
   templateUrl: './comments.html',
   styleUrl: './comments.css',
 })

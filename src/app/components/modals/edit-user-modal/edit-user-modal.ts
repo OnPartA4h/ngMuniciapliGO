@@ -6,6 +6,7 @@ import { AdminService } from '../../../services/admin-service';
 import { GeneralService } from '../../../services/general-service';
 import { LanguageService } from '../../../services/language-service';
 import { DeleteConfirmModal } from '../delete-confirm-modal/delete-confirm-modal';
+import { ToastService } from '../../ui';
 
 @Component({
   selector: 'app-edit-user-modal',
@@ -19,6 +20,7 @@ export class EditUserModal implements OnInit {
   private generalService = inject(GeneralService);
   private languageService = inject(LanguageService);
   private translate = inject(TranslateService);
+  private toast = inject(ToastService);
 
   readonly user = input<User | null>(null);
   readonly isOpen = input<boolean>(false);
@@ -111,6 +113,7 @@ export class EditUserModal implements OnInit {
       this.isLoading.set(true);
       this.deleteErrorMessage.set(null);
       await this.adminService.deleteUser(user.id);
+      this.toast.success(this.translate.instant('EDIT_USER_MODAL.DELETE_SUCCESS'));
       this.userDeleted.emit(undefined);
       this.closeModal();
     } catch (error: any) {

@@ -7,7 +7,9 @@
     "LOGIN": "Connexion",
     "LOGOUT": "Déconnexion",
     "VITRINE": "Modifier la vitrine",
-    "VITRINE_TOOLTIP": "Ouvrir l'éditeur de la vitrine (s'ouvre dans un nouvel onglet)"
+    "VITRINE_TOOLTIP": "Ouvrir l'éditeur de la vitrine (s'ouvre dans un nouvel onglet)",
+    "HELP_DESK": "Assistance",
+    "CHANGE_LANGUAGE": "Changer la langue"
   },
   "COMMON": {
     "YES": "Oui",
@@ -68,7 +70,8 @@
     "CATEGORY_THREATS": "Menaces",
     "CATEGORY_MISINFORMATION": "Désinformation",
     "CATEGORY_OFF_TOPIC": "Hors sujet",
-    "CATEGORY_OTHER": "Autre"
+    "CATEGORY_OTHER": "Autre",
+    "CONFIRM_DELETE_TITLE": "Confirmer la suppression"
   },
   "PROFILE": {
     "TITLE": "Mon profil",
@@ -143,7 +146,9 @@
     "VERIFY_CODE": "Vérifier le code",
     "RESEND_CODE": "Renvoyer le code",
     "SUBSCRIBED_TASKS": "Tâches suivies",
-    "NO_SUBSCRIBED_TASKS": "Aucune tâche suivie"
+    "NO_SUBSCRIBED_TASKS": "Aucune tâche suivie",
+    "RESET_EMAIL_SENT": "Un lien de réinitialisation du mot de passe a été envoyé",
+    "RESET_EMAIL_ERROR": "Erreur lors de l'envoi du lien de réinitialisation"
   },
   "AI_PROCESSING": {
     "NO_PROCESSING": "Aucun signalement en traitement",
@@ -176,6 +181,7 @@
     "ROLES": "Rôles",
     "DELETE_USER": "Supprimer l'utilisateur",
     "ROLE_CHANGED": "Rôle modifié avec succès pour {{firstName}} {{lastName}}",
+    "DELETE_SUCCESS": "Utilisateur supprimé avec succès",
     "ADDRESS": "Adresse",
     "STREET_NUMBER": "Numéro de rue",
     "STREET_NAME": "Nom de la rue",
@@ -202,7 +208,8 @@
     "REASON_HINT": "Optionnel — aide les agents à comprendre le regroupement.",
     "INFO": "Une fois créé, le groupe apparaîtra dans la liste des doublons. Vous pourrez y glisser-déposer des signalements depuis d'autres groupes.",
     "SUBMIT": "Créer le groupe",
-    "ERROR": "Une erreur est survenue lors de la création du groupe."
+    "ERROR": "Une erreur est survenue lors de la création du groupe.",
+    "SUCCESS": "Groupe de doublons créé avec succès !"
   },
   "CREATE_USER": {
     "TITLE": "Créer un nouvel utilisateur",
@@ -240,7 +247,8 @@
     "COPY_PASSWORD": "Copier",
     "PASSWORD_COPIED": "Mot de passe copié !",
     "MUST_CHANGE_PASSWORD": "L'utilisateur devra changer ce mot de passe lors de sa première connexion.",
-    "UNDERSTOOD": "Compris, retourner à la liste"
+    "UNDERSTOOD": "Compris, retourner à la liste",
+    "ERROR_CREATING": "Erreur lors de la création de l'utilisateur. Veuillez réessayer."
   },
   "MANAGE_REPORTS": {
     "TITLE": "Gestion des problèmes",
@@ -277,8 +285,8 @@
     "ASSIGN_SUCCESS_COL_BLEU": "{{colbleu}} a été assigné.",
     "ACCEPTER_SUCCESS": "Le problème a été accepté avec succès.",
     "REFUSER_SUCCESS": "Le problème a été refusé avec succès.",
-    "ACCEPTER_FIX_SUCCESS": "Successfully accepted the resolution.",
-    "REFUSER_FIX_SUCCESS": "Successfully rejected the resolution.",
+    "ACCEPTER_FIX_SUCCESS": "La résolution a été acceptée avec succès.",
+    "REFUSER_FIX_SUCCESS": "La résolution a été refusée avec succès.",
     "MESSAGE_REFUS": "Entrez un message de refus...",
     "UNSUBSCRIBE_ERROR": "Impossible de se désabonner de ce problème",
     "LIKES": "J'aime"
@@ -381,7 +389,9 @@
   },
   "MAP": {
     "ERROR_LOADING_PROBLEMS": "Impossible de charger les signalements. Veuillez vérifier votre connexion et réessayer.",
-    "NO_PROBLEMS_FOUND": "Il n'y a aucun signalement dans cette zone"
+    "NO_PROBLEMS_FOUND": "Il n'y a aucun signalement dans cette zone",
+    "TOGGLE_DISTRICTS": "Afficher/Masquer les districts",
+    "DISTRICTS": "Districts"
   },
   "DUPLICATES": {
     "TITLE": "Groupes de doublons",
@@ -409,7 +419,10 @@
     "MOVE_ERROR": "Erreur lors du déplacement du signalement",
     "CREATE_GROUP": "Créer un groupe",
     "EMPTY_GROUP": "Groupe vide",
-    "EMPTY_GROUP_HINT": "Ce groupe est vide. Glissez-déposez des signalements depuis un autre groupe pour les y ajouter."
+    "EMPTY_GROUP_HINT": "Ce groupe est vide. Glissez-déposez des signalements depuis un autre groupe pour les y ajouter.",
+    "EXCLUDE_SUCCESS": "Signalement exclu du groupe avec succès",
+    "ACCEPT_SUCCESS": "Groupe accepté et fusionné avec succès",
+    "MOVE_SUCCESS": "Signalement déplacé avec succès"
   },
   "DASHBOARD": {
     "TITLE": "Tableau de bord",
@@ -440,7 +453,33 @@
     "IN_DUPLICATE_GROUP": "Ce signalement est dans un groupe de doublons",
     "IN_DUPLICATE_GROUP_DESC": "Ce rapport fait partie d'un groupe de doublons en cours de révision. Rendez-vous sur la page des doublons pour gérer les membres du groupe.",
     "GO_TO_DUPLICATES": "Aller aux doublons",
-    "EDIT_PROBLEM": "Éditer le problème"
+    "EDIT_PROBLEM": "Éditer le problème",
+    "INFORMATION": "Information",
+    "COMMENT_COUNT": "Nombre de commentaires",
+    "VIEW_COMMENTS": "Voir les commentaires",
+    "VIEW": "Voir",
+    "PHOTO_ALT": "Photo du problème",
+    "RESOLUTION_PHOTO_ALT": "Photo de résolution"
+  },
+  "HELP_DESK": {
+    "TITLE": "Assistance / Help Desk",
+    "SUBTITLE": "Gestion des appels et des problèmes utilisateurs",
+    "CALL_IN_PROGRESS": "Appel en cours",
+    "AGENT": "Agent",
+    "START": "Début",
+    "DURATION": "Durée",
+    "STATUS": "Statut",
+    "STATUS_IN_PROGRESS": "En cours",
+    "END_CALL": "Terminer l'appel",
+    "ADD_USER_PLACEHOLDER": "Ajouter un utilisateur à l'appel...",
+    "ADD_USER_BTN": "Ajouter à l'appel",
+    "NO_CALL": "Aucun appel en cours",
+    "WAITING_CALL": "En attente d'un appel utilisateur",
+    "SEARCH_PROBLEM": "Rechercher un problème...",
+    "END_CALL_SUCCESS": "Appel terminé avec succès",
+    "END_CALL_ERROR": "Erreur lors de la fin de l'appel",
+    "ADD_USER_SUCCESS": "Utilisateur ajouté à l'appel",
+    "ADD_USER_ERROR": "Impossible d'ajouter cet utilisateur à l'appel"
   },
   "CHAT": {
     "TITLE": "Messagerie",
@@ -461,7 +500,9 @@
     "HOURS_AGO": "Il y a {{count}} h",
     "DAYS_AGO": "Il y a {{count}} j",
     "ONLINE": "En ligne",
-    "TYPING": "écrit…"
+    "TYPING": "écrit…",
+    "CREATE_ERROR": "Erreur lors de la création de la conversation",
+    "CREATE_GROUP_ERROR": "Erreur lors de la création du groupe"
   },
   "CHAT_DETAIL": {
     "MEMBERS": "membres",
@@ -527,7 +568,14 @@
     "VOICE_READY": "Prêt à envoyer",
     "PHOTO": "Photo",
     "VIDEO": "Vidéo",
-    "AUDIO": "Audio"
+    "AUDIO": "Audio",
+    "EDIT_ERROR": "Erreur lors de la modification du message",
+    "DELETE_ERROR": "Erreur lors de la suppression du message",
+    "RENAME_ERROR": "Erreur lors du renommage du groupe",
+    "ADD_MEMBER_ERROR": "Erreur lors de l'ajout du membre",
+    "REMOVE_MEMBER_ERROR": "Erreur lors du retrait du membre",
+    "LEAVE_ERROR": "Erreur lors du départ du groupe",
+    "CALL_START_ERROR": "Impossible de démarrer l'appel. Veuillez réessayer."
   },
   "CALL": {
     "INCOMING_AUDIO": "Appel audio entrant…",
@@ -582,5 +630,13 @@
     "FIELD_REJECTION": "Raison de refus",
     "FIELD_LIKES": "J'aime",
     "FIELD_PHOTO": "Photo (lien)"
+  },
+  "COMMENTS": {
+    "TITLE": "Commentaires",
+    "SUBTITLE": "Liste des commentaires pour ce signalement",
+    "AGO": "Il y a",
+    "DAYS": "jours",
+    "REPLY": "réponse",
+    "REPLIES": "réponses"
   }
 }

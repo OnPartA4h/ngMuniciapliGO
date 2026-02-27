@@ -29,14 +29,14 @@
 
     @if (userRoles().includes('Support')) {
     <a routerLink="/help-desk" routerLinkActive="active">
-      {{ "Help desk"}}
+      {{ 'HEADER.HELP_DESK' | translate }}
     </a>
     }
   </nav>
 
   <div class="header-actions">
     <!-- Language Toggle -->
-    <button class="btn-language" (click)="toggleLanguage()" title="Change language">
+    <button class="btn-language" (click)="toggleLanguage()" [title]="'HEADER.CHANGE_LANGUAGE' | translate">
       <i class="fas fa-globe"></i>
       <span>{{ getCurrentLanguage() }}</span>
     </button>

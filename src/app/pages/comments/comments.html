@@ -1,8 +1,8 @@
 <div class="page-container">
 
   <app-page-header [routerLink]="['/report-details', problemId]"
-    title="Commentaires"
-    subtitle="Nid-de-poule rue Sherbrooke — 12 commentaires"
+    [title]="'COMMENTS.TITLE' | translate"
+    [subtitle]="'COMMENTS.SUBTITLE' | translate"
     [showBackButton]="true" />
 
   <!-- Liste des commentaires -->
@@ -17,11 +17,11 @@
             </div>
             <div class="comment-item__meta">
             <span class="comment-item__name">{{c.authorFirstName}} {{c.authorLastName}}</span>
-            <span class="comment-item__time">Il y a {{c.dateCreation | daysAgo}} jours</span>
+            <span class="comment-item__time">{{ 'COMMENTS.AGO' | translate }} {{c.dateCreation | daysAgo}} {{ 'COMMENTS.DAYS' | translate }}</span>
             </div>
             <button class="btn btn-danger btn-sm comment-delete-btn">
             <i class="fas fa-trash"></i>
-            Supprimer
+            {{ 'COMMON.DELETE' | translate }}
             </button>
         </div>
         <div class="comment-item__body">
@@ -49,7 +49,7 @@
                 (click)="toggleReplies(c.id)">
               <i class="fas fa-chevron-right comment-replies__chevron"></i>
               <i class="fas fa-reply"></i>
-              {{c.replies.length}} réponse{{c.replies.length > 1 ? 's' : ''}}
+              {{c.replies.length}} {{ c.replies.length > 1 ? ('COMMENTS.REPLIES' | translate) : ('COMMENTS.REPLY' | translate) }}
             </button>
 
             @if (isRepliesOpen(c.id)) {
@@ -62,11 +62,11 @@
                     </div>
                     <div class="comment-item__meta">
                         <span class="comment-item__name">{{c.authorFirstName}} {{c.authorLastName}}</span>
-                        <span class="comment-item__time">il y a {{c.dateCreation | daysAgo}} jours</span>
+                        <span class="comment-item__time">{{ 'COMMENTS.AGO' | translate }} {{c.dateCreation | daysAgo}} {{ 'COMMENTS.DAYS' | translate }}</span>
                     </div>
                     <button class="btn btn-danger btn-sm comment-delete-btn">
                         <i class="fas fa-trash"></i>
-                        Supprimer
+                        {{ 'COMMON.DELETE' | translate }}
                     </button>
                     </div>
                     <div class="comment-item__body">

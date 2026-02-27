@@ -119,7 +119,13 @@ export class Profile implements OnInit {
   }
 
   async sendResetPasswordEmail() {
-    await this.authService.forgotPassword(this.profile()!.email)
+    try {
+      await this.authService.forgotPassword(this.profile()!.email);
+      this.toastService.success(this.translateService.instant('PROFILE.RESET_EMAIL_SENT'));
+    } catch (error) {
+      console.error('Error sending reset password email:', error);
+      this.toastService.error(this.translateService.instant('PROFILE.RESET_EMAIL_ERROR'));
+    }
   }
 
   async loadRoles() {

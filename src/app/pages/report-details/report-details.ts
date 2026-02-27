@@ -206,13 +206,13 @@ export class ReportDetails implements OnInit {
       return;
     }
 
-    if (!this.isSubscribed) {
-      await this.notifService.subscribe(this.problem.id)
-      this.isSubscribed = true
-      return
-    }
-
     try {
+      if (!this.isSubscribed) {
+        await this.notifService.subscribe(this.problem.id)
+        this.isSubscribed = true
+        return
+      }
+
       await this.notifService.unsubscribe(this.problem.id)
       this.isSubscribed = false
     } catch {

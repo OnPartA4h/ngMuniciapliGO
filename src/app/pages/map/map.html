@@ -6,10 +6,10 @@
 
   <button class="districts-button" 
     [class.active]="showDistricts()"
-    title="Afficher/Masquer les districts" 
+    [title]="'MAP.TOGGLE_DISTRICTS' | translate" 
     (click)="toggleDistricts()">
     <i class="fas fa-map"></i>
-    <span>Districts</span>
+    <span>{{ 'MAP.DISTRICTS' | translate }}</span>
   </button>
 
   <button class="center-button" (click)="resetView()">

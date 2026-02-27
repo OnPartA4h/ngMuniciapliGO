@@ -1,10 +1,10 @@
 import { Component, inject, viewChild } from '@angular/core';
 
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdminService } from '../../services/admin-service';
 import { CreateUserDto, CreateUserResponseDto } from '../../models/user';
-import { PageHeaderComponent } from '../../components/ui';
+import { PageHeaderComponent, ToastService } from '../../components/ui';
 import { CreateUserFormComponent } from '../../components/forms/create-user-form/create-user-form';
 import { PasswordSuccessModalComponent } from '../../components/modals/password-success-modal/password-success-modal';
 
@@ -17,6 +17,8 @@ import { PasswordSuccessModalComponent } from '../../components/modals/password-
 export class CreateUser {
   private adminService = inject(AdminService);
   private router = inject(Router);
+  private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   readonly createUserForm = viewChild.required(CreateUserFormComponent);
 
@@ -36,6 +38,7 @@ export class CreateUser {
       this.createUserForm().resetForm();
     } catch (error: any) {
       console.error('Error creating user:', error);
+      this.toast.error(this.translate.instant('CREATE_USER.ERROR_CREATING'));
     } finally {
       this.createUserForm().setLoading(false);
     }

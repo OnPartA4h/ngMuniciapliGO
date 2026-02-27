@@ -13,7 +13,8 @@ import {
   PaginationComponent,
   NavigationTabsComponent,
   NavigationTab,
-  AiProcessingStatusComponent
+  AiProcessingStatusComponent,
+  ToastService
 } from '../../components/ui';
 import { DuplicateGroupCardComponent } from '../../components/cards/duplicate-group-card/duplicate-group-card';
 import { DuplicateMemberCardComponent } from '../../components/cards/duplicate-member-card/duplicate-member-card';
@@ -43,6 +44,7 @@ export class ManageDuplicates implements OnInit {
   private generalService = inject(GeneralService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
+  private toast = inject(ToastService);
 
   readonly loading = signal(true);
   readonly errorMessage = signal('');
@@ -171,8 +173,10 @@ export class ManageDuplicates implements OnInit {
           await this.loadGroups(this.currentPage());
         }
       }
+      this.toast.success(this.translateService.instant('DUPLICATES.EXCLUDE_SUCCESS'));
     } catch (e: any) {
       this.showError(e?.error?.message || 'Error excluding problem');
+      this.toast.error(e?.error?.message || this.translateService.instant('COMMON.ERROR_GENERIC'));
     } finally {
       this.confirmModalLoading.set(false);
       this.showExcludeModal.set(false);
@@ -202,8 +206,10 @@ export class ManageDuplicates implements OnInit {
       await this.whiteService.acceptDuplicateGroup(groupId);
       this.selectedGroupId.set(null);
       await this.loadGroups(this.currentPage());
+      this.toast.success(this.translateService.instant('DUPLICATES.ACCEPT_SUCCESS'));
     } catch (e: any) {
       this.showError(e?.error?.message || 'Error accepting group');
+      this.toast.error(e?.error?.message || this.translateService.instant('COMMON.ERROR_GENERIC'));
     } finally {
       this.confirmModalLoading.set(false);
       this.showAcceptModal.set(false);
@@ -279,8 +285,11 @@ export class ManageDuplicates implements OnInit {
       if (updatedSource.members.length === 0 && this.selectedGroupId() === sourceGroupId) {
         this.selectedGroupId.set(null);
       }
+
+      this.toast.success(this.translateService.instant('DUPLICATES.MOVE_SUCCESS'));
     } catch (e: any) {
       this.showDragError(e?.error?.message || this.translateService.instant('DUPLICATES.MOVE_ERROR'));
+      this.toast.error(e?.error?.message || this.translateService.instant('DUPLICATES.MOVE_ERROR'));
     }
   }
 }

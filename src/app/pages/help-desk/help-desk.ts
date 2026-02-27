@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { PageHeaderComponent } from '../../components/ui/page-header/page-header';
+import { ToastService } from '../../components/ui';
 import { SupportService } from '../../services/support-service';
 import { Problem } from '../../models/problem';
 import { Pagination } from '../../models/pagination';
@@ -13,11 +14,12 @@ import { PhoneCall } from '../../models/phoneCall';
 import { DatePipe } from '@angular/common';
 import { DurationPipe } from '../../pipes/duration.pipe';
 import { RouterLink } from "@angular/router";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-help-desk',
   standalone: true,
-  imports: [PageHeaderComponent, ReportListComponent, FormsModule, PhoneNumberPipe, DatePipe, DurationPipe, RouterLink],
+  imports: [PageHeaderComponent, ReportListComponent, FormsModule, PhoneNumberPipe, DatePipe, DurationPipe, RouterLink, TranslateModule],
   templateUrl: './help-desk.html',
   styleUrl: './help-desk.css',
 })
@@ -25,6 +27,8 @@ export class HelpDesk implements OnInit{
   supportService = inject(SupportService)
   generalService = inject(GeneralService);
   userService = inject(UserService)
+  private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   problems = signal<Problem[]>([])
   phoneCall = signal<PhoneCall | null>(null)
@@ -73,8 +77,14 @@ export class HelpDesk implements OnInit{
   }
 
   async endCall() {
-    await this.supportService.endCall(this.phoneCall()!.id)
-    this.phoneCall.set(null)
+    try {
+      await this.supportService.endCall(this.phoneCall()!.id)
+      this.phoneCall.set(null)
+      this.toast.success(this.translate.instant('HELP_DESK.END_CALL_SUCCESS'));
+    } catch (error) {
+      console.error('Error ending call:', error);
+      this.toast.error(this.translate.instant('HELP_DESK.END_CALL_ERROR'));
+    }
   }
 
   async addUserToCall() {
@@ -82,8 +92,9 @@ export class HelpDesk implements OnInit{
       let newCall = await this.supportService.addUserToCall(this.phoneCall()!.id, this.userSearch)
       this.phoneCall.set(newCall)
       this.client = this.phoneCall()!.client
+      this.toast.success(this.translate.instant('HELP_DESK.ADD_USER_SUCCESS'));
     } catch {
-      console.log('get me out of here');
+      this.toast.error(this.translate.instant('HELP_DESK.ADD_USER_ERROR'));
     }
     
     this.userSearch = '';

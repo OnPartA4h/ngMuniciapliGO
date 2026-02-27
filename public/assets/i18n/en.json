@@ -7,7 +7,9 @@
     "LOGIN": "Login",
     "LOGOUT": "Logout",
     "VITRINE": "Edit vitrine",
-    "VITRINE_TOOLTIP": "Open the public vitrine editor (opens in a new tab)"
+    "VITRINE_TOOLTIP": "Open the public vitrine editor (opens in a new tab)",
+    "HELP_DESK": "Help Desk",
+    "CHANGE_LANGUAGE": "Change language"
   },
   "COMMON": {
     "YES": "Yes",
@@ -68,7 +70,8 @@
     "CATEGORY_THREATS": "Threats",
     "CATEGORY_MISINFORMATION": "Misinformation",
     "CATEGORY_OFF_TOPIC": "Off Topic",
-    "CATEGORY_OTHER": "Other"
+    "CATEGORY_OTHER": "Other",
+    "CONFIRM_DELETE_TITLE": "Confirm Deletion"
   },
   "PROFILE": {
     "TITLE": "My Profile",
@@ -143,7 +146,9 @@
     "VERIFY_CODE": "Verify Code",
     "RESEND_CODE": "Resend Code",
     "SUBSCRIBED_TASKS": "Subscribed Tasks",
-    "NO_SUBSCRIBED_TASKS": "No subscribed tasks"
+    "NO_SUBSCRIBED_TASKS": "No subscribed tasks",
+    "RESET_EMAIL_SENT": "A password reset link has been sent",
+    "RESET_EMAIL_ERROR": "Error sending the reset link"
   },
   "AI_PROCESSING": {
     "NO_PROCESSING": "No reports being processed",
@@ -176,6 +181,7 @@
     "ROLES": "Roles",
     "DELETE_USER": "Delete User",
     "ROLE_CHANGED": "Role changed successfully for {{firstName}} {{lastName}}",
+    "DELETE_SUCCESS": "User deleted successfully",
     "ADDRESS": "Address",
     "STREET_NUMBER": "Street Number",
     "STREET_NAME": "Street Name",
@@ -202,7 +208,8 @@
     "REASON_HINT": "Optional — helps agents understand the grouping.",
     "INFO": "Once created, the group will appear in the duplicates list. You can then drag and drop reports from other groups into it.",
     "SUBMIT": "Create group",
-    "ERROR": "An error occurred while creating the group."
+    "ERROR": "An error occurred while creating the group.",
+    "SUCCESS": "Duplicate group created successfully!"
   },
   "CREATE_USER": {
     "TITLE": "Create New User",
@@ -240,7 +247,8 @@
     "COPY_PASSWORD": "Copy",
     "PASSWORD_COPIED": "Password copied!",
     "MUST_CHANGE_PASSWORD": "The user must change this password on first login.",
-    "UNDERSTOOD": "Understood, return to list"
+    "UNDERSTOOD": "Understood, return to list",
+    "ERROR_CREATING": "Error creating user. Please try again."
   },
   "MANAGE_REPORTS": {
     "TITLE": "Problem Management",
@@ -381,7 +389,9 @@
   },
   "MAP": {
     "ERROR_LOADING_PROBLEMS": "Unable to load problems. Please check your connection and try again.",
-    "NO_PROBLEMS_FOUND": "There are no problems in this area"
+    "NO_PROBLEMS_FOUND": "There are no problems in this area",
+    "TOGGLE_DISTRICTS": "Show/Hide districts",
+    "DISTRICTS": "Districts"
   },
   "DUPLICATES": {
     "TITLE": "Duplicate Groups",
@@ -409,7 +419,10 @@
     "MOVE_ERROR": "Error while moving the report",
     "CREATE_GROUP": "Create group",
     "EMPTY_GROUP": "Empty group",
-    "EMPTY_GROUP_HINT": "This group is empty. Drag and drop reports from another group to add them here."
+    "EMPTY_GROUP_HINT": "This group is empty. Drag and drop reports from another group to add them here.",
+    "EXCLUDE_SUCCESS": "Report excluded from group successfully",
+    "ACCEPT_SUCCESS": "Group accepted and merged successfully",
+    "MOVE_SUCCESS": "Report moved successfully"
   },
   "DASHBOARD": {
     "TITLE": "Dashboard",
@@ -440,7 +453,33 @@
     "IN_DUPLICATE_GROUP": "This report is in a duplicate group",
     "IN_DUPLICATE_GROUP_DESC": "This report is part of a duplicate group under review. Go to the duplicates page to manage group members.",
     "GO_TO_DUPLICATES": "Go to duplicates",
-    "EDIT_PROBLEM": "Edit problem"
+    "EDIT_PROBLEM": "Edit problem",
+    "INFORMATION": "Information",
+    "COMMENT_COUNT": "Number of comments",
+    "VIEW_COMMENTS": "View comments",
+    "VIEW": "View",
+    "PHOTO_ALT": "Problem photo",
+    "RESOLUTION_PHOTO_ALT": "Resolution photo"
+  },
+  "HELP_DESK": {
+    "TITLE": "Help Desk",
+    "SUBTITLE": "Call and user problem management",
+    "CALL_IN_PROGRESS": "Call in progress",
+    "AGENT": "Agent",
+    "START": "Start",
+    "DURATION": "Duration",
+    "STATUS": "Status",
+    "STATUS_IN_PROGRESS": "In progress",
+    "END_CALL": "End call",
+    "ADD_USER_PLACEHOLDER": "Add a user to the call...",
+    "ADD_USER_BTN": "Add to call",
+    "NO_CALL": "No call in progress",
+    "WAITING_CALL": "Waiting for a user call",
+    "SEARCH_PROBLEM": "Search for a problem...",
+    "END_CALL_SUCCESS": "Call ended successfully",
+    "END_CALL_ERROR": "Error ending the call",
+    "ADD_USER_SUCCESS": "User added to the call",
+    "ADD_USER_ERROR": "Unable to add this user to the call"
   },
   "CHAT": {
     "TITLE": "Messaging",
@@ -461,7 +500,9 @@
     "HOURS_AGO": "{{count}} h ago",
     "DAYS_AGO": "{{count}} d ago",
     "ONLINE": "Online",
-    "TYPING": "typing…"
+    "TYPING": "typing…",
+    "CREATE_ERROR": "Error creating the conversation",
+    "CREATE_GROUP_ERROR": "Error creating the group"
   },
   "CHAT_DETAIL": {
     "MEMBERS": "members",
@@ -527,7 +568,14 @@
     "VOICE_READY": "Ready to send",
     "PHOTO": "Photo",
     "VIDEO": "Video",
-    "AUDIO": "Audio"
+    "AUDIO": "Audio",
+    "EDIT_ERROR": "Error editing the message",
+    "DELETE_ERROR": "Error deleting the message",
+    "RENAME_ERROR": "Error renaming the group",
+    "ADD_MEMBER_ERROR": "Error adding member",
+    "REMOVE_MEMBER_ERROR": "Error removing member",
+    "LEAVE_ERROR": "Error leaving the group",
+    "CALL_START_ERROR": "Unable to start the call. Please try again."
   },
   "CALL": {
     "INCOMING_AUDIO": "Audio call incoming…",
@@ -582,5 +630,13 @@
     "FIELD_REJECTION": "Rejection Reason",
     "FIELD_LIKES": "Likes",
     "FIELD_PHOTO": "Photo (link)"
+  },
+  "COMMENTS": {
+    "TITLE": "Comments",
+    "SUBTITLE": "List of comments for this report",
+    "AGO": "",
+    "DAYS": "days ago",
+    "REPLY": "reply",
+    "REPLIES": "replies"
   }
 }

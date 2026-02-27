@@ -9,7 +9,7 @@ import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { ChatSummaryDto, ChatMessageDto, ChatType, UserSearchResultDto } from '../../models/chat';
 import { RoleOption } from '../../models/user';
-import { LoadingSpinnerComponent, EmptyStateComponent } from '../../components/ui';
+import { LoadingSpinnerComponent, EmptyStateComponent, ToastService } from '../../components/ui';
 
 @Component({
   selector: 'app-chats',
@@ -25,6 +25,7 @@ export class Chats implements OnInit, OnDestroy {
   private languageService = inject(LanguageService);
   private router = inject(Router);
   private translate = inject(TranslateService);
+  private toast = inject(ToastService);
   private subs: Subscription[] = [];
 
   // Exposer ChatType pour le template
@@ -276,6 +277,7 @@ export class Chats implements OnInit, OnDestroy {
         this.router.navigate(['/chats', chat.id]);
       } catch (error) {
         console.error('Error creating direct chat:', error);
+        this.toast.error(this.translate.instant('CHAT.CREATE_ERROR'));
       } finally {
         this.isCreating.set(false);
       }
@@ -304,6 +306,7 @@ export class Chats implements OnInit, OnDestroy {
       this.router.navigate(['/chats', chat.id]);
     } catch (error) {
       console.error('Error creating group chat:', error);
+      this.toast.error(this.translate.instant('CHAT.CREATE_GROUP_ERROR'));
     } finally {
       this.isCreating.set(false);
     }

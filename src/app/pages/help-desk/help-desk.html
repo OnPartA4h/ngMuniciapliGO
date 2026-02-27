@@ -1,6 +1,6 @@
 <div class="page-container">
-  <app-page-header title="Assistance / Help Desk"
-    subtitle="Gestion des appels et des problèmes utilisateurs"
+  <app-page-header [title]="'HELP_DESK.TITLE' | translate"
+    [subtitle]="'HELP_DESK.SUBTITLE' | translate"
     [showBackButton]="true" />
 
   <div class="helpdesk-layout">
@@ -10,7 +10,7 @@
       @if (phoneCall()) {
         <div class="helpdesk-user-card" [routerLink]="['/profile', client?.id]">
           <div class="helpdesk-user-avatar">
-            <img [src]="client?.profilePictureUrl" alt="Avatar utilisateur" />
+            <img [src]="client?.profilePictureUrl" alt="Avatar" />
           </div>
           <div class="helpdesk-user-info">
             <h2>{{client?.firstName}} {{client?.lastName}}</h2>
@@ -23,33 +23,33 @@
         </div>
         <div class="helpdesk-call-info">
           <div class="helpdesk-call-header">
-            <i class="fas fa-headset"></i> Appel en cours
+            <i class="fas fa-headset"></i> {{ 'HELP_DESK.CALL_IN_PROGRESS' | translate }}
           </div>
           <div class="helpdesk-call-details">
-            <span><b>Agent :</b> {{supportAgent?.firstName}} {{supportAgent?.lastName}}</span>
-            <span><b>Début :</b> {{phoneCall()?.createdAt | date:'HH:mm'}}</span>
-            <span><b>Durée :</b> {{phoneCall()!.createdAt | duration}}</span>
-            <span><b>Statut :</b> En cours</span>
+            <span><b>{{ 'HELP_DESK.AGENT' | translate }} :</b> {{supportAgent?.firstName}} {{supportAgent?.lastName}}</span>
+            <span><b>{{ 'HELP_DESK.START' | translate }} :</b> {{phoneCall()?.createdAt | date:'HH:mm'}}</span>
+            <span><b>{{ 'HELP_DESK.DURATION' | translate }} :</b> {{phoneCall()!.createdAt | duration}}</span>
+            <span><b>{{ 'HELP_DESK.STATUS' | translate }} :</b> {{ 'HELP_DESK.STATUS_IN_PROGRESS' | translate }}</span>
           </div>
           <button
             class="btn btn-danger helpdesk-end-call-btn"
             (click)="endCall()">
-            <i class="fas fa-phone-slash"></i> Terminer l'appel
+            <i class="fas fa-phone-slash"></i> {{ 'HELP_DESK.END_CALL' | translate }}
           </button>
         </div>
         <div class="helpdesk-add-user">
           <form (submit)="$event.preventDefault(); addUserToCall()">
-            <input type="text" placeholder="Ajouter un utilisateur à l'appel..." [(ngModel)]="userSearch" name="userSearch" class="helpdesk-add-user-input" />
+            <input type="text" [placeholder]="'HELP_DESK.ADD_USER_PLACEHOLDER' | translate" [(ngModel)]="userSearch" name="userSearch" class="helpdesk-add-user-input" />
             <button type="submit" class="btn btn-primary helpdesk-add-user-btn">
-              <i class="fas fa-user-plus"></i> Ajouter à l'appel
+              <i class="fas fa-user-plus"></i> {{ 'HELP_DESK.ADD_USER_BTN' | translate }}
             </button>
           </form>
         </div>
       } @else {
         <div class="helpdesk-call-info--empty">
           <i class="fas fa-phone-slash"></i>
-          <span>Aucun appel en cours</span>
-          <small>En attente d’un appel utilisateur</small>
+          <span>{{ 'HELP_DESK.NO_CALL' | translate }}</span>
+          <small>{{ 'HELP_DESK.WAITING_CALL' | translate }}</small>
         </div>
       }
     </div>
@@ -58,7 +58,7 @@
     <div class="helpdesk-problems-panel">
       <div class="helpdesk-search-bar">
         <form>
-          <input type="text" placeholder="Rechercher un problème..." [(ngModel)]="currentSearch" name="currentSearch"/>
+          <input type="text" [placeholder]="'HELP_DESK.SEARCH_PROBLEM' | translate" [(ngModel)]="currentSearch" name="currentSearch"/>
           <button type="submit" (click)="getProblems()" class="btn btn-primary"><i class="fas fa-search"></i></button>
         </form>
 
