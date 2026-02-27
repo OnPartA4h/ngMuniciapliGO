@@ -15,6 +15,7 @@ import { ChatHubService } from '../../services/chat-hub.service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
 import { GiphyService, GiphyGif } from '../../services/giphy.service';
+import { ActiveCallService } from '../../services/active-call.service';
 import {
   ChatDto, ChatType, ChatMemberDto, ChatMemberRole,
   ChatMessageDto, UserSearchResultDto, ReplyToDto
@@ -43,6 +44,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   private toast = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
   private giphyService = inject(GiphyService);
+  private activeCallService = inject(ActiveCallService);
   private subs: Subscription[] = [];
 
   readonly messagesContainer = viewChild.required<ElementRef<HTMLDivElement>>('messagesContainer');
@@ -821,11 +823,12 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
         token:    resp.token,     // token Twilio pour rejoindre la room
         joining:  'false',        // on est le caller
       });
-      window.open(
+      const callWin = window.open(
         `/call?${params.toString()}`,
         '_blank',
         'width=900,height=700,menubar=no,toolbar=no'
       );
+      this.activeCallService.registerCallWindow(callWin, this.chatDisplayName());
     } catch (err) {
       console.error('Failed to initiate call:', err);
       this.toast.error(this.translate.instant('CHAT_DETAIL.CALL_START_ERROR'));

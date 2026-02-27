@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { ChatHubService } from '../../services/chat-hub.service';
 import { VideoCallService } from '../../services/video-call.service';
+import { ActiveCallService } from '../../services/active-call.service';
 import { IncomingCallEvent } from '../../models/chat';
 
 @Component({
@@ -15,6 +16,7 @@ import { IncomingCallEvent } from '../../models/chat';
 export class IncomingCallComponent implements OnInit, OnDestroy {
   private chatHub = inject(ChatHubService);
   private videoCallService = inject(VideoCallService);
+  private activeCallService = inject(ActiveCallService);
   private subs: Subscription[] = [];
 
   incomingCall = signal<IncomingCallEvent | null>(null);
@@ -73,11 +75,12 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
         token:    resp.token,     // JWT Twilio court-terme
         joining:  'true',         // flag callee — le caller est déjà dans la room
       });
-      window.open(
+      const callWin = window.open(
         `/call?${params.toString()}`,
         '_blank',
         'width=900,height=700,menubar=no,toolbar=no',
       );
+      this.activeCallService.registerCallWindow(callWin, call.CallerName);
     } catch (err) {
       console.error('Error accepting call:', err);
       // Si l'obtention du token échoue, on refuse proprement
@@ -114,27 +117,75 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
   }
 
   private _audioCtx: AudioContext | null = null;
-  private _osc: OscillatorNode | null = null;
+  private _gainNode: GainNode | null = null;
+  private _osc1: OscillatorNode | null = null;
+  private _osc2: OscillatorNode | null = null;
   private _ringtoneTimeout: ReturnType<typeof setTimeout> | null = null;
 
+  /**
+   * Play a pleasant phone-style ringtone:
+   * Two gentle tones alternating with silence, like a real phone ring.
+   * Pattern: 1s ring, 2s silence, repeat.
+   */
   private playRingtone(): void {
-    // Use system audio API for a simple ringtone effect
     try {
-      this.stopRingtone(); // Stop any existing ringtone first
+      this.stopRingtone();
       const ctx = new AudioContext();
-      const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = 440;
-      gain.gain.value = 0.3;
-      osc.connect(gain);
+      gain.gain.value = 0; // start silent
       gain.connect(ctx.destination);
-      osc.start();
+
+      // Schedule a ring pattern: ring for 1s, silent for 2s, repeating
+      const now = ctx.currentTime;
+      const ringDuration = 1.0;
+      const silenceDuration = 2.0;
+      const cycleLength = ringDuration + silenceDuration;
+      const totalCycles = 10; // ~30s of ringing
+
+      for (let i = 0; i < totalCycles; i++) {
+        const start = now + i * cycleLength;
+        // Fade in
+        gain.gain.setValueAtTime(0, start);
+        gain.gain.linearRampToValueAtTime(0.15, start + 0.05);
+        // Hold
+        gain.gain.setValueAtTime(0.15, start + ringDuration - 0.05);
+        // Fade out
+        gain.gain.linearRampToValueAtTime(0, start + ringDuration);
+      }
+
+      // Two oscillators for a dual-tone ring (like a real phone)
+      const osc1 = ctx.createOscillator();
+      osc1.type = 'sine';
+      osc1.frequency.value = 440; // A4
+      osc1.connect(gain);
+      osc1.start();
+
+      const osc2 = ctx.createOscillator();
+      osc2.type = 'sine';
+      osc2.frequency.value = 480; // slightly above A4 — classic phone ring
+      const gain2 = ctx.createGain();
+      gain2.gain.value = 0;
+      gain2.connect(ctx.destination);
+      osc2.connect(gain2);
+      osc2.start();
+
+      // Same gain pattern for second oscillator
+      for (let i = 0; i < totalCycles; i++) {
+        const start = now + i * cycleLength;
+        gain2.gain.setValueAtTime(0, start);
+        gain2.gain.linearRampToValueAtTime(0.1, start + 0.05);
+        gain2.gain.setValueAtTime(0.1, start + ringDuration - 0.05);
+        gain2.gain.linearRampToValueAtTime(0, start + ringDuration);
+      }
+
       this._audioCtx = ctx;
-      this._osc = osc;
-      // Safety: stop after 30 seconds max
+      this._gainNode = gain;
+      this._osc1 = osc1;
+      this._osc2 = osc2;
+
+      // Safety: stop after 30s max
       this._ringtoneTimeout = setTimeout(() => this.stopRingtone(), 30000);
-    } catch { /* silently fail */ }
+    } catch { /* silently fail if audio not available */ }
   }
 
   private stopRingtone(): void {
@@ -143,16 +194,17 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
       this._ringtoneTimeout = null;
     }
     try {
-      if (this._osc) {
-        this._osc.stop();
-        this._osc = null;
-      }
-    } catch { /* ignore - oscillator may already be stopped */ }
+      if (this._osc1) { this._osc1.stop(); this._osc1 = null; }
+    } catch { /* ignore */ }
+    try {
+      if (this._osc2) { this._osc2.stop(); this._osc2 = null; }
+    } catch { /* ignore */ }
+    this._gainNode = null;
     try {
       if (this._audioCtx && this._audioCtx.state !== 'closed') {
         this._audioCtx.close();
       }
       this._audioCtx = null;
-    } catch { /* ignore - context may already be closed */ }
+    } catch { /* ignore */ }
   }
 }

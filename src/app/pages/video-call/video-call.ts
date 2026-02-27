@@ -310,13 +310,21 @@ export class VideoCall implements OnInit, OnDestroy, AfterViewInit {
   }
 
   toggleMute(): void {
-    this.isMuted.update(v => !v);
-    if (this.localStream) {
-      this.localStream.getAudioTracks().forEach(t => t.enabled = !this.isMuted());
-    }
+    const muted = !this.isMuted();
+    this.isMuted.set(muted);
+
+    // Prefer Twilio API when room is connected (it manages the underlying track)
     if (this.twilioRoom?.localParticipant) {
-      this.twilioRoom.localParticipant.audioTracks.forEach(pub =>
-        this.isMuted() ? pub.track.disable() : pub.track.enable());
+      this.twilioRoom.localParticipant.audioTracks.forEach(pub => {
+        if (muted) {
+          pub.track.disable();
+        } else {
+          pub.track.enable();
+        }
+      });
+    } else if (this.localStream) {
+      // Fallback: directly toggle the raw MediaStreamTrack
+      this.localStream.getAudioTracks().forEach(t => t.enabled = !muted);
     }
   }
 
@@ -325,13 +333,20 @@ export class VideoCall implements OnInit, OnDestroy, AfterViewInit {
       this.addCameraTrack();
       return;
     }
-    this.isVideoOff.update(v => !v);
-    if (this.localStream) {
-      this.localStream.getVideoTracks().forEach(t => t.enabled = !this.isVideoOff());
-    }
+
+    const off = !this.isVideoOff();
+    this.isVideoOff.set(off);
+
     if (this.twilioRoom?.localParticipant) {
-      this.twilioRoom.localParticipant.videoTracks.forEach(pub =>
-        this.isVideoOff() ? pub.track.disable() : pub.track.enable());
+      this.twilioRoom.localParticipant.videoTracks.forEach(pub => {
+        if (off) {
+          pub.track.disable();
+        } else {
+          pub.track.enable();
+        }
+      });
+    } else if (this.localStream) {
+      this.localStream.getVideoTracks().forEach(t => t.enabled = !off);
     }
   }
 
