@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -21,15 +21,15 @@ export class Login implements OnInit {
   private translateService = inject(TranslateService);
   
   formGroup: FormGroup;
-  showResetPasswordModal = false;
-  showForgotPasswordModal = false;
-  currentPassword = '';
-  isLoading = false;
-  sessionExpired = false;
+  showResetPasswordModal = signal<boolean>(false);
+  showForgotPasswordModal = signal<boolean>(false);
+  currentPassword = signal<string>("");
+  isLoading = signal<boolean>(false);
+  sessionExpired = signal<boolean>(false);
 
-  roles: string[] = []
-  token: string | null = null
-  errorMessage: string = ""
+  roles = signal<string[]>([])
+  token = signal<string | null>(null)
+  errorMessage = signal<string>("")
 
   constructor() {
     this.formGroup = this.formBuilder.group(
@@ -43,7 +43,7 @@ export class Login implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params['sessionExpired'] === 'true') {
-        this.sessionExpired = true;
+        this.sessionExpired.set(true);
       }
     });
   }
@@ -51,8 +51,8 @@ export class Login implements OnInit {
   async login() {
     if (!this.formGroup.valid) return
     
-    this.sessionExpired = false;
-    this.isLoading = true;
+    this.sessionExpired.set(false);
+    this.isLoading.set(true)
     
     let email = this.formGroup.get('email')?.value
     let password = this.formGroup.get('password')?.value
@@ -60,67 +60,93 @@ export class Login implements OnInit {
     try {
       await this.authService.login(email, password)
 
-      this.token = this.authService.token()
-      this.roles = this.authService.roles()
+      this.token.set(this.authService.token()) 
+      this.roles.set(this.authService.roles())
 
       this.verifyPermissions()
 
       const loginResponse = this.authService.getLoginResponse();
       if (loginResponse && loginResponse.user.mustResetPassword) {
-        this.currentPassword = password;
-        this.showResetPasswordModal = true;
-        this.isLoading = false;
+        this.currentPassword.set(password);
+        this.showResetPasswordModal.set(true);
+        this.isLoading.set(false)
         return;
       }
 
       await this.handleRedirection()
 
     } catch (error: any) {
-      switch (error.status) {
-        case 401:
-          this.errorMessage = this.translateService.instant('LOGIN.INVALID_CREDENTIALS');
-          break;
-        case 500:
-          this.errorMessage = this.translateService.instant('LOGIN.SERVER_ERROR');
-          break;
-        default:
-          this.errorMessage = this.translateService.instant('LOGIN.SOMETHING_WENT_WRONG');
-          break
-      }
+      this.errorHandling(error)
+
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
   async onPasswordReset() {
-    this.showResetPasswordModal = false;
+    this.showResetPasswordModal.set(false)
     await this.handleRedirection()
   }
 
   verifyPermissions(){
-    if (this.roles.includes("Admin") || this.roles.includes("ColBlanc") || this.roles.includes("Support")) return
-    this.errorMessage = this.translateService.instant('LOGIN.INSUFFICIENT_PERMISSIONS');
+    if (this.roles().includes("Admin") || this.roles().includes("ColBlanc") || this.roles().includes("Support")) return
+    this.errorMessage.set(this.translateService.instant('LOGIN.INSUFFICIENT_PERMISSIONS'));
     this.authService.logout()
   }
 
   async handleRedirection() {
-    if (this.roles.includes('Admin') && this.token){
+    if (this.roles().includes('Admin') && this.token()){
         this.router.navigate(['/manage-users'])
         await this.authService.connectToNotificationHub();
         return
       }
 
-    if (this.roles.includes('ColBlanc') && this.token){
+    if (this.roles().includes('ColBlanc') && this.token()){
       this.router.navigate(['/manage-reports'])
       await this.authService.connectToNotificationHub();
       return
     }
 
-    if (this.roles.includes('Support') && this.token) {
+    if (this.roles().includes('Support') && this.token()) {
       this.router.navigate(['/help-desk'])
       await this.authService.connectToNotificationHub();
       return
     }
+  }
+
+  errorHandling(error: any) {
+    if (error.status === 0) {
+        if (!navigator.onLine){
+          this.errorMessage.set(this.translateService.instant('LOGIN.NO_INTERNET'));
+        } else {
+          this.errorMessage.set(this.translateService.instant('LOGIN.SERVER_DOWN'))
+        }
+      } else {
+        switch (error.status) {
+          case 401:
+            this.errorMessage.set(this.translateService.instant('LOGIN.INVALID_CREDENTIALS'));
+            break;
+          case 403:
+            this.errorMessage.set(this.translateService.instant('LOGIN.FORBIDDEN'));
+            break;
+          case 404:
+            this.errorMessage.set(this.translateService.instant('LOGIN.NOT_FOUND'));
+            break;
+          case 429:
+            this.errorMessage.set(this.translateService.instant('LOGIN.TOO_MANY_ATTEMPTS'));
+            break;
+          case 500:
+            this.errorMessage.set(this.translateService.instant('LOGIN.SERVER_ERROR'));
+            break;
+          default:
+            if (error.error && error.error.message) {
+              this.errorMessage.set(error.error.message);
+            } else {
+              this.errorMessage.set(this.translateService.instant('LOGIN.SOMETHING_WENT_WRONG'));
+            }
+            break;
+        }
+      }
   }
 
   onResetError(error: string | undefined) {
@@ -128,11 +154,11 @@ export class Login implements OnInit {
   }
 
   openForgotPasswordModal() {
-    this.showForgotPasswordModal = true;
+    this.showForgotPasswordModal.set(true);
   }
 
   closeForgotPasswordModal() {
-    this.showForgotPasswordModal = false;
+    this.showForgotPasswordModal.set(false);
   }
 }
 

@@ -10,12 +10,12 @@
         <p>{{ 'LOGIN.SUBTITLE' | translate }}</p>
       </div>
 
-      @if (sessionExpired) {
+      @if (sessionExpired()) {
         <div class="form-alert form-alert--warning login-error-message">{{ 'LOGIN.SESSION_EXPIRED' | translate }}</div>
       }
 
-      @if (errorMessage != '') {
-        <div class="form-alert form-alert--error login-error-message">{{errorMessage}}</div>
+      @if (errorMessage() != '') {
+        <div class="form-alert form-alert--error login-error-message">{{errorMessage()}}</div>
       }
 
       <form [formGroup]="formGroup" class="login-form">
@@ -43,11 +43,11 @@
           <a href="javascript:void(0)" class="forgot-password" (click)="openForgotPasswordModal()">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
         </div>
 
-        <button type="submit" [disabled]="!formGroup.valid || isLoading" class="btn-login" (click)="login()">
-          @if (!isLoading) {
+        <button type="submit" [disabled]="!formGroup.valid || isLoading()" class="btn-login" (click)="login()">
+          @if (!isLoading()) {
             <span>{{ 'LOGIN.SIGN_IN' | translate }}</span>
           }
-          @if (isLoading) {
+          @if (isLoading()) {
             <div class="loading-spinner">
               <div class="spinner"></div>
               <span class="loading-text">{{ 'LOGIN.SIGNING_IN' | translate }}</span>
@@ -59,15 +59,15 @@
   </div>
 
   <!-- Force Reset Password Modal -->
-  @if (showResetPasswordModal) {
-    <app-force-reset-password-modal [currentPassword]="currentPassword"
+  @if (showResetPasswordModal()) {
+    <app-force-reset-password-modal [currentPassword]="currentPassword()"
       (passwordReset)="onPasswordReset()"
       (resetError)="onResetError($event)"
      />
   }
 
   <!-- Forgot Password Modal -->
-  @if (showForgotPasswordModal) {
+  @if (showForgotPasswordModal()) {
     <app-forgot-password-modal (close)="closeForgotPasswordModal()"
      />
   }
