@@ -14,6 +14,7 @@ import { VideoCallService } from '../../services/video-call.service';
 import { ChatHubService } from '../../services/chat-hub.service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
+import { GiphyService, GiphyGif } from '../../services/giphy.service';
 import {
   ChatDto, ChatType, ChatMemberDto, ChatMemberRole,
   ChatMessageDto, UserSearchResultDto, ReplyToDto
@@ -41,10 +42,12 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   private translate = inject(TranslateService);
   private toast = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
+  private giphyService = inject(GiphyService);
   private subs: Subscription[] = [];
 
   readonly messagesContainer = viewChild.required<ElementRef<HTMLDivElement>>('messagesContainer');
   readonly fileInput = viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
+  readonly gifSearchInput = viewChild<ElementRef<HTMLInputElement>>('gifSearchInput');
 
   readonly ChatType = ChatType;
   readonly ChatMemberRole = ChatMemberRole;
@@ -159,6 +162,13 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
 
   // ── Error toast ───────────────────────────────────────────────────────
   recordingError = signal<string | null>(null);
+
+  // ── GIF Picker ────────────────────────────────────────────────────────
+  showGifPicker = signal(false);
+  gifSearchQuery = signal('');
+  gifResults = signal<GiphyGif[]>([]);
+  isGifSearching = signal(false);
+  private gifSearchTimer: ReturnType<typeof setTimeout> | null = null;
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -278,6 +288,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
     if (this.searchTimer) clearTimeout(this.searchTimer);
     if (this.typingTimer) clearTimeout(this.typingTimer);
     if (this.recordingInterval) clearInterval(this.recordingInterval);
+    if (this.gifSearchTimer) clearTimeout(this.gifSearchTimer);
     this.stopRecording(true);
     this.clearFileSelection();
     if (this.chatId) {
@@ -650,6 +661,83 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   extractGifUrl(content: string): string {
     const match = content.trim().match(/^\[gif\](.+)\[\/gif\]$/);
     return match ? match[1] : '';
+  }
+
+  // ── GIF Picker ────────────────────────────────────────────────────────────
+
+  async toggleGifPicker(): Promise<void> {
+    const wasOpen = this.showGifPicker();
+    this.showGifPicker.update(v => !v);
+    if (!wasOpen) {
+      // Charger les GIFs tendance si pas encore chargés
+      if (this.gifResults().length === 0) {
+        await this.loadTrendingGifs();
+      }
+      // Focus l'input après le rendu
+      setTimeout(() => {
+        this.gifSearchInput()?.nativeElement?.focus();
+      }, 50);
+    }
+  }
+
+  closeGifPicker(): void {
+    this.showGifPicker.set(false);
+    this.gifSearchQuery.set('');
+  }
+
+  private async loadTrendingGifs(): Promise<void> {
+    try {
+      this.isGifSearching.set(true);
+      const results = await this.giphyService.trending(24);
+      this.gifResults.set(results);
+    } catch (e) {
+      console.error('Error loading trending GIFs:', e);
+    } finally {
+      this.isGifSearching.set(false);
+    }
+  }
+
+  onGifSearchInput(query: string): void {
+    this.gifSearchQuery.set(query);
+    if (this.gifSearchTimer) clearTimeout(this.gifSearchTimer);
+    if (!query.trim()) {
+      this.gifSearchTimer = setTimeout(() => this.loadTrendingGifs(), 300);
+      return;
+    }
+    this.gifSearchTimer = setTimeout(() => this.searchGifs(query), 400);
+  }
+
+  private async searchGifs(query: string): Promise<void> {
+    try {
+      this.isGifSearching.set(true);
+      const results = await this.giphyService.search(query);
+      this.gifResults.set(results);
+    } catch (e) {
+      console.error('Error searching GIFs:', e);
+    } finally {
+      this.isGifSearching.set(false);
+    }
+  }
+
+  async sendGif(gif: GiphyGif): Promise<void> {
+    const url = gif.images.original.url;
+    const content = `[gif]${url}[/gif]`;
+    this.closeGifPicker();
+    try {
+      this.isSending.set(true);
+      const replyTo = this.replyingTo();
+      await this.messageService.sendMessage(this.chatId, {
+        content,
+        replyToMessageId: replyTo?.id,
+      });
+      this.replyingTo.set(null);
+      this.shouldScrollToBottom = true;
+    } catch (error) {
+      console.error('Error sending GIF:', error);
+      this.toast.error(this.translate.instant('CHAT_DETAIL.SEND_ERROR'));
+    } finally {
+      this.isSending.set(false);
+    }
   }
 
   /**

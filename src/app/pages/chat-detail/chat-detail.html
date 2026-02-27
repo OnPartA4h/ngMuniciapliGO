@@ -544,6 +544,53 @@
     </div>
   }
 
+  <!-- ─── GIF Picker ─────────────────────────────────────────────────── -->
+  @if (showGifPicker()) {
+    <div class="gif-picker">
+      <div class="gif-picker__header">
+        <div class="gif-search-box">
+          <i class="fas fa-search"></i>
+          <input
+            #gifSearchInput
+            type="text"
+            [placeholder]="'CHAT_DETAIL.GIF_SEARCH_PLACEHOLDER' | translate"
+            [ngModel]="gifSearchQuery()"
+            (ngModelChange)="onGifSearchInput($event)"
+            class="gif-search-input" />
+          @if (isGifSearching()) {
+            <div class="spinner spinner--sm"></div>
+          }
+        </div>
+        <button class="icon-btn sm" (click)="closeGifPicker()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="gif-picker__grid">
+        @if (isGifSearching() && gifResults().length === 0) {
+          <div class="gif-picker__loading">
+            <div class="spinner spinner--sm"></div>
+          </div>
+        }
+        @for (gif of gifResults(); track gif.id) {
+          <button class="gif-item" (click)="sendGif(gif)" [title]="gif.title">
+            <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title" loading="lazy" />
+          </button>
+        }
+        @if (!isGifSearching() && gifResults().length === 0) {
+          <div class="gif-picker__empty">
+            <i class="fas fa-film"></i>
+            <span>{{ 'CHAT_DETAIL.GIF_NO_RESULTS' | translate }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="gif-picker__footer">
+        <span class="gif-powered">Powered by GIPHY</span>
+      </div>
+    </div>
+  }
+
   <!-- ─── Zone de saisie ─────────────────────────────────────────────── -->
   @if (!chatHub.isConnected()) {
     <div class="connection-banner">
@@ -606,6 +653,12 @@
     @else {
       <button class="icon-btn input-action-btn" (click)="triggerFileInput()" [title]="'CHAT_DETAIL.ATTACH_FILE' | translate">
         <i class="fas fa-paperclip"></i>
+      </button>
+
+      <!-- Bouton GIF -->
+      <button class="icon-btn input-action-btn gif-btn" (click)="toggleGifPicker()"
+        [class.active]="showGifPicker()" [title]="'GIF'">
+        <span class="gif-btn-label">GIF</span>
       </button>
 
       <input
