@@ -10,6 +10,8 @@
     "VITRINE_TOOLTIP": "Open the public vitrine editor (opens in a new tab)"
   },
   "COMMON": {
+    "NO_INTERNET": "Please check your internet connection.",
+    "BACK_ONLINE": "Back online.",
     "YES": "Yes",
     "NO": "No",
     "LOADING": "Loading...",

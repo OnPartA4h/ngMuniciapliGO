@@ -10,6 +10,8 @@
     "VITRINE_TOOLTIP": "Ouvrir l'éditeur de la vitrine (s'ouvre dans un nouvel onglet)"
   },
   "COMMON": {
+    "NO_INTERNET": "Veuillez vérifier votre connexion internet.",
+    "BACK_ONLINE": "Connexion établie.",
     "YES": "Oui",
     "NO": "Non",
     "LOADING": "Chargement...",

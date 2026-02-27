@@ -10,6 +10,9 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user-service';
 import { StatsFilterDTO } from '../../models/statsFilterDTO';
 import { DatePickerModule } from 'primeng/datepicker';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+let debounceTimer: any;
 
 @Component({
   selector: 'app-home',
@@ -22,6 +25,7 @@ export class Home {
   languageService = inject(LanguageService);
   userService = inject(UserService);
   private translate = inject(TranslateService);
+  private snackbar = inject(MatSnackBar);
 
   datasets = signal<ChartData<'line', { x: number; y: number }[]>>(undefined as any);
   datasetsResolution = signal<ChartData<'bar', { x: number; y: number }[]>>(undefined as any);
@@ -52,17 +56,26 @@ export class Home {
       this.generalService.loadAssigneA();
       this.generalService.loadCategories()
     });
+    window.addEventListener('online', () => {
+      this.snackbar.open(this.translate.instant('COMMON.BACK_ONLINE'), 'OK', { duration: 3000 });
+    });
+    window.addEventListener('offline', () => {
+      this.snackbar.open(this.translate.instant('COMMON.NO_INTERNET'), 'OK', { duration: 5000 });
+    });
   }
 
   async getColBleus() {
-    if (this.search() === "") {
-      this.colBleus.set([]);
-      this.currentResponsable.set("")
-    }
-    else {
-      const result = await this.userService.getColBleus(this.search());
-      this.colBleus.set(result);
-    }
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(async () => {
+      if (this.search() === "") {
+        this.colBleus.set([]);
+        this.currentResponsable.set("");
+      }
+      else {
+        const result = await this.userService.getColBleus(this.search());
+        this.colBleus.set(result);
+      }
+    }, 300);
   }
 
   async selectColBleu(colBleu: any) {
@@ -100,14 +113,19 @@ export class Home {
     filters.categorieId = this.currentCategory();
     filters.districtId = this.currentDistrict();
 
-    const statsResult = await this.generalService.getStats(filters);
-    console.log(statsResult);
-    this.stats.set(statsResult);
+    try {
+      const statsResult = await this.generalService.getStats(filters);
+      console.log(statsResult);
+      this.stats.set(statsResult);
 
-    this.setGraph(statsResult.graph);
-    this.setMoyenne(statsResult.graphAverage);
-    this.setDistricts(statsResult.graphDistrict);
-    this.setCategories(statsResult.graphCategorie);
+      this.setGraph(statsResult.graph);
+      this.setMoyenne(statsResult.graphAverage);
+      this.setDistricts(statsResult.graphDistrict);
+      this.setCategories(statsResult.graphCategorie);
+    } catch (error) {
+      this.snackbar.open(this.translate.instant('COMMON.NO_INTERNET'), 'OK', { duration: 5000 });
+      console.error('Error fetching stats:', error);
+    }
   }
 
   setGraph(graph: GraphDTO[]) {
