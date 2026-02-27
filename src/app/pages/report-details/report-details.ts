@@ -14,6 +14,8 @@ import { NotificationService } from '../../services/notification.service';
 import { ColBleuOption } from '../../models/user';
 import { LoadingSpinnerComponent, EmptyStateComponent, ToastService } from '../../components/ui';
 
+let debounceTimer: any;
+
 @Component({
   selector: 'app-report-details',
   templateUrl: './report-details.html',
@@ -176,10 +178,13 @@ export class ReportDetails implements OnInit {
   }
 
   async getColBleus() {
-    if (this.search == "")
-      this.colBleus = [];
-    else
-      this.colBleus = await this.userService.getColBleus(this.search);
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(async () => {
+      if (this.search == "")
+        this.colBleus = [];
+      else
+        this.colBleus = await this.userService.getColBleus(this.search);
+    }, 300);
   }
 
   openPhotoModal(index: number) {

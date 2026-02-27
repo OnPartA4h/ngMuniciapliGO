@@ -12,6 +12,8 @@
     "CHANGE_LANGUAGE": "Changer la langue"
   },
   "COMMON": {
+    "NO_INTERNET": "Veuillez vérifier votre connexion internet.",
+    "BACK_ONLINE": "Connexion établie.",
     "YES": "Oui",
     "NO": "Non",
     "LOADING": "Chargement...",
