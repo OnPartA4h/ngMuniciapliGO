@@ -1,9 +1,20 @@
 /* Report List Component */
 
+.report-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* Conteneur : une seule carte avec items collés */
 .reports-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-gray-200);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 
 .report-card {
@@ -14,6 +25,16 @@
   cursor: pointer;
   text-decoration: none;
   color: inherit;
+  border-bottom: 1px solid var(--color-gray-100);
+  transition: background var(--transition-fast);
+}
+
+.report-card:last-of-type {
+  border-bottom: none;
+}
+
+.report-card:hover {
+  background: var(--color-gray-50, #f9fafb);
 }
 
 .report-card:hover .report-title {
@@ -26,8 +47,8 @@
 }
 
 .report-thumbnail img {
-  width: 80px;
-  height: 60px;
+  width: 72px;
+  height: 54px;
   object-fit: cover;
   border-radius: var(--border-radius-sm);
   display: block;
@@ -39,7 +60,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 /* Ligne 1 : titre + badge */
@@ -88,7 +109,7 @@
 }
 
 .report-meta-sep {
-  color: var(--color-gray-400);
+  color: var(--color-gray-300);
   font-size: var(--font-size-xs);
   user-select: none;
 }
@@ -104,8 +125,8 @@
 /* Chevron */
 .report-action {
   flex-shrink: 0;
-  color: var(--color-gray-400);
-  font-size: 12px;
+  color: var(--color-gray-300);
+  font-size: 11px;
   transition: color var(--transition-fast), transform var(--transition-fast);
 }
 
@@ -121,8 +142,8 @@
   }
 
   .report-thumbnail img {
-    width: 64px;
-    height: 48px;
+    width: 56px;
+    height: 42px;
   }
 
   .report-action {

@@ -1,56 +1,58 @@
-<div class="reports-list">
-  @for (p of problems(); track p.id) {
-    <div class="report-card list-card" routerLink="/report-details/{{p.id}}">
+<div class="report-list-wrapper">
 
-      @if (p.photos && p.photos.length > 0) {
-        <div class="report-thumbnail">
-          <img [src]="p.photos[0].url" alt="Photo du problème" />
+  @if (problems().length > 0) {
+    <div class="reports-list">
+      @for (p of problems(); track p.id) {
+        <div class="report-card" routerLink="/report-details/{{p.id}}">
+
+          @if (p.photos && p.photos.length > 0) {
+            <div class="report-thumbnail">
+              <img [src]="p.photos[0].url" alt="Photo du problème" />
+            </div>
+          }
+
+          <div class="report-info">
+            <div class="report-header">
+              <h3 class="report-title">{{ p.titre }}</h3>
+              <span class="badge badge-info">{{ generalService.getStatusLabel(p.statut) }}</span>
+            </div>
+            <div class="report-meta-row">
+              <span class="report-meta-item">
+                <i class="fas fa-map-marker-alt"></i>
+                {{ p.address }}
+              </span>
+              <span class="report-meta-sep">·</span>
+              <span class="report-meta-item">
+                <i class="fas fa-tag"></i>
+                {{ generalService.getCategoryLabel(p.categorie) }}
+              </span>
+              <span class="report-meta-sep">·</span>
+              <span class="report-meta-item">
+                <i class="fas fa-clock"></i>
+                {{ p.dateCreation | daysAgo }}j
+              </span>
+              <span class="report-meta-sep">·</span>
+              <span class="report-meta-item">
+                <i class="fas fa-user"></i>
+                @if (p.assigneA === 2 && p.responsable) {
+                  {{ p.responsable.firstName }} {{ p.responsable.lastName }}
+                } @else {
+                  {{ generalService.assignees()[p.assigneA].label }}
+                }
+              </span>
+              <span class="report-meta-sep">·</span>
+              <span class="report-meta-item report-likes">
+                <i class="fa-solid fa-thumbs-up"></i>
+                {{ p.nbLikes }}
+              </span>
+            </div>
+          </div>
+
+          <div class="report-action">
+            <i class="fas fa-chevron-right"></i>
+          </div>
         </div>
       }
-
-      <div class="report-info">
-        <!-- Ligne 1 : Titre + statut -->
-        <div class="report-header">
-          <h3 class="report-title">{{ p.titre }}</h3>
-          <span class="badge badge-info">{{ generalService.getStatusLabel(p.statut) }}</span>
-        </div>
-
-        <!-- Ligne 2 : Métadonnées organisées en groupes -->
-        <div class="report-meta-row">
-          <span class="report-meta-item">
-            <i class="fas fa-map-marker-alt"></i>
-            {{ p.address }}
-          </span>
-          <span class="report-meta-sep">·</span>
-          <span class="report-meta-item">
-            <i class="fas fa-tag"></i>
-            {{ generalService.getCategoryLabel(p.categorie) }}
-          </span>
-          <span class="report-meta-sep">·</span>
-          <span class="report-meta-item">
-            <i class="fas fa-clock"></i>
-            {{ p.dateCreation | daysAgo }}j
-          </span>
-          <span class="report-meta-sep">·</span>
-          <span class="report-meta-item">
-            <i class="fas fa-user"></i>
-            @if (p.assigneA === 2 && p.responsable) {
-              {{ p.responsable.firstName }} {{ p.responsable.lastName }}
-            } @else {
-              {{ generalService.assignees()[p.assigneA].label }}
-            }
-          </span>
-          <span class="report-meta-sep">·</span>
-          <span class="report-meta-item report-likes">
-            <i class="fa-solid fa-thumbs-up"></i>
-            {{ p.nbLikes }}
-          </span>
-        </div>
-      </div>
-
-      <div class="report-action">
-        <i class="fas fa-chevron-right"></i>
-      </div>
     </div>
   }
 
@@ -65,4 +67,5 @@
       [totalPages]="pg.totalPages"
       (pageChange)="onPageChange($event)" />
   }
+
 </div>
