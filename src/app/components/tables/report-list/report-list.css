@@ -34,7 +34,7 @@
 }
 
 .report-card:hover {
-  background: var(--color-gray-50, #f9fafb);
+  background: var(--color-primary-light);
 }
 
 .report-card:hover .report-title {
