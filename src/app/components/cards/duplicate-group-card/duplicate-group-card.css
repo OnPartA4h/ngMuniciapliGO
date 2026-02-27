@@ -1,23 +1,27 @@
-/* Duplicate Group Card — style aligné sur report-list */
+/* Duplicate Group Card — intégrée dans le conteneur-table de manage-duplicates */
 .group-card {
   background: var(--color-white);
-  border-radius: var(--border-radius-lg);
-  border: 1px solid var(--color-gray-200);
-  box-shadow: var(--shadow-sm);
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
   overflow: hidden;
-  transition: border-color var(--transition-fast);
+  transition: background var(--transition-fast);
 }
 
 .group-card:hover {
-  border-color: var(--color-gray-300);
+  background: var(--color-gray-50);
 }
 
 .group-card--expanded {
-  border-color: var(--color-primary);
+  background: var(--color-white);
+}
+
+.group-card--expanded .group-card__header {
+  background: var(--color-primary-light);
+  border-left: 3px solid var(--color-primary);
 }
 
 .group-card--drag-over {
-  border-color: var(--color-primary);
   background: var(--color-primary-light);
 }
 
@@ -28,10 +32,12 @@
   padding: var(--spacing-lg) var(--spacing-xl);
   cursor: pointer;
   transition: background var(--transition-fast);
+  border-left: 3px solid transparent;
 }
 
 .group-card__header:hover {
   background: var(--color-primary-light);
+  border-left-color: var(--color-primary);
 }
 
 .group-card__info {
@@ -114,6 +120,7 @@
   border-top: 1px solid var(--color-gray-100);
   cursor: default;
   padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-xl);
+  background: var(--color-gray-50);
 }
 
 .group-card__empty {

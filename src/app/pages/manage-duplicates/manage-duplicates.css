@@ -68,16 +68,26 @@
   margin-bottom: var(--spacing-xl);
 }
 
-/* Groups List */
+/* Groups List — collés comme une table, sans espace entre les groupes */
 .groups-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: 0;
   margin-bottom: var(--spacing-2xl);
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-gray-200);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 
 .group-drop-zone {
   display: block;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.group-drop-zone:last-child {
+  border-bottom: none;
 }
 
 /* Group Actions */
