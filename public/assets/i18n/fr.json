@@ -327,11 +327,15 @@
     "SIGN_IN": "Se connecter",
     "SIGNING_IN": "Connexion en cours...",
     "ERROR_MESSAGE": "Identifiants invalides. Veuillez réessayer.",
-    "INVALID_CREDENTIALS": "Identifiants invalides",
-    "SERVER_ERROR": "Erreur du serveur",
-    "SESSION_EXPIRED": "Votre session a expiré. Veuillez vous reconnecter.",
-    "SOMETHING_WENT_WRONG": "Une erreur s'est produite, réessayer plus tard",
-    "INSUFFICIENT_PERMISSIONS": "Vous n'avez pas les permissions nécessaires pour accéder à cette application"
+    "INVALID_CREDENTIALS": "Identifiants invalides. Veuillez vérifier votre email et mot de passe.",
+    "SERVER_ERROR": "Erreur serveur. Veuillez réessayer plus tard.",
+    "SOMETHING_WENT_WRONG": "Une erreur est survenue. Veuillez réessayer.",
+    "NO_INTERNET": "Aucune connexion internet. Vérifiez votre réseau et réessayez.",
+    "FORBIDDEN": "Accès refusé. Vous n'avez pas la permission d'accéder à cette ressource.",
+    "NOT_FOUND": "Ressource non trouvée. Veuillez vérifier l'URL ou réessayer.",
+    "TOO_MANY_ATTEMPTS": "Trop de tentatives. Veuillez patienter avant de réessayer.",
+    "INSUFFICIENT_PERMISSIONS": "Vous n'avez pas les permissions nécessaires pour accéder à cette application",
+    "SERVER_DOWN": "Le serveur est indisponible. Veuillez réessayer plus tard."
   },
   "PROVINCES": {
     "ON": "Ontario",
