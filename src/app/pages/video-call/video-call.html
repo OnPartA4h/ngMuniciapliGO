@@ -1,126 +1,132 @@
-<div class="video-call-container">
+<div class="call-container">
   <!-- ── Call Rejected ──────────────────────────────────────────────────── -->
   @if (callRejected()) {
-    <div class="call-rejected">
-      <div class="rejected-icon">
+    <div class="call-status-screen">
+      <div class="status-icon rejected">
         <i class="fas fa-phone-slash"></i>
       </div>
-      <p class="rejected-text">{{ 'CALL.REJECTED' | translate }}</p>
-      <span class="call-target-name">{{ chatName() }}</span>
-      <button class="btn btn-primary" (click)="hangUp()">{{ 'CALL.CLOSE' | translate }}</button>
+      <p class="status-title">{{ 'CALL.REJECTED' | translate }}</p>
+      <span class="status-name">{{ chatName() }}</span>
+      <button class="btn-action primary" (click)="hangUp()">
+        <i class="fas fa-times"></i>
+        {{ 'CALL.CLOSE' | translate }}
+      </button>
     </div>
   }
   <!-- ── Error ──────────────────────────────────────────────────────────── -->
   @else if (error()) {
-    <div class="call-error">
-      <i class="fas fa-exclamation-triangle"></i>
-      <p>{{ error() }}</p>
-      <button class="btn btn-primary" (click)="hangUp()">{{ 'CALL.CLOSE' | translate }}</button>
+    <div class="call-status-screen">
+      <div class="status-icon error">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <p class="status-title">{{ error() }}</p>
+      <button class="btn-action primary" (click)="hangUp()">
+        <i class="fas fa-times"></i>
+        {{ 'CALL.CLOSE' | translate }}
+      </button>
     </div>
   }
   <!-- ── Connecting ─────────────────────────────────────────────────────── -->
   @else if (isConnecting()) {
-    <div class="call-connecting">
-      <div class="connecting-spinner"></div>
-      <p>{{ 'CALL.CONNECTING' | translate }}</p>
-      <span class="call-target-name">{{ chatName() }}</span>
-      <button class="btn btn-outline btn-cancel-connecting" (click)="hangUp()">
-        <i class="fas fa-phone-slash"></i>
-        {{ 'CALL.CANCEL' | translate }}
-      </button>
+    <div class="call-status-screen connecting">
+      <!-- Show local video preview behind the connecting state -->
+      @if (localStream) {
+        <video #localVideoPreview autoplay playsinline muted class="connecting-preview"></video>
+      }
+      <div class="connecting-overlay">
+        <div class="connecting-ring">
+          <div class="connecting-ring-inner"></div>
+        </div>
+        <span class="status-name">{{ chatName() }}</span>
+        <p class="status-subtitle">{{ 'CALL.CONNECTING' | translate }}</p>
+        <button class="btn-action hangup-sm" (click)="hangUp()">
+          <i class="fas fa-phone-slash"></i>
+          {{ 'CALL.CANCEL' | translate }}
+        </button>
+      </div>
     </div>
   }
   <!-- ── Active Call ────────────────────────────────────────────────────── -->
   @else {
-    <!-- Video area -->
-    <div class="call-video-area">
-      @if (isVideo) {
-        <div class="remote-videos" #remoteVideos>
-          <div class="no-remote-video">
+    <div class="call-stage">
+      <!-- Remote participant: big view -->
+      <div class="remote-area" #remoteVideos>
+        @if (!remoteJoined()) {
+          <div class="remote-placeholder">
             <div class="remote-avatar">
               <i class="fas fa-user"></i>
             </div>
-            <span>{{ chatName() }}</span>
+            <span class="remote-name">{{ chatName() }}</span>
+            <span class="remote-waiting">
+              <div class="waiting-dots"><span></span><span></span><span></span></div>
+              {{ 'CALL.CONNECTING' | translate }}
+            </span>
           </div>
-        </div>
-        <div class="local-video-wrapper" [class.video-off]="isVideoOff()">
-          <video #localVideo autoplay playsinline muted></video>
-          @if (isVideoOff()) {
-            <div class="video-off-placeholder">
-              <i class="fas fa-video-slash"></i>
-              @if (!hasCamera()) {
-                <span class="no-camera-label">{{ 'CALL.NO_CAMERA' | translate }}</span>
-              }
-            </div>
+        }
+      </div>
+
+      <!-- Local participant: small overlay -->
+      <div class="local-pip" [class.video-off]="isVideoOff()">
+        <video #localVideo autoplay playsinline muted class="local-video"></video>
+        @if (isVideoOff()) {
+          <div class="pip-video-off">
+            <i class="fas fa-video-slash"></i>
+          </div>
+        }
+      </div>
+
+      <!-- Top bar: call info -->
+      <div class="call-top-bar">
+        <div class="call-top-info">
+          <span class="call-peer-name">{{ chatName() }}</span>
+          @if (remoteJoined()) {
+            <span class="call-timer">{{ formatDuration(callDuration()) }}</span>
           }
         </div>
-      } @else {
-        <div class="audio-call-display">
-          <div class="audio-avatar">
-            <i class="fas fa-user"></i>
-          </div>
-          <span class="audio-name">{{ chatName() }}</span>
-        </div>
-      }
-    </div>
+      </div>
 
-    <!-- Group call participants -->
-    @if (isGroupCall && connectedParticipants().length > 0) {
-      <div class="group-participants-bar">
-        <span class="participants-label">
-          <i class="fas fa-users"></i>
-          {{ connectedParticipants().length }} {{ 'CALL.CONNECTED' | translate }}
-        </span>
-        <div class="participants-list">
+      <!-- Group participants strip -->
+      @if (isGroupCall && connectedParticipants().length > 0) {
+        <div class="participants-strip">
           @for (p of connectedParticipants(); track p.userId) {
-            <div class="participant-chip">
-              <div class="participant-avatar-sm">
+            <div class="participant-pill">
+              <div class="pill-avatar">
                 @if (p.profilePictureUrl) {
                   <img [src]="p.profilePictureUrl" alt="" />
                 } @else {
                   <span>{{ getInitials(p.displayName) }}</span>
                 }
               </div>
-              <span class="participant-name">{{ p.displayName }}</span>
+              <span class="pill-name">{{ p.displayName }}</span>
             </div>
           }
         </div>
-      </div>
-    }
-
-    <!-- Call info bar -->
-    <div class="call-info-bar">
-      @if (remoteJoined()) {
-        <span class="call-connected-badge">
-          <i class="fas fa-circle connected-dot"></i>
-          {{ 'CALL.CONNECTED' | translate }}
-        </span>
-        <span class="call-duration">{{ formatDuration(callDuration()) }}</span>
-      } @else {
-        <span class="call-waiting">
-          <div class="waiting-spinner"></div>
-          {{ 'CALL.CONNECTING' | translate }}
-        </span>
       }
     </div>
 
-    <!-- Controls -->
-    <div class="call-controls">
-      <button class="control-btn" [class.active]="isMuted()" (click)="toggleMute()"
-        [title]="(isMuted() ? 'CALL.UNMUTE' : 'CALL.MUTE') | translate">
-        <i class="fas" [class.fa-microphone]="!isMuted()" [class.fa-microphone-slash]="isMuted()"></i>
-      </button>
+    <!-- Bottom controls bar -->
+    <div class="call-controls-bar">
+      <div class="controls-group">
+        <!-- Mic -->
+        <button class="ctrl-btn" [class.off]="isMuted()" (click)="toggleMute()"
+          [title]="(isMuted() ? 'CALL.UNMUTE' : 'CALL.MUTE') | translate">
+          <i class="fas" [class.fa-microphone]="!isMuted()" [class.fa-microphone-slash]="isMuted()"></i>
+          <span class="ctrl-label">{{ (isMuted() ? 'CALL.UNMUTE' : 'CALL.MUTE') | translate }}</span>
+        </button>
 
-      @if (isVideo) {
-        <button class="control-btn" [class.active]="isVideoOff()" (click)="toggleVideo()"
+        <!-- Camera -->
+        <button class="ctrl-btn" [class.off]="isVideoOff()" (click)="toggleVideo()"
           [title]="(isVideoOff() ? 'CALL.VIDEO_ON' : 'CALL.VIDEO_OFF') | translate">
           <i class="fas" [class.fa-video]="!isVideoOff()" [class.fa-video-slash]="isVideoOff()"></i>
+          <span class="ctrl-label">{{ (isVideoOff() ? 'CALL.VIDEO_ON' : 'CALL.VIDEO_OFF') | translate }}</span>
         </button>
-      }
 
-      <button class="control-btn hangup" (click)="hangUp()" [title]="'CALL.HANG_UP' | translate">
-        <i class="fas fa-phone-slash"></i>
-      </button>
+        <!-- Hang up -->
+        <button class="ctrl-btn hangup" (click)="hangUp()" [title]="'CALL.HANG_UP' | translate">
+          <i class="fas fa-phone-slash"></i>
+          <span class="ctrl-label">{{ 'CALL.HANG_UP' | translate }}</span>
+        </button>
+      </div>
     </div>
   }
 </div>

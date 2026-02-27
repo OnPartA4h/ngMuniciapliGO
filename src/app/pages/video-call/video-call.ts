@@ -1,5 +1,5 @@
 import {
-  Component, OnInit, OnDestroy,
+  Component, OnInit, OnDestroy, AfterViewInit,
   inject, signal, ElementRef,
   viewChild
 } from '@angular/core';
@@ -26,21 +26,22 @@ export interface CallParticipant {
   templateUrl: './video-call.html',
   styleUrl: './video-call.css',
 })
-export class VideoCall implements OnInit, OnDestroy {
+export class VideoCall implements OnInit, OnDestroy, AfterViewInit {
   private videoCallService = inject(VideoCallService);
   private chatHub          = inject(ChatHubService);
   private chatService      = inject(ChatService);
   private subs: Subscription[] = [];
 
-  readonly localVideoRef = viewChild.required<ElementRef<HTMLVideoElement>>('localVideo');
-  readonly remoteVideosRef = viewChild.required<ElementRef<HTMLDivElement>>('remoteVideos');
+  readonly localVideoRef      = viewChild<ElementRef<HTMLVideoElement>>('localVideo');
+  readonly localVideoPreview  = viewChild<ElementRef<HTMLVideoElement>>('localVideoPreview');
+  readonly remoteVideosRef    = viewChild<ElementRef<HTMLDivElement>>('remoteVideos');
 
   // ── Paramètres reçus via l'URL ────────────────────────────────────────────
   chatId      = '';
-  roomName    = '';   // UUID stable de l'appel
-  twilioToken = '';   // JWT Twilio court-terme
+  roomName    = '';
+  twilioToken = '';
   isVideo     = true;
-  isJoining   = false; // true = callee, false = caller
+  isJoining   = false;
 
   // ── État UI ───────────────────────────────────────────────────────────────
   chatName              = signal('');
@@ -52,20 +53,24 @@ export class VideoCall implements OnInit, OnDestroy {
   hasCamera             = signal(true);
   error                 = signal('');
   callRejected          = signal(false);
-  /** True dès qu'au moins un participant distant a rejoint la room. */
   remoteJoined          = signal(false);
   isGroupCall           = false;
   connectedParticipants = signal<CallParticipant[]>([]);
 
-  // ── Ressources ────────────────────────────────────────────────────────────
+  // ── Ressources (public for template access) ───────────────────────────────
+  localStream: MediaStream | null = null;
   private twilioRoom?: TwilioVideo.Room;
-  private localStream: MediaStream | null = null;
   private durationInterval?: ReturnType<typeof setInterval>;
-  /** Timer caller 45 s sans réponse → raccrocher (§6.7). */
   private callerTimeoutTimer?: ReturnType<typeof setTimeout>;
   private cleanedUp = false;
+  private viewReady = false;
 
   // ──────────────────────────────────────────────────────────────────────────
+
+  ngAfterViewInit(): void {
+    this.viewReady = true;
+    this.bindLocalVideoToElement();
+  }
 
   async ngOnInit(): Promise<void> {
     const params      = new URLSearchParams(window.location.search);
@@ -82,7 +87,6 @@ export class VideoCall implements OnInit, OnDestroy {
     }
 
     try {
-      // Chargement des infos du chat pour l'affichage
       const chat   = await this.chatService.getChat(this.chatId);
       const userId = localStorage.getItem('userId') ?? '';
       this.isGroupCall = chat.type === ChatType.Group;
@@ -105,28 +109,20 @@ export class VideoCall implements OnInit, OnDestroy {
         }
       }
 
-      // ── CALLER (§6.1) : token passé dans l'URL par chat-detail.startCall() ──
-      // Si le token est absent (cas de secours), on le redemande.
       if (!this.isJoining && !this.twilioToken) {
         const resp       = await this.videoCallService.getCallToken(this.chatId, this.isVideo);
         this.twilioToken = resp.token;
         this.roomName    = resp.roomName;
       }
 
-      // ── CALLEE (§6.2) : token déjà obtenu dans incoming-call.accept() ────────
-      // roomName et token sont dans l'URL.
-
-      // Acquisition du flux local (audio ± vidéo)
+      // Always acquire both audio + video regardless of call type
       await this.acquireMediaStream();
-      const localVideoRef = this.localVideoRef();
-      if (localVideoRef?.nativeElement && this.localStream) {
-        localVideoRef.nativeElement.srcObject = this.localStream;
-      }
+      this.bindLocalVideoToElement();
 
-      // Connexion à la room Twilio
+      // Connect to Twilio room
       await this.connectTwilioRoom();
 
-      // Timer côté caller (§6.7)
+      // Caller timeout 45s
       if (!this.isJoining) {
         this.callerTimeoutTimer = setTimeout(() => {
           if (!this.remoteJoined()) this.hangUp();
@@ -136,14 +132,15 @@ export class VideoCall implements OnInit, OnDestroy {
       this.isConnecting.set(false);
       this.isConnected.set(true);
 
-      // Abonnements SignalR
+      // Re-bind local video after connecting state changes (different element)
+      setTimeout(() => this.bindLocalVideoToElement(), 50);
+
+      // SignalR subscriptions
       this.subs.push(
-        // §6.5 — l'autre côté raccroche
         this.chatHub.callEnded$.subscribe(ev => {
           const id = ev.ChatId ?? ev.chatId;
           if (id === this.chatId) this.onRemoteHangUp();
         }),
-        // §6.6 — le callee refuse (uniquement pertinent pour le caller)
         this.chatHub.callRejected$.subscribe(ev => {
           const id = ev.ChatId ?? ev.chatId;
           if (id === this.chatId) this.onCallRejected();
@@ -162,9 +159,26 @@ export class VideoCall implements OnInit, OnDestroy {
     this.subs.forEach(s => s.unsubscribe());
   }
 
+  // ── Bind local stream to whichever video element is currently in the DOM ──
+
+  private bindLocalVideoToElement(): void {
+    if (!this.localStream || !this.viewReady) return;
+
+    // Try the main local-video PIP first
+    const mainRef = this.localVideoRef();
+    if (mainRef?.nativeElement) {
+      mainRef.nativeElement.srcObject = this.localStream;
+      return;
+    }
+    // Fall back to connecting-state preview
+    const previewRef = this.localVideoPreview();
+    if (previewRef?.nativeElement) {
+      previewRef.nativeElement.srcObject = this.localStream;
+    }
+  }
+
   // ── SDK Twilio ─────────────────────────────────────────────────────────────
 
-  /** Connexion à la room Twilio (§6.1 caller / §6.2 callee). */
   private async connectTwilioRoom(): Promise<void> {
     if (!this.twilioToken || !this.roomName) {
       throw new Error('Missing Twilio token or roomName');
@@ -175,7 +189,8 @@ export class VideoCall implements OnInit, OnDestroy {
       for (const t of this.localStream.getAudioTracks()) {
         tracks.push(new TwilioVideo.LocalAudioTrack(t));
       }
-      if (this.isVideo && !this.isVideoOff()) {
+      // Publish video track if camera is on
+      if (!this.isVideoOff()) {
         for (const t of this.localStream.getVideoTracks()) {
           tracks.push(new TwilioVideo.LocalVideoTrack(t));
         }
@@ -187,7 +202,6 @@ export class VideoCall implements OnInit, OnDestroy {
       tracks,
     });
 
-    // Participants déjà présents dans la room (callee rejoint une room avec le caller)
     this.twilioRoom.participants.forEach(p => this.onParticipantConnected(p));
 
     this.twilioRoom.on('participantConnected', (p: TwilioVideo.RemoteParticipant) =>
@@ -196,7 +210,6 @@ export class VideoCall implements OnInit, OnDestroy {
     this.twilioRoom.on('participantDisconnected', (p: TwilioVideo.RemoteParticipant) =>
       this.onParticipantDisconnected(p));
 
-    // Déconnexion inattendue de la room
     this.twilioRoom.on('disconnected', (_room: TwilioVideo.Room, err?: TwilioVideo.TwilioError) => {
       if (err) {
         console.error('Twilio room disconnected unexpectedly:', err);
@@ -207,7 +220,6 @@ export class VideoCall implements OnInit, OnDestroy {
   }
 
   private onParticipantConnected(participant: TwilioVideo.RemoteParticipant): void {
-    // Attacher les pistes déjà souscrites
     participant.tracks.forEach(pub => {
       if (pub.isSubscribed && pub.track) {
         this.attachTrack(pub.track as TwilioVideo.RemoteAudioTrack | TwilioVideo.RemoteVideoTrack);
@@ -231,7 +243,6 @@ export class VideoCall implements OnInit, OnDestroy {
   }
 
   private onParticipantDisconnected(_p: TwilioVideo.RemoteParticipant): void {
-    // Appel 1-à-1 : si plus aucun participant distant → fin d'appel
     if (!this.isGroupCall && this.twilioRoom && this.twilioRoom.participants.size === 0) {
       this.onRemoteHangUp();
     }
@@ -240,6 +251,13 @@ export class VideoCall implements OnInit, OnDestroy {
   private attachTrack(track: TwilioVideo.RemoteAudioTrack | TwilioVideo.RemoteVideoTrack): void {
     const remoteVideosRef = this.remoteVideosRef();
     if (!remoteVideosRef?.nativeElement) return;
+
+    // Remove the placeholder if remote video is coming in
+    const placeholder = remoteVideosRef.nativeElement.querySelector('.remote-placeholder');
+    if (placeholder && track.kind === 'video') {
+      placeholder.remove();
+    }
+
     const el = track.attach();
     (el as HTMLElement).style.cssText = 'width:100%;height:100%;object-fit:cover;';
     remoteVideosRef.nativeElement.appendChild(el);
@@ -249,25 +267,28 @@ export class VideoCall implements OnInit, OnDestroy {
     track.detach().forEach(el => el.remove());
   }
 
-  // ── Flux local ────────────────────────────────────────────────────────────
+  // ── Acquire local media ───────────────────────────────────────────────────
 
+  /**
+   * Always try to get both audio + video.
+   * For audio calls, the camera starts disabled but the stream is still acquired
+   * This lets the user enable camera during an audio call.
+   */
   private async acquireMediaStream(): Promise<void> {
-    if (this.isVideo) {
-      try {
-        this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        this.hasCamera.set(true);
-        this.isVideoOff.set(false);
-      } catch {
-        console.warn('Camera not available, joining with audio only');
-        try {
-          this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        } catch {
-          throw new Error('Microphone access denied or unavailable');
-        }
-        this.hasCamera.set(false);
+    try {
+      this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      this.hasCamera.set(true);
+
+      // For "audio" calls, start with camera off but stream acquired
+      if (!this.isVideo) {
+        this.localStream.getVideoTracks().forEach(t => t.enabled = false);
         this.isVideoOff.set(true);
+      } else {
+        this.isVideoOff.set(false);
       }
-    } else {
+    } catch {
+      // Camera not available — fall back to audio only
+      console.warn('Camera not available, joining with audio only');
       try {
         this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
       } catch {
@@ -278,16 +299,12 @@ export class VideoCall implements OnInit, OnDestroy {
     }
   }
 
-  // ── Actions utilisateur ───────────────────────────────────────────────────
+  // ── User actions ──────────────────────────────────────────────────────────
 
-  /**
-   * Raccrocher (§6.4).
-   * Ordre : 1. POST /hangup  2. Déconnecter Twilio  3. Fermer l'UI.
-   */
   async hangUp(): Promise<void> {
     try {
       await this.videoCallService.hangUp(this.chatId);
-    } catch { /* le serveur a peut-être déjà terminé l'appel */ }
+    } catch { /* server may have already ended */ }
     this.cleanup();
     window.close();
   }
@@ -331,12 +348,8 @@ export class VideoCall implements OnInit, OnDestroy {
       this.hasCamera.set(true);
       this.isVideoOff.set(false);
 
-      const localVideoRef = this.localVideoRef();
-      if (localVideoRef?.nativeElement) {
-        localVideoRef.nativeElement.srcObject = this.localStream;
-      }
+      this.bindLocalVideoToElement();
 
-      // Publier la nouvelle piste vidéo dans la room Twilio
       if (this.twilioRoom?.localParticipant) {
         const localVideoTrack = new TwilioVideo.LocalVideoTrack(rawTrack);
         await this.twilioRoom.localParticipant.publishTrack(localVideoTrack);
@@ -346,27 +359,25 @@ export class VideoCall implements OnInit, OnDestroy {
     }
   }
 
-  // ── Événements SignalR ────────────────────────────────────────────────────
+  // ── SignalR events ────────────────────────────────────────────────────────
 
-  /** §6.5 — l'autre côté raccroche. */
   private onRemoteHangUp(): void {
     this.cleanup();
     this.error.set('Call ended');
   }
 
-  /** §6.6 — le callee refuse (vu par le caller). */
   private onCallRejected(): void {
     this.callRejected.set(true);
     this.cleanup();
   }
 
-  // ── Timer durée ───────────────────────────────────────────────────────────
+  // ── Duration timer ────────────────────────────────────────────────────────
 
   private startDurationTimer(): void {
     this.durationInterval = setInterval(() => this.callDuration.update(d => d + 1), 1000);
   }
 
-  // ── Nettoyage des ressources (§9) ─────────────────────────────────────────
+  // ── Cleanup ───────────────────────────────────────────────────────────────
 
   private cleanup(): void {
     if (this.cleanedUp) return;
@@ -381,10 +392,8 @@ export class VideoCall implements OnInit, OnDestroy {
       this.durationInterval = undefined;
     }
 
-    // Déconnecter la room Twilio et dépublier les pistes locales
     if (this.twilioRoom) {
       this.twilioRoom.localParticipant?.tracks.forEach(pub => {
-        // LocalDataTrack n'a pas de méthode stop() — on ne dépublie que audio/video
         const track = pub.track as TwilioVideo.LocalAudioTrack | TwilioVideo.LocalVideoTrack | TwilioVideo.LocalDataTrack;
         if (track.kind === 'audio' || track.kind === 'video') {
           (track as TwilioVideo.LocalAudioTrack | TwilioVideo.LocalVideoTrack).stop();
@@ -397,7 +406,6 @@ export class VideoCall implements OnInit, OnDestroy {
       this.twilioRoom = undefined;
     }
 
-    // Libérer caméra et microphone
     if (this.localStream) {
       this.localStream.getTracks().forEach(t => t.stop());
       this.localStream = null;
@@ -406,7 +414,7 @@ export class VideoCall implements OnInit, OnDestroy {
     this.isConnected.set(false);
   }
 
-  // ── Helpers UI ────────────────────────────────────────────────────────────
+  // ── UI Helpers ────────────────────────────────────────────────────────────
 
   formatDuration(seconds: number): string {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
