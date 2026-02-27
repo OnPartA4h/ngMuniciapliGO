@@ -1,5 +1,6 @@
 <div class="member-card">
   <a class="member-card__link" [routerLink]="['/report-details', member().problemeId]">
+
     <div class="member-card__thumbnail">
       @if (member().probleme?.photoUrl) {
         <img [src]="member().probleme?.photoUrl" alt="Photo" class="member-card__image" />
@@ -9,45 +10,57 @@
         </div>
       }
     </div>
+
     <div class="member-card__info">
+      <!-- Titre + badges -->
       <div class="member-card__header">
         <h4 class="member-card__title">{{ member().probleme?.titre }}</h4>
         @if (member().isPrimary) {
           <span class="badge badge-success">{{ 'DUPLICATES.PRIMARY' | translate }}</span>
         }
-        <span class="badge badge-info">{{ getStatusLabel(member().probleme?.statut || '') }}</span>
+        <span class="badge badge-info">{{ member().probleme?.statut }}</span>
       </div>
+
+      <!-- Métadonnées : adresse · catégorie · citoyen -->
       <div class="member-card__details">
         <span class="member-card__detail">
           <i class="fas fa-map-marker-alt"></i>
           {{ member().probleme?.address }}
         </span>
+        <span class="member-card__sep">·</span>
         <span class="member-card__detail">
           <i class="fas fa-tag"></i>
-          {{ getCategoryLabel(member().probleme?.categorie || '') }}
+          {{ member().probleme?.categorie }}
         </span>
         @if (member().probleme?.citoyenDemandeurNom) {
+          <span class="member-card__sep">·</span>
           <span class="member-card__detail">
             <i class="fas fa-user"></i>
             {{ member().probleme?.citoyenDemandeurNom }}
           </span>
         }
       </div>
+
+      <!-- Score · date -->
       <div class="member-card__footer">
         <span class="member-card__score">
           <i class="fas fa-percentage"></i>
-          {{ 'DUPLICATES.SIMILARITY' | translate }}: {{ member().similarityScore.toFixed(0) }}%
+          {{ member().similarityScore.toFixed(0) }}%
         </span>
+        <span class="member-card__sep">·</span>
         <span class="member-card__date">
           <i class="fas fa-calendar"></i>
           {{ member().probleme?.dateCreation | date:'dd/MM/yyyy' }}
         </span>
       </div>
     </div>
+
     <div class="member-card__action">
       <i class="fas fa-chevron-right"></i>
     </div>
   </a>
+
+  <!-- Bouton exclure inline (non-primaire seulement) -->
   @if (!member().isPrimary) {
     <button class="member-card__exclude-btn"
             (click)="onExclude($event)"

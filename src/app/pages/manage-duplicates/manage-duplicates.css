@@ -96,20 +96,26 @@
   cursor: not-allowed;
 }
 
-/* Members List (Drop Zone) */
+/* Members List (Drop Zone) — conteneur collé comme reports-list */
 .members-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
-  padding-top: var(--spacing-xl);
+  background: var(--color-white);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-gray-200);
+  overflow: hidden;
+  margin-top: var(--spacing-md);
 }
 
 .member-drag-wrapper {
   display: flex;
   align-items: stretch;
-  gap: var(--spacing-sm);
-  border-radius: var(--border-radius-md);
   width: 100%;
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.member-drag-wrapper:last-child {
+  border-bottom: none;
 }
 
 /* Placeholder CDK : tient la place mais reste invisible.
@@ -124,10 +130,7 @@
   border: none !important;
 }
 
-/* Masquer UNIQUEMENT l'élément en cours de drag (pas les autres membres).
-   CDK ajoute .cdk-drag-dragging sur le wrapper qui est draggé.
-   On cache son contenu interne (handle + card) mais on garde
-   le nœud DOM pour que CDK suive la position. */
+/* Masquer UNIQUEMENT l'élément en cours de drag */
 .member-drag-wrapper.cdk-drag-dragging > .drag-handle,
 .member-drag-wrapper.cdk-drag-dragging > .member-card-fill {
   opacity: 0;
@@ -139,7 +142,7 @@
   min-width: 0;
 }
 
-/* Poignée de drag */
+/* Poignée de drag — intégrée dans la rangée */
 .drag-handle {
   display: flex;
   align-items: center;
@@ -148,14 +151,15 @@
   flex-shrink: 0;
   color: var(--color-gray-400);
   cursor: grab;
-  border-radius: var(--border-radius-sm);
+  background: var(--color-gray-50);
+  border-right: 1px solid var(--color-gray-100);
   transition: color 0.15s ease, background 0.15s ease;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
 }
 
 .drag-handle:hover {
   color: var(--color-primary);
-  background: var(--color-gray-100);
+  background: var(--color-primary-light);
 }
 
 .drag-handle:active {
