@@ -3,11 +3,11 @@
   background: transparent;
   border: none;
   color: var(--color-gray-500);
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
   padding: 0;
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;

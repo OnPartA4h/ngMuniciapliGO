@@ -1,7 +1,7 @@
 header {
   background: var(--color-white);
   padding: 0 var(--spacing-3xl);
-  height: 64px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,7 +17,7 @@ header {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
   text-decoration: none;
@@ -29,7 +29,7 @@ header {
 }
 
 .logo-img {
-  width: 50px;
+  width: 58px;
   height: auto;
 }
 
@@ -50,9 +50,9 @@ nav {
 nav a {
   color: var(--color-gray-600);
   text-decoration: none;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
   border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
   transition: all var(--transition-fast);
   white-space: nowrap;
@@ -73,16 +73,16 @@ nav a.active {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   flex-shrink: 0;
 }
 
 /* Séparateur vertical */
 .header-divider {
   width: 1px;
-  height: 20px;
+  height: 24px;
   background: var(--color-gray-200);
-  margin: 0 4px;
+  margin: 0 6px;
 }
 
 /* Langue toggle — même taille que les icônes */
@@ -91,10 +91,10 @@ nav a.active {
   border: 1px solid var(--color-gray-300);
   color: var(--color-gray-500);
   padding: 0;
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   border-radius: var(--border-radius-sm);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.5px;
   cursor: pointer;
@@ -111,13 +111,13 @@ nav a.active {
   background: var(--color-gray-100);
 }
 
-/* Profile Avatar — 36×36px comme tous les autres */
+/* Profile Avatar — 42×42px comme tous les autres */
 .profile-avatar {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: var(--color-primary-light);
   color: var(--color-primary);
@@ -139,7 +139,7 @@ nav a.active {
 }
 
 .profile-avatar i {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .profile-avatar img {
@@ -156,10 +156,10 @@ nav a.active {
   background: transparent;
   border: 1px solid var(--color-secondary, #f59e0b);
   color: var(--color-secondary, #f59e0b);
-  padding: 0 var(--spacing-md);
-  height: 36px;
+  padding: 0 var(--spacing-lg);
+  height: 42px;
   border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: background var(--transition-fast), color var(--transition-fast);
@@ -173,7 +173,7 @@ nav a.active {
 }
 
 .btn-vitrine i {
-  font-size: 12px;
+  font-size: 13px;
 }
 
 /* Login Button */
@@ -185,9 +185,9 @@ nav a.active {
   color: var(--color-white);
   text-decoration: none;
   padding: 0 var(--spacing-xl);
-  height: 36px;
+  height: 42px;
   border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   border: none;
   cursor: pointer;
@@ -199,13 +199,13 @@ nav a.active {
   background: var(--color-primary-dark);
 }
 
-/* Logout — 36×36px, même style que bells */
+/* Logout — 42×42px, même style que bells */
 .btn-logout {
   background: transparent;
   border: none;
   color: var(--color-gray-500);
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   padding: 0;
   display: flex;
   align-items: center;
@@ -214,7 +214,7 @@ nav a.active {
   cursor: pointer;
   transition: background var(--transition-fast), color var(--transition-fast);
   flex-shrink: 0;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .btn-logout:hover {

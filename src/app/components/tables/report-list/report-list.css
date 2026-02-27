@@ -21,7 +21,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-lg);
-  padding: var(--spacing-md) var(--spacing-xl);
+  padding: var(--spacing-lg) var(--spacing-xl);
   cursor: pointer;
   text-decoration: none;
   color: inherit;
@@ -47,8 +47,8 @@
 }
 
 .report-thumbnail img {
-  width: 72px;
-  height: 54px;
+  width: 96px;
+  height: 72px;
   object-fit: cover;
   border-radius: var(--border-radius-sm);
   display: block;
@@ -60,7 +60,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
 }
 
 /* Ligne 1 : titre + badge */
@@ -71,7 +71,7 @@
 }
 
 .report-title {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-md);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin: 0;
@@ -94,23 +94,23 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px;
+  max-width: 220px;
 }
 
 .report-meta-item i {
-  font-size: 10px;
+  font-size: 11px;
   flex-shrink: 0;
   color: var(--color-text-tertiary);
 }
 
 .report-meta-sep {
   color: var(--color-gray-300);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   user-select: none;
 }
 

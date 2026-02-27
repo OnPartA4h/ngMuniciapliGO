@@ -639,9 +639,9 @@ textarea::placeholder {
 }
 
 .data-table th {
-  padding: var(--spacing-sm) var(--spacing-xl);
+  padding: var(--spacing-md) var(--spacing-xl);
   text-align: left;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-secondary);
   text-transform: uppercase;
@@ -663,10 +663,10 @@ textarea::placeholder {
 }
 
 .data-table td {
-  padding: 6px var(--spacing-xl);
-  font-size: var(--font-size-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: var(--font-size-base);
   color: var(--color-text-primary);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* Empty State */
