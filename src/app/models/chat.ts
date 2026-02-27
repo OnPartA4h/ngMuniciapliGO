@@ -108,19 +108,26 @@ export interface StartCallRequest {
 }
 
 export interface IncomingCallEvent {
-  chatId: string;
-  callerId: string;
+  // Server may send PascalCase or camelCase — both are handled in the hub service
+  ChatId:     string;
+  CallerId:   string;
+  CallerName: string;
+  IsVideo:    boolean;
+  RoomName:   string;
+  // camelCase aliases (populated after normalization)
+  chatId:     string;
+  callerId:   string;
   callerName: string;
-  isVideo: boolean;
-  roomName: string;
+  isVideo:    boolean;
+  roomName:   string;
 }
 
 export interface CallEndedEvent {
-  chatId: string;
-  userId: string;
+  ChatId?: string;
+  chatId?: string;
 }
 
 export interface CallRejectedEvent {
-  chatId: string;
-  userId: string;
+  ChatId?: string;
+  chatId?: string;
 }

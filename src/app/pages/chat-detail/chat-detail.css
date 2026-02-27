@@ -1260,10 +1260,21 @@
   min-width: 200px;
 }
 
+.voice-mic-icon {
+  font-size: 16px;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.msg-bubble.own .voice-mic-icon {
+  color: rgba(255, 255, 255, 0.85);
+}
+
 .voice-audio {
   height: 36px;
   flex: 1;
   min-width: 0;
+  border-radius: 20px;
 }
 
 .voice-audio::-webkit-media-controls-panel {
@@ -1278,6 +1289,24 @@
 
 .msg-bubble.own .voice-duration {
   color: rgba(255, 255, 255, 0.7);
+}
+
+/* ── GIF inline ───────────────────────────────────────────────────────────── */
+
+.attachment-gif {
+  margin: -6px -12px 6px;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 300px;
+}
+
+.attachment-gif img {
+  width: 100%;
+  max-width: 300px;
+  max-height: 260px;
+  object-fit: contain;
+  display: block;
+  border-radius: 12px;
 }
 
 /* ── Attachment image styles ──────────────────────────────────────────────── */
@@ -1473,6 +1502,14 @@
   justify-content: space-between;
   flex: 1;
   gap: var(--spacing-lg);
+  padding: 0 var(--spacing-sm);
+}
+
+.recording-bar--preview {
+  /* Style légèrement différent pour l'état "prêt à envoyer" */
+  background: rgba(21, 101, 192, 0.04);
+  border-radius: 24px;
+  padding: var(--spacing-sm) var(--spacing-lg);
 }
 
 .recording-indicator {
@@ -1499,12 +1536,70 @@
   font-weight: 600;
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
+  min-width: 3ch;
+}
+
+.recording-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
 }
 
 .recording-actions {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
+}
+
+/* Boutons d'action de l'enregistreur vocal (style mobile) */
+.rec-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.rec-btn--delete {
+  background: #fdecea;
+  color: #e53935;
+}
+
+.rec-btn--delete:hover {
+  background: #e53935;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.rec-btn--stop {
+  background: var(--color-gray-200);
+  color: var(--color-text-primary);
+}
+
+.rec-btn--stop:hover {
+  background: var(--color-gray-400, #9e9e9e);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.rec-btn--send {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.rec-btn--send:hover:not(:disabled) {
+  background: var(--color-primary-dark, #1251a3);
+  transform: scale(1.05);
+}
+
+.rec-btn--send:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* ── Input area action buttons ───────────────────────────────────────────── */

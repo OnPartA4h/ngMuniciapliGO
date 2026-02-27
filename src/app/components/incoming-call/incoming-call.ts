@@ -23,25 +23,29 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subs.push(
       this.chatHub.incomingCall$.subscribe(event => {
+        const current = this.incomingCall();
+        // Deduplication: ignore if same RoomName is already being displayed
+        if (current && current.RoomName === event.RoomName) return;
+        // If another call is active, dismiss it first (one active call at a time)
+        if (current) this.dismiss();
+
         this.incomingCall.set(event);
         this.playRingtone();
-        // Auto-reject after 30 seconds if no response (like real apps)
+        // Auto-reject after 45 seconds per protocol
         this.clearAutoRejectTimer();
         this.autoRejectTimer = setTimeout(() => {
-          if (this.incomingCall()) {
-            this.reject();
-          }
-        }, 30000);
+          if (this.incomingCall()) this.reject();
+        }, 45000);
       }),
+      // Caller hung up before we answered
       this.chatHub.callEnded$.subscribe(event => {
-        if (this.incomingCall()?.chatId === event.chatId) {
-          this.dismiss();
-        }
+        const chatId = event.ChatId ?? event.chatId;
+        if (this.incomingCall()?.ChatId === chatId) this.dismiss();
       }),
+      // Call was rejected elsewhere (e.g. another device)
       this.chatHub.callRejected$.subscribe(event => {
-        if (this.incomingCall()?.chatId === event.chatId) {
-          this.dismiss();
-        }
+        const chatId = event.ChatId ?? event.chatId;
+        if (this.incomingCall()?.ChatId === chatId) this.dismiss();
       })
     );
   }
@@ -57,19 +61,28 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
     if (!call) return;
     this.stopRingtone();
     this.clearAutoRejectTimer();
+    this.incomingCall.set(null); // ferme l'overlay immédiatement
 
-    // Open video call window — mark joining=true so the timer starts right away
-    const params = new URLSearchParams({
-      chatId: call.chatId,
-      isVideo: String(call.isVideo),
-      joining: 'true',
-    });
-    window.open(
-      `/call?${params.toString()}`,
-      '_blank',
-      'width=900,height=700,menubar=no,toolbar=no'
-    );
-    this.incomingCall.set(null);
+    try {
+      // Per protocol §6.2 : POST /call/token AVANT de connecter Twilio
+      const resp = await this.videoCallService.getCallToken(call.ChatId, call.IsVideo);
+      const params = new URLSearchParams({
+        chatId:   call.ChatId,
+        isVideo:  String(call.IsVideo),
+        roomName: resp.roomName,  // UUID stable = même valeur que RoomName dans IncomingCall
+        token:    resp.token,     // JWT Twilio court-terme
+        joining:  'true',         // flag callee — le caller est déjà dans la room
+      });
+      window.open(
+        `/call?${params.toString()}`,
+        '_blank',
+        'width=900,height=700,menubar=no,toolbar=no',
+      );
+    } catch (err) {
+      console.error('Error accepting call:', err);
+      // Si l'obtention du token échoue, on refuse proprement
+      await this.videoCallService.rejectCall(call.ChatId).catch(() => {});
+    }
   }
 
   async reject(): Promise<void> {
@@ -77,13 +90,14 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
     if (!call) return;
     this.stopRingtone();
     this.clearAutoRejectTimer();
+    this.incomingCall.set(null); // ferme l'UI sans attendre la réponse REST (§6.3)
 
+    // Per protocol §6.3 : POST /call/reject
     try {
-      await this.videoCallService.rejectCall(call.chatId);
+      await this.videoCallService.rejectCall(call.ChatId);
     } catch (err) {
       console.error('Error rejecting call:', err);
     }
-    this.incomingCall.set(null);
   }
 
   private dismiss(): void {

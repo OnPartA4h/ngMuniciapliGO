@@ -57,7 +57,11 @@ export class ChatHubService {
 
   readonly isConnected = signal<boolean>(false);
 
-  // ── Presence tracking (set of online user IDs) ────────────────────────
+  // ── Presence tracking: per-chat set of online user IDs ────────────────
+  // Key = chatId, Value = set of online userIds in that chat
+  private readonly chatOnlineUsers = new Map<string, Set<string>>();
+
+  // Global set of online users (union of all chats) — kept for backwards compat
   readonly onlineUsers = signal<Set<string>>(new Set());
 
   // ── Subjects observables (multi-abonnement) ───────────────────────────────
@@ -120,7 +124,10 @@ export class ChatHubService {
         console.log('Reconnected to chat hub');
         this.isConnected.set(true);
         this.reconnectAttempts = 0;
-        // The server automatically sends ChatOnlineUsers snapshots on reconnect
+        // Per protocol: clear ALL presence cache on reconnect.
+        // The server will re-send ChatOnlineUsers snapshots for each chat.
+        this.chatOnlineUsers.clear();
+        this.onlineUsers.set(new Set());
       });
     });
 
@@ -237,37 +244,85 @@ export class ChatHubService {
     this.hubConnection.on('TypingStop', (event: TypingEvent) =>
       this.ngZone.run(() => this.typingStop$.next(event)));
 
-    this.hubConnection.on('UserOnline', (event: UserPresenceEvent) =>
+    this.hubConnection.on('UserOnline', (raw: any) =>
       this.ngZone.run(() => {
+        const event: UserPresenceEvent = {
+          userId: raw.UserId ?? raw.userId,
+          chatId: raw.ChatId ?? raw.chatId,
+        };
         this.onlineUsers.update(set => { const s = new Set(set); s.add(event.userId); return s; });
+        if (event.chatId) {
+          const chatSet = this.chatOnlineUsers.get(event.chatId) ?? new Set<string>();
+          chatSet.add(event.userId);
+          this.chatOnlineUsers.set(event.chatId, chatSet);
+        }
         this.userOnline$.next(event);
       }));
 
-    this.hubConnection.on('UserOffline', (event: UserPresenceEvent) =>
+    this.hubConnection.on('UserOffline', (raw: any) =>
       this.ngZone.run(() => {
+        const event: UserPresenceEvent = {
+          userId: raw.UserId ?? raw.userId,
+          chatId: raw.ChatId ?? raw.chatId,
+        };
         this.onlineUsers.update(set => { const s = new Set(set); s.delete(event.userId); return s; });
+        if (event.chatId) {
+          this.chatOnlineUsers.get(event.chatId)?.delete(event.userId);
+        }
         this.userOffline$.next(event);
       }));
 
-    // ── Presence snapshot sent by the server on connect/reconnect/joinChat ──
-    this.hubConnection.on('ChatOnlineUsers', (event: { chatId: string; userIds: string[] }) =>
+    // ── Presence snapshot: server sends this once per chat on connect/reconnect ──
+    // Per protocol: REPLACE (not merge) the presence for that specific chat.
+    this.hubConnection.on('ChatOnlineUsers', (raw: any) =>
       this.ngZone.run(() => {
-        this.onlineUsers.update(set => {
-          const s = new Set(set);
-          event.userIds.forEach(id => s.add(id));
-          return s;
-        });
+        const chatId: string = raw.ChatId ?? raw.chatId;
+        const userIds: string[] = raw.UserIds ?? raw.userIds ?? [];
+        // Replace the per-chat set entirely (authoritative snapshot)
+        const newSet = new Set<string>(userIds);
+        this.chatOnlineUsers.set(chatId, newSet);
+        // Rebuild global online set from all chats
+        const merged = new Set<string>();
+        this.chatOnlineUsers.forEach(s => s.forEach(id => merged.add(id)));
+        this.onlineUsers.set(merged);
       }));
 
-    // ── Call handlers ────────────────────────────────────────────────────
-    this.hubConnection.on('IncomingCall', (event: IncomingCallEvent) =>
-      this.ngZone.run(() => this.incomingCall$.next(event)));
+    // ── Call handlers — normalize PascalCase keys from server ───────────
+    this.hubConnection.on('IncomingCall', (raw: any) =>
+      this.ngZone.run(() => {
+        const event: IncomingCallEvent = {
+          ChatId:     raw.ChatId     ?? raw.chatId,
+          CallerId:   raw.CallerId   ?? raw.callerId,
+          CallerName: raw.CallerName ?? raw.callerName,
+          IsVideo:    raw.IsVideo    ?? raw.isVideo,
+          RoomName:   raw.RoomName   ?? raw.roomName,
+          // camelCase aliases
+          chatId:     raw.ChatId     ?? raw.chatId,
+          callerId:   raw.CallerId   ?? raw.callerId,
+          callerName: raw.CallerName ?? raw.callerName,
+          isVideo:    raw.IsVideo    ?? raw.isVideo,
+          roomName:   raw.RoomName   ?? raw.roomName,
+        };
+        this.incomingCall$.next(event);
+      }));
 
-    this.hubConnection.on('CallEnded', (event: CallEndedEvent) =>
-      this.ngZone.run(() => this.callEnded$.next(event)));
+    this.hubConnection.on('CallEnded', (raw: any) =>
+      this.ngZone.run(() => {
+        const event: CallEndedEvent = {
+          ChatId: raw.ChatId ?? raw.chatId,
+          chatId: raw.ChatId ?? raw.chatId,
+        };
+        this.callEnded$.next(event);
+      }));
 
-    this.hubConnection.on('CallRejected', (event: CallRejectedEvent) =>
-      this.ngZone.run(() => this.callRejected$.next(event)));
+    this.hubConnection.on('CallRejected', (raw: any) =>
+      this.ngZone.run(() => {
+        const event: CallRejectedEvent = {
+          ChatId: raw.ChatId ?? raw.chatId,
+          chatId: raw.ChatId ?? raw.chatId,
+        };
+        this.callRejected$.next(event);
+      }));
   }
 
   private async invoke(method: string, ...args: any[]): Promise<void> {

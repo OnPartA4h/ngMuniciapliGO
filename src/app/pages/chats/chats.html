@@ -181,7 +181,7 @@
                   } @else if (chat.type === ChatType.Group && chat.lastMessage.senderName) {
                     <strong>{{ chat.lastMessage.senderName.split(' ')[0] }}:</strong>
                   }
-                  {{ truncateMessage(chat.lastMessage.content) }}
+                  {{ getLastMessagePreview(chat.lastMessage) }}
                 } @else {
                   <span class="no-message">{{ 'CHAT.NO_MESSAGES_YET' | translate }}</span>
                 }
