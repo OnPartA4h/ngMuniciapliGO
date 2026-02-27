@@ -261,7 +261,7 @@
 }
 
 .chat-item.unread:hover {
-  background: #d0e8fc;
+  background: var(--color-primary-light);
 }
 
 /* Chat avatar */
@@ -278,13 +278,13 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   position: relative;
-  overflow: hidden;
 }
 
 .chat-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
 }
 
 .chat-avatar .avatar-initials {
@@ -292,7 +292,7 @@
 }
 
 .chat-avatar.group-avatar {
-  background: linear-gradient(135deg, #1565c0 0%, #7b1fa2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #7b1fa2 100%);
 }
 
 .chat-avatar .group-icon {
@@ -301,14 +301,65 @@
   right: -2px;
   background: var(--color-white);
   color: var(--color-primary);
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 10px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 0 0 2px var(--color-white), var(--shadow-sm);
+  z-index: 1;
+}
+
+/* Online indicator dot */
+.online-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-success);
+  border: 2.5px solid var(--color-white);
+  z-index: 2;
+}
+
+/* Typing indicator in chat list */
+.typing-indicator-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-primary);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.typing-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: typingDot 1.2s ease-in-out infinite;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingDot {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
 }
 
 /* Chat content */

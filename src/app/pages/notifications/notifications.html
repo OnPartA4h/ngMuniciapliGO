@@ -116,3 +116,12 @@
       (pageChange)="onPageChange($event)" />
   }
 </div>
+
+<app-confirm-modal
+  [isOpen]="showDeleteConfirm"
+  [title]="'NOTIFICATIONS.CONFIRM_DELETE_TITLE' | translate"
+  [message]="'NOTIFICATIONS.CONFIRM_DELETE' | translate"
+  [confirmLabel]="'NOTIFICATIONS.DELETE_COMMENT'"
+  [confirmClass]="'btn-danger'"
+  (confirm)="confirmDeleteComment()"
+  (cancel)="cancelDeleteComment()" />

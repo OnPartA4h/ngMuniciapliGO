@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
@@ -11,8 +11,8 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
 })
 
 export class Chart {
-  @Input() chartType: ChartType = 'line';
-  @Input() datasets!: ChartData;
+  readonly chartType = input<ChartType>('line');
+  readonly datasets = input.required<ChartData>();
 
   options: ChartOptions<ChartType> = {
     responsive: true,

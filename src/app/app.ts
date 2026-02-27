@@ -1,6 +1,8 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Header } from './components/header/header';
+import { IncomingCallComponent } from './components/incoming-call/incoming-call';
+import { ToastComponent } from './components/ui/toast/toast';
 import { AuthService } from './services/auth-service';
 import { ChatHubService } from './services/chat-hub.service';
 
@@ -10,7 +12,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, Header],
+  imports: [RouterOutlet, Header, IncomingCallComponent, ToastComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
 })
@@ -21,7 +23,7 @@ export class App implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   showHeaderFooter = true;
-  private hiddenRoutes = ['/login'];
+  private hiddenRoutes = ['/login', '/call'];
 
   ngOnInit() {
     // Establish SignalR connections on app initialization if user is authenticated
@@ -35,10 +37,15 @@ export class App implements OnInit, OnDestroy {
       }
     }
 
+    // Check the initial URL immediately (before first NavigationEnd fires)
+    const initialUrl = this.router.url.split('?')[0];
+    this.showHeaderFooter = !this.hiddenRoutes.some(r => initialUrl.startsWith(r));
+
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        this.showHeaderFooter = !this.hiddenRoutes.includes(event.urlAfterRedirects);
+        const url = event.urlAfterRedirects.split('?')[0]; // strip query params
+        this.showHeaderFooter = !this.hiddenRoutes.some(r => url.startsWith(r));
       });
   }
 

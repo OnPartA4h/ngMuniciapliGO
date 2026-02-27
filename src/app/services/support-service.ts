@@ -30,4 +30,15 @@ export class SupportService {
     let res = await lastValueFrom(this.http.delete<any>(`${this.apiUrl}/api/Support/DeletePhoneCall/${id}`))
     console.log(res);
   }
+
+  async addUserToCall(id: number, email: string): Promise<PhoneCall> {
+    let dto = {
+      callId: id,
+      email: email
+    }
+    let res = await lastValueFrom(this.http.post<PhoneCall>(`${this.apiUrl}/api/Support/AddUserToCall`, dto))
+    console.log(res);
+    
+    return res
+  }
 }

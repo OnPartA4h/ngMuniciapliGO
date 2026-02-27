@@ -1,14 +1,14 @@
 import { Component, input, output, inject, OnChanges, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { NgClass } from '@angular/common';
+
 import { Problem } from '../../../models/problem';
 import { ExportService, ExportField, ExportFormat, ExportOptions } from '../../../services/export.service';
 
 @Component({
   selector: 'app-export-modal',
   standalone: true,
-  imports: [FormsModule, TranslateModule, NgClass],
+  imports: [FormsModule, TranslateModule],
   templateUrl: './export-modal.html',
   styleUrl: './export-modal.css',
 })

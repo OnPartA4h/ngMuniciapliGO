@@ -84,4 +84,31 @@ export class MessageService {
       this.http.post<ChatMessageDto>(`${this.base(chatId)}/${messageId}/reactions`, request)
     );
   }
+
+  // ── Recherche ────────────────────────────────────────────────────────────
+
+  /** Recherche dans les messages d'un chat par contenu textuel. */
+  async searchMessages(chatId: string, query: string, pageSize: number = 50): Promise<ChatMessageDto[]> {
+    const params = new HttpParams().set('q', query).set('pageSize', pageSize.toString());
+    return await lastValueFrom(
+      this.http.get<ChatMessageDto[]>(`${this.base(chatId)}/search`, { params })
+    );
+  }
+
+  // ── Upload de fichiers ───────────────────────────────────────────────────
+
+  /**
+   * Envoie un message avec un fichier attaché (image, document, audio…).
+   * Le fichier est stocké côté serveur et l'URL est retournée dans le message.
+   */
+  async sendFileMessage(chatId: string, file: File, caption?: string): Promise<ChatMessageDto> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    if (caption) {
+      formData.append('caption', caption);
+    }
+    return await lastValueFrom(
+      this.http.post<ChatMessageDto>(`${this.base(chatId)}/upload`, formData)
+    );
+  }
 }

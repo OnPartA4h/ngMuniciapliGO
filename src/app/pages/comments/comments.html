@@ -1,11 +1,9 @@
 <div class="page-container">
 
-  <app-page-header
-    [routerLink]="['/report-details', problemId]"
+  <app-page-header [routerLink]="['/report-details', problemId]"
     title="Commentaires"
     subtitle="Nid-de-poule rue Sherbrooke — 12 commentaires"
-    [showBackButton]="true">
-  </app-page-header>
+    [showBackButton]="true" />
 
   <!-- Liste des commentaires -->
   <div class="comments-list">
@@ -30,9 +28,15 @@
             <p>{{c.text}}</p>
             <div class="comment-item__media comment-item__media--grid-2">
                 @if (c.photoUrl){
-                    <div class="comment-media-thumb">
-                        <img [src]="c.photoUrl" alt="Photo 1" />
+                  @if (isGifUrl(c.photoUrl)) {
+                    <div class="comment-media-thumb comment-media-gif">
+                      <img [src]="c.photoUrl" alt="GIF" />
                     </div>
+                  } @else {
+                    <div class="comment-media-thumb">
+                      <img [src]="c.photoUrl" alt="Photo 1" />
+                    </div>
+                  }
                 }
             </div>
         </div>
@@ -68,10 +72,16 @@
                     <div class="comment-item__body">
                     <p>{{r.text}}</p>
                     <div class="comment-item__media">
-                        @if (c.photoUrl){
-                            <div class="comment-media-thumb">
-                                <img [src]="r.photoUrl" alt="GIF" />
+                        @if (r.photoUrl){
+                          @if (isGifUrl(r.photoUrl)) {
+                            <div class="comment-media-thumb comment-media-gif">
+                              <img [src]="r.photoUrl" alt="GIF" />
                             </div>
+                          } @else {
+                            <div class="comment-media-thumb">
+                              <img [src]="r.photoUrl" alt="Photo" />
+                            </div>
+                          }
                         }
                     </div>
                     </div>
@@ -87,10 +97,8 @@
      }
   </div>
   @if (pagination && pagination.totalPages > 1) {
-    <app-pagination
-      [currentPage]="pagination.currentPage"
+    <app-pagination [currentPage]="pagination.currentPage"
       [totalPages]="pagination.totalPages"
-      (pageChange)="onPageChange($event)">
-    </app-pagination>
+      (pageChange)="onPageChange($event)" />
   }
 </div>

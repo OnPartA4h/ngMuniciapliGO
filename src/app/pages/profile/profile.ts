@@ -9,7 +9,7 @@ import { RoleOption, UpdateUserDto, ChangePasswordDto, User } from '../../models
 import { ImageCropperModal } from '../../components/modals/image-cropper-modal/image-cropper-modal';
 import { ChangeEmailModal } from '../../components/modals/change-email-modal/change-email-modal';
 import { UserService } from '../../services/user-service';
-import { LoadingSpinnerComponent, PageHeaderComponent } from '../../components/ui';
+import { LoadingSpinnerComponent, PageHeaderComponent, ToastService } from '../../components/ui';
 import { ProfileInfoFormComponent } from '../../components/forms/profile-info-form/profile-info-form';
 import { ProfileEmailFormComponent } from '../../components/forms/profile-email-form/profile-email-form';
 import { ProfilePasswordFormComponent } from '../../components/forms/profile-password-form/profile-password-form';
@@ -17,6 +17,7 @@ import { NotificationService } from '../../services/notification.service';
 import { Problem } from '../../models/problem';
 import { Pagination } from '../../models/pagination';
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
+import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-profile',
@@ -31,6 +32,7 @@ import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
     ProfilePasswordFormComponent,
     RouterLink,
     DaysAgoPipe,
+    ConfirmModalComponent,
 ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
@@ -44,7 +46,10 @@ export class Profile implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute)
   private notifService = inject(NotificationService);
+  private toastService = inject(ToastService);
   generalServicePublic = inject(GeneralService);
+
+  showDeletePhotoConfirm = signal(false);
 
   readonly emailFormComponent = viewChild.required(ProfileEmailFormComponent);
   readonly passwordFormComponent = viewChild.required(ProfilePasswordFormComponent);
@@ -111,6 +116,10 @@ export class Profile implements OnInit {
       console.error('Error loading profile:', error);
       this.infoErrorMessage.set(this.translateService.instant('PROFILE.ERROR_LOADING'));
     }
+  }
+
+  async sendResetPasswordEmail() {
+    await this.authService.forgotPassword(this.profile()!.email)
   }
 
   async loadRoles() {
@@ -246,6 +255,7 @@ export class Profile implements OnInit {
       const file = new File([croppedBlob], 'profile-picture.jpg', { type: 'image/jpeg' });
       const response = await this.userService.uploadProfilePicture(file);
       this.profileImageUrl.set(response.profilePictureUrl);
+      this.authService.setProfilePictureUrl(response.profilePictureUrl);
       const profileData = await this.userService.getProfile();
       this.profile.set(profileData);
       this.infoSuccessMessage.set(this.translateService.instant('PROFILE.PHOTO_UPLOADED'));
@@ -272,10 +282,11 @@ export class Profile implements OnInit {
   }
 
   async removeProfileImage() {
-    if (!confirm(this.translateService.instant('PROFILE.CONFIRM_DELETE_PHOTO'))) {
-      return;
-    }
+    this.showDeletePhotoConfirm.set(true);
+  }
 
+  async confirmRemoveProfileImage() {
+    this.showDeletePhotoConfirm.set(false);
     this.isUploadingImage.set(true);
     this.infoSuccessMessage.set(null);
     this.infoErrorMessage.set(null);
@@ -283,12 +294,13 @@ export class Profile implements OnInit {
     try {
       await this.userService.deleteProfilePicture();
       this.profileImageUrl.set(null);
+      this.authService.setProfilePictureUrl(null);
       const profileData = await this.userService.getProfile();
       this.profile.set(profileData);
-      this.infoSuccessMessage.set(this.translateService.instant('PROFILE.PHOTO_DELETED'));
+      this.toastService.success(this.translateService.instant('PROFILE.PHOTO_DELETED'));
     } catch (error: any) {
       console.error('Error deleting profile picture:', error);
-      this.infoErrorMessage.set(this.translateService.instant('PROFILE.PHOTO_DELETE_ERROR'));
+      this.toastService.error(this.translateService.instant('PROFILE.PHOTO_DELETE_ERROR'));
     } finally {
       this.isUploadingImage.set(false);
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -7,7 +7,7 @@ import { ChatService } from '../../services/chat-service';
 import { ChatHubService } from '../../services/chat-hub.service';
 import { GeneralService } from '../../services/general-service';
 import { LanguageService } from '../../services/language-service';
-import { ChatSummaryDto, ChatType, UserSearchResultDto } from '../../models/chat';
+import { ChatSummaryDto, ChatMessageDto, ChatType, UserSearchResultDto } from '../../models/chat';
 import { RoleOption } from '../../models/user';
 import { LoadingSpinnerComponent, EmptyStateComponent } from '../../components/ui';
 
@@ -51,6 +51,14 @@ export class Chats implements OnInit, OnDestroy {
   // ── Rôles (traduction) ────────────────────────────────────────────────────
   roles = signal<RoleOption[]>([]);
 
+  // ── Typing indicators per chat ────────────────────────────────────────────
+  typingByChatId = signal<Map<string, Set<string>>>(new Map());
+  private typingTimers = new Map<string, ReturnType<typeof setTimeout>>();
+
+  // ── Online presence (reactive copy of the hub's set) ──────────────────
+  /** Local reactive copy of online users, so the template re-renders when presence changes. */
+  onlineUsersSnapshot = signal<Set<string>>(new Set());
+
   // ── Computed ──────────────────────────────────────────────────────────────
   filteredChats = computed(() => {
     const all = this.chats();
@@ -64,6 +72,14 @@ export class Chats implements OnInit, OnDestroy {
     this.chats().reduce((sum, c) => sum + c.unreadCount, 0)
   );
 
+  constructor() {
+    // Sync the local snapshot whenever the hub's onlineUsers signal changes.
+    // Using an effect ensures the template picks up changes automatically.
+    effect(() => {
+      this.onlineUsersSnapshot.set(this.chatHubService.onlineUsers());
+    });
+  }
+
   async ngOnInit(): Promise<void> {
     await Promise.all([this.loadChats(), this.loadRoles()]);
 
@@ -72,18 +88,83 @@ export class Chats implements OnInit, OnDestroy {
       this.languageService.onLangChange().subscribe(() => this.loadRoles())
     );
 
+    const currentUserId = localStorage.getItem('userId') ?? '';
+
     // Temps réel via Subjects
     this.subs.push(
       this.chatHubService.newMessage$.subscribe(() => this.loadChats()),
+      this.chatHubService.messageEdited$.subscribe(() => this.loadChats()),
+      this.chatHubService.messageDeleted$.subscribe(() => this.loadChats()),
       this.chatHubService.addedToChat$.subscribe(() => this.loadChats()),
       this.chatHubService.removedFromChat$.subscribe(() => this.loadChats()),
       this.chatHubService.groupRenamed$.subscribe(() => this.loadChats()),
+      this.chatHubService.memberAdded$.subscribe(() => this.loadChats()),
+      this.chatHubService.memberRemoved$.subscribe(() => this.loadChats()),
+      // readReceipt: only refresh if it's OUR receipt (to update unread counts)
+      this.chatHubService.readReceipt$.subscribe(event => {
+        if (event.userId === currentUserId) this.loadChats();
+      }),
+      // Typing indicators
+      this.chatHubService.typingStart$.subscribe(event => {
+        if (event.userId === currentUserId) return;
+        this.typingByChatId.update(map => {
+          const m = new Map(map);
+          const users = new Set(m.get(event.chatId) ?? []);
+          users.add(event.userId);
+          m.set(event.chatId, users);
+          return m;
+        });
+        // Auto-clear after 3 seconds if no typingStop received
+        const timerKey = `${event.chatId}_${event.userId}`;
+        if (this.typingTimers.has(timerKey)) clearTimeout(this.typingTimers.get(timerKey)!);
+        this.typingTimers.set(timerKey, setTimeout(() => {
+          this.removeTypingUser(event.chatId, event.userId);
+          this.typingTimers.delete(timerKey);
+        }, 3000));
+      }),
+      this.chatHubService.typingStop$.subscribe(event => {
+        this.removeTypingUser(event.chatId, event.userId);
+        const timerKey = `${event.chatId}_${event.userId}`;
+        if (this.typingTimers.has(timerKey)) {
+          clearTimeout(this.typingTimers.get(timerKey)!);
+          this.typingTimers.delete(timerKey);
+        }
+      }),
     );
   }
 
   ngOnDestroy(): void {
     if (this.searchDebounceTimer) clearTimeout(this.searchDebounceTimer);
+    this.typingTimers.forEach(timer => clearTimeout(timer));
+    this.typingTimers.clear();
     this.subs.forEach(s => s.unsubscribe());
+  }
+
+  // ── Typing helpers ────────────────────────────────────────────────────────
+
+  private removeTypingUser(chatId: string, userId: string): void {
+    this.typingByChatId.update(map => {
+      const m = new Map(map);
+      const users = new Set(m.get(chatId) ?? []);
+      users.delete(userId);
+      if (users.size === 0) {
+        m.delete(chatId);
+      } else {
+        m.set(chatId, users);
+      }
+      return m;
+    });
+  }
+
+  isChatTyping(chatId: string): boolean {
+    return (this.typingByChatId().get(chatId)?.size ?? 0) > 0;
+  }
+
+  // ── Online presence helpers ───────────────────────────────────────────────
+
+  isUserOnline(userId: string | null): boolean {
+    if (!userId) return false;
+    return this.onlineUsersSnapshot().has(userId);
   }
 
   // ── Chargement ────────────────────────────────────────────────────────────
@@ -258,5 +339,25 @@ export class Chats implements OnInit, OnDestroy {
   truncateMessage(content: string, maxLength: number = 50): string {
     if (!content) return '';
     return content.length > maxLength ? content.substring(0, maxLength) + '…' : content;
+  }
+
+  /**
+   * Retourne un texte d'aperçu pour le dernier message dans la liste des chats.
+   * Si c'est un GIF, une image, un vocal ou un fichier audio, affiche un label lisible.
+   */
+  getLastMessagePreview(msg: ChatMessageDto | null): string {
+    if (!msg) return '';
+    if (msg.isSystemMessage) return this.truncateMessage(msg.content);
+    if (msg.isVoiceMessage) return '🎤 ' + this.translate.instant('CHAT_DETAIL.VOICE_MESSAGE');
+    if (msg.attachmentType?.startsWith('image/')) {
+      if (msg.attachmentType.includes('gif')) return '🎞️ GIF';
+      return '🖼️ ' + this.translate.instant('CHAT_DETAIL.PHOTO');
+    }
+    if (msg.attachmentType?.startsWith('video/')) return '🎬 ' + this.translate.instant('CHAT_DETAIL.VIDEO');
+    if (msg.attachmentType?.startsWith('audio/')) return '🎵 ' + this.translate.instant('CHAT_DETAIL.AUDIO');
+    if (msg.attachmentUrl) return '📎 ' + this.translate.instant('CHAT_DETAIL.ATTACHMENT');
+    // Détection GIF inline [gif]url[/gif]
+    if (/^\[gif\].+\[\/gif\]$/.test((msg.content ?? '').trim())) return '🎞️ GIF';
+    return this.truncateMessage(msg.content);
   }
 }

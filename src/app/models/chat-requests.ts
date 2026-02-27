@@ -19,6 +19,7 @@ export interface AddMemberRequest {
 
 export interface SendMessageRequest {
   content: string;
+  replyToMessageId?: string;
 }
 
 export interface EditMessageRequest {
