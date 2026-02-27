@@ -71,7 +71,7 @@
 }
 
 .header-avatar.group {
-  background: linear-gradient(135deg, #1565c0 0%, #7b1fa2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #7b1fa2 100%);
 }
 
 .header-avatar img,
@@ -90,7 +90,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #4caf50;
+  background: var(--color-success);
   border: 2px solid var(--color-white);
   z-index: 2;
 }
@@ -128,7 +128,7 @@
 }
 
 .header-status.online {
-  color: #4caf50;
+  color: var(--color-success);
 }
 
 @keyframes typingPulse {
@@ -569,11 +569,11 @@
   justify-content: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-lg);
-  background: #fff3cd;
-  color: #856404;
+  background: var(--color-warning-light);
+  color: var(--color-warning);
   font-size: 13px;
   font-weight: 500;
-  border-top: 1px solid #ffc107;
+  border-top: 1px solid var(--color-warning);
   animation: fadeIn 0.3s ease;
 }
 
@@ -588,11 +588,11 @@
   align-items: center;
   gap: var(--spacing-md);
   padding: var(--spacing-md) var(--spacing-2xl);
-  background: #fdecea;
-  color: #c62828;
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
   font-size: 13px;
   font-weight: 500;
-  border-top: 1px solid #ef9a9a;
+  border-top: 1px solid var(--color-error);
   flex-shrink: 0;
   animation: slideUp 0.3s ease;
 }
@@ -607,7 +607,7 @@
 }
 
 .recording-error-toast .icon-btn {
-  color: #c62828;
+  color: var(--color-error-dark);
 }
 
 @keyframes fadeIn {
@@ -815,13 +815,13 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #4caf50;
+  background: var(--color-success);
   border: 2px solid var(--color-white);
   z-index: 2;
 }
 
 .online-label {
-  color: #4caf50;
+  color: var(--color-success);
   font-weight: 500;
 }
 
@@ -940,7 +940,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #4caf50;
+  background: var(--color-success);
   border: 3px solid var(--color-white);
   z-index: 2;
 }
@@ -957,7 +957,7 @@
 }
 
 .direct-status.online {
-  color: #4caf50;
+  color: var(--color-success);
 }
 
 .direct-status.offline {
@@ -1485,7 +1485,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #e53935;
+  background: var(--color-error);
   animation: recordingBlink 1s ease-in-out infinite;
 }
 

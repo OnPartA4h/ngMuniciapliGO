@@ -6,9 +6,7 @@
     </div>
     }
     @if(isLoading){
-    <div style="text-align: center; padding: 40px;">
-        {{ 'COMMON.LOADING' | translate }}
-    </div>
+    <app-loading-spinner />
     }
     @else if (!isLoading && problem) {
     <div class="details-row">
@@ -16,24 +14,22 @@
             <div class="details-carousel">
                 <div class="details-carousel-img">
                     @if(problem.photos && problem.photos.length > 0){
-                    <span>
-                        <img class="photo-probleme" [src]="problem.photos[photoIndex()]?.url" alt="Photo du problème">
-                    </span>
+                    <img class="photo-probleme" [src]="problem.photos[photoIndex()]?.url" alt="Photo du problème">
                     }
                     @else {
-                    <i class="fas fa-image" style="font-size: 48px; display: block; margin-bottom: 8px;"></i>
+                    <i class="fas fa-image"></i>
                     <span>{{ 'MANAGE_REPORTS.NO_PHOTO' | translate }}</span>
                     }
                 </div>
+                @if(problem.photos && problem.photos.length > 1){
                 <div class="details-carousel-menu">
                     <button class="details-carousel-btn" (click)="prevPhoto()">
                         <i class="fas fa-chevron-left"></i>
                     </button>
-                    <div style="display:flex; flex-direction: row;">
+                    <div style="display:flex; gap: 6px; align-items: center;">
                         @for (p of problem.photos; track $index) {
                         <button class="details-carousel-select-btn" [class.active-photo-btn]="$index === photoIndex()"
                             (click)="selectPhoto($index)">
-                            <i class="fa-solid fa-circle"></i>
                         </button>
                         }
                     </div>
@@ -41,6 +37,7 @@
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
+                }
             </div>
             <div class="details-box">
                 <div class="details-box__top-row">
@@ -76,7 +73,7 @@
         </div>
         <!-- Information -->
         <div class="details-side">
-            <div class="details-box" style="margin-bottom: 24px; display: flex;">
+            <div class="details-box">
                 <div class="details-badges">
                     <h2>Information</h2>
                     <span>
@@ -102,7 +99,7 @@
                     </span>
                     <span>
                         <div class="property">
-                            <i class="fas fa-user"></i>
+                            <i class="fas fa-building"></i>
                             {{"MANAGE_REPORTS.ASSIGNEA" | translate}}
                         </div>
                         {{this.generalService.assignees()[problem.assigneA].label}}
@@ -137,15 +134,15 @@
                     </span>
                     <span>
                         <div class="property">
-                            <i class="fa-solid fa-thumbs-up"></i>
+                            <i class="fas fa-comments"></i>
                             Nombre de commentaires
                         </div>
                         <span style="display: flex; align-items: center; gap: 8px;">
                             {{problem.nbComments}}
-                            <a class="btn btn-outline-primary btn-sm" [routerLink]="['/comments', problem.id]"
+                            <a class="btn btn-sm btn-outline" [routerLink]="['/comments', problem.id]"
                                 title="Voir les commentaires">
-                                see comments
                                 <i class="fas fa-comments"></i>
+                                Voir
                             </a>
                         </span>
                     </span>
@@ -180,12 +177,12 @@
                 } @else {
                 <!-- Accepter -->
                 @if (problem.statut === 0) {
-                <button class="btn btn-primary details-btn-refuse" (click)="refuseProblem()">
-                    <i class="fas fa-times" style="margin-right: 8px;"></i>
+                <button class="btn btn-danger details-btn-refuse" (click)="refuseProblem()">
+                    <i class="fas fa-times"></i>
                     {{ 'MANAGE_REPORTS.REFUSER' | translate }}
                 </button>
-                <button class="btn btn-primary details-btn-accept" (click)="acceptProblem()">
-                    <i class="fas fa-check" style="margin-right: 8px;"></i>
+                <button class="btn btn-success details-btn-accept" (click)="acceptProblem()">
+                    <i class="fas fa-check"></i>
                     {{ 'MANAGE_REPORTS.ACCEPTER' | translate }}
                 </button>
                 <div class="divider"></div>
@@ -194,14 +191,14 @@
                 @if (problem.statut === 5) {
                 <div class="search-box">
                     <input type="text" [placeholder]="'MANAGE_REPORTS.MESSAGE_REFUS' | translate"
-                        [(ngModel)]="message_refus" (ngModelChange)="getColBleus()" />
+                        [(ngModel)]="message_refus" />
                 </div>
-                <button class="btn btn-primary details-btn-refuse" (click)="refuseFix()">
-                    <i class="fas fa-times" style="margin-right: 8px;"></i>
+                <button class="btn btn-danger details-btn-refuse" (click)="refuseFix()">
+                    <i class="fas fa-times"></i>
                     {{ 'MANAGE_REPORTS.REFUSER' | translate }}
                 </button>
-                <button class="btn btn-primary details-btn-accept" (click)="acceptFix()">
-                    <i class="fas fa-check" style="margin-right: 8px;"></i>
+                <button class="btn btn-success details-btn-accept" (click)="acceptFix()">
+                    <i class="fas fa-check"></i>
                     {{ 'MANAGE_REPORTS.ACCEPTER' | translate }}
                 </button>
                 }
@@ -213,13 +210,13 @@
                         (ngModelChange)="getColBleus()" />
                 </div>
                 @for (c of colBleus; track $index) {
-                <button class="btn pagination-btn" (click)="assignColBleu(c.key)">
-                    <i class="fas fa-user" style="margin-right: 8px;"></i>
+                <button class="btn btn-outline" (click)="assignColBleu(c.key)">
+                    <i class="fas fa-user"></i>
                     {{c.label}}
                 </button>
                 }
-                <button class="btn btn-primary btn-primary" (click)="assignCitoyen()">
-                    <i class="fas fa-user" style="margin-right: 8px;"></i>
+                <button class="btn btn-primary" (click)="assignCitoyen()">
+                    <i class="fas fa-user-check"></i>
                     {{"MANAGE_REPORTS.ASSIGN_CITOYEN" | translate}}
                 </button>
                 }
@@ -230,9 +227,8 @@
     }
 
     @if (!isLoading && !problem) {
-    <div style="text-align: center; padding: 40px;">
-        {{"MANAGE_REPORTS.NO_PROBLEM" | translate}}
-    </div>
+    <app-empty-state iconClass="fas fa-exclamation-triangle"
+        [title]="'MANAGE_REPORTS.NO_PROBLEM' | translate" />
     }
 
     @if (showPhotoModal() && problem !== null) {

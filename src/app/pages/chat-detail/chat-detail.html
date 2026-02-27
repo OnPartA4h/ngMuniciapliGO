@@ -580,3 +580,13 @@
     }
   </div>
 </div>
+
+<!-- ─── Confirm Modal ──────────────────────────────────────────────────── -->
+<app-confirm-modal
+  [isOpen]="confirmModalOpen()"
+  [title]="confirmModalTitle()"
+  [message]="confirmModalMessage()"
+  [confirmLabel]="confirmModalConfirmLabel()"
+  [confirmClass]="confirmModalClass()"
+  (confirm)="onConfirmModalConfirm()"
+  (cancel)="onConfirmModalCancel()" />

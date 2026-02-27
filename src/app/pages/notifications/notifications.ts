@@ -6,13 +6,14 @@ import { lastValueFrom, Subscription } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
 import { NotificationHubService } from '../../services/notification-hub.service';
 import { Notification, PaginatedNotifications } from '../../models/notification';
-import { PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent } from '../../components/ui';
+import { PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent, ToastService } from '../../components/ui';
 import { CommentService } from '../../services/comment-service';
+import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [TranslateModule, PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent],
+  imports: [TranslateModule, PaginationComponent, EmptyStateComponent, LoadingSpinnerComponent, ConfirmModalComponent],
   templateUrl: './notifications.html',
   styleUrls: ['./notifications.css']
 })
@@ -22,6 +23,7 @@ export class Notifications implements OnInit, OnDestroy {
   private notificationHubService = inject(NotificationHubService);
   private router = inject(Router);
   private translateService = inject(TranslateService);
+  private toastService = inject(ToastService);
 
   notifications: Notification[] = [];
   currentPage = 1;
@@ -31,6 +33,10 @@ export class Notifications implements OnInit, OnDestroy {
   loading = false;
   filterRead: boolean | undefined = undefined;
   private newNotificationSubscription?: Subscription;
+
+  // Confirm modal state
+  showDeleteConfirm = false;
+  pendingDeleteNotification: Notification | null = null;
 
   ngOnInit(): void {
     this.loadNotifications();
@@ -171,51 +177,57 @@ export class Notifications implements OnInit, OnDestroy {
   }
 
   async deleteComment(notification: Notification): Promise<void> {
-    if (!confirm(this.translateService.instant('NOTIFICATIONS.CONFIRM_DELETE'))) {
-      return;
-    }
+    this.pendingDeleteNotification = notification;
+    this.showDeleteConfirm = true;
+  }
+
+  async confirmDeleteComment(): Promise<void> {
+    const notification = this.pendingDeleteNotification;
+    this.showDeleteConfirm = false;
+    this.pendingDeleteNotification = null;
+    if (!notification) return;
 
     try {
-      // Supprimer le commentaire via l'API
       await this.commentService.deleteComment(
         notification.problemeId, 
         notification.commentId, 
         notification.id
       );
       
-      // Retirer la notification de la liste immédiatement
       this.notifications = this.notifications.filter(n => n.id !== notification.id);
       this.totalCount--;
       
-      // Décrémenter le compteur si la notification n'était pas lue
       if (!notification.estLue) {
         this.notificationService.decrementUnreadCount();
       }
       
-      console.log('Comment deleted successfully');
+      this.toastService.success(this.translateService.instant('NOTIFICATIONS.COMMENT_DELETED'));
     } catch (error) {
       console.error('Error deleting comment:', error);
-      alert(this.translateService.instant('NOTIFICATIONS.ERROR_DELETE'));
+      this.toastService.error(this.translateService.instant('NOTIFICATIONS.ERROR_DELETE'));
     }
+  }
+
+  cancelDeleteComment(): void {
+    this.showDeleteConfirm = false;
+    this.pendingDeleteNotification = null;
   }
 
   async ignoreReport(notification: Notification): Promise<void> {
     try {
       await this.commentService.ignoreCommentReport(notification.problemeId, notification.id);
       
-      // Retirer la notification de la liste immédiatement
       this.notifications = this.notifications.filter(n => n.id !== notification.id);
       this.totalCount--;
       
-      // Décrémenter le compteur si la notification n'était pas lue
       if (!notification.estLue) {
         this.notificationService.decrementUnreadCount();
       }
       
-      console.log('Report ignored successfully');
+      this.toastService.success(this.translateService.instant('NOTIFICATIONS.REPORT_IGNORED'));
     } catch (error) {
       console.error('Error ignoring report:', error);
-      alert(this.translateService.instant('NOTIFICATIONS.ERROR_IGNORE'));
+      this.toastService.error(this.translateService.instant('NOTIFICATIONS.ERROR_IGNORE'));
     }
   }
 }

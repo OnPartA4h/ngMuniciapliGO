@@ -18,12 +18,13 @@ import {
   ChatMessageDto, UserSearchResultDto, ReplyToDto
 } from '../../models/chat';
 import { RoleOption } from '../../models/user';
-import { LoadingSpinnerComponent } from '../../components/ui';
+import { LoadingSpinnerComponent, ToastService } from '../../components/ui';
+import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-chat-detail',
   standalone: true,
-  imports: [FormsModule, TranslateModule, RouterLink, LoadingSpinnerComponent, LowerCasePipe],
+  imports: [FormsModule, TranslateModule, RouterLink, LoadingSpinnerComponent, LowerCasePipe, ConfirmModalComponent],
   templateUrl: './chat-detail.html',
   styleUrl: './chat-detail.css',
 })
@@ -104,6 +105,14 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   // ── Rename ────────────────────────────────────────────────────────────────
   isRenaming = signal(false);
   renameValue = signal('');
+
+  // ── Confirm modal ─────────────────────────────────────────────────────────
+  confirmModalOpen = signal(false);
+  confirmModalTitle = signal('');
+  confirmModalMessage = signal('');
+  confirmModalConfirmLabel = signal('COMMON.YES');
+  confirmModalClass = signal('btn-danger');
+  private confirmModalAction: (() => Promise<void>) | null = null;
 
   // ── Computed ──────────────────────────────────────────────────────────────
   currentUserId = computed(() => localStorage.getItem('userId') ?? '');
@@ -659,17 +668,21 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   // ── Suppression de message ────────────────────────────────────────────────
 
   async deleteMessage(msg: ChatMessageDto): Promise<void> {
-    const confirmed = confirm(this.translate.instant('CHAT_DETAIL.DELETE_CONFIRM'));
-    if (!confirmed) return;
-
-    try {
-      await this.messageService.deleteMessage(this.chatId, msg.id);
-      this.messages.update(list =>
-        list.map(m => m.id === msg.id ? { ...m, isDeleted: true, content: '' } : m)
-      );
-    } catch (error) {
-      console.error('Error deleting message:', error);
-    }
+    this.confirmModalTitle.set(this.translate.instant('CHAT_DETAIL.DELETE_MESSAGE'));
+    this.confirmModalMessage.set(this.translate.instant('CHAT_DETAIL.DELETE_CONFIRM'));
+    this.confirmModalConfirmLabel.set('COMMON.YES');
+    this.confirmModalClass.set('btn-danger');
+    this.confirmModalAction = async () => {
+      try {
+        await this.messageService.deleteMessage(this.chatId, msg.id);
+        this.messages.update(list =>
+          list.map(m => m.id === msg.id ? { ...m, isDeleted: true, content: '' } : m)
+        );
+      } catch (error) {
+        console.error('Error deleting message:', error);
+      }
+    };
+    this.confirmModalOpen.set(true);
   }
 
   // ── Réactions ─────────────────────────────────────────────────────────────
@@ -779,31 +792,51 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async removeMember(member: ChatMemberDto): Promise<void> {
-    const confirmed = confirm(
+    this.confirmModalTitle.set(this.translate.instant('CHAT_DETAIL.REMOVE_MEMBER'));
+    this.confirmModalMessage.set(
       this.translate.instant('CHAT_DETAIL.REMOVE_CONFIRM', { name: member.displayName })
     );
-    if (!confirmed) return;
-
-    try {
-      await this.chatService.removeMember(this.chatId, member.userId);
-      await this.loadChat();
-    } catch (error) {
-      console.error('Error removing member:', error);
-    }
+    this.confirmModalConfirmLabel.set('COMMON.YES');
+    this.confirmModalClass.set('btn-danger');
+    this.confirmModalAction = async () => {
+      try {
+        await this.chatService.removeMember(this.chatId, member.userId);
+        await this.loadChat();
+      } catch (error) {
+        console.error('Error removing member:', error);
+      }
+    };
+    this.confirmModalOpen.set(true);
   }
 
   async leaveChat(): Promise<void> {
-    const confirmed = confirm(this.translate.instant('CHAT_DETAIL.LEAVE_CONFIRM'));
-    if (!confirmed) return;
-
-    try {
-      await this.chatService.leaveChat(this.chatId);
-      this.router.navigate(['/chats']);
-    } catch (error) {
-      console.error('Error leaving chat:', error);
-    }
+    this.confirmModalTitle.set(this.translate.instant('CHAT_DETAIL.LEAVE_GROUP'));
+    this.confirmModalMessage.set(this.translate.instant('CHAT_DETAIL.LEAVE_CONFIRM'));
+    this.confirmModalConfirmLabel.set('COMMON.YES');
+    this.confirmModalClass.set('btn-danger');
+    this.confirmModalAction = async () => {
+      try {
+        await this.chatService.leaveChat(this.chatId);
+        this.router.navigate(['/chats']);
+      } catch (error) {
+        console.error('Error leaving chat:', error);
+      }
+    };
+    this.confirmModalOpen.set(true);
   }
 
+  onConfirmModalConfirm(): void {
+    if (this.confirmModalAction) {
+      this.confirmModalAction();
+    }
+    this.confirmModalOpen.set(false);
+    this.confirmModalAction = null;
+  }
+
+  onConfirmModalCancel(): void {
+    this.confirmModalOpen.set(false);
+    this.confirmModalAction = null;
+  }
   // ── Helpers ───────────────────────────────────────────────────────────────
 
   getInitials(name: string): string {

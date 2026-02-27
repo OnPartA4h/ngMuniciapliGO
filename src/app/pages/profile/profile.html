@@ -175,5 +175,15 @@
         (emailVerified)="onEmailVerified($event)"
        />
     }
+
+    <!-- Delete Photo Confirm Modal -->
+    <app-confirm-modal
+      [isOpen]="showDeletePhotoConfirm()"
+      [title]="'PROFILE.DELETE_PHOTO_TITLE' | translate"
+      [message]="'PROFILE.CONFIRM_DELETE_PHOTO' | translate"
+      [confirmLabel]="'COMMON.DELETE'"
+      [confirmClass]="'btn-danger'"
+      (confirm)="confirmRemoveProfileImage()"
+      (cancel)="showDeletePhotoConfirm.set(false)" />
   }
 </div>

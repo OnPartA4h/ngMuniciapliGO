@@ -10,15 +10,15 @@ import { WhiteService } from '../../services/white-service';
 import { UserService } from '../../services/user-service';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { NotificationService } from '../../services/notification.service';
 import { ColBleuOption } from '../../models/user';
+import { LoadingSpinnerComponent, EmptyStateComponent, ToastService } from '../../components/ui';
 
 @Component({
   selector: 'app-report-details',
   templateUrl: './report-details.html',
   styleUrl: './report-details.css',
-  imports: [DaysAgoPipe, FormsModule, TranslateModule, MatSnackBarModule, RouterLink],
+  imports: [DaysAgoPipe, FormsModule, TranslateModule, RouterLink, LoadingSpinnerComponent, EmptyStateComponent],
 })
 export class ReportDetails implements OnInit {
   private route = inject(ActivatedRoute);
@@ -27,7 +27,7 @@ export class ReportDetails implements OnInit {
   private languageService = inject(LanguageService);
   private whiteService = inject(WhiteService);
   private userService = inject(UserService);
-  private snackbar = inject(MatSnackBar);
+  private toast = inject(ToastService);
   private translate = inject(TranslateService);
   private notifService = inject(NotificationService)
 
@@ -62,7 +62,6 @@ export class ReportDetails implements OnInit {
       try {
         this.problem = await this.whiteService.getProblem(params['id']);
         this.photoIndex.set(0);
-        console.log(this.problem);
 
         this.isSubscribed = await this.notifService.isSubscribed(params['id']);
       } catch (error) {
@@ -79,10 +78,10 @@ export class ReportDetails implements OnInit {
 
     try {
       this.problem = await this.whiteService.acceptProblem(this.problem.id);
-      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ACCEPTER_SUCCESS'), 'OK', { duration: 3000 });
+      this.toast.success(this.translate.instant('MANAGE_REPORTS.ACCEPTER_SUCCESS'));
     }
     catch (e) {
-      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
+      this.toast.error(this.translate.instant('COMMON.ERROR'));
       console.error(e);
     }
   }
@@ -94,10 +93,10 @@ export class ReportDetails implements OnInit {
 
     try {
       await this.whiteService.refuseProblem(this.problem.id);
-      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.REFUSER_SUCCESS'), 'OK', { duration: 3000 });
+      this.toast.success(this.translate.instant('MANAGE_REPORTS.REFUSER_SUCCESS'));
       this.router.navigate(['/manage-reports']);
     } catch (err) {
-      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
+      this.toast.error(this.translate.instant('COMMON.ERROR'));
       console.error(err);
     }
   }
@@ -109,10 +108,10 @@ export class ReportDetails implements OnInit {
 
     try {
       await this.whiteService.acceptFix(this.problem.id);
-      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ACCEPTER_FIX_SUCCESS'), 'OK', { duration: 3000 });
+      this.toast.success(this.translate.instant('MANAGE_REPORTS.ACCEPTER_FIX_SUCCESS'));
       this.router.navigate(['/manage-reports']);
     } catch (err) {
-      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
+      this.toast.error(this.translate.instant('COMMON.ERROR'));
       console.error(err);
     }
   }
@@ -124,10 +123,10 @@ export class ReportDetails implements OnInit {
 
     try {
       await this.whiteService.refuseFix(this.problem.id, this.message_refus);
-      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.REFUSER_FIX_SUCCESS'), 'OK', { duration: 3000 });
+      this.toast.success(this.translate.instant('MANAGE_REPORTS.REFUSER_FIX_SUCCESS'));
       this.router.navigate(['/manage-reports']);
     } catch (err: any) {
-      this.snackbar.open(err.error.errors.Reason[0], 'OK', { duration: 3000 });
+      this.toast.error(err.error.errors.Reason[0]);
       console.error(err);
     }
   }
@@ -139,10 +138,10 @@ export class ReportDetails implements OnInit {
 
     try {
       this.problem = await this.whiteService.assignProblemCitoyen(this.problem.id);
-      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ASSIGN_SUCCESS_CITOYEN'), 'OK', { duration: 3000 });
+      this.toast.success(this.translate.instant('MANAGE_REPORTS.ASSIGN_SUCCESS_CITOYEN'));
     }
     catch (e) {
-      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
+      this.toast.error(this.translate.instant('COMMON.ERROR'));
     }
   }
 
@@ -154,10 +153,10 @@ export class ReportDetails implements OnInit {
     try {
       this.problem = await this.whiteService.assignProblemColbleu(this.problem.id, colBleuId);
       let name = this.problem?.responsable?.firstName + ' ' + this.problem?.responsable?.lastName;
-      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.ASSIGN_SUCCESS_COL_BLEU', { colbleu: name }), 'OK', { duration: 3000 });
+      this.toast.success(this.translate.instant('MANAGE_REPORTS.ASSIGN_SUCCESS_COL_BLEU', { colbleu: name }));
     }
     catch (e) {
-      this.snackbar.open(this.translate.instant('COMMON.ERROR'), 'OK', { duration: 3000 });
+      this.toast.error(this.translate.instant('COMMON.ERROR'));
     }
   }
 
@@ -217,7 +216,7 @@ export class ReportDetails implements OnInit {
       await this.notifService.unsubscribe(this.problem.id)
       this.isSubscribed = false
     } catch {
-      this.snackbar.open(this.translate.instant('MANAGE_REPORTS.UNSUBSCRIBE_ERROR'), 'OK', { duration: 2000 })
+      this.toast.error(this.translate.instant('MANAGE_REPORTS.UNSUBSCRIBE_ERROR'))
     }
   }
 }
