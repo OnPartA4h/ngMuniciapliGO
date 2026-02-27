@@ -18,7 +18,9 @@
   max-width: 600px;
   width: 100%;
   max-height: 90vh;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   box-shadow: var(--shadow-xl);
   animation: modalSlideIn 0.3s ease;
 }
@@ -40,6 +42,8 @@
   align-items: center;
   padding: var(--spacing-2xl);
   border-bottom: 1px solid var(--color-gray-200);
+  flex-shrink: 0;
+  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
 }
 
 .modal-header h2 {
@@ -73,6 +77,9 @@
 
 .modal-body {
   padding: var(--spacing-2xl);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .user-profile-section {
@@ -326,6 +333,9 @@
   padding: var(--spacing-2xl);
   border-top: 1px solid var(--color-gray-200);
   gap: var(--spacing-md);
+  flex-shrink: 0;
+  border-radius: 0 0 var(--border-radius-xl) var(--border-radius-xl);
+  background: var(--color-white);
 }
 
 .btn {

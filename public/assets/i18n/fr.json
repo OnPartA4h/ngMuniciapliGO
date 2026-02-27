@@ -473,6 +473,7 @@
     "LEAVE_CONFIRM": "Êtes-vous sûr de vouloir quitter ce groupe ?",
     "REMOVE_CONFIRM": "Retirer {{name}} du groupe ?",
     "DELETE_CONFIRM": "Supprimer ce message ?",
+    "DELETE_MESSAGE": "Supprimer le message",
     "YOU": "(vous)",
     "MEMBER": "Membre",
     "ADMIN": "Admin",

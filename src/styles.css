@@ -172,7 +172,7 @@ a {
   transition: color var(--transition-fast);
 }
 
-a:hover {
+a:hover:not(.btn) {
   color: var(--color-primary-dark);
 }
 
@@ -266,7 +266,7 @@ textarea::placeholder {
 
 .btn-primary:hover:not(:disabled) {
   background: var(--color-primary-dark);
-  transform: translateY(-1px);
+  color: var(--color-white);
   box-shadow: var(--shadow-primary);
 }
 
