@@ -574,7 +574,8 @@
         }
         @for (gif of gifResults(); track gif.id) {
           <button class="gif-item" (click)="sendGif(gif)" [title]="gif.title">
-            <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title" loading="lazy" />
+            <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title" loading="lazy"
+              (load)="$event.target.classList.add('loaded')" />
           </button>
         }
         @if (!isGifSearching() && gifResults().length === 0) {
