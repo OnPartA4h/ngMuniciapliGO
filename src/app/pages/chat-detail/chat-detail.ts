@@ -1,6 +1,7 @@
 import {
   Component, OnInit, OnDestroy, AfterViewChecked,
-  inject, signal, computed, ViewChild, ElementRef, ChangeDetectorRef
+  inject, signal, computed, ElementRef, ChangeDetectorRef,
+  viewChild
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -41,8 +42,8 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   private cdr = inject(ChangeDetectorRef);
   private subs: Subscription[] = [];
 
-  @ViewChild('messagesContainer') messagesContainer!: ElementRef<HTMLDivElement>;
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  readonly messagesContainer = viewChild.required<ElementRef<HTMLDivElement>>('messagesContainer');
+  readonly fileInput = viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
 
   readonly ChatType = ChatType;
   readonly ChatMemberRole = ChatMemberRole;
@@ -407,7 +408,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   // ── Pièces jointes / Upload ───────────────────────────────────────────────
 
   triggerFileInput(): void {
-    this.fileInput?.nativeElement?.click();
+    this.fileInput()?.nativeElement?.click();
   }
 
   onFileSelected(event: Event): void {
@@ -430,8 +431,9 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
   clearFileSelection(): void {
     this.selectedFile.set(null);
     this.filePreviewUrl.set(null);
-    if (this.fileInput?.nativeElement) {
-      this.fileInput.nativeElement.value = '';
+    const fileInput = this.fileInput();
+    if (fileInput?.nativeElement) {
+      fileInput.nativeElement.value = '';
     }
   }
 
@@ -1026,8 +1028,9 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
 
   private scrollToBottom(): void {
     try {
-      if (this.messagesContainer) {
-        const el = this.messagesContainer.nativeElement;
+      const messagesContainer = this.messagesContainer();
+      if (messagesContainer) {
+        const el = messagesContainer.nativeElement;
         // Disable smooth scrolling temporarily for instant jump
         el.style.scrollBehavior = 'auto';
         el.scrollTop = el.scrollHeight;

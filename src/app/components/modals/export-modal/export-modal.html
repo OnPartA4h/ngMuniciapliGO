@@ -26,7 +26,7 @@
             @for (fmt of SUPPORTED_FORMATS; track fmt) {
               <button
                 class="export-format-btn"
-                [ngClass]="{ active: selectedFormat === fmt }"
+                [class.active]="selectedFormat === fmt"
                 (click)="selectedFormat = fmt">
                 @switch (fmt) {
                   @case ('excel') { <i class="fas fa-file-excel"></i> }
@@ -83,7 +83,7 @@
           </div>
           <div class="export-fields-grid">
             @for (field of fields; track field.key) {
-              <label class="export-field-checkbox" [ngClass]="{ checked: field.selected }">
+              <label class="export-field-checkbox" [class.checked]="field.selected">
                 <input type="checkbox" [(ngModel)]="field.selected" />
                 <span>{{ field.labelKey | translate }}</span>
               </label>

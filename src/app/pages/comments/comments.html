@@ -1,11 +1,9 @@
 <div class="page-container">
 
-  <app-page-header
-    [routerLink]="['/report-details', problemId]"
+  <app-page-header [routerLink]="['/report-details', problemId]"
     title="Commentaires"
     subtitle="Nid-de-poule rue Sherbrooke — 12 commentaires"
-    [showBackButton]="true">
-  </app-page-header>
+    [showBackButton]="true" />
 
   <!-- Liste des commentaires -->
   <div class="comments-list">
@@ -99,10 +97,8 @@
      }
   </div>
   @if (pagination && pagination.totalPages > 1) {
-    <app-pagination
-      [currentPage]="pagination.currentPage"
+    <app-pagination [currentPage]="pagination.currentPage"
       [totalPages]="pagination.totalPages"
-      (pageChange)="onPageChange($event)">
-    </app-pagination>
+      (pageChange)="onPageChange($event)" />
   }
 </div>

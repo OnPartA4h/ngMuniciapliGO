@@ -51,10 +51,10 @@
     </div>
 
     <div class="stat-boxes-row">
-        <app-stat-box [title]="'DASHBOARD.RESOLUTION' | translate" [value]="stats()?.tempsResolution"></app-stat-box>
+        <app-stat-box [title]="'DASHBOARD.RESOLUTION' | translate" [value]="stats()?.tempsResolution" />
         <app-stat-box [title]="'DASHBOARD.PRISE_EN_CHARGE' | translate"
-            [value]="stats()?.tempsPriseEnCharge"></app-stat-box>
-        <app-stat-box [title]="'DASHBOARD.ASSIGNATION' | translate" [value]="stats()?.tempsAssignation"></app-stat-box>
+            [value]="stats()?.tempsPriseEnCharge" />
+        <app-stat-box [title]="'DASHBOARD.ASSIGNATION' | translate" [value]="stats()?.tempsAssignation" />
     </div>
 
     <div class="charts-grid">
@@ -67,7 +67,7 @@
             </div>
             }
             @else {
-            <app-chart [datasets]="datasets()" [chartType]="'line'"></app-chart>
+            <app-chart [datasets]="datasets()" [chartType]="'line'" />
             }
         </div>
         <div class="app-chart-container">
@@ -79,7 +79,7 @@
             </div>
             }
             @else {
-            <app-chart [datasets]="datasetsResolution()" [chartType]="'bar'"></app-chart>
+            <app-chart [datasets]="datasetsResolution()" [chartType]="'bar'" />
             }
         </div>
         <div class="app-chart-container full-width">
@@ -91,7 +91,7 @@
             </div>
             }
             @else {
-            <app-chart [datasets]="datasetsDistricts()" [chartType]="'line'"></app-chart>
+            <app-chart [datasets]="datasetsDistricts()" [chartType]="'line'" />
             }
         </div>
         <div class="app-chart-container full-width">
@@ -103,7 +103,7 @@
             </div>
             }
             @else {
-            <app-chart [datasets]="datasetsCategories()" [chartType]="'line'"></app-chart>
+            <app-chart [datasets]="datasetsCategories()" [chartType]="'line'" />
             }
         </div>
     </div>

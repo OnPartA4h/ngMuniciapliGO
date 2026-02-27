@@ -1,6 +1,7 @@
 import {
   Component, OnInit, OnDestroy,
-  inject, signal, ElementRef, ViewChild,
+  inject, signal, ElementRef,
+  viewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
@@ -31,8 +32,8 @@ export class VideoCall implements OnInit, OnDestroy {
   private chatService      = inject(ChatService);
   private subs: Subscription[] = [];
 
-  @ViewChild('localVideo')   localVideoRef!:  ElementRef<HTMLVideoElement>;
-  @ViewChild('remoteVideos') remoteVideosRef!: ElementRef<HTMLDivElement>;
+  readonly localVideoRef = viewChild.required<ElementRef<HTMLVideoElement>>('localVideo');
+  readonly remoteVideosRef = viewChild.required<ElementRef<HTMLDivElement>>('remoteVideos');
 
   // ── Paramètres reçus via l'URL ────────────────────────────────────────────
   chatId      = '';
@@ -117,8 +118,9 @@ export class VideoCall implements OnInit, OnDestroy {
 
       // Acquisition du flux local (audio ± vidéo)
       await this.acquireMediaStream();
-      if (this.localVideoRef?.nativeElement && this.localStream) {
-        this.localVideoRef.nativeElement.srcObject = this.localStream;
+      const localVideoRef = this.localVideoRef();
+      if (localVideoRef?.nativeElement && this.localStream) {
+        localVideoRef.nativeElement.srcObject = this.localStream;
       }
 
       // Connexion à la room Twilio
@@ -236,10 +238,11 @@ export class VideoCall implements OnInit, OnDestroy {
   }
 
   private attachTrack(track: TwilioVideo.RemoteAudioTrack | TwilioVideo.RemoteVideoTrack): void {
-    if (!this.remoteVideosRef?.nativeElement) return;
+    const remoteVideosRef = this.remoteVideosRef();
+    if (!remoteVideosRef?.nativeElement) return;
     const el = track.attach();
     (el as HTMLElement).style.cssText = 'width:100%;height:100%;object-fit:cover;';
-    this.remoteVideosRef.nativeElement.appendChild(el);
+    remoteVideosRef.nativeElement.appendChild(el);
   }
 
   private detachTrack(track: TwilioVideo.RemoteAudioTrack | TwilioVideo.RemoteVideoTrack): void {
@@ -328,8 +331,9 @@ export class VideoCall implements OnInit, OnDestroy {
       this.hasCamera.set(true);
       this.isVideoOff.set(false);
 
-      if (this.localVideoRef?.nativeElement) {
-        this.localVideoRef.nativeElement.srcObject = this.localStream;
+      const localVideoRef = this.localVideoRef();
+      if (localVideoRef?.nativeElement) {
+        localVideoRef.nativeElement.srcObject = this.localStream;
       }
 
       // Publier la nouvelle piste vidéo dans la room Twilio
