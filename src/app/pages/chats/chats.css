@@ -261,7 +261,7 @@
 }
 
 .chat-item.unread:hover {
-  background: #d0e8fc;
+  background: var(--color-primary-light);
 }
 
 /* Chat avatar */
@@ -292,7 +292,7 @@
 }
 
 .chat-avatar.group-avatar {
-  background: linear-gradient(135deg, #1565c0 0%, #7b1fa2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #7b1fa2 100%);
 }
 
 .chat-avatar .group-icon {
@@ -320,7 +320,7 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #4caf50;
+  background: var(--color-success);
   border: 2.5px solid var(--color-white);
   z-index: 2;
 }

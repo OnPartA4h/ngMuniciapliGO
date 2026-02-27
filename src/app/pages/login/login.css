@@ -123,7 +123,7 @@
 
 .form-group input {
   padding: 14px var(--spacing-lg);
-  border: 2px solid var(--border-color);
+  border: 1px solid var(--color-gray-300);
   border-radius: var(--border-radius-md);
   font-size: var(--font-size-md);
   transition: all var(--transition-base);
@@ -131,8 +131,8 @@
 }
 
 .form-group input:focus {
-  border-color: var(--border-color-focus);
-  box-shadow: 0 0 0 4px rgba(21, 101, 192, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
 }
 
 .form-group input::placeholder {
@@ -174,7 +174,7 @@
 }
 
 .btn-login {
-  background: var(--color-bg-gradient-primary);
+  background: var(--color-primary);
   color: var(--color-white);
   border: none;
   border-radius: var(--border-radius-md);
@@ -187,7 +187,8 @@
 }
 
 .btn-login:hover {
-  transform: translateY(-2px);
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-primary-lg);
 }
 

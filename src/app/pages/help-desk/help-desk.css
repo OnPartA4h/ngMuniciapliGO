@@ -23,10 +23,17 @@
   background: var(--color-white);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-gray-200);
   padding: var(--spacing-xl);
   display: flex;
   gap: var(--spacing-lg);
   align-items: center;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.helpdesk-user-card:hover {
+  border-color: var(--color-primary);
 }
 
 .helpdesk-user-avatar img {
@@ -115,9 +122,17 @@
   flex: 1 1 0;
   width: 100%;
   min-width: 0;
-  border-radius: 5px;
-  border: solid 1px var(--border-color);
-  padding: 0 10px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-gray-300);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  outline: none;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.helpdesk-search-bar input[type="text"]:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
 }
 
 .helpdesk-problems-list {
