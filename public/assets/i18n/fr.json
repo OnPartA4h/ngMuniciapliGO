@@ -581,7 +581,9 @@
     "ADD_MEMBER_ERROR": "Erreur lors de l'ajout du membre",
     "REMOVE_MEMBER_ERROR": "Erreur lors du retrait du membre",
     "LEAVE_ERROR": "Erreur lors du départ du groupe",
-    "CALL_START_ERROR": "Impossible de démarrer l'appel. Veuillez réessayer."
+    "CALL_START_ERROR": "Impossible de démarrer l'appel. Veuillez réessayer.",
+    "GIF_SEARCH_PLACEHOLDER": "Rechercher un GIF…",
+    "GIF_NO_RESULTS": "Aucun GIF trouvé"
   },
   "CALL": {
     "INCOMING_AUDIO": "Appel audio entrant…",

@@ -582,7 +582,9 @@
     "ADD_MEMBER_ERROR": "Error adding member",
     "REMOVE_MEMBER_ERROR": "Error removing member",
     "LEAVE_ERROR": "Error leaving the group",
-    "CALL_START_ERROR": "Unable to start the call. Please try again."
+    "CALL_START_ERROR": "Unable to start the call. Please try again.",
+    "GIF_SEARCH_PLACEHOLDER": "Search a GIF…",
+    "GIF_NO_RESULTS": "No GIFs found"
   },
   "CALL": {
     "INCOMING_AUDIO": "Audio call incoming…",
