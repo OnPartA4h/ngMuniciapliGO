@@ -1,8 +1,11 @@
 <header>
+  <!-- Logo -->
   <a routerLink="/home" class="logo">
-    <img src="/assets/images/Logo.png" class="logo-img"> <span>MunicipaliGO</span>
+    <img src="/assets/images/Logo.png" class="logo-img" alt="MunicipaliGO">
+    <span>MunicipaliGO</span>
   </a>
 
+  <!-- Nav centré -->
   <nav>
     <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
       {{ 'DASHBOARD.TITLE' | translate }}
@@ -13,73 +16,77 @@
         {{ 'HEADER.MAP' | translate }}
       </a>
     }
-    
 
     @if (userRoles().includes('ColBlanc') || userRoles().includes('Admin')) {
-    <a routerLink="/manage-reports" routerLinkActive="active">
-      {{ 'HEADER.MANAGE_REPORTS' | translate }}
-    </a>
+      <a routerLink="/manage-reports" routerLinkActive="active">
+        {{ 'HEADER.MANAGE_REPORTS' | translate }}
+      </a>
     }
 
     @if (userRoles().includes('Admin')) {
-    <a routerLink="/manage-users" routerLinkActive="active">
-      {{ 'HEADER.MANAGE_USERS' | translate }}
-    </a>
+      <a routerLink="/manage-users" routerLinkActive="active">
+        {{ 'HEADER.MANAGE_USERS' | translate }}
+      </a>
     }
 
     @if (userRoles().includes('Support')) {
-    <a routerLink="/help-desk" routerLinkActive="active">
-      {{ 'HEADER.HELP_DESK' | translate }}
-    </a>
+      <a routerLink="/help-desk" routerLinkActive="active">
+        {{ 'HEADER.HELP_DESK' | translate }}
+      </a>
     }
   </nav>
 
+  <!-- Actions droite -->
   <div class="header-actions">
-    <!-- Language Toggle -->
-    <button class="btn-language" (click)="toggleLanguage()" [title]="'HEADER.CHANGE_LANGUAGE' | translate">
-      <i class="fas fa-globe"></i>
-      <span>{{ getCurrentLanguage() }}</span>
-    </button>
 
     <!-- Vitrine Editor Button (Admin & ColBlanc) -->
     @if (isConnected() && (userRoles().includes('Admin') || userRoles().includes('ColBlanc'))) {
-    <button class="btn-vitrine" (click)="openVitrine()" title="{{ 'HEADER.VITRINE_TOOLTIP' | translate }}">
-      <i class="fas fa-external-link-alt"></i>
-      <span>{{ 'HEADER.VITRINE' | translate }}</span>
+      <button class="btn-vitrine" (click)="openVitrine()" [matTooltip]="'HEADER.VITRINE_TOOLTIP' | translate">
+        <i class="fas fa-external-link-alt"></i>
+        <span>{{ 'HEADER.VITRINE' | translate }}</span>
+      </button>
+    }
+
+    <!-- Séparateur visuel -->
+    @if (isConnected()) {
+      <div class="header-divider"></div>
+    }
+
+    <!-- Notifications & Chat -->
+    @if (isConnected()) {
+      <app-chat-bell />
+      <app-notification-bell />
+    }
+
+    <!-- Langue toggle — texte uniquement -->
+    <button class="btn-language" (click)="toggleLanguage()" [matTooltip]="'HEADER.CHANGE_LANGUAGE' | translate">
+      {{ getCurrentLanguage() }}
     </button>
-    }
 
-    <!-- Notification Bell (when connected) -->
+    <!-- Profile Avatar -->
     @if (isConnected()) {
-    <app-chat-bell />
-    <app-notification-bell />
+      <a routerLink="/profile" class="profile-avatar" routerLinkActive="active">
+        @if (authService.profilePictureUrl()) {
+          <img [src]="authService.profilePictureUrl()!" alt="Profile" />
+        } @else {
+          <i class="fas fa-user"></i>
+        }
+      </a>
     }
 
-    <!-- Profile Avatar (when connected) -->
-    @if (isConnected()) {
-    <a routerLink="/profile" class="profile-avatar" routerLinkActive="active">
-      @if (authService.profilePictureUrl()) {
-      <img [src]="authService.profilePictureUrl()!" alt="Profile" />
-      }
-      @if (!authService.profilePictureUrl()) {
-      <i class="fas fa-user"></i>
-      }
-    </a>
-    }
-
-
-    <!-- Login/Logout -->
+    <!-- Login -->
     @if (!isConnected()) {
-    <a routerLink="/login" class="btn-login">
-      {{ 'HEADER.LOGIN' | translate }}
-    </a>
+      <a routerLink="/login" class="btn-login">
+        {{ 'HEADER.LOGIN' | translate }}
+      </a>
     }
 
+    <!-- Déconnexion — icon-button style bell -->
     @if (isConnected()) {
-    <button class="btn-login" (click)="logout()">
-      <i class="fas fa-sign-out-alt"></i>
-      {{ 'HEADER.LOGOUT' | translate }}
-    </button>
+      <button mat-icon-button class="btn-logout" (click)="logout()" [matTooltip]="'HEADER.LOGOUT' | translate">
+        <mat-icon>logout</mat-icon>
+      </button>
     }
+
   </div>
 </header>

@@ -1,45 +1,53 @@
 <div class="reports-list">
   @for (p of problems(); track p.id) {
     <div class="report-card list-card" routerLink="/report-details/{{p.id}}">
-      <div class="report-thumbnail">
-        @if (p.photos && p.photos.length > 0) {
+
+      @if (p.photos && p.photos.length > 0) {
+        <div class="report-thumbnail">
           <img [src]="p.photos[0].url" alt="Photo du problème" />
-        }
-      </div>
+        </div>
+      }
+
       <div class="report-info">
+        <!-- Ligne 1 : Titre + statut -->
         <div class="report-header">
           <h3 class="report-title">{{ p.titre }}</h3>
           <span class="badge badge-info">{{ generalService.getStatusLabel(p.statut) }}</span>
         </div>
-        <div class="report-details">
-          <span class="report-location">
+
+        <!-- Ligne 2 : Métadonnées organisées en groupes -->
+        <div class="report-meta-row">
+          <span class="report-meta-item">
             <i class="fas fa-map-marker-alt"></i>
             {{ p.address }}
           </span>
-          <span class="report-category">
+          <span class="report-meta-sep">·</span>
+          <span class="report-meta-item">
             <i class="fas fa-tag"></i>
             {{ generalService.getCategoryLabel(p.categorie) }}
           </span>
-        </div>
-        <div class="report-meta">
-          <span class="report-date">
+          <span class="report-meta-sep">·</span>
+          <span class="report-meta-item">
             <i class="fas fa-clock"></i>
-            {{ p.dateCreation | daysAgo }} {{ "MANAGE_REPORTS.DAYS" | translate }}
+            {{ p.dateCreation | daysAgo }}j
           </span>
-          <span class="report-assignee">
+          <span class="report-meta-sep">·</span>
+          <span class="report-meta-item">
             <i class="fas fa-user"></i>
             @if (p.assigneA === 2 && p.responsable) {
-              {{ p.responsable.firstName + ' ' + p.responsable.lastName }}
+              {{ p.responsable.firstName }} {{ p.responsable.lastName }}
             } @else {
               {{ generalService.assignees()[p.assigneA].label }}
             }
           </span>
-          <span class="report-likes">
+          <span class="report-meta-sep">·</span>
+          <span class="report-meta-item report-likes">
             <i class="fa-solid fa-thumbs-up"></i>
             {{ p.nbLikes }}
           </span>
         </div>
       </div>
+
       <div class="report-action">
         <i class="fas fa-chevron-right"></i>
       </div>

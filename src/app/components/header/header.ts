@@ -1,4 +1,3 @@
-
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
@@ -7,10 +6,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NotificationBell } from '../notification-bell/notification-bell';
 import { ChatBell } from '../chat-bell/chat-bell';
 import { environment } from '../../../environments/environment';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive, TranslateModule, NotificationBell, ChatBell],
+  imports: [RouterLink, RouterLinkActive, TranslateModule, NotificationBell, ChatBell, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })

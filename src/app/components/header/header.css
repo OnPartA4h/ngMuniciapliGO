@@ -12,6 +12,7 @@ header {
   border-bottom: 1px solid var(--color-gray-200);
 }
 
+/* Logo */
 .logo {
   display: flex;
   align-items: center;
@@ -20,7 +21,7 @@ header {
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
   text-decoration: none;
-  transition: transform var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .logo:hover {
@@ -37,19 +38,24 @@ header {
   -webkit-text-fill-color: var(--color-primary);
 }
 
+/* Nav — centré absolument */
 nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
 }
 
 nav a {
-  color: var(--color-gray-700);
+  color: var(--color-gray-600);
   text-decoration: none;
-  padding: var(--spacing-md) var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 nav a:hover {
@@ -67,34 +73,38 @@ nav a.active {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
 }
 
-/* Language Toggle Button */
+/* Séparateur vertical */
+.header-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--color-gray-200);
+  margin: 0 var(--spacing-xs);
+}
+
+/* Langue toggle — compact, texte seul */
 .btn-language {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
   background: transparent;
-  border: 2px solid var(--color-gray-300);
-  color: var(--color-text-primary);
-  padding: 0 var(--spacing-lg);
-  height: 36px;
+  border: 1.5px solid var(--color-gray-300);
+  color: var(--color-text-secondary);
+  padding: 0 10px;
+  height: 32px;
   border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
   cursor: pointer;
   transition: all var(--transition-fast);
+  min-width: 38px;
 }
 
 .btn-language:hover {
-  background-color: var(--color-gray-100);
   border-color: var(--color-primary);
   color: var(--color-primary);
-}
-
-.btn-language i {
-  font-size: var(--font-size-base);
+  background: var(--color-primary-light);
 }
 
 /* Profile Avatar */
@@ -102,8 +112,8 @@ nav a.active {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: var(--color-primary-light);
   color: var(--color-primary);
@@ -124,7 +134,7 @@ nav a.active {
 }
 
 .profile-avatar i {
-  font-size: var(--font-size-lg);
+  font-size: 16px;
 }
 
 .profile-avatar img {
@@ -137,14 +147,14 @@ nav a.active {
 .btn-vitrine {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
   background: transparent;
-  border: 2px solid var(--color-secondary, #f59e0b);
+  border: 1.5px solid var(--color-secondary, #f59e0b);
   color: var(--color-secondary, #f59e0b);
-  padding: 0 var(--spacing-lg);
-  height: 36px;
+  padding: 0 var(--spacing-md);
+  height: 32px;
   border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -154,14 +164,13 @@ nav a.active {
 .btn-vitrine:hover {
   background-color: var(--color-secondary, #f59e0b);
   color: var(--color-white);
-  box-shadow: var(--shadow-md);
 }
 
 .btn-vitrine i {
-  font-size: var(--font-size-sm);
+  font-size: 12px;
 }
 
-/* Login/Logout Button */
+/* Login Button */
 .btn-login {
   display: flex;
   align-items: center;
@@ -185,11 +194,27 @@ nav a.active {
   box-shadow: var(--shadow-primary);
 }
 
-.btn-login i {
-  font-size: var(--font-size-base);
+/* Logout — icon-button cohérent avec bells */
+.btn-logout {
+  color: var(--color-text-secondary) !important;
+}
+
+.btn-logout:hover {
+  color: var(--color-error, #d32f2f) !important;
+  background: rgba(211, 47, 47, 0.08) !important;
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  nav {
+    gap: 2px;
+  }
+  nav a {
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-sm) var(--spacing-sm);
+  }
+}
+
 @media (max-width: 768px) {
   header {
     padding: 0 var(--spacing-lg);
@@ -197,11 +222,9 @@ nav a.active {
 
   nav {
     display: none;
-    /* Hide on mobile, you can add a hamburger menu later */
   }
 
-  .btn-language span {
+  .btn-vitrine span {
     display: none;
-    /* Show only icon on mobile */
   }
 }
