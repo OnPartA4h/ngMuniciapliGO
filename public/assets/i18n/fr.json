@@ -649,6 +649,8 @@
     "AGO": "Il y a",
     "DAYS": "jours",
     "REPLY": "réponse",
-    "REPLIES": "réponses"
+    "REPLIES": "réponses",
+    "NO_COMMENTS": "Aucun commentaire",
+    "NO_COMMENTS_DESC": "Aucun commentaire n'a été ajouté à ce signalement pour le moment."
   }
 }

@@ -12,8 +12,14 @@ export class CommentService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}`;
 
-  async deleteComment(problemId: number, commentId: number, notificationId: number) {
+  async deleteCommentNotif(problemId: number, commentId: number, notificationId: number) {
     let res = await lastValueFrom(this.http.delete<any>(`${this.apiUrl}/api/Probleme/${problemId}/comments/${commentId}/${notificationId}`))
+    console.log(res);
+    return res;
+  }
+
+  async deleteComment(problemId: number, commentId: number) {
+    let res = await lastValueFrom(this.http.delete<any>(`${this.apiUrl}/api/Probleme/${problemId}/comments/delete/${commentId}/`))
     console.log(res);
     return res;
   }

@@ -650,6 +650,8 @@
     "AGO": "",
     "DAYS": "days ago",
     "REPLY": "reply",
-    "REPLIES": "replies"
+    "REPLIES": "replies",
+    "NO_COMMENTS": "No comments",
+    "NO_COMMENTS_DESC": "No comments have been added to this report yet."
   }
 }
