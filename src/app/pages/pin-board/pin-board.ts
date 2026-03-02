@@ -32,7 +32,6 @@ export interface PinPhotoEntry {
 export class PinBoard implements AfterViewInit, OnDestroy {
   @ViewChild('board')    boardRef!:    ElementRef<HTMLElement>;
   @ViewChild('viewport') viewportRef!: ElementRef<HTMLElement>;
-  @ViewChild('bgLayer')  bgLayerRef!:  ElementRef<HTMLElement>;
   @ViewChildren(PinPhotoComponent) pinPhotoComponents!: QueryList<PinPhotoComponent>;
 
   constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {}
@@ -162,7 +161,6 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     this.isInspecting = true;
 
     const viewport = this.viewportRef.nativeElement;
-    const bgLayer  = this.bgLayerRef.nativeElement;
     const boardW   = this.boardRef.nativeElement.clientWidth;
     const boardH   = this.boardRef.nativeElement.clientHeight;
 
@@ -172,21 +170,13 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     const cardCenterX = payload.state.x + cardW / 2;
     const cardCenterY = payload.state.y + cardH / 2;
 
-    const targetScale  = 2.8;
-    const translateX   = boardW / 2 - cardCenterX * targetScale;
-    const translateY   = boardH / 2 - cardCenterY * targetScale;
+    const targetScale = 2.8;
+    const translateX  = boardW / 2 - cardCenterX * targetScale;
+    const translateY  = boardH / 2 - cardCenterY * targetScale;
 
-    // Background zooms slightly less than the cards → parallax depth effect
-    const bgScale      = 1 + (targetScale - 1) * 0.35;
-    const bgTranslateX = boardW / 2 - cardCenterX * bgScale;
-    const bgTranslateY = boardH / 2 - cardCenterY * bgScale;
-
+    // bg is inside the viewport — it zooms exactly with the cards, no separate animation needed
     gsap.to(viewport, {
       scale: targetScale, x: translateX, y: translateY,
-      duration: 0.8, ease: 'power3.inOut',
-    });
-    gsap.to(bgLayer, {
-      scale: bgScale, x: bgTranslateX, y: bgTranslateY,
       duration: 0.8, ease: 'power3.inOut',
     });
   }
@@ -197,13 +187,8 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     this.cdr.markForCheck();
 
     const viewport = this.viewportRef.nativeElement;
-    const bgLayer  = this.bgLayerRef.nativeElement;
 
     gsap.to(viewport, {
-      scale: 1, x: 0, y: 0,
-      duration: 0.7, ease: 'power3.inOut',
-    });
-    gsap.to(bgLayer, {
       scale: 1, x: 0, y: 0,
       duration: 0.7, ease: 'power3.inOut',
     });

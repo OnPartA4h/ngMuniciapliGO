@@ -1,12 +1,12 @@
 <div class="pin-board-root" #board>
-  <!-- Background layer — zooms independently for parallax depth effect -->
-  <div class="pin-board-bg" #bgLayer></div>
-
-  <!-- Vignette overlay (static, always on top of bg) -->
+  <!-- Vignette overlay (static, never zooms) -->
   <div class="pin-board-vignette"></div>
 
-  <!-- Zoomable viewport layer — cards live here -->
+  <!-- Single zoomable layer — bg image + cards move as one unit -->
   <div class="pin-board-viewport" #viewport>
+    <!-- Background fills the viewport so it scales with the cards -->
+    <div class="pin-board-bg" #bgLayer></div>
+
     @for (entry of entries; track trackById($index, entry)) {
       <app-pin-photo
         [photo]="entry.photo"

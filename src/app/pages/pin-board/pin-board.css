@@ -12,37 +12,32 @@
   height: 100%;
   position: relative;
   overflow: hidden;
-  background: #2a1f14; /* fallback color matching the board texture */
+  background: #2a1f14;
 }
 
-/* ── Background layer — animated independently for parallax zoom ──────────── */
-.pin-board-bg {
-  position: absolute;
-  /* Slightly oversized so scaling inward never shows edges */
-  inset: -8%;
-  width: 116%;
-  height: 116%;
-  background: url('/assets/images/board_page/board.jpg') center center / cover no-repeat;
-  transform-origin: center center;
-  will-change: transform;
-  z-index: 0;
-}
-
-/* ── Static vignette — always on top of bg, never moves ──────────────────── */
+/* ── Static vignette — sits above everything, never transforms ────────────── */
 .pin-board-vignette {
   pointer-events: none;
   position: absolute;
   inset: 0;
   background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.28) 100%);
-  z-index: 1;
+  z-index: 100;
 }
 
-/* ── Zoomable viewport ────────────────────────────────────────────────────── */
+/* ── Single zoomable viewport — bg + cards are children, move as one ──────── */
 .pin-board-viewport {
   position: absolute;
   inset: 0;
   transform-origin: 0 0;
-  z-index: 2;
+  z-index: 1;
+}
+
+/* ── Background inside the viewport — same size as the board ─────────────── */
+.pin-board-bg {
+  position: absolute;
+  inset: 0;
+  background: url('/assets/images/board_page/board.jpg') center center / cover no-repeat;
+  z-index: 0;
 }
 
 /* ── Inspect overlay ──────────────────────────────────────────────────────── */
