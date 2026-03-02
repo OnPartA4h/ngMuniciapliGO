@@ -55,6 +55,16 @@ export class UserService {
     return response;
   }
 
+  async uploadProfilePicture(file: File): Promise<{ message: string; profilePictureUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await lastValueFrom(
+      this.http.post<{ message: string; profilePictureUrl: string }>(`${this.apiUrl}/api/User/profile-picture`, formData)
+    );
+    this.authService.setProfilePictureUrl(response.profilePictureUrl);
+    return response;
+  }
+
   async verifyEmailChange(dto: VerifyEmailChangeDto): Promise<{ message: string }> {
     const response = await lastValueFrom(
       this.http.post<{ message: string }>(`${this.apiUrl}/api/User/verify-email-change`, dto)
@@ -68,15 +78,6 @@ export class UserService {
     const response = await lastValueFrom(
       this.http.post<{ message: string }>(`${this.apiUrl}/api/User/resend-email-change-code`, {})
     );
-    return response;
-  }
-
-  async uploadProfilePicture(file: File): Promise<{ message: string; profilePictureUrl: string }> {
-    const formData = new FormData();
-    formData.append('file', file);
-    const response = await lastValueFrom(this.http.post<{ message: string; profilePictureUrl: string }>(`${this.apiUrl}/api/User/profile-picture`, formData));
-    // Update the profile picture signal in AuthService
-    this.authService.setProfilePictureUrl(response.profilePictureUrl);
     return response;
   }
 

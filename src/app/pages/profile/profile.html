@@ -8,8 +8,9 @@
   @if (!isLoading() && profile()) {
     <div class="profile-content">
       <!-- Page Header -->
-      <app-page-header [title]="'PROFILE.TITLE' | translate"
-        [subtitle]="'PROFILE.SUBTITLE' | translate"
+      <app-page-header
+        [title]="userId() ? (profile()!.firstName + ' ' + profile()!.lastName) : ('PROFILE.TITLE' | translate)"
+        [subtitle]="userId() ? profile()!.email : ('PROFILE.SUBTITLE' | translate)"
         [showBackButton]="true"
         (back)="goBack()" />
 
@@ -144,16 +145,20 @@
           <!-- Email Change Form Component -->
           <app-profile-email-form [currentEmail]="profile()!.email"
             [isSaving]="isSavingEmail()"
+            [isSupport]="!!userId()"
             [successMessage]="emailSuccessMessage()"
             [errorMessage]="emailErrorMessage()"
-            (formSubmit)="onRequestEmailChange($event)" />
+            (formSubmit)="onRequestEmailChange($event)"
+            (resetPassword)="sendResetPasswordEmail()" />
 
-          <!-- Password Change Form Component -->
-          <app-profile-password-form [isSaving]="isSavingPassword()"
-            [successMessage]="passwordSuccessMessage()"
-            [errorMessage]="passwordErrorMessage()"
-            (formSubmit)="onSavePassword($event)"
-            (forgotPassword)="sendResetPasswordEmail()" />
+          <!-- Password Change Form Component (regular profile only) -->
+          @if (!userId()) {
+            <app-profile-password-form [isSaving]="isSavingPassword()"
+              [successMessage]="passwordSuccessMessage()"
+              [errorMessage]="passwordErrorMessage()"
+              (formSubmit)="onSavePassword($event)"
+              (forgotPassword)="sendResetPasswordEmail()" />
+          }
         </div>
       </div>
     </div>

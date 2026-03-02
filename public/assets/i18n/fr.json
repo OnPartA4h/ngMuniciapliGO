@@ -152,6 +152,7 @@
     "SUBSCRIBED_TASKS": "Tâches suivies",
     "NO_SUBSCRIBED_TASKS": "Aucune tâche suivie",
     "RESET_EMAIL_SENT": "Un lien de réinitialisation du mot de passe a été envoyé",
+    "SEND_RESET_PASSWORD_EMAIL": "Envoyer un email de réinitialisation du mot de passe",
     "RESET_EMAIL_ERROR": "Erreur lors de l'envoi du lien de réinitialisation"
   },
   "AI_PROCESSING": {
