@@ -47,8 +47,8 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     { url: '/assets/images/board_page/haversine.png',    text: 'Une partie intégrante de notre projet 🧠' },
     { url: '/assets/images/board_page/time_cube.png',    text: 'Les 4 coins du monde 🌍' },
     { url: '/assets/images/board_page/refactor.png',    text: '"Bro I swear just one more refactor"' },
-    { url: '/assets/images/board_page/git_force.png',    text: '"git push origin main --force' },
-
+    { url: '/assets/images/board_page/git_force.png',    text: 'git push origin main --force' },
+    { url: '/assets/images/board_page/quit_job.png',    text: '"Je pars live sinon il y aura trop de traffic"' },
   ];
 
   entries: PinPhotoEntry[] = [];
