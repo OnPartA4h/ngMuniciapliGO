@@ -7,7 +7,7 @@ import { supportGuard } from './guards/support-guard';
 
 export const routes: Routes = [
   { path: 'hello', loadComponent: () => import('./pages/hello/hello').then(m => m.Hello) },
-  { path: 'map', loadComponent: () => import('./pages/map/map').then(m => m.Map), canActivate: [authGuard, whiteGuard]},
+  { path: 'map', loadComponent: () => import('./pages/map/map').then(m => m.Map), canActivate: [authGuard, whiteGuard] },
   { path: 'home', loadComponent: () => import('./pages/home/home').then(m => m.Home), canActivate: [authGuard] },
   { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.Login), canActivate: [loginGuard] },
   { path: 'manage-reports', loadComponent: () => import('./pages/manage-reports/manage-reports').then(m => m.ManageReports), canActivate: [authGuard, whiteGuard] },
@@ -16,7 +16,7 @@ export const routes: Routes = [
   { path: 'manage-users', loadComponent: () => import('./pages/manage-users/manage-users').then(m => m.ManageUsers), canActivate: [authGuard, adminGuard] },
   { path: 'create-user', loadComponent: () => import('./pages/create-user/create-user').then(m => m.CreateUser), canActivate: [authGuard, adminGuard] },
   { path: 'report-details/:id', loadComponent: () => import('./pages/report-details/report-details').then(m => m.ReportDetails), canActivate: [authGuard] },
-  { path: 'comments/:id', loadComponent: () => import('./pages/comments/comments').then(m => m.Comments), canActivate: [authGuard]},
+  { path: 'comments/:id', loadComponent: () => import('./pages/comments/comments').then(m => m.Comments), canActivate: [authGuard] },
   { path: 'edit-problem/:id', loadComponent: () => import('./pages/edit-problem/edit-problem').then(m => m.EditProblem), canActivate: [authGuard, whiteGuard] },
   { path: 'profile', loadComponent: () => import('./pages/profile/profile').then(m => m.Profile), canActivate: [authGuard] },
   { path: 'profile/:id', loadComponent: () => import('./pages/profile/profile').then(m => m.Profile), canActivate: [authGuard, supportGuard] },
@@ -25,6 +25,7 @@ export const routes: Routes = [
   { path: 'chats/:id', loadComponent: () => import('./pages/chat-detail/chat-detail').then(m => m.ChatDetail), canActivate: [authGuard] },
   { path: 'call', loadComponent: () => import('./pages/video-call/video-call').then(m => m.VideoCall), canActivate: [authGuard] },
   { path: 'help-desk', loadComponent: () => import('./pages/help-desk/help-desk').then(m => m.HelpDesk), canActivate: [authGuard, supportGuard] },
+  { path: 'godot', loadComponent: () => import('./pages/godot/godot').then(m => m.GodotPage), canActivate: [authGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
 ];
