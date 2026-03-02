@@ -45,10 +45,12 @@
                         <h2>{{ problem.titre }}</h2>
                         <p>{{ problem.description }}</p>
                     </div>
+                    @if (!isSupport) {
                     <button class="btn-subscribe" [class.subscribed]="isSubscribed" (click)="toggleSubscription()"
                         [title]="isSubscribed ? ('REPORT_DETAILS.UNSUBSCRIBE' | translate) : ('REPORT_DETAILS.SUBSCRIBE' | translate)">
                         <i class="fas" [class.fa-bell]="isSubscribed" [class.fa-bell-slash]="!isSubscribed"></i>
                     </button>
+                    }
                 </div>
                 @if (problem.statut === 5) {
                 <div class="divider"></div>
@@ -139,11 +141,13 @@
                         </div>
                         <span style="display: flex; align-items: center; gap: 8px;">
                             {{problem.nbComments}}
+                            @if (!isSupport) {
                             <a class="btn btn-sm btn-outline" [routerLink]="['/comments', problem.id]"
                                 [title]="'REPORT_DETAILS.VIEW_COMMENTS' | translate">
                                 <i class="fas fa-comments"></i>
                                 {{ 'REPORT_DETAILS.VIEW' | translate }}
                             </a>
+                            }
                         </span>
                     </span>
                     <div class="report-header">
@@ -154,6 +158,7 @@
                 </div>
             </div>
             <div class="details-actions">
+                @if (!isSupport) {
                 <a [routerLink]="['/edit-problem', problem.id]" class="btn btn-secondary">
                     <i class="fas fa-edit"></i>
                     {{ 'REPORT_DETAILS.EDIT_PROBLEM' | translate }}
@@ -221,6 +226,7 @@
                 </button>
                 }
                 }
+                } <!-- end @if (!isSupport) -->
             </div>
         </div>
     </div>

@@ -20,6 +20,12 @@ export class SupportService {
     return res;
   }
 
+  async getProblem(id: number): Promise<Problem> {
+    let res = await lastValueFrom(this.http.get<Problem>(`${this.apiUrl}/api/Support/GetProblem/${id}`));
+    console.log(res);
+    return res;
+  }
+
   async getPhoneCall(): Promise<PhoneCall | null> {
     try {
       let res = await lastValueFrom(this.http.get<PhoneCall>(`${this.apiUrl}/api/Support/GetPhoneCall`))
