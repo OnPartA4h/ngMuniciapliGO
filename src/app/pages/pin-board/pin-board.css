@@ -32,10 +32,13 @@
   z-index: 1;
 }
 
-/* ── Background inside the viewport — same size as the board ─────────────── */
+/* ── Background inside the viewport — extended beyond edges for seamless zoom ─ */
 .pin-board-bg {
   position: absolute;
-  inset: 0;
+  top: -5%;
+  left: -15%;
+  width: 130%;
+  height: 110%;
   background: url('/assets/images/board_page/board.jpg') center center / cover no-repeat;
   z-index: 0;
 }
