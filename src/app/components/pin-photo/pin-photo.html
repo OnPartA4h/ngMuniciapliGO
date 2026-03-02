@@ -1,17 +1,22 @@
-<div class="pin-photo-wrapper" #card>
-  <!-- Pushpin — drag handle -->
-  <div class="pin" #pinArea (mousedown)="onPinMousedown($event)">
-    <div class="pin-head"></div>
-    <div class="pin-needle"></div>
-  </div>
+<div class="pin-card-drag" #card>
+  <!-- Inner wrapper: rotates for sway, pivot at top-center (the pin) -->
+  <div class="pin-card-sway" #swayEl>
 
-  <!-- Polaroid card — click to inspect -->
-  <div class="polaroid" (click)="onCardClick()">
-    <div class="polaroid-image-wrap">
-      <img [src]="photo.url" [alt]="photo.text" draggable="false" />
+    <!-- Pushpin — drag trigger -->
+    <div class="pin" #pinArea>
+      <div class="pin-head"></div>
+      <div class="pin-needle"></div>
     </div>
-    <div class="polaroid-caption">
-      <span>{{ photo.text }}</span>
+
+    <!-- Polaroid — click to inspect -->
+    <div class="polaroid" (click)="onCardClick()">
+      <div class="polaroid-image-wrap">
+        <img [src]="photo.url" [alt]="photo.text" draggable="false" />
+      </div>
+      <div class="polaroid-caption">
+        <span>{{ photo.text }}</span>
+      </div>
     </div>
+
   </div>
 </div>
