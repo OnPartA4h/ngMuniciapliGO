@@ -2,7 +2,7 @@
 :host {
   display: block;
   width: 100%;
-  height: calc(100vh - 72px);
+  height: 100%;
   overflow: hidden;
   position: relative;
 }
@@ -30,7 +30,6 @@
   position: absolute;
   inset: 0;
   transform-origin: 0 0; /* GSAP will control x/y/scale */
-  will-change: transform;
 }
 
 /* ── Inspect overlay ──────────────────────────────────────────────────────── */

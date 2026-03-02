@@ -137,6 +137,13 @@ main {
   background-color: var(--color-bg-secondary);
 }
 
+/* Utilisé par les pages plein-écran (ex: pin-board) pour supprimer tout scroll */
+main.page-fullscreen,
+body.page-fullscreen {
+  overflow: hidden !important;
+  height: 100%;
+}
+
 /* Typography */
 h1,
 h2,

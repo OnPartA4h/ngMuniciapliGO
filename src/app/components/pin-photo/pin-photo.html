@@ -1,12 +1,12 @@
-<div class="pin-photo-wrapper" #card (click)="onCardClick()">
-  <!-- Pushpin -->
-  <div class="pin" #pinArea>
+<div class="pin-photo-wrapper" #card>
+  <!-- Pushpin — drag handle -->
+  <div class="pin" #pinArea (mousedown)="onPinMousedown($event)">
     <div class="pin-head"></div>
     <div class="pin-needle"></div>
   </div>
 
-  <!-- Polaroid card -->
-  <div class="polaroid">
+  <!-- Polaroid card — click to inspect -->
+  <div class="polaroid" (click)="onCardClick()">
     <div class="polaroid-image-wrap">
       <img [src]="photo.url" [alt]="photo.text" draggable="false" />
     </div>

@@ -5,13 +5,8 @@
   top: 0;
   left: 0;
   width: 180px;
-  cursor: grab;
   user-select: none;
   -webkit-user-select: none;
-}
-
-:host:active {
-  cursor: grabbing;
 }
 
 .pin-photo-wrapper {
@@ -19,10 +14,11 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  /* Pin is the pivot — top-center */
   transform-origin: 50% 0%;
 }
 
-/* ── Pushpin ─────────────────────────────────────────────────────────────── */
+/* ── Pushpin — drag handle ───────────────────────────────────────────────── */
 .pin {
   position: relative;
   z-index: 2;
@@ -30,7 +26,12 @@
   flex-direction: column;
   align-items: center;
   margin-bottom: -6px;
-  pointer-events: none;
+  cursor: grab;
+  pointer-events: all;
+}
+
+.pin:active {
+  cursor: grabbing;
 }
 
 .pin-head {
@@ -64,7 +65,7 @@
   box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
-/* ── Polaroid card ───────────────────────────────────────────────────────── */
+/* ── Polaroid card — clickable / zoomable ────────────────────────────────── */
 .polaroid {
   background: #fffef8;
   padding: 10px 10px 28px;
@@ -74,6 +75,7 @@
   box-sizing: border-box;
   transition: box-shadow 0.2s;
   border-radius: 2px;
+  cursor: zoom-in;
 }
 
 .polaroid-image-wrap {

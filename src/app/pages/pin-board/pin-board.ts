@@ -2,10 +2,10 @@ import {
   Component,
   ElementRef,
   ViewChild,
+  ViewChildren,
+  QueryList,
   AfterViewInit,
   OnDestroy,
-  NgZone,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import gsap from 'gsap';
@@ -30,6 +30,7 @@ export interface PinPhotoEntry {
 export class PinBoard implements AfterViewInit, OnDestroy {
   @ViewChild('board') boardRef!: ElementRef<HTMLElement>;
   @ViewChild('viewport') viewportRef!: ElementRef<HTMLElement>;
+  @ViewChildren(PinPhotoComponent) pinPhotoComponents!: QueryList<PinPhotoComponent>;
 
   // ── Photo data ──────────────────────────────────────────────────────────
   photos: PinPhoto[] = [
@@ -45,11 +46,12 @@ export class PinBoard implements AfterViewInit, OnDestroy {
 
   entries: PinPhotoEntry[] = [];
 
-  // ── Inspect state ────────────────────────────────────────────────────────
+  // ── State ────────────────────────────────────────────────────────────────
   isInspecting = false;
   private topZIndex = 10;
 
   ngAfterViewInit(): void {
+    document.querySelector('main')?.classList.add('page-fullscreen');
     this.scatter();
   }
 
@@ -59,13 +61,13 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     const boardH = board.clientHeight;
 
     const cardW = 180;
-    const cardH = 240;
+    const cardH = 260;
     const padding = 40;
 
     this.entries = this.photos.map((photo, i) => {
       const x = padding + Math.random() * (boardW - cardW - padding * 2);
       const y = padding + Math.random() * (boardH - cardH - padding * 2);
-      const rotation = (Math.random() - 0.5) * 22; // -11° to +11°
+      const rotation = (Math.random() - 0.5) * 22;
 
       return {
         photo,
@@ -77,34 +79,39 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     this.topZIndex = this.entries.length + 1;
   }
 
+  /** Increment global z-index counter, update entry model, apply to DOM immediately */
   bringToFront(entry: PinPhotoEntry): void {
     this.topZIndex++;
     entry.state.zIndex = this.topZIndex;
+
+    // Find the matching child component and apply z-index directly
+    const comps = this.pinPhotoComponents?.toArray();
+    if (comps) {
+      const comp = comps.find(c => c.state === entry.state);
+      comp?.applyZIndex(this.topZIndex);
+    }
   }
 
-  onDragEnd(entry: PinPhotoEntry, pos: { x: number; y: number }): void {
+  onDragEnd(entry: PinPhotoEntry, pos: { x: number; y: number; rotation: number }): void {
     entry.state.x = pos.x;
     entry.state.y = pos.y;
+    entry.state.rotation = pos.rotation;
   }
 
   onInspectRequest(entry: PinPhotoEntry, payload: { el: HTMLElement; state: PinPhotoState }): void {
     if (this.isInspecting) return;
     this.isInspecting = true;
 
-    const board = this.boardRef.nativeElement;
     const viewport = this.viewportRef.nativeElement;
-
-    const boardW = board.clientWidth;
-    const boardH = board.clientHeight;
+    const boardW = this.boardRef.nativeElement.clientWidth;
+    const boardH = this.boardRef.nativeElement.clientHeight;
 
     const cardW = 180;
-    const cardH = 240;
+    const cardH = 260;
 
-    // Center of the card (approximate)
     const cardCenterX = payload.state.x + cardW / 2;
     const cardCenterY = payload.state.y + cardH / 2;
 
-    // We want to pan the viewport so the card is centered on screen, and scale up
     const targetScale = 2.8;
     const translateX = boardW / 2 - cardCenterX * targetScale;
     const translateY = boardH / 2 - cardCenterY * targetScale;
@@ -134,9 +141,11 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     });
   }
 
-  trackById(index: number, entry: PinPhotoEntry): number {
+  trackById(_index: number, entry: PinPhotoEntry): number {
     return entry.id;
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    document.querySelector('main')?.classList.remove('page-fullscreen');
+  }
 }
