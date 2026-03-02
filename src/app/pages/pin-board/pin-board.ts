@@ -39,11 +39,16 @@ export class PinBoard implements AfterViewInit, OnDestroy {
   // ── Photo data ──────────────────────────────────────────────────────────
   photos: PinPhoto[] = [
     { url: '/assets/images/board_page/joel.jpg',    text: 'Le Joël de la parole 🗣️' },
-    { url: '/assets/images/board_page/equipe1.jpg',    text: 'Les membres de l\'équipe 3 debout' },
-    { url: '/assets/images/board_page/equipe2.jpg',    text: 'Les membres de l\'équipe 3 assis' },
+    { url: '/assets/images/board_page/equipe1.jpg',    text: 'Les membres de l\'équipe 3 debout🧍' },
+    { url: '/assets/images/board_page/equipe2.jpg',    text: 'Les membres de l\'équipe 3 assis 🪑' },
     { url: '/assets/images/board_page/photos_prof.jpg',    text: 'Le roi et ses sujets 🌱👑' },
-    { url: '/assets/images/board_page/tableau_blanc.jpg',    text: 'Architecture et planification de projet' },
-    { url: '/assets/images/board_page/gh_team.png',    text: 'Notre philosophie d\'équipe' },
+    { url: '/assets/images/board_page/tableau_blanc.jpg',    text: 'Architecture et planification de projet ✏️' },
+    { url: '/assets/images/board_page/gh_team.png',    text: 'Notre philosophie d\'équipe 💭' },
+    { url: '/assets/images/board_page/haversine.png',    text: 'Une partie intégrante de notre projet 🧠' },
+    { url: '/assets/images/board_page/time_cube.png',    text: 'Les 4 coins du monde 🌍' },
+    { url: '/assets/images/board_page/refactor.png',    text: '"Bro I swear just one more refactor"' },
+    { url: '/assets/images/board_page/git_force.png',    text: '"git push origin main --force' },
+
   ];
 
   entries: PinPhotoEntry[] = [];
