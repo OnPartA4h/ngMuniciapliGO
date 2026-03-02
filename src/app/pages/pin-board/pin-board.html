@@ -1,0 +1,26 @@
+<div class="pin-board-root" #board>
+  <!-- Zoomable viewport layer -->
+  <div class="pin-board-viewport" #viewport>
+    @for (entry of entries; track trackById($index, entry)) {
+      <app-pin-photo
+        [photo]="entry.photo"
+        [state]="entry.state"
+        [boardElement]="boardRef.nativeElement"
+        [draggingEnabled]="!isInspecting"
+        (inspectRequest)="onInspectRequest(entry, $event)"
+        (dragEnd)="onDragEnd(entry, $event)"
+        (bringToFront)="bringToFront(entry)"
+      />
+    }
+  </div>
+
+  <!-- Inspect overlay — click to exit zoom -->
+  @if (isInspecting) {
+    <div class="inspect-overlay" (click)="exitInspect()">
+      <button class="inspect-back-btn" (click)="$event.stopPropagation(); exitInspect()">
+        <i class="fas fa-arrow-left"></i>
+        Back to board
+      </button>
+    </div>
+  }
+</div>

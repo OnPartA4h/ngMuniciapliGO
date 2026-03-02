@@ -25,6 +25,7 @@ export const routes: Routes = [
   { path: 'chats/:id', loadComponent: () => import('./pages/chat-detail/chat-detail').then(m => m.ChatDetail), canActivate: [authGuard] },
   { path: 'call', loadComponent: () => import('./pages/video-call/video-call').then(m => m.VideoCall), canActivate: [authGuard] },
   { path: 'help-desk', loadComponent: () => import('./pages/help-desk/help-desk').then(m => m.HelpDesk), canActivate: [authGuard, supportGuard] },
+  { path: 'pin-board', loadComponent: () => import('./pages/pin-board/pin-board').then(m => m.PinBoard), canActivate: [authGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
 ];

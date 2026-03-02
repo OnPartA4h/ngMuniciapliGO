@@ -1,0 +1,17 @@
+<div class="pin-photo-wrapper" #card (click)="onCardClick()">
+  <!-- Pushpin -->
+  <div class="pin" #pinArea>
+    <div class="pin-head"></div>
+    <div class="pin-needle"></div>
+  </div>
+
+  <!-- Polaroid card -->
+  <div class="polaroid">
+    <div class="polaroid-image-wrap">
+      <img [src]="photo.url" [alt]="photo.text" draggable="false" />
+    </div>
+    <div class="polaroid-caption">
+      <span>{{ photo.text }}</span>
+    </div>
+  </div>
+</div>
