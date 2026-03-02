@@ -1,11 +1,13 @@
 import {
   Component,
+  ChangeDetectorRef,
   ElementRef,
   ViewChild,
   ViewChildren,
   QueryList,
   AfterViewInit,
   OnDestroy,
+  NgZone,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import gsap from 'gsap';
@@ -31,6 +33,8 @@ export class PinBoard implements AfterViewInit, OnDestroy {
   @ViewChild('board') boardRef!: ElementRef<HTMLElement>;
   @ViewChild('viewport') viewportRef!: ElementRef<HTMLElement>;
   @ViewChildren(PinPhotoComponent) pinPhotoComponents!: QueryList<PinPhotoComponent>;
+
+  constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {}
 
   // ── Photo data ──────────────────────────────────────────────────────────
   photos: PinPhoto[] = [
@@ -84,12 +88,9 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     this.topZIndex++;
     entry.state.zIndex = this.topZIndex;
 
-    // Find the matching child component and apply z-index directly
-    const comps = this.pinPhotoComponents?.toArray();
-    if (comps) {
-      const comp = comps.find(c => c.state === entry.state);
-      comp?.applyZIndex(this.topZIndex);
-    }
+    // Find the matching child component by entryId and apply z-index directly to :host
+    const comp = this.pinPhotoComponents?.find(c => c.entryId === entry.id);
+    comp?.applyZIndex(this.topZIndex);
   }
 
   onDragEnd(entry: PinPhotoEntry, pos: { x: number; y: number; rotation: number }): void {
@@ -127,17 +128,17 @@ export class PinBoard implements AfterViewInit, OnDestroy {
 
   exitInspect(): void {
     if (!this.isInspecting) return;
-    const viewport = this.viewportRef.nativeElement;
+    // Immediately clear the state so Angular removes the overlay on this frame
+    this.isInspecting = false;
+    this.cdr.markForCheck();
 
+    const viewport = this.viewportRef.nativeElement;
     gsap.to(viewport, {
       scale: 1,
       x: 0,
       y: 0,
       duration: 0.7,
       ease: 'power3.inOut',
-      onComplete: () => {
-        this.isInspecting = false;
-      },
     });
   }
 

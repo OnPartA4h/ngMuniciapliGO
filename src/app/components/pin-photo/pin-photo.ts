@@ -39,6 +39,7 @@ export interface PinPhotoState {
 export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() photo!: PinPhoto;
   @Input() state!: PinPhotoState;
+  @Input() entryId!: number;
   @Input() boardElement!: HTMLElement;
   @Input() draggingEnabled = true;
 
@@ -46,29 +47,28 @@ export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Output() dragEnd = new EventEmitter<{ x: number; y: number; rotation: number }>();
   @Output() bringToFront = new EventEmitter<void>();
 
-  // cardRef = .pin-photo-wrapper  → cible du Draggable (x, y)
+  // #card = .pin-card-drag   → Draggable moves x/y here
+  // #swayEl = .pin-card-sway → RAF rotates this for pendulum
   @ViewChild('card') cardRef!: ElementRef<HTMLElement>;
-  // wrapperRef = .pin-wrapper-inner → cible de la rotation/sway
   @ViewChild('swayEl') swayRef!: ElementRef<HTMLElement>;
   @ViewChild('pinArea') pinAreaRef!: ElementRef<HTMLElement>;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private draggable: any = null;
 
-  // ── Sway (pendulum RAF loop) ───────────────────────────────────────────
+  // ── Pendulum sway state ────────────────────────────────────────────────
   private swayAngle = 0;
-  private swayOmega = 0;      // angular velocity deg/frame
+  private swayOmega = 0;
   private swayRAF: number | null = null;
   private isDragging = false;
 
-  // Velocity tracking via InertiaPlugin.track()
-  private readonly GRAVITY    = 0.55;   // pendulum restoring strength
-  private readonly DAMPING    = 0.972;  // free-swing friction (per frame)
-  private readonly DRAG_DAMP  = 0.91;   // heavier friction while held
-  private readonly VEL_SCALE  = 0.0008; // cursor px/s → angular impulse
-  private readonly MAX_ANGLE  = 38;     // deg clamp
+  private readonly GRAVITY   = 0.55;
+  private readonly DAMPING   = 0.88;   // higher = settles much faster after drop
+  private readonly DRAG_DAMP = 0.80;
+  private readonly VEL_SCALE = 0.0005;
+  private readonly MAX_ANGLE = 28;
 
-  constructor(private ngZone: NgZone) {}
+  constructor(private ngZone: NgZone, private hostRef: ElementRef<HTMLElement>) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['draggingEnabled'] && this.draggable) {
@@ -81,23 +81,19 @@ export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    const dragEl = this.cardRef.nativeElement;   // moves with x/y
-    const swayEl = this.swayRef.nativeElement;   // rotates for sway
+    const dragEl = this.cardRef.nativeElement;
+    const swayEl = this.swayRef.nativeElement;
 
-    // Position via GSAP on the draggable element
-    gsap.set(dragEl, {
-      x: this.state.x,
-      y: this.state.y,
-      zIndex: this.state.zIndex,
-    });
+    // Set initial position on the drag wrapper
+    gsap.set(dragEl, { x: this.state.x, y: this.state.y });
 
-    // Initial rotation on the sway wrapper
-    gsap.set(swayEl, {
-      rotation: this.state.rotation,
-      transformOrigin: '50% 0%',
-    });
+    // z-index lives on :host (the absolute-positioned element in the stacking context)
+    this.hostRef.nativeElement.style.zIndex = String(this.state.zIndex);
 
-    // Track velocity on the draggable element so InertiaPlugin can read it
+    // Rotation on the sway wrapper, pivoting from the pin (top-center)
+    gsap.set(swayEl, { rotation: this.state.rotation, transformOrigin: '50% 0%' });
+
+    // Let InertiaPlugin track cursor velocity on the drag element
     InertiaPlugin.track(dragEl, 'x,y');
 
     this.ngZone.runOutsideAngular(() => {
@@ -105,13 +101,12 @@ export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
         type: 'x,y',
         bounds: this.boardElement,
         trigger: this.pinAreaRef.nativeElement,
-        zIndexBoost: false,   // we manage z-index ourselves
+        zIndexBoost: false,
         cursor: 'grab',
         activeCursor: 'grabbing',
-        onPress:    () => this.handlePress(),
+        onPress:     () => this.handlePress(),
         onDragStart: () => this.handleDragStart(),
-        onDrag:     () => this.handleDragMove(),
-        onDragEnd:  () => this.handleDragEnd(),
+        onDragEnd:   () => this.handleDragEnd(),
       })[0];
     });
   }
@@ -119,7 +114,6 @@ export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
   // ── Drag events ───────────────────────────────────────────────────────
 
   private handlePress(): void {
-    // Fires immediately on mousedown — elevate z-index at once
     this.bringToFront.emit();
   }
 
@@ -136,55 +130,44 @@ export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.startSwayLoop();
   }
 
-  private handleDragMove(): void {
-    // Nothing to do here — velocity is read from InertiaPlugin in the RAF loop
-  }
-
   private handleDragEnd(): void {
     this.isDragging = false;
 
-    const dragEl  = this.cardRef.nativeElement;
-    const swayEl  = this.swayRef.nativeElement;
-
-    // Scale back down
-    gsap.to(dragEl, {
+    gsap.to(this.cardRef.nativeElement, {
       scale: 1,
-      duration: 0.25,
+      duration: 0.22,
       ease: 'power2.out',
       overwrite: true,
     });
 
-    // Randomize final resting rotation
+    // Give the pendulum an initial kick based on final drag velocity
+    const vx = InertiaPlugin.getVelocity(this.cardRef.nativeElement, 'x') as number;
+    this.swayOmega += vx * this.VEL_SCALE * 1.5;
+
+    // New random resting rotation — sway loop will converge to it naturally
     const newRotation = (Math.random() - 0.5) * 22;
     this.state.rotation = newRotation;
 
-    // Let the sway loop settle naturally into the new angle
-    // (loop already running — it will converge to state.rotation)
-
-    const xVal = gsap.getProperty(dragEl, 'x') as number;
-    const yVal = gsap.getProperty(dragEl, 'y') as number;
+    const xVal = gsap.getProperty(this.cardRef.nativeElement, 'x') as number;
+    const yVal = gsap.getProperty(this.cardRef.nativeElement, 'y') as number;
     this.dragEnd.emit({ x: xVal, y: yVal, rotation: newRotation });
   }
 
-  // ── Pendulum sway RAF loop ────────────────────────────────────────────
+  // ── Pendulum sway RAF loop ─────────────────────────────────────────────
 
   private startSwayLoop(): void {
-    if (this.swayRAF !== null) return; // already running
+    if (this.swayRAF !== null) return;
 
     const swayEl = this.swayRef.nativeElement;
     const dragEl = this.cardRef.nativeElement;
 
     const loop = () => {
-      // Read cursor velocity from InertiaPlugin (px/s)
       const vx = this.isDragging
         ? (InertiaPlugin.getVelocity(dragEl, 'x') as number)
         : 0;
 
-      // Pendulum restoring force
-      const rad = (this.swayAngle * Math.PI) / 180;
+      const rad     = (this.swayAngle * Math.PI) / 180;
       const restore = -this.GRAVITY * Math.sin(rad);
-
-      // Cursor horizontal velocity creates an angular impulse (inertia effect)
       const impulse = vx * this.VEL_SCALE;
 
       if (this.isDragging) {
@@ -198,11 +181,9 @@ export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
       this.swayAngle += this.swayOmega;
       this.swayAngle = Math.max(-this.MAX_ANGLE, Math.min(this.MAX_ANGLE, this.swayAngle));
 
-      // Apply rotation directly (no tween — frame-accurate)
       gsap.set(swayEl, { rotation: this.state.rotation + this.swayAngle });
 
-      // Settle check (only when not dragging)
-      if (!this.isDragging && Math.abs(this.swayAngle) < 0.15 && Math.abs(this.swayOmega) < 0.15) {
+      if (!this.isDragging && Math.abs(this.swayAngle) < 0.12 && Math.abs(this.swayOmega) < 0.12) {
         this.swayAngle = 0;
         this.swayOmega = 0;
         gsap.set(swayEl, { rotation: this.state.rotation });
@@ -216,24 +197,22 @@ export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.swayRAF = requestAnimationFrame(loop);
   }
 
-  // ── Public API ────────────────────────────────────────────────────────
+  // ── Public API ─────────────────────────────────────────────────────────
 
   onCardClick(): void {
     if (this.draggable?.isDragging) return;
-    this.inspectRequest.emit({
-      el: this.cardRef.nativeElement,
-      state: this.state,
-    });
+    this.inspectRequest.emit({ el: this.cardRef.nativeElement, state: this.state });
   }
 
-  /** Called by parent to immediately apply z-index on the GSAP element */
+  /** Parent calls this to apply z-index immediately on the stacking element */
   applyZIndex(z: number): void {
-    gsap.set(this.cardRef.nativeElement, { zIndex: z });
+    // :host is position:absolute — set z-index directly on it
+    this.hostRef.nativeElement.style.zIndex = String(z);
   }
 
   ngOnDestroy(): void {
     if (this.swayRAF !== null) cancelAnimationFrame(this.swayRAF);
-    InertiaPlugin.untrack(this.cardRef?.nativeElement);
+    if (this.cardRef?.nativeElement) InertiaPlugin.untrack(this.cardRef.nativeElement);
     if (this.draggable) this.draggable.kill();
   }
 }

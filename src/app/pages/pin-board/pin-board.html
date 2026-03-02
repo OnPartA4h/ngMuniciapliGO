@@ -5,6 +5,7 @@
       <app-pin-photo
         [photo]="entry.photo"
         [state]="entry.state"
+        [entryId]="entry.id"
         [boardElement]="boardRef.nativeElement"
         [draggingEnabled]="!isInspecting"
         (inspectRequest)="onInspectRequest(entry, $event)"
