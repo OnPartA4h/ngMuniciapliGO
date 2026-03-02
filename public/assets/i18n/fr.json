@@ -401,7 +401,11 @@
     "ERROR_LOADING_PROBLEMS": "Impossible de charger les signalements. Veuillez vérifier votre connexion et réessayer.",
     "NO_PROBLEMS_FOUND": "Il n'y a aucun signalement dans cette zone",
     "TOGGLE_DISTRICTS": "Afficher/Masquer les districts",
-    "DISTRICTS": "Districts"
+    "DISTRICTS": "Districts",
+    "DISTRICT_POPUP_NAME": "Nom",
+    "DISTRICT_POPUP_NUMBER": "Numéro",
+    "DISTRICT_POPUP_ARRONDISSEMENT": "Arrondissement",
+    "DISTRICT_POPUP_PROBLEMS": "Signalements actifs"
   },
   "DUPLICATES": {
     "TITLE": "Groupes de doublons",

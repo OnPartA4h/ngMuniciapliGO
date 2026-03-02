@@ -401,7 +401,11 @@
     "ERROR_LOADING_PROBLEMS": "Unable to load problems. Please check your connection and try again.",
     "NO_PROBLEMS_FOUND": "There are no problems in this area",
     "TOGGLE_DISTRICTS": "Show/Hide districts",
-    "DISTRICTS": "Districts"
+    "DISTRICTS": "Districts",
+    "DISTRICT_POPUP_NAME": "Name",
+    "DISTRICT_POPUP_NUMBER": "Number",
+    "DISTRICT_POPUP_ARRONDISSEMENT": "Borough",
+    "DISTRICT_POPUP_PROBLEMS": "Active reports"
   },
   "DUPLICATES": {
     "TITLE": "Duplicate Groups",
