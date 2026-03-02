@@ -71,12 +71,9 @@ export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
   constructor(private ngZone: NgZone, private hostRef: ElementRef<HTMLElement>) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['draggingEnabled'] && this.draggable) {
-      if (this.draggingEnabled) {
-        this.draggable.enable();
-      } else {
-        this.draggable.disable();
-      }
+    if (changes['draggingEnabled']) {
+      // Don't call draggable.enable()/disable() — it recalculates bounds
+      // and can snap cards to wrong positions. We guard in the event handlers instead.
     }
   }
 
@@ -114,10 +111,16 @@ export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
   // ── Drag events ───────────────────────────────────────────────────────
 
   private handlePress(): void {
+    if (!this.draggingEnabled) return;
     this.bringToFront.emit();
   }
 
   private handleDragStart(): void {
+    if (!this.draggingEnabled) {
+      // Cancel the drag immediately without touching bounds
+      this.draggable?.endDrag();
+      return;
+    }
     this.isDragging = true;
 
     gsap.to(this.cardRef.nativeElement, {
@@ -131,6 +134,7 @@ export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private handleDragEnd(): void {
+    if (!this.isDragging) return; // was cancelled in handleDragStart
     this.isDragging = false;
 
     gsap.to(this.cardRef.nativeElement, {
@@ -151,12 +155,20 @@ export class PinPhotoComponent implements AfterViewInit, OnChanges, OnDestroy {
     const xVal = gsap.getProperty(this.cardRef.nativeElement, 'x') as number;
     const yVal = gsap.getProperty(this.cardRef.nativeElement, 'y') as number;
     this.dragEnd.emit({ x: xVal, y: yVal, rotation: newRotation });
+
+    // Ensure sway loop is running (may have stopped if card was barely moved)
+    this.startSwayLoop(true);
   }
 
   // ── Pendulum sway RAF loop ─────────────────────────────────────────────
 
-  private startSwayLoop(): void {
-    if (this.swayRAF !== null) return;
+  private startSwayLoop(forceRestart = false): void {
+    if (this.swayRAF !== null && !forceRestart) return;
+    // Cancel any existing loop before restarting
+    if (this.swayRAF !== null) {
+      cancelAnimationFrame(this.swayRAF);
+      this.swayRAF = null;
+    }
 
     const swayEl = this.swayRef.nativeElement;
     const dragEl = this.cardRef.nativeElement;

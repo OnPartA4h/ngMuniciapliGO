@@ -38,14 +38,22 @@ export class PinBoard implements AfterViewInit, OnDestroy {
 
   // ── Photo data ──────────────────────────────────────────────────────────
   photos: PinPhoto[] = [
-    { url: 'https://picsum.photos/seed/park/400/400', text: 'A walk in the park' },
-    { url: 'https://picsum.photos/seed/city/400/400', text: 'City lights' },
-    { url: 'https://picsum.photos/seed/mountain/400/400', text: 'Mountain view' },
-    { url: 'https://picsum.photos/seed/beach/400/400', text: 'Beach day' },
-    { url: 'https://picsum.photos/seed/forest/400/400', text: 'Into the woods' },
-    { url: 'https://picsum.photos/seed/sunset/400/400', text: 'Golden hour' },
-    { url: 'https://picsum.photos/seed/street/400/400', text: 'Street vibes' },
-    { url: 'https://picsum.photos/seed/portrait/400/400', text: 'Candid moment' },
+    // Square
+    { url: 'https://picsum.photos/seed/park/400/400',     text: 'A walk in the park' },
+    // Landscape wide
+    { url: 'https://picsum.photos/seed/city/800/400',     text: 'City lights' },
+    // Portrait tall
+    { url: 'https://picsum.photos/seed/mountain/300/600', text: 'Mountain view' },
+    // Landscape HD
+    { url: 'https://picsum.photos/seed/beach/1200/600',   text: 'Beach day' },
+    // Portrait HD
+    { url: 'https://picsum.photos/seed/forest/600/1200',  text: 'Into the woods' },
+    // Square large
+    { url: 'https://picsum.photos/seed/sunset/900/900',   text: 'Golden hour' },
+    // Landscape ultra-wide
+    { url: 'https://picsum.photos/seed/street/1600/500',  text: 'Street vibes' },
+    // Portrait small
+    { url: 'https://picsum.photos/seed/portrait/200/400', text: 'Candid moment' },
   ];
 
   entries: PinPhotoEntry[] = [];
