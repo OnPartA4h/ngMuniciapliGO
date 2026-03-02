@@ -348,7 +348,8 @@
     "NOT_FOUND": "Ressource non trouvée. Veuillez vérifier l'URL ou réessayer.",
     "TOO_MANY_ATTEMPTS": "Trop de tentatives. Veuillez patienter avant de réessayer.",
     "INSUFFICIENT_PERMISSIONS": "Vous n'avez pas les permissions nécessaires pour accéder à cette application",
-    "SERVER_DOWN": "Le serveur est indisponible. Veuillez réessayer plus tard."
+    "SERVER_DOWN": "Le serveur est indisponible. Veuillez réessayer plus tard.",
+    "SESSION_EXPIRED": "Votre session a expiré. Veuillez vous reconnecter."
   },
   "PROVINCES": {
     "ON": "Ontario",
