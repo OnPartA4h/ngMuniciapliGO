@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { PageHeaderComponent } from '../../components/ui/page-header/page-header';
 import { ToastService } from '../../components/ui';
 import { SupportService } from '../../services/support-service';
@@ -15,6 +15,8 @@ import { DatePipe } from '@angular/common';
 import { DurationPipe } from '../../pipes/duration.pipe';
 import { RouterLink } from "@angular/router";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CallHubService } from '../../services/call-hub.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-help-desk',
@@ -23,23 +25,25 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   templateUrl: './help-desk.html',
   styleUrl: './help-desk.css',
 })
-export class HelpDesk implements OnInit{
+export class HelpDesk implements OnInit, OnDestroy {
   supportService = inject(SupportService)
   generalService = inject(GeneralService);
   userService = inject(UserService)
   private toast = inject(ToastService);
   private translate = inject(TranslateService);
+  private callHubService = inject(CallHubService);
 
   problems = signal<Problem[]>([])
   phoneCall = signal<PhoneCall | null>(null)
   pagination: Pagination | null = null
   supportAgent: User | null = null
   client: User | null = null
-  
 
   currentSearch: string | null = null;
   loading = true;
   userSearch: string = '';
+
+  private subscriptions: Subscription[] = [];
 
   async ngOnInit() {
     this.loading = true
@@ -51,9 +55,41 @@ export class HelpDesk implements OnInit{
       this.getPhoneCall(),
       this.getProblems(),
     ]);
-    this.loading = false
+    this.loading = false;
+
+    // S'abonner aux événements SignalR du hub d'appels
+    this.subscriptions.push(
+      this.callHubService.callReceived$.subscribe((call: PhoneCall) => {
+        // Nouvel appel reçu : l'afficher s'il n'y a pas d'appel en cours
+        if (!this.phoneCall()) {
+          this.phoneCall.set(call);
+          this.client = call.client ?? null;
+          this.toast.success(this.translate.instant('HELP_DESK.NEW_CALL_RECEIVED'));
+        }
+      }),
+
+      this.callHubService.callUpdated$.subscribe((call: PhoneCall) => {
+        // Un appel a été mis à jour (ex: utilisateur ajouté)
+        if (this.phoneCall()?.id === call.id) {
+          this.phoneCall.set(call);
+          this.client = call.client ?? null;
+        }
+      }),
+
+      this.callHubService.callEnded$.subscribe((callId: number) => {
+        // Un appel s'est terminé
+        if (this.phoneCall()?.id === callId) {
+          this.phoneCall.set(null);
+          this.client = null;
+        }
+      })
+    );
   }
-  
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
   async getProblems(page: number = 1) {
     const params: any = { page };
 
@@ -68,8 +104,14 @@ export class HelpDesk implements OnInit{
   }
 
   async getPhoneCall() {
-    this.phoneCall.set(await this.supportService.getPhoneCall())
-    this.client = this.phoneCall()!.client
+    try {
+      const call = await this.supportService.getPhoneCall();
+      this.phoneCall.set(call);
+      this.client = call?.client ?? null;
+    } catch {
+      this.phoneCall.set(null);
+      this.client = null;
+    }
   }
 
   async onPageChange(page: number) {
@@ -80,6 +122,7 @@ export class HelpDesk implements OnInit{
     try {
       await this.supportService.endCall(this.phoneCall()!.id)
       this.phoneCall.set(null)
+      this.client = null;
       this.toast.success(this.translate.instant('HELP_DESK.END_CALL_SUCCESS'));
     } catch (error) {
       console.error('Error ending call:', error);
@@ -96,18 +139,7 @@ export class HelpDesk implements OnInit{
     } catch {
       this.toast.error(this.translate.instant('HELP_DESK.ADD_USER_ERROR'));
     }
-    
+
     this.userSearch = '';
   }
-
-  agent = {
-    firstName: 'Marc',
-    lastName: 'Bouchard',
-  };
-  call = {
-    startTime: new Date(),
-    duration: 120, // secondes
-    status: 'En cours',
-  };
-  search = '';
 }

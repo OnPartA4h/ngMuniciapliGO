@@ -488,7 +488,8 @@
     "END_CALL_SUCCESS": "Appel terminé avec succès",
     "END_CALL_ERROR": "Erreur lors de la fin de l'appel",
     "ADD_USER_SUCCESS": "Utilisateur ajouté à l'appel",
-    "ADD_USER_ERROR": "Impossible d'ajouter cet utilisateur à l'appel"
+    "ADD_USER_ERROR": "Impossible d'ajouter cet utilisateur à l'appel",
+    "NEW_CALL_RECEIVED": "Nouvel appel entrant"
   },
   "CHAT": {
     "TITLE": "Messagerie",

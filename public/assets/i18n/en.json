@@ -489,7 +489,8 @@
     "END_CALL_SUCCESS": "Call ended successfully",
     "END_CALL_ERROR": "Error ending the call",
     "ADD_USER_SUCCESS": "User added to the call",
-    "ADD_USER_ERROR": "Unable to add this user to the call"
+    "ADD_USER_ERROR": "Unable to add this user to the call",
+    "NEW_CALL_RECEIVED": "New incoming call"
   },
   "CHAT": {
     "TITLE": "Messaging",
