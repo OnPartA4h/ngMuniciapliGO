@@ -50,6 +50,8 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     { url: '/assets/images/board_page/git_force.png',    text: 'git push origin main --force' },
     { url: '/assets/images/board_page/quit_job.png',    text: '"Je pars live sinon il y aura trop de traffic"' },
     { url: '/assets/images/board_page/guild_wars.png',    text: '250 000 kills (Ultimate Dominator)' },
+    { url: '/assets/images/board_page/late.png',    text: 'R: Arriver plus tard qu\'eux' },
+    { url: '/assets/images/board_page/imports.png',    text: 'Pourquoi le coder soi-même si une librairie existe déjà ? 🤔' },
   ];
 
   entries: PinPhotoEntry[] = [];
