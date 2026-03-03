@@ -1,20 +1,20 @@
 <!-- Active Call Banner — outside header so it doesn't break flex layout -->
 @if (activeCallService.isCallActive()) {
-  <div class="active-call-banner" (click)="focusCall()">
-    <span class="call-pulse-dot"></span>
-    <i class="fas fa-phone-alt"></i>
-    <span class="call-banner-text">
-      {{ 'HEADER.CALL_IN_PROGRESS' | translate }}
-      — {{ activeCallService.callPeerName() }}
-    </span>
-    <span class="call-banner-timer">{{ formatCallDuration(activeCallService.callDuration()) }}</span>
-    <span class="call-banner-action">{{ 'HEADER.RETURN_TO_CALL' | translate }}</span>
-  </div>
+<div class="active-call-banner" (click)="focusCall()">
+  <span class="call-pulse-dot"></span>
+  <i class="fas fa-phone-alt"></i>
+  <span class="call-banner-text">
+    {{ 'HEADER.CALL_IN_PROGRESS' | translate }}
+    — {{ activeCallService.callPeerName() }}
+  </span>
+  <span class="call-banner-timer">{{ formatCallDuration(activeCallService.callDuration()) }}</span>
+  <span class="call-banner-action">{{ 'HEADER.RETURN_TO_CALL' | translate }}</span>
+</div>
 }
 
 <header>
   <!-- Logo -->
-  <a routerLink="/home" class="logo">
+  <a routerLink="/home" class="logo" (click)="onHeaderClick()">
     <img src="/assets/images/Logo.png" class="logo-img" alt="MunicipaliGO">
     <span>MunicipaliGO</span>
   </a>
@@ -26,27 +26,27 @@
     </a>
 
     @if (userRoles().includes('ColBlanc') || userRoles().includes('Admin')) {
-      <a routerLink="/map" routerLinkActive="active">
-        {{ 'HEADER.MAP' | translate }}
-      </a>
+    <a routerLink="/map" routerLinkActive="active">
+      {{ 'HEADER.MAP' | translate }}
+    </a>
     }
 
     @if (userRoles().includes('ColBlanc') || userRoles().includes('Admin')) {
-      <a routerLink="/manage-reports" routerLinkActive="active">
-        {{ 'HEADER.MANAGE_REPORTS' | translate }}
-      </a>
+    <a routerLink="/manage-reports" routerLinkActive="active">
+      {{ 'HEADER.MANAGE_REPORTS' | translate }}
+    </a>
     }
 
     @if (userRoles().includes('Admin')) {
-      <a routerLink="/manage-users" routerLinkActive="active">
-        {{ 'HEADER.MANAGE_USERS' | translate }}
-      </a>
+    <a routerLink="/manage-users" routerLinkActive="active">
+      {{ 'HEADER.MANAGE_USERS' | translate }}
+    </a>
     }
 
     @if (userRoles().includes('Support')) {
-      <a routerLink="/help-desk" routerLinkActive="active">
-        {{ 'HEADER.HELP_DESK' | translate }}
-      </a>
+    <a routerLink="/help-desk" routerLinkActive="active">
+      {{ 'HEADER.HELP_DESK' | translate }}
+    </a>
     }
   </nav>
 
@@ -55,21 +55,21 @@
 
     <!-- Vitrine Editor Button (Admin & ColBlanc) -->
     @if (isConnected() && (userRoles().includes('Admin') || userRoles().includes('ColBlanc'))) {
-      <button class="btn-vitrine" (click)="openVitrine()" title="{{ 'HEADER.VITRINE_TOOLTIP' | translate }}">
-        <i class="fas fa-external-link-alt"></i>
-        <span>{{ 'HEADER.VITRINE' | translate }}</span>
-      </button>
+    <button class="btn-vitrine" (click)="openVitrine()" title="{{ 'HEADER.VITRINE_TOOLTIP' | translate }}">
+      <i class="fas fa-external-link-alt"></i>
+      <span>{{ 'HEADER.VITRINE' | translate }}</span>
+    </button>
     }
 
     <!-- Séparateur visuel -->
     @if (isConnected()) {
-      <div class="header-divider"></div>
+    <div class="header-divider"></div>
     }
 
     <!-- Notifications & Chat -->
     @if (isConnected()) {
-      <app-chat-bell />
-      <app-notification-bell />
+    <app-chat-bell />
+    <app-notification-bell />
     }
 
     <!-- Langue toggle — texte uniquement -->
@@ -79,27 +79,27 @@
 
     <!-- Profile Avatar -->
     @if (isConnected()) {
-      <a routerLink="/profile" class="profile-avatar" routerLinkActive="active">
-        @if (authService.profilePictureUrl()) {
-          <img [src]="authService.profilePictureUrl()!" alt="Profile" />
-        } @else {
-          <i class="fas fa-user"></i>
-        }
-      </a>
+    <a routerLink="/profile" class="profile-avatar" routerLinkActive="active">
+      @if (authService.profilePictureUrl()) {
+      <img [src]="authService.profilePictureUrl()!" alt="Profile" />
+      } @else {
+      <i class="fas fa-user"></i>
+      }
+    </a>
     }
 
     <!-- Login -->
     @if (!isConnected()) {
-      <a routerLink="/login" class="btn-login">
-        {{ 'HEADER.LOGIN' | translate }}
-      </a>
+    <a routerLink="/login" class="btn-login">
+      {{ 'HEADER.LOGIN' | translate }}
+    </a>
     }
 
     <!-- Déconnexion -->
     @if (isConnected()) {
-      <button class="btn-logout" (click)="logout()" title="{{ 'HEADER.LOGOUT' | translate }}">
-        <i class="fas fa-sign-out-alt"></i>
-      </button>
+    <button class="btn-logout" (click)="logout()" title="{{ 'HEADER.LOGOUT' | translate }}">
+      <i class="fas fa-sign-out-alt"></i>
+    </button>
     }
 
   </div>
