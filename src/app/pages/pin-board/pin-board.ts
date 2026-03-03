@@ -49,6 +49,7 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     { url: '/assets/images/board_page/refactor.png',    text: '"Bro I swear just one more refactor"' },
     { url: '/assets/images/board_page/git_force.png',    text: 'git push origin main --force' },
     { url: '/assets/images/board_page/quit_job.png',    text: '"Je pars live sinon il y aura trop de traffic"' },
+    { url: '/assets/images/board_page/guild_wars.png',    text: '250 000 kills (Ultimate Dominator)' },
   ];
 
   entries: PinPhotoEntry[] = [];
@@ -98,11 +99,11 @@ export class PinBoard implements AfterViewInit, OnDestroy {
 
     const cardW   = 180;
     const cardH   = 260;
-    const padding = 32;
+    const padding = 40;
 
-    // Usable area
-    const areaW = boardW - cardW  - padding * 2;
-    const areaH = boardH - cardH - padding * 2;
+    // Usable area — the full board minus one card width/height and padding on each side
+    const areaW = boardW - padding * 2;
+    const areaH = boardH - padding * 2;
 
     // Find grid dimensions (cols × rows) closest to screen aspect ratio
     const aspect = areaW / areaH;
@@ -112,19 +113,29 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     const cellW  = areaW / cols;
     const cellH  = areaH / rows;
 
-    // Jitter: cards can wander up to 35% of cell size from cell center
-    const jitterX = cellW * 0.35;
-    const jitterY = cellH * 0.35;
+    // Jitter: cards can wander up to 30% of cell size from cell center
+    const jitterX = cellW * 0.30;
+    const jitterY = cellH * 0.30;
 
-    // Shuffle photo order so same photos don't always end up in same region
+    // Build shuffled grid positions (Fisher-Yates) so cards are spread over whole board
+    const gridPositions: Array<{ col: number; row: number }> = [];
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        gridPositions.push({ col, row });
+      }
+    }
+    for (let i = gridPositions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [gridPositions[i], gridPositions[j]] = [gridPositions[j], gridPositions[i]];
+    }
+
     const shuffled = [...this.photos].sort(() => Math.random() - 0.5);
 
     this.entries = shuffled.map((photo, i) => {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
+      const gridPos = gridPositions[i] ?? { col: 0, row: 0 };
 
-      const cellCenterX = padding + col * cellW + cellW / 2;
-      const cellCenterY = padding + row * cellH + cellH / 2;
+      const cellCenterX = padding + gridPos.col * cellW + cellW / 2;
+      const cellCenterY = padding + gridPos.row * cellH + cellH / 2;
 
       const x = Math.max(padding, Math.min(boardW - cardW - padding,
         cellCenterX - cardW / 2 + (Math.random() - 0.5) * 2 * jitterX));
@@ -133,7 +144,6 @@ export class PinBoard implements AfterViewInit, OnDestroy {
 
       const rotation = (Math.random() - 0.5) * 22;
 
-      // Find original index for stable id
       const originalIndex = this.photos.indexOf(photo);
       return {
         photo,
