@@ -27,14 +27,14 @@
             {{ p.nbLikes }}
           </span>
         </div>
-        <span class="status-badge">
+        <span [class]="'status-badge ' + getStatusClass(p.statut)">
           {{ this.generalService.getStatusLabel(p.statut) }}
         </span>
       </div>
       <!-- Category -->
       <div class="info-card">
         <div class="info-item">
-          <i class="fas"></i>
+          <i [class]="'fas ' + getCategoryIcon(p.categorie)"></i>
           <div class="info-content">
             <label>{{ 'MAP_SIDEBAR.CATEGORY' | translate }}</label>
             <p>{{ this.generalService.getCategoryLabel(p.categorie) }}</p>
@@ -43,8 +43,13 @@
       </div>
       <!-- Description -->
       <div class="info-card">
-        <label>{{ 'MAP_SIDEBAR.DESCRIPTION' | translate }}</label>
-        <p class="description">{{ p.description }}</p>
+        <div class="info-item">
+          <i class="fas fa-align-left"></i>
+          <div class="info-content">
+            <label>{{ 'MAP_SIDEBAR.DESCRIPTION' | translate }}</label>
+            <p class="description">{{ p.description }}</p>
+          </div>
+        </div>
       </div>
       <!-- Location -->
       <div class="info-card">
