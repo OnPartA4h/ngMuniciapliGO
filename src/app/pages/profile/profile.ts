@@ -14,6 +14,7 @@ import { ProfileInfoFormComponent } from '../../components/forms/profile-info-fo
 import { ProfileEmailFormComponent } from '../../components/forms/profile-email-form/profile-email-form';
 import { ProfilePasswordFormComponent } from '../../components/forms/profile-password-form/profile-password-form';
 import { NotificationService } from '../../services/notification.service';
+import { SupportService } from '../../services/support-service';
 import { Problem } from '../../models/problem';
 import { Pagination } from '../../models/pagination';
 import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
@@ -40,6 +41,7 @@ import { ConfirmModalComponent } from '../../components/modals/confirm-modal/con
 export class Profile implements OnInit {
   private authService = inject(AuthService);
   private userService = inject(UserService);
+  private supportService = inject(SupportService);
   private generalService = inject(GeneralService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
@@ -163,15 +165,18 @@ export class Profile implements OnInit {
 
   // --- Personal Info API call ---
   async onSavePersonalInfo(dto: UpdateUserDto) {
-    if (this.userId()){
-      dto.userId = this.userId()
-    }
     this.isSavingInfo.set(true);
     this.infoSuccessMessage.set(null);
     this.infoErrorMessage.set(null);
 
     try {
-      const response = await this.userService.updateUser(dto);
+      const uid = this.userId();
+      let response: { message: string; user: User };
+      if (uid) {
+        response = await this.supportService.updateUserProfile(uid, dto);
+      } else {
+        response = await this.userService.updateUser(dto);
+      }
       this.infoSuccessMessage.set(this.translateService.instant('PROFILE.SUCCESS_UPDATE'));
       this.profile.set(response.user);
     } catch (error: any) {
@@ -207,10 +212,19 @@ export class Profile implements OnInit {
     this.isSavingEmail.set(true);
 
     try {
-      await this.userService.requestEmailChange({ newEmail: data.newEmail });
-      this.pendingEmail.set(data.newEmail);
-      this.showEmailVerificationModal.set(true);
-      this.emailFormComponent().resetForm();
+      const uid = this.userId();
+      if (uid) {
+        // Support agent: directly change email without verification
+        const response = await this.supportService.changeUserEmail(uid, data.newEmail);
+        this.profile.set(response.user);
+        this.emailSuccessMessage.set(this.translateService.instant('PROFILE.EMAIL_CHANGED_SUCCESS'));
+        this.emailFormComponent().resetForm();
+      } else {
+        await this.userService.requestEmailChange({ newEmail: data.newEmail });
+        this.pendingEmail.set(data.newEmail);
+        this.showEmailVerificationModal.set(true);
+        this.emailFormComponent().resetForm();
+      }
     } catch (error: any) {
       console.error('Error requesting email change:', error);
       this.emailErrorMessage.set(this.translateService.instant('PROFILE.EMAIL_REQUEST_ERROR'));
@@ -259,11 +273,19 @@ export class Profile implements OnInit {
 
     try {
       const file = new File([croppedBlob], 'profile-picture.jpg', { type: 'image/jpeg' });
-      const response = await this.userService.uploadProfilePicture(file);
+      const uid = this.userId();
+      let response: { message: string; profilePictureUrl: string };
+      if (uid) {
+        response = await this.supportService.changeUserProfilePicture(uid, file);
+      } else {
+        response = await this.userService.uploadProfilePicture(file);
+        this.authService.setProfilePictureUrl(response.profilePictureUrl);
+      }
       this.profileImageUrl.set(response.profilePictureUrl);
-      this.authService.setProfilePictureUrl(response.profilePictureUrl);
-      const profileData = await this.userService.getProfile();
-      this.profile.set(profileData);
+      if (!uid) {
+        const profileData = await this.userService.getProfile();
+        this.profile.set(profileData);
+      }
       this.infoSuccessMessage.set(this.translateService.instant('PROFILE.PHOTO_UPLOADED'));
       this.showImageCropper.set(false);
       this.imageChangedEvent.set(null);

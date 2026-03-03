@@ -32,18 +32,13 @@ export class MapSidebar implements OnInit {
   }
 
   getStatusClass(statusKey: number): string {
-    const statusLabel = this.generalService.getStatusLabel(statusKey);
-    const statusMap: { [key: string]: string } = {
-      'En attente': 'status-pending',
-      'Pending': 'status-pending',
-      'En cours': 'status-in-progress',
-      'In Progress': 'status-in-progress',
-      'Résolu': 'status-resolved',
-      'Resolved': 'status-resolved',
-      'Rejeté': 'status-rejected',
-      'Rejected': 'status-rejected'
+    const statusMap: { [key: number]: string } = {
+      0: 'status-pending',
+      1: 'status-in-progress',
+      2: 'status-resolved',
+      3: 'status-rejected',
     };
-    return statusMap[statusLabel] || 'status-pending';
+    return statusMap[statusKey] ?? 'status-pending';
   }
 
   getCategoryIcon(categoryKey: number): string {

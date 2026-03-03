@@ -19,7 +19,7 @@
             <span class="comment-item__name">{{c.authorFirstName}} {{c.authorLastName}}</span>
             <span class="comment-item__time">{{ 'COMMENTS.AGO' | translate }} {{c.dateCreation | daysAgo}} {{ 'COMMENTS.DAYS' | translate }}</span>
             </div>
-            <button class="btn btn-danger btn-sm comment-delete-btn">
+            <button class="btn btn-danger btn-sm comment-delete-btn" (click)="deleteComment(c.id)">
             <i class="fas fa-trash"></i>
             {{ 'COMMON.DELETE' | translate }}
             </button>
@@ -64,7 +64,7 @@
                         <span class="comment-item__name">{{c.authorFirstName}} {{c.authorLastName}}</span>
                         <span class="comment-item__time">{{ 'COMMENTS.AGO' | translate }} {{c.dateCreation | daysAgo}} {{ 'COMMENTS.DAYS' | translate }}</span>
                     </div>
-                    <button class="btn btn-danger btn-sm comment-delete-btn">
+                    <button class="btn btn-danger btn-sm comment-delete-btn" (click)="deleteComment(r.id)">
                         <i class="fas fa-trash"></i>
                         {{ 'COMMON.DELETE' | translate }}
                     </button>
@@ -95,6 +95,12 @@
         
     </div>
      }
+
+    @if (comments().length === 0) {
+      <app-empty-state iconClass="fas fa-comment-slash"
+        [title]="'COMMENTS.NO_COMMENTS' | translate"
+        [description]="'COMMENTS.NO_COMMENTS_DESC' | translate" />
+    }
   </div>
   @if (pagination && pagination.totalPages > 1) {
     <app-pagination [currentPage]="pagination.currentPage"
@@ -102,3 +108,12 @@
       (pageChange)="onPageChange($event)" />
   }
 </div>
+
+<app-confirm-modal
+  [isOpen]="showConfirmModal()"
+  [title]="'NOTIFICATIONS.CONFIRM_DELETE_TITLE' | translate"
+  [message]="'NOTIFICATIONS.CONFIRM_DELETE' | translate"
+  [confirmLabel]="'NOTIFICATIONS.DELETE_COMMENT'"
+  [confirmClass]="'btn-danger'"
+  (confirm)="confirmDeleteComment()"
+  (cancel)="cancelDeleteComment()" />

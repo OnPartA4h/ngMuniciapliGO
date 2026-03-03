@@ -8,19 +8,27 @@
     <div class="helpdesk-user-panel">
 
       @if (phoneCall()) {
-        <div class="helpdesk-user-card" [routerLink]="['/profile', client?.id]">
-          <div class="helpdesk-user-avatar">
-            <img [src]="client?.profilePictureUrl" alt="Avatar" />
-          </div>
-          <div class="helpdesk-user-info">
-            <h2>{{client?.firstName}} {{client?.lastName}}</h2>
-            <div class="helpdesk-user-meta">
-              <span><i class="fas fa-envelope"></i> {{client?.email}}</span>
-              <span><i class="fas fa-phone"></i> {{client?.phoneNumber | phoneNumber}}</span>
-              <span><i class="fas fa-map-marker-alt"></i> {{client?.streetNumber}} {{client?.streetName}}, {{client?.city}}</span>
+        @if (client) {
+          <div class="helpdesk-user-card" [routerLink]="['/profile', client.id]">
+            @if (client.profilePictureUrl) {
+              <div class="helpdesk-user-avatar">
+                <img [src]="client.profilePictureUrl" alt="Avatar" />
+              </div>
+            } @else {
+              <div class="helpdesk-user-avatar helpdesk-user-avatar--placeholder">
+                <i class="fas fa-user"></i>
+              </div>
+            }
+            <div class="helpdesk-user-info">
+              <h2>{{client.firstName}} {{client.lastName}}</h2>
+              <div class="helpdesk-user-meta">
+                <span><i class="fas fa-envelope"></i> {{client.email}}</span>
+                <span><i class="fas fa-phone"></i> {{client.phoneNumber | phoneNumber}}</span>
+                <span><i class="fas fa-map-marker-alt"></i> {{client.streetNumber}} {{client.streetName}}, {{client.city}}</span>
+              </div>
             </div>
           </div>
-        </div>
+        }
         <div class="helpdesk-call-info">
           <div class="helpdesk-call-header">
             <i class="fas fa-headset"></i> {{ 'HELP_DESK.CALL_IN_PROGRESS' | translate }}

@@ -108,6 +108,8 @@ export class Notifications implements OnInit, OnDestroy {
 
     if (!this.isReportedComment(notification)){
       this.router.navigate(['/report-details', notification.problemeId]);
+    } else {
+      this.router.navigate(['/comments/', notification.problemeId])
     }
     
   }
@@ -188,7 +190,7 @@ export class Notifications implements OnInit, OnDestroy {
     if (!notification) return;
 
     try {
-      await this.commentService.deleteComment(
+      await this.commentService.deleteCommentNotif(
         notification.problemeId, 
         notification.commentId, 
         notification.id

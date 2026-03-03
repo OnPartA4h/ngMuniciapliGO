@@ -153,6 +153,7 @@
     "SUBSCRIBED_TASKS": "Subscribed Tasks",
     "NO_SUBSCRIBED_TASKS": "No subscribed tasks",
     "RESET_EMAIL_SENT": "A password reset link has been sent",
+    "SEND_RESET_PASSWORD_EMAIL": "Send password reset email",
     "RESET_EMAIL_ERROR": "Error sending the reset link"
   },
   "AI_PROCESSING": {
@@ -401,7 +402,11 @@
     "ERROR_LOADING_PROBLEMS": "Unable to load problems. Please check your connection and try again.",
     "NO_PROBLEMS_FOUND": "There are no problems in this area",
     "TOGGLE_DISTRICTS": "Show/Hide districts",
-    "DISTRICTS": "Districts"
+    "DISTRICTS": "Districts",
+    "DISTRICT_POPUP_NAME": "Name",
+    "DISTRICT_POPUP_NUMBER": "Number",
+    "DISTRICT_POPUP_ARRONDISSEMENT": "Borough",
+    "DISTRICT_POPUP_PROBLEMS": "Active reports"
   },
   "DUPLICATES": {
     "TITLE": "Duplicate Groups",
@@ -489,7 +494,8 @@
     "END_CALL_SUCCESS": "Call ended successfully",
     "END_CALL_ERROR": "Error ending the call",
     "ADD_USER_SUCCESS": "User added to the call",
-    "ADD_USER_ERROR": "Unable to add this user to the call"
+    "ADD_USER_ERROR": "Unable to add this user to the call",
+    "NEW_CALL_RECEIVED": "New incoming call"
   },
   "CHAT": {
     "TITLE": "Messaging",
@@ -649,6 +655,8 @@
     "AGO": "",
     "DAYS": "days ago",
     "REPLY": "reply",
-    "REPLIES": "replies"
+    "REPLIES": "replies",
+    "NO_COMMENTS": "No comments",
+    "NO_COMMENTS_DESC": "No comments have been added to this report yet."
   }
 }

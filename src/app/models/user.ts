@@ -73,6 +73,7 @@ export interface ChangePasswordDto {
 
 export interface RequestEmailChangeDto {
   newEmail: string;
+  userId?: string;
 }
 
 export interface VerifyEmailChangeDto {

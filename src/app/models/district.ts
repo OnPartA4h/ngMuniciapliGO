@@ -5,7 +5,8 @@ export class District {
         public name: string,
         public arrondissement: string,
         public colorIndex: number,
-        public coordinates: number[][][]
+        public coordinates: number[][][],
+        public problemCount: number
     ) { }
 }
 

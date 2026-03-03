@@ -32,8 +32,14 @@
       <button type="button" class="btn btn-primary" [disabled]="isSaving()" (click)="submitForm()">
         @if (!isSaving()) { <i class="fas fa-envelope"></i> }
         @if (isSaving()) { <i class="fas fa-spinner fa-spin"></i> }
-        {{ (isSaving() ? 'COMMON.SAVING' : 'PROFILE.SEND_VERIFICATION_CODE') | translate }}
+        {{ (isSaving() ? 'COMMON.SAVING' : (isSupport() ? 'PROFILE.CHANGE_EMAIL' : 'PROFILE.SEND_VERIFICATION_CODE')) | translate }}
       </button>
+      @if (isSupport()) {
+        <button type="button" class="btn btn-primary" (click)="resetPassword.emit()">
+          <i class="fas fa-key"></i>
+          {{ 'PROFILE.SEND_RESET_PASSWORD_EMAIL' | translate }}
+        </button>
+      }
     </div>
   </form>
 </div>

@@ -75,6 +75,7 @@ export class Map implements AfterViewInit, OnDestroy {
   });
 
   async ngAfterViewInit() {
+    document.body.classList.add('map-page');
     this.getRadius()
     this.initMap()
 
@@ -112,9 +113,10 @@ export class Map implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-   if (!this.map) return
-    this.map.off(); 
-    this.map.remove(); 
+    document.body.classList.remove('map-page');
+    if (!this.map) return
+    this.map.off();
+    this.map.remove();
   }
 
   async getProblems() {
@@ -336,11 +338,45 @@ export class Map implements AfterViewInit, OnDestroy {
       bubblingMouseEvents: true
     });
 
+    const labelName          = this.translate.instant('MAP.DISTRICT_POPUP_NAME');
+    const labelNumber        = this.translate.instant('MAP.DISTRICT_POPUP_NUMBER');
+    const labelArrondissement = this.translate.instant('MAP.DISTRICT_POPUP_ARRONDISSEMENT');
+    const labelProblems      = this.translate.instant('MAP.DISTRICT_POPUP_PROBLEMS');
+
     const popupContent = `
-      <div style="font-family: var(--font-family-base);">
-        <strong style="font-size: 16px; color: ${color};">${district.name}</strong><br>
-        <span style="color: var(--color-text-secondary);">District ${district.number}</span><br>
-        <span style="color: var(--color-text-secondary);">${district.arrondissement}</span>
+      <div style="font-family: var(--font-family-base); min-width: 190px;">
+        <div style="
+          background: ${color};
+          color: #fff;
+          padding: 10px 14px;
+          font-size: 15px;
+          font-weight: 700;
+          letter-spacing: 0.01em;
+        ">${district.name}</div>
+        <table style="width:100%; border-collapse: collapse; font-size: 13px; padding: 8px 12px; display: block;">
+          <tr>
+            <td style="color: var(--color-text-secondary); padding: 4px 8px 4px 0; white-space: nowrap;">${labelNumber}</td>
+            <td style="font-weight: 600; padding: 4px 0;">${district.number}</td>
+          </tr>
+          <tr>
+            <td style="color: var(--color-text-secondary); padding: 4px 8px 4px 0; white-space: nowrap;">${labelArrondissement}</td>
+            <td style="font-weight: 600; padding: 4px 0;">${district.arrondissement}</td>
+          </tr>
+          <tr>
+            <td style="color: var(--color-text-secondary); padding: 4px 8px 4px 0; white-space: nowrap;">${labelProblems}</td>
+            <td style="padding: 4px 0;">
+              <span style="
+                background: ${color}22;
+                color: ${color};
+                border: 1px solid ${color}55;
+                border-radius: 12px;
+                padding: 1px 8px;
+                font-weight: 700;
+                font-size: 13px;
+              ">${district.problemCount}</span>
+            </td>
+          </tr>
+        </table>
       </div>
     `;
 
@@ -357,9 +393,9 @@ export class Map implements AfterViewInit, OnDestroy {
     setTimeout(() => {
       const element = polygon.getElement();
       if (element) {
-        element.addEventListener('auxclick', (e: Event) => {
+        element.addEventListener('mousedown', (e: Event) => {
           const mouseEvent = e as MouseEvent;
-          if (mouseEvent.button === 1) { 
+          if (mouseEvent.button === 1) {
             mouseEvent.preventDefault();
             mouseEvent.stopPropagation();
             const bounds = polygon.getBounds();
@@ -367,6 +403,13 @@ export class Map implements AfterViewInit, OnDestroy {
               padding: [50, 50],
               maxZoom: 15
             });
+          }
+        });
+        element.addEventListener('auxclick', (e: Event) => {
+          const mouseEvent = e as MouseEvent;
+          if (mouseEvent.button === 1) {
+            mouseEvent.preventDefault();
+            mouseEvent.stopPropagation();
           }
         });
       }

@@ -153,6 +153,7 @@
     "SUBSCRIBED_TASKS": "Tâches suivies",
     "NO_SUBSCRIBED_TASKS": "Aucune tâche suivie",
     "RESET_EMAIL_SENT": "Un lien de réinitialisation du mot de passe a été envoyé",
+    "SEND_RESET_PASSWORD_EMAIL": "Envoyer un email de réinitialisation du mot de passe",
     "RESET_EMAIL_ERROR": "Erreur lors de l'envoi du lien de réinitialisation"
   },
   "AI_PROCESSING": {
@@ -348,7 +349,8 @@
     "NOT_FOUND": "Ressource non trouvée. Veuillez vérifier l'URL ou réessayer.",
     "TOO_MANY_ATTEMPTS": "Trop de tentatives. Veuillez patienter avant de réessayer.",
     "INSUFFICIENT_PERMISSIONS": "Vous n'avez pas les permissions nécessaires pour accéder à cette application",
-    "SERVER_DOWN": "Le serveur est indisponible. Veuillez réessayer plus tard."
+    "SERVER_DOWN": "Le serveur est indisponible. Veuillez réessayer plus tard.",
+    "SESSION_EXPIRED": "Votre session a expiré. Veuillez vous reconnecter."
   },
   "PROVINCES": {
     "ON": "Ontario",
@@ -400,7 +402,11 @@
     "ERROR_LOADING_PROBLEMS": "Impossible de charger les signalements. Veuillez vérifier votre connexion et réessayer.",
     "NO_PROBLEMS_FOUND": "Il n'y a aucun signalement dans cette zone",
     "TOGGLE_DISTRICTS": "Afficher/Masquer les districts",
-    "DISTRICTS": "Districts"
+    "DISTRICTS": "Districts",
+    "DISTRICT_POPUP_NAME": "Nom",
+    "DISTRICT_POPUP_NUMBER": "Numéro",
+    "DISTRICT_POPUP_ARRONDISSEMENT": "Arrondissement",
+    "DISTRICT_POPUP_PROBLEMS": "Signalements actifs"
   },
   "DUPLICATES": {
     "TITLE": "Groupes de doublons",
@@ -488,7 +494,8 @@
     "END_CALL_SUCCESS": "Appel terminé avec succès",
     "END_CALL_ERROR": "Erreur lors de la fin de l'appel",
     "ADD_USER_SUCCESS": "Utilisateur ajouté à l'appel",
-    "ADD_USER_ERROR": "Impossible d'ajouter cet utilisateur à l'appel"
+    "ADD_USER_ERROR": "Impossible d'ajouter cet utilisateur à l'appel",
+    "NEW_CALL_RECEIVED": "Nouvel appel entrant"
   },
   "CHAT": {
     "TITLE": "Messagerie",
@@ -648,6 +655,8 @@
     "AGO": "Il y a",
     "DAYS": "jours",
     "REPLY": "réponse",
-    "REPLIES": "réponses"
+    "REPLIES": "réponses",
+    "NO_COMMENTS": "Aucun commentaire",
+    "NO_COMMENTS_DESC": "Aucun commentaire n'a été ajouté à ce signalement pour le moment."
   }
 }

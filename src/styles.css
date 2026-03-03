@@ -148,6 +148,14 @@ main {
   background-color: var(--color-bg-secondary);
 }
 
+/* Pas de scroll sur la page carte */
+body.map-page,
+body.map-page main {
+  overflow: hidden;
+  min-height: unset;
+  height: 100%;
+}
+
 /* Full-screen pages (e.g. pin-board): <main> fills remaining height, no scroll */
 main.page-fullscreen {
   overflow: hidden !important;

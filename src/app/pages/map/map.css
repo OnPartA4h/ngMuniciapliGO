@@ -2,12 +2,14 @@
   display: block;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 .map-container {
   height: calc(100vh - 70px);
-  width: 100vw;
+  width: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 #map {
@@ -130,11 +132,31 @@
 ::ng-deep .district-popup .leaflet-popup-content-wrapper {
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-lg);
-    padding: var(--spacing-sm);
+    padding: 0;
+    overflow: hidden;
 }
 
 ::ng-deep .district-popup .leaflet-popup-content {
-    margin: var(--spacing-md);
+    margin: 0;
     font-size: var(--font-size-sm);
     line-height: 1.6;
+}
+
+::ng-deep .district-popup .leaflet-popup-close-button {
+    color: #fff !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    width: 28px !important;
+    height: 28px !important;
+    line-height: 26px !important;
+    top: 4px !important;
+    right: 6px !important;
+    opacity: 0.85;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+::ng-deep .district-popup .leaflet-popup-close-button:hover {
+    opacity: 1;
+    background: rgba(0,0,0,0.15);
+    border-radius: 50%;
 }

@@ -12,3 +12,6 @@ export interface PhoneCall {
     clientId: string
     client: User
 }
+
+/** DTO envoyé par le backend via SignalR (CallHub) */
+export type CallLiveDTO = PhoneCall;

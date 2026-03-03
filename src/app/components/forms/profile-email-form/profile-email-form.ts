@@ -8,18 +8,21 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [ReactiveFormsModule, TranslateModule],
   templateUrl: './profile-email-form.html',
+  styleUrl: './profile-email-form.css',
 })
 export class ProfileEmailFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
 
   readonly currentEmail = input<string | null>(null);
   readonly isSaving = input(false);
+  readonly isSupport = input(false);
   readonly successMessage = input<string | null>(null);
   readonly errorMessage = input<string | null>(null);
 
   readonly formSubmit = output<{
     newEmail: string;
 }>();
+  readonly resetPassword = output<void>();
 
   emailForm: FormGroup;
 

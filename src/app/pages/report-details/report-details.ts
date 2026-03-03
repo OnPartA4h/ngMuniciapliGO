@@ -13,6 +13,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../services/notification.service';
 import { ColBleuOption } from '../../models/user';
 import { LoadingSpinnerComponent, EmptyStateComponent, ToastService } from '../../components/ui';
+import { AuthService } from '../../services/auth-service';
+import { SupportService } from '../../services/support-service';
 
 let debounceTimer: any;
 
@@ -32,6 +34,12 @@ export class ReportDetails implements OnInit {
   private toast = inject(ToastService);
   private translate = inject(TranslateService);
   private notifService = inject(NotificationService)
+  private authService = inject(AuthService);
+  private supportService = inject(SupportService);
+
+  get isSupport(): boolean {
+    return this.authService.roles().includes('Support');
+  }
 
   problem: Problem | null = null;
   isLoading = true;
@@ -62,10 +70,13 @@ export class ReportDetails implements OnInit {
     const params = await firstValueFrom(this.route.params);
     if (params['id']) {
       try {
-        this.problem = await this.whiteService.getProblem(params['id']);
+        if (this.isSupport) {
+          this.problem = await this.supportService.getProblem(parseInt(params['id']));
+        } else {
+          this.problem = await this.whiteService.getProblem(params['id']);
+          this.isSubscribed = await this.notifService.isSubscribed(params['id']);
+        }
         this.photoIndex.set(0);
-
-        this.isSubscribed = await this.notifService.isSubscribed(params['id']);
       } catch (error) {
         console.error('Error loading problem:', error);
       }

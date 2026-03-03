@@ -8,10 +8,12 @@ import { DaysAgoPipe } from '../../pipes/days-ago-pipe';
 import { Pagination } from '../../models/pagination';
 import { PaginationComponent } from '../../components/ui/pagination/pagination';
 import { TranslateModule } from '@ngx-translate/core';
+import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal';
+import { EmptyStateComponent } from '../../components/ui/empty-state/empty-state';
 
 @Component({
   selector: 'app-comments',
-  imports: [PageHeaderComponent, DaysAgoPipe, RouterLink, PaginationComponent, TranslateModule],
+  imports: [PageHeaderComponent, DaysAgoPipe, RouterLink, PaginationComponent, TranslateModule, ConfirmModalComponent, EmptyStateComponent],
   templateUrl: './comments.html',
   styleUrl: './comments.css',
 })
@@ -23,6 +25,9 @@ export class Comments implements OnInit{
   openReplies = new Set<number>();
   problemId: number = -1
   pagination: Pagination | null = null;
+  showConfirmModal = signal<boolean>(false)
+
+  deleteCommentId: number = -1
 
   async ngOnInit(){
     this.route.paramMap.subscribe((params: ParamMap) => {
@@ -53,6 +58,38 @@ export class Comments implements OnInit{
 
   async onPageChange(page: number) {
     await this.getComments(page);
+  }
+
+  deleteComment(commentId: number) {
+    this.showConfirmModal.set(true)
+    this.deleteCommentId = commentId
+  }
+
+  async confirmDeleteComment() {
+    await this.commentsService.deleteComment(this.problemId, this.deleteCommentId)
+    this.showConfirmModal.set(false)
+
+    // Retrait immédiat depuis la liste locale sans rechargement
+    const id = this.deleteCommentId;
+    this.comments.update(list => {
+      // Vérifier si c'est un commentaire principal
+      const isTopLevel = list.some(c => c.id === id);
+      if (isTopLevel) {
+        return list.filter(c => c.id !== id);
+      }
+      // Sinon c'est une réponse : la retirer de son parent
+      return list.map(c => ({
+        ...c,
+        replies: c.replies.filter(r => r.id !== id)
+      }));
+    });
+
+    this.deleteCommentId = -1;
+  }
+
+  cancelDeleteComment() {
+    this.showConfirmModal.set(false)
+    this.deleteCommentId = -1
   }
 
   /**
