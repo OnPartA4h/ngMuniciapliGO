@@ -48,6 +48,12 @@
       {{ 'HEADER.HELP_DESK' | translate }}
     </a>
     }
+
+    @if (isConnected()) {
+      <a routerLink="/pin-board" routerLinkActive="active">
+        📌 {{ 'HEADER.PIN_BOARD' | translate }}
+      </a>
+    }
   </nav>
 
   <!-- Actions droite -->

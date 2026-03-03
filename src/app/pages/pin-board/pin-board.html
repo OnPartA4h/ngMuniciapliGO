@@ -1,0 +1,33 @@
+<div class="pin-board-root" #board>
+  <!-- Vignette overlay (static, never zooms) -->
+  <div class="pin-board-vignette"></div>
+
+  <!-- Single zoomable layer — bg image + cards move as one unit -->
+  <div class="pin-board-viewport" #viewport>
+    <!-- Background fills the viewport so it scales with the cards -->
+    <div class="pin-board-bg" #bgLayer></div>
+
+    @for (entry of entries; track trackById($index, entry)) {
+      <app-pin-photo
+        [photo]="entry.photo"
+        [state]="entry.state"
+        [entryId]="entry.id"
+        [boardElement]="boardRef.nativeElement"
+        [draggingEnabled]="!isInspecting"
+        (inspectRequest)="onInspectRequest(entry, $event)"
+        (dragEnd)="onDragEnd(entry, $event)"
+        (bringToFront)="bringToFront(entry)"
+      />
+    }
+  </div>
+
+  <!-- Inspect overlay — click to exit zoom -->
+  @if (isInspecting) {
+    <div class="inspect-overlay" (click)="exitInspect()">
+      <button class="inspect-back-btn" (click)="$event.stopPropagation(); exitInspect()">
+        <i class="fas fa-arrow-left"></i>
+        Back to board
+      </button>
+    </div>
+  }
+</div>

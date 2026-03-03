@@ -129,11 +129,22 @@ html {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow: hidden; /* Never allow page-level scroll */
+}
+
+/* App root — full viewport, column flex so header + main fill height */
+app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Main Container */
 main {
-  min-height: calc(100vh - 64px);
+  flex: 1 1 0;
+  min-height: 0;           /* allow flex child to shrink below content size */
+  overflow: auto;          /* pages that need scroll still scroll inside <main> */
   background-color: var(--color-bg-secondary);
 }
 
@@ -143,6 +154,12 @@ body.map-page main {
   overflow: hidden;
   min-height: unset;
   height: 100%;
+}
+
+/* Full-screen pages (e.g. pin-board): <main> fills remaining height, no scroll */
+main.page-fullscreen {
+  overflow: hidden !important;
+  height: 100% !important;
 }
 
 /* Typography */

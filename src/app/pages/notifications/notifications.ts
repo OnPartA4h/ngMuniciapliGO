@@ -108,6 +108,8 @@ export class Notifications implements OnInit, OnDestroy {
 
     if (!this.isReportedComment(notification)){
       this.router.navigate(['/report-details', notification.problemeId]);
+    } else {
+      this.router.navigate(['/comments/', notification.problemeId])
     }
     
   }

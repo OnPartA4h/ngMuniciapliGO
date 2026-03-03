@@ -52,12 +52,14 @@ export class CallHubService {
       });
     });
 
-    this.hubConnection.onreconnected(() => {
+    this.hubConnection.onreconnected(async () => {
       this.ngZone.run(() => {
         console.log('Reconnected to call hub');
         this.isConnected.set(true);
         this.reconnectAttempts = 0;
       });
+      // Rejoindre le groupe support après reconnexion automatique
+      await this.joinSupportQueue();
     });
 
     this.hubConnection.onclose(() => {
@@ -98,6 +100,8 @@ export class CallHubService {
         this.isConnected.set(true);
         this.reconnectAttempts = 0;
       });
+      // Rejoindre le groupe support pour recevoir les événements d'appels
+      await this.joinSupportQueue();
     } catch (err) {
       this.ngZone.run(() => {
         console.error('Error connecting to call hub:', err);
@@ -142,5 +146,23 @@ export class CallHubService {
 
   isConnectionActive(): boolean {
     return this.hubConnection?.state === signalR.HubConnectionState.Connected;
+  }
+
+  /**
+   * Rejoint le groupe SignalR "SupportQueue" afin de recevoir
+   * les événements CallAdded / CallUpdated / CallRemoved.
+   * Doit être appelé après chaque connexion ou reconnexion.
+   */
+  async joinSupportQueue(): Promise<void> {
+    if (!this.hubConnection || this.hubConnection.state !== signalR.HubConnectionState.Connected) {
+      console.warn('Cannot join SupportQueue: hub not connected');
+      return;
+    }
+    try {
+      await this.hubConnection.invoke('JoinSupportQueue');
+      console.log('Joined SupportQueue group on call hub');
+    } catch (err) {
+      console.error('Error joining SupportQueue group:', err);
+    }
   }
 }

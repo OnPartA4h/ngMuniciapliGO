@@ -1,0 +1,118 @@
+/* ── Outer drag container — GSAP moves x/y here ─────────────────────────── */
+:host {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 180px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Outer wrapper that GSAP Draggable translates */
+.pin-card-drag {
+  width: 180px;
+}
+
+/* ── Inner sway wrapper — GSAP rotates this for pendulum swing ───────────── */
+.pin-card-sway {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  /* Pivot at the pin = top center */
+  transform-origin: 50% 0%;
+}
+
+/* ── Pushpin — the drag trigger ──────────────────────────────────────────── */
+.pin {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: -6px;
+  cursor: grab;
+  pointer-events: all;
+}
+
+.pin:active {
+  cursor: grabbing;
+}
+
+.pin-head {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ff6b6b, #b71c1c);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.45),
+    inset 0 -2px 4px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.pin-head::after {
+  content: '';
+  position: absolute;
+  top: 18%;
+  left: 22%;
+  width: 30%;
+  height: 25%;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+  transform: rotate(-30deg);
+}
+
+.pin-needle {
+  width: 3px;
+  height: 10px;
+  background: linear-gradient(to bottom, #bdbdbd, #757575);
+  border-radius: 0 0 2px 2px;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* ── Polaroid card ───────────────────────────────────────────────────────── */
+.polaroid {
+  background: #fffef8;
+  padding: 10px 10px 28px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  border: 1px solid rgba(0,0,0,0.06);
+  width: 100%;
+  box-sizing: border-box;
+  transition: box-shadow 0.2s;
+  border-radius: 2px;
+  cursor: zoom-in;
+}
+
+.polaroid-image-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #e0e0e0;
+}
+
+.polaroid-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  border-radius: 1px;
+}
+
+.polaroid-caption {
+  margin-top: 8px;
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.polaroid-caption span {
+  font-family: 'Caveat', 'Patrick Hand', 'Comic Sans MS', cursive;
+  font-size: 13px;
+  color: #444;
+  text-align: center;
+  line-height: 1.3;
+  word-break: break-word;
+}
