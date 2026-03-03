@@ -92,7 +92,31 @@ body {
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="voxel.icon.png" />
 <link rel="apple-touch-icon" href="voxel.apple-touch-icon.png"/>
-
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, set, remove, onChildAdded, onChildChanged, onChildRemoved, onValue, onDisconnect, get } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+const firebaseConfig = {
+apiKey: "tcLAZXjXTrODusud8lc3DKyJ9rqkycBQFrPrn8tl", 
+authDomain: "voxel-f939c.firebaseapp.com",
+databaseURL: "https://voxel-f939c-default-rtdb.firebaseio.com",
+projectId: "voxel-f939c",
+storageBucket: "voxel-f939c.appspot.com",
+messagingSenderId: "614969776355",
+appId: "1:614969776355:web:eef6dfa88fd4c237f00dd6"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+window._voxelDB = db;
+window._voxelFBRef = ref;
+window._voxelFBSet = set;
+window._voxelFBRemove = remove;
+window._voxelFBOnChildAdded = onChildAdded;
+window._voxelFBOnChildChanged = onChildChanged;
+window._voxelFBOnChildRemoved = onChildRemoved;
+window._voxelFBOnValue = onValue;
+window._voxelFBOnDisconnect = onDisconnect;
+console.log('Firebase ready');
+</script>
 	</head>
 	<body>
 		<canvas id="canvas">
@@ -111,7 +135,7 @@ body {
 
 		<script src="voxel.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"voxel","experimentalVK":false,"fileSizes":{"voxel.pck":35064,"voxel.wasm":36145869},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"voxel","experimentalVK":false,"fileSizes":{"voxel.pck":46220,"voxel.wasm":36145869},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 

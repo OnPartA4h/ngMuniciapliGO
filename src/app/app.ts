@@ -9,6 +9,29 @@ import { ChatHubService } from './services/chat-hub.service';
 import { filter } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyA6ze27dtjUYV48z7QU6fkKT63_EKwri8k",
+  authDomain: "voxel-f939c.firebaseapp.com",
+  databaseURL: "https://voxel-f939c-default-rtdb.firebaseio.com",
+  projectId: "voxel-f939c",
+  storageBucket: "voxel-f939c.firebasestorage.app",
+  messagingSenderId: "614969776355",
+  appId: "1:614969776355:web:eef6dfa88fd4c237f00dd6",
+  measurementId: "G-0H81XR8P0V"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
 @Component({
   selector: 'app-root',
   standalone: true,
