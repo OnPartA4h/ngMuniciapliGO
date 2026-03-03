@@ -16,16 +16,16 @@ export class AuthService {
 
   private apiUrl = environment.apiUrl;
 
-  private tokenSignal : WritableSignal<string|null> = signal(localStorage.getItem("token"));
-  readonly token : Signal<string|null> = this.tokenSignal.asReadonly();
+  private tokenSignal: WritableSignal<string | null> = signal(localStorage.getItem("token"));
+  readonly token: Signal<string | null> = this.tokenSignal.asReadonly();
 
-  private rolesSignal : WritableSignal<string[]> = signal(
+  private rolesSignal: WritableSignal<string[]> = signal(
     localStorage.getItem("roles") ? JSON.parse(localStorage.getItem("roles")!) : []
   );
-  readonly roles : Signal<string[]> = this.rolesSignal.asReadonly();
+  readonly roles: Signal<string[]> = this.rolesSignal.asReadonly();
 
-  private profilePictureSignal : WritableSignal<string|null> = signal(localStorage.getItem("profilePictureUrl"));
-  readonly profilePictureUrl : Signal<string|null> = this.profilePictureSignal.asReadonly();
+  private profilePictureSignal: WritableSignal<string | null> = signal(localStorage.getItem("profilePictureUrl"));
+  readonly profilePictureUrl: Signal<string | null> = this.profilePictureSignal.asReadonly();
 
   private loginResponse: any = null;
   private notificationHubService = inject(NotificationHubService);
@@ -39,31 +39,32 @@ export class AuthService {
     };
 
     const response = await lastValueFrom(this.http.post<any>(`${this.apiUrl}/api/Auth/login`, dto));
-      console.log(response);
+    console.log(response);
 
-      const roles: string[] = response.user.roles;
+    const roles: string[] = response.user.roles;
 
-      this.updateSignals(response)
+    this.updateSignals(response)
 
-      // Update profile picture signal from login response
-      const pfpUrl = response.user.profilePictureUrl || null;
-      this.profilePictureSignal.set(pfpUrl);
-      if (pfpUrl) {
-        localStorage.setItem("profilePictureUrl", pfpUrl);
-      } else {
-        localStorage.removeItem("profilePictureUrl");
-      }
+    // Update profile picture signal from login response
+    const pfpUrl = response.user.profilePictureUrl || null;
+    this.profilePictureSignal.set(pfpUrl);
+    if (pfpUrl) {
+      localStorage.setItem("profilePictureUrl", pfpUrl);
+    } else {
+      localStorage.removeItem("profilePictureUrl");
+    }
 
-      // Store the login response for mustResetPassword check
-      this.loginResponse = response;
+    // Store the login response for mustResetPassword check
+    this.loginResponse = response;
   }
 
   updateSignals(data: any) {
     localStorage.setItem("token", data.token);
-    localStorage.setItem("roles", JSON.stringify(data.user.roles))
-    localStorage.setItem("userId", data.user.id)
-    this.tokenSignal.set(data.token)
-    this.rolesSignal.set(data.user.roles)
+    localStorage.setItem("roles", JSON.stringify(data.user.roles));
+    localStorage.setItem("userId", data.user.id);
+    localStorage.setItem("username", data.user.firstName + " " + data.user.lastName);
+    this.tokenSignal.set(data.token);
+    this.rolesSignal.set(data.user.roles);
   }
 
   isAuthenticated(): boolean {
@@ -105,7 +106,7 @@ export class AuthService {
       this.http.post<void>(`${this.apiUrl}/api/Auth/forgot-password`, dto)
     );
     console.log(res);
-    
+
   }
 
   logout() {
@@ -113,7 +114,7 @@ export class AuthService {
     localStorage.removeItem("roles")
     localStorage.removeItem("userId")
     localStorage.removeItem("profilePictureUrl")
-    
+
     this.tokenSignal.set(null)
     this.rolesSignal.set([])
     this.profilePictureSignal.set(null)
