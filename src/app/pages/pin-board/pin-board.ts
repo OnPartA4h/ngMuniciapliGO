@@ -52,6 +52,7 @@ export class PinBoard implements AfterViewInit, OnDestroy {
     { url: '/assets/images/board_page/guild_wars.png',    text: '250 000 kills (Ultimate Dominator)' },
     { url: '/assets/images/board_page/late.png',    text: 'R: Arriver plus tard qu\'eux' },
     { url: '/assets/images/board_page/imports.png',    text: 'Pourquoi le coder soi-même si une librairie existe déjà ? 🤔' },
+    { url: '/assets/images/board_page/hello_moto.jpg',    text: 'HOW THE F*** DO I SILENCE HELLO MOTO 😡' },
   ];
 
   entries: PinPhotoEntry[] = [];
