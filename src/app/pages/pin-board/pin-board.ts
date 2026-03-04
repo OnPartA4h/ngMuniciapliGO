@@ -35,6 +35,8 @@ export class PinBoard implements AfterViewInit, OnDestroy {
   @ViewChild('viewport') viewportRef!: ElementRef<HTMLElement>;
   @ViewChildren(PinPhotoComponent) pinPhotoComponents!: QueryList<PinPhotoComponent>;
 
+  boardBgStyle = `url('${assetUrl('assets/images/board_page/board.jpg')}') center center / cover no-repeat`;
+
   constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {}
 
   // ── Photo data ──────────────────────────────────────────────────────────

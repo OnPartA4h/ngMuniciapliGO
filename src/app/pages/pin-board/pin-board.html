@@ -5,7 +5,7 @@
   <!-- Single zoomable layer — bg image + cards move as one unit -->
   <div class="pin-board-viewport" #viewport>
     <!-- Background fills the viewport so it scales with the cards -->
-    <div class="pin-board-bg" #bgLayer></div>
+    <div class="pin-board-bg" #bgLayer [style.background]="boardBgStyle"></div>
 
     @for (entry of entries; track trackById($index, entry)) {
       <app-pin-photo
