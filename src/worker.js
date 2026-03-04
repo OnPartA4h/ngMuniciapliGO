@@ -3,44 +3,80 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Intercepter TOUTES les requêtes vers des fichiers .wasm (quel que soit le sous-chemin)
-    // Ex: /voxel.wasm ou /assets/godot/voxel.wasm
+    // ─────────────────────────────────────────────────────────────────
+    // CAS 1 : Le navigateur/Godot demande directement un .wasm.gz
+    //   → on récupère le fichier depuis ASSETS et on REMPLACE les headers
+    //     pour que le navigateur le décompresse et le traite comme du WASM.
+    //   Note : on bypass le cache Cloudflare via Cache-Control: no-store
+    //          sur la requête interne pour toujours passer par le worker.
+    // ─────────────────────────────────────────────────────────────────
+    if (url.pathname.endsWith('.wasm.gz')) {
+      const assetRequest = new Request(request.url, {
+        method: request.method,
+        headers: request.headers,
+      });
+      const gzipResponse = await env.ASSETS.fetch(assetRequest);
+
+      if (gzipResponse.status === 200) {
+        const headers = new Headers(gzipResponse.headers);
+        // Headers OBLIGATOIRES pour que le navigateur accepte le fichier comme WASM décompressé
+        headers.set('Content-Type', 'application/wasm');
+        headers.set('Content-Encoding', 'gzip');
+        headers.delete('Content-Length'); // recalculé après décompression côté client
+        // Empêcher Cloudflare de recacher la réponse avec de mauvais headers
+        headers.set('Cache-Control', 'no-store');
+        // Header de debug : permet de confirmer que le worker a traité la requête
+        headers.set('X-Worker-Handled', 'wasm-gz');
+
+        return new Response(gzipResponse.body, {
+          status: 200,
+          statusText: 'OK',
+          headers,
+        });
+      }
+
+      return new Response('WebAssembly GZ file not found', { status: 404 });
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // CAS 2 : Le navigateur demande un .wasm « normal »
+    //   1. Essayer de servir le .wasm tel quel (s'il existe)
+    //   2. Sinon, chercher le .wasm.gz et le reserver avec les bons headers
+    // ─────────────────────────────────────────────────────────────────
     if (url.pathname.endsWith('.wasm')) {
-      // 1. Essayer d'abord de servir le .wasm normal (s'il existe)
       const wasmResponse = await env.ASSETS.fetch(request);
       if (wasmResponse.status === 200) {
         return wasmResponse;
       }
 
-      // 2. Si le .wasm n'existe pas, essayer le .wasm.gz compressé :)
+      // Fallback : essayer le .wasm.gz correspondant
       const gzipUrl = new URL(url.pathname + '.gz', url.origin);
       const gzipResponse = await env.ASSETS.fetch(new Request(gzipUrl.toString(), request));
 
       if (gzipResponse.status === 200) {
-        // Reconstruire la réponse avec les bons headers pour que le navigateur
-        // décompresse automatiquement le gzip et traite le contenu comme du WASM
         const headers = new Headers(gzipResponse.headers);
         headers.set('Content-Type', 'application/wasm');
         headers.set('Content-Encoding', 'gzip');
-        headers.delete('Content-Length'); // Le navigateur recalcule après décompression
-        headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+        headers.delete('Content-Length');
+        headers.set('Cache-Control', 'no-store');
+        headers.set('X-Worker-Handled', 'wasm-fallback-gz');
 
         return new Response(gzipResponse.body, {
           status: 200,
           statusText: 'OK',
-          headers: headers,
+          headers,
         });
       }
 
-      // 3. Ni .wasm ni .wasm.gz trouvé → 404
       return new Response('WebAssembly file not found', { status: 404 });
     }
 
-    // Pour toutes les autres requêtes, essayer de récupérer le fichier statique
+    // ─────────────────────────────────────────────────────────────────
+    // CAS 3 : Toutes les autres requêtes → fichier statique ou SPA fallback
+    // ─────────────────────────────────────────────────────────────────
     let response = await env.ASSETS.fetch(request);
 
-    // Si le fichier n'existe pas (404) et que ce n'est pas un fichier avec extension
-    // → rediriger vers index.html pour le routing Angular (SPA fallback)
+    // SPA fallback : si la route n'existe pas et n'a pas d'extension → index.html
     if (response.status === 404 && !url.pathname.includes('.')) {
       const indexRequest = new Request(new URL('/index.html', request.url), request);
       response = await env.ASSETS.fetch(indexRequest);
