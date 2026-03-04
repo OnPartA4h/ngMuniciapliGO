@@ -1,0 +1,15 @@
+/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  X-Content-Type-Options: nosniff
+
+/*.wasm.gz
+  Content-Type: application/wasm
+  Content-Encoding: gzip
+
+/*.pck
+  Content-Type: application/octet-stream
+
+/*.js.gz
+  Content-Type: application/javascript
+  Content-Encoding: gzip
