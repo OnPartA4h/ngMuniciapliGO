@@ -1,53 +1,43 @@
-// Worker pour gérer le routing d'une SPA Angular
+// Worker pour gérer le routing d'une SPA Angular et la compression gzip
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    
+
+    // Si la requête est pour voxel.wasm, servir le fichier compressé avec les bons headers
+    if (url.pathname.endsWith('/voxel.wasm')) {
+      // Essayer de récupérer le fichier .wasm.gz compressé
+      const gzipUrl = new URL(url.pathname + '.gz', url.origin);
+      const gzipRequest = new Request(gzipUrl, {
+        method: request.method,
+        headers: request.headers,
+      });
+
+      let response = await env.ASSETS.fetch(gzipRequest);
+
+      if (response.status === 200) {
+        // Créer une nouvelle réponse avec les bons en-têtes pour gzip
+        const headers = new Headers(response.headers);
+        headers.set('Content-Type', 'application/wasm');
+        headers.set('Content-Encoding', 'gzip');
+        headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+
+        return new Response(response.body, {
+          status: 200,
+          statusText: response.statusText,
+          headers: headers,
+        });
+      }
+      // Si le .wasm.gz n'existe pas, essayer le .wasm normal
+    }
+
     // Essayer de récupérer le fichier demandé
     let response = await env.ASSETS.fetch(request);
-    
+
     // Si le fichier n'existe pas (404) et que ce n'est pas un fichier avec extension
     // rediriger vers index.html pour le routing Angular
     if (response.status === 404 && !url.pathname.includes('.')) {
       const indexRequest = new Request(new URL('/index.html', request.url), request);
       response = await env.ASSETS.fetch(indexRequest);
-    }
-
-    // Fichiers .wasm.br : Godot exporte le WASM compressé en Brotli.
-    // La décompression est gérée côté navigateur (DecompressionStream('br'))
-    // dans voxel.js. Le worker se contente de servir le fichier brut
-    // avec le bon Content-Type pour éviter tout problème MIME.
-    if (url.pathname.endsWith('.wasm.br')) {
-      const headers = new Headers(response.headers);
-      headers.set('Content-Type', 'application/octet-stream');
-      return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers,
-      });
-    }
-
-    // Fichiers .pck (Godot game data) – s'assurer du bon Content-Type
-    if (url.pathname.endsWith('.pck')) {
-      const headers = new Headers(response.headers);
-      headers.set('Content-Type', 'application/octet-stream');
-      return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers,
-      });
-    }
-
-    // Headers Cross-Origin Isolation requis par Godot pour SharedArrayBuffer / threads
-    if (url.pathname.includes('/assets/godot/')) {
-      const headers = new Headers(response.headers);
-      headers.set('Cross-Origin-Opener-Policy', 'same-origin');
-      headers.set('Cross-Origin-Embedder-Policy', 'require-corp');
-      return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers,
-      });
     }
 
     return response;
