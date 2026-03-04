@@ -12,7 +12,7 @@ export default {
         return wasmResponse;
       }
 
-      // 2. Si le .wasm n'existe pas, essayer le .wasm.gz compressé
+      // 2. Si le .wasm n'existe pas, essayer le .wasm.gz compressé :)
       const gzipUrl = new URL(url.pathname + '.gz', url.origin);
       const gzipResponse = await env.ASSETS.fetch(new Request(gzipUrl.toString(), request));
 
