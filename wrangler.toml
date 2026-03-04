@@ -3,7 +3,8 @@ compatibility_date = "2026-01-27"
 main = "src/worker.js"
 
 # Configuration pour servir les assets statiques Angular
+# not_found_handling est volontairement absent : le worker gère lui-même le fallback SPA
+# et l'interception des fichiers .wasm (pour servir les .wasm.gz avec les bons headers)
 [assets]
 directory = "./dist/ng-municipali-go/browser"
 binding = "ASSETS"
-not_found_handling = "single-page-application"
