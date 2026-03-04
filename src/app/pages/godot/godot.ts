@@ -1,4 +1,6 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, inject } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { assetUrl } from '../../app.config';
 
 @Component({
   selector: 'app-godot',
@@ -7,6 +9,9 @@ import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 })
 export class GodotPage {
   @ViewChild('godotIframe') godotIframe!: ElementRef<HTMLIFrameElement>;
+
+  private sanitizer = inject(DomSanitizer);
+  iframeSrc: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(assetUrl('assets/godot/voxel.html'));
 
   fullscreenIframe() {
     const iframe = this.godotIframe?.nativeElement;

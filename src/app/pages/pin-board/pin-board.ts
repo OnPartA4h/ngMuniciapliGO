@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import gsap from 'gsap';
 import { Draggable } from 'gsap/all';
 import { PinPhotoComponent, PinPhoto, PinPhotoState } from '../../components/pin-photo/pin-photo';
+import { assetUrl } from '../../app.config';
 
 gsap.registerPlugin(Draggable);
 
@@ -38,21 +39,21 @@ export class PinBoard implements AfterViewInit, OnDestroy {
 
   // ── Photo data ──────────────────────────────────────────────────────────
   photos: PinPhoto[] = [
-    { url: 'assets/images/board_page/joel.jpg',    text: 'Le Joël de la parole 🗣️' },
-    { url: 'assets/images/board_page/equipe1.jpg',    text: 'Les membres de l\'équipe 3 debout🧍' },
-    { url: 'assets/images/board_page/equipe2.jpg',    text: 'Les membres de l\'équipe 3 assis 🪑' },
-    { url: 'assets/images/board_page/photos_prof.jpg',    text: 'Le roi et ses sujets 🌱👑' },
-    { url: 'assets/images/board_page/tableau_blanc.jpg',    text: 'Architecture et planification de projet ✏️' },
-    { url: 'assets/images/board_page/gh_team.png',    text: 'Notre philosophie d\'équipe 💭' },
-    { url: 'assets/images/board_page/haversine.png',    text: 'Une partie intégrante de notre projet 🧠' },
-    { url: 'assets/images/board_page/time_cube.png',    text: 'Les 4 coins du monde 🌍' },
-    { url: 'assets/images/board_page/refactor.png',    text: '"Bro I swear just one more refactor"' },
-    { url: 'assets/images/board_page/git_force.png',    text: 'git push origin main --force' },
-    { url: 'assets/images/board_page/quit_job.png',    text: '"Je pars live sinon il y aura trop de traffic"' },
-    { url: 'assets/images/board_page/guild_wars.png',    text: '250 000 kills (Ultimate Dominator)' },
-    { url: 'assets/images/board_page/late.png',    text: 'R: Arriver plus tard qu\'eux' },
-    { url: 'assets/images/board_page/imports.png',    text: 'Pourquoi le coder soi-même si une librairie existe déjà ? 🤔' },
-    { url: 'assets/images/board_page/hello_moto.jpg',    text: 'HOW THE F*** DO I SILENCE HELLO MOTO 😡' },
+    { url: assetUrl('assets/images/board_page/joel.jpg'),    text: 'Le Joël de la parole 🗣️' },
+    { url: assetUrl('assets/images/board_page/equipe1.jpg'),    text: 'Les membres de l\'équipe 3 debout🧍' },
+    { url: assetUrl('assets/images/board_page/equipe2.jpg'),    text: 'Les membres de l\'équipe 3 assis 🪑' },
+    { url: assetUrl('assets/images/board_page/photos_prof.jpg'),    text: 'Le roi et ses sujets 🌱👑' },
+    { url: assetUrl('assets/images/board_page/tableau_blanc.jpg'),    text: 'Architecture et planification de projet ✏️' },
+    { url: assetUrl('assets/images/board_page/gh_team.png'),    text: 'Notre philosophie d\'équipe 💭' },
+    { url: assetUrl('assets/images/board_page/haversine.png'),    text: 'Une partie intégrante de notre projet 🧠' },
+    { url: assetUrl('assets/images/board_page/time_cube.png'),    text: 'Les 4 coins du monde 🌍' },
+    { url: assetUrl('assets/images/board_page/refactor.png'),    text: '"Bro I swear just one more refactor"' },
+    { url: assetUrl('assets/images/board_page/git_force.png'),    text: 'git push origin main --force' },
+    { url: assetUrl('assets/images/board_page/quit_job.png'),    text: '"Je pars live sinon il y aura trop de traffic"' },
+    { url: assetUrl('assets/images/board_page/guild_wars.png'),    text: '250 000 kills (Ultimate Dominator)' },
+    { url: assetUrl('assets/images/board_page/late.png'),    text: 'R: Arriver plus tard qu\'eux' },
+    { url: assetUrl('assets/images/board_page/imports.png'),    text: 'Pourquoi le coder soi-même si une librairie existe déjà ? 🤔' },
+    { url: assetUrl('assets/images/board_page/hello_moto.jpg'),    text: 'HOW THE F*** DO I SILENCE HELLO MOTO 😡' },
   ];
 
   entries: PinPhotoEntry[] = [];

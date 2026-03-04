@@ -67,6 +67,7 @@
               ],
               "outputHashing": "all",
               "baseHref": "/ngMuniciapliGO/",
+              "deployUrl": "/ngMuniciapliGO/",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

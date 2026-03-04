@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NotificationBell } from '../notification-bell/notification-bell';
 import { ChatBell } from '../chat-bell/chat-bell';
 import { environment } from '../../../environments/environment';
+import { assetUrl } from '../../app.config';
 
 @Component({
   selector: 'app-header',
@@ -19,6 +20,8 @@ export class Header {
   languageService = inject(LanguageService);
   activeCallService = inject(ActiveCallService);
   private router = inject(Router);
+
+  logoUrl = assetUrl('assets/images/Logo.png');
 
   // Utiliser un computed pour réagir aux changements du signal token
   isConnected = computed(() => !!this.authService.token());

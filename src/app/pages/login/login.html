@@ -1,12 +1,12 @@
 <div class="login-page">
   <a routerLink="/home" class="logo-link">
-    <div class="logo"><img src="assets/images/Logo.png" class="login-logo-img"> MunicipaliGO</div>
+    <div class="logo"><img [src]="logoUrl" class="login-logo-img"> MunicipaliGO</div>
   </a>
 
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">
-        <img src="assets/images/LogoText.png" class="login-logo-text">
+        <img [src]="logoTextUrl" class="login-logo-text">
         <p>{{ 'LOGIN.SUBTITLE' | translate }}</p>
       </div>
 

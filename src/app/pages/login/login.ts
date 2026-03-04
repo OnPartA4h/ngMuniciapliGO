@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ForceResetPasswordModal } from '../../components/modals/force-reset-password-modal/force-reset-password-modal';
 import { ForgotPasswordModal } from '../../components/modals/forgot-password-modal/forgot-password-modal';
+import { assetUrl } from '../../app.config';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,9 @@ export class Login implements OnInit {
   router = inject(Router);
   private route = inject(ActivatedRoute);
   private translateService = inject(TranslateService);
+
+  logoUrl = assetUrl('assets/images/Logo.png');
+  logoTextUrl = assetUrl('assets/images/LogoText.png');
   
   formGroup: FormGroup;
   showResetPasswordModal = signal<boolean>(false);
