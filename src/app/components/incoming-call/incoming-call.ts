@@ -5,6 +5,7 @@ import { ChatHubService } from '../../services/chat-hub.service';
 import { VideoCallService } from '../../services/video-call.service';
 import { ActiveCallService } from '../../services/active-call.service';
 import { IncomingCallEvent } from '../../models/chat';
+import { assetUrl } from '../../app.config';
 
 @Component({
   selector: 'app-incoming-call',
@@ -76,7 +77,7 @@ export class IncomingCallComponent implements OnInit, OnDestroy {
         joining:  'true',         // flag callee — le caller est déjà dans la room
       });
       const callWin = window.open(
-        `/call?${params.toString()}`,
+        assetUrl(`call?${params.toString()}`),
         '_blank',
         'width=900,height=700,menubar=no,toolbar=no',
       );

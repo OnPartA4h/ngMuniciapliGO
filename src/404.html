@@ -4,17 +4,19 @@
   <meta charset="utf-8">
   <title>MunicipaliGO</title>
   <script type="text/javascript">
-    // Script de redirection SPA pour GitHub Pages
-    // Redirige toutes les routes vers index.html via un paramètre de requête
-    // que le script dans index.html reconvertira en route
-    var pathSegmentsToKeep = 1; // Nombre de segments du repo (1 pour /ngMuniciapliGO/)
+    // SPA redirect for GitHub Pages – preserves path + full query string
+    var pathSegmentsToKeep = 1; // 1 for /ngMuniciapliGO/
 
     var l = window.location;
+    // Encode the path after the repo segment as the first query-param value,
+    // and append the original search string (minus leading '?') after ~qs~.
+    var pathAfterRepo = l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/');
+    var qs = l.search ? l.search.slice(1) : '';
+    var encoded = pathAfterRepo + (qs ? '~qs~' + qs : '');
     l.replace(
       l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-      l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-      (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') +
+      '/?/' + encoded.replace(/&/g, '~and~') +
       l.hash
     );
   </script>

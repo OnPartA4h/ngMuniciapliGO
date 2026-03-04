@@ -23,6 +23,7 @@ import {
 import { RoleOption } from '../../models/user';
 import { LoadingSpinnerComponent, ToastService } from '../../components/ui';
 import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal';
+import { assetUrl } from '../../app.config';
 
 @Component({
   selector: 'app-chat-detail',
@@ -824,7 +825,7 @@ export class ChatDetail implements OnInit, OnDestroy, AfterViewChecked {
         joining:  'false',        // on est le caller
       });
       const callWin = window.open(
-        `/call?${params.toString()}`,
+        assetUrl(`call?${params.toString()}`),
         '_blank',
         'width=900,height=700,menubar=no,toolbar=no'
       );
