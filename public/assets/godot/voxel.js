@@ -557,11 +557,78 @@ const InternalConfig = function (initConfig) { // eslint-disable-line no-unused-
 				function done(result) {
 					onSuccess(result['instance'], result['module']);
 				}
+				function decompressBrotli(buffer) {
+					if (!buffer || buffer.byteLength < 4) {
+						return Promise.resolve(buffer);
+					}
+					// Check for Brotli magic bytes: cf ff ff 7f
+					const view = new Uint8Array(buffer);
+					if (view[0] === 0xcf && view[1] === 0xff && view[2] === 0xff && view[3] === 0x7f) {
+						// Data is Brotli compressed, decompress it
+						return new Promise(function (resolve, reject) {
+							const brotliReady = typeof window !== 'undefined' && window.brotliReady;
+							if (brotliReady) {
+								brotliReady.then(function (BrotliDecode) {
+									if (typeof BrotliDecode === 'function') {
+										try {
+											const decompressed = BrotliDecode(view);
+											resolve(decompressed);
+										} catch (e) {
+											console.error('Brotli decompression failed:', e);
+											reject(e);
+										}
+									} else {
+										// BrotliDecode might be undefined if loading failed
+										if (typeof window !== 'undefined' && window.BrotliDecode) {
+											try {
+												const decompressed = window.BrotliDecode(view);
+												resolve(decompressed);
+											} catch (e) {
+												console.error('Brotli decompression failed:', e);
+												reject(e);
+											}
+										} else {
+											reject(new Error('Brotli decompression not available'));
+										}
+									}
+								}).catch(reject);
+							} else if (typeof window !== 'undefined' && window.BrotliDecode) {
+								try {
+									const decompressed = window.BrotliDecode(view);
+									resolve(decompressed);
+								} catch (e) {
+									console.error('Brotli decompression failed:', e);
+									reject(e);
+								}
+							} else {
+								reject(new Error('Brotli library not loaded. Brotli-compressed WebAssembly cannot be instantiated.'));
+							}
+						});
+					}
+					return Promise.resolve(buffer);
+				}
+				
+				function instantiateWithDecompression(response) {
+					return response.arrayBuffer().then(function (buffer) {
+						return decompressBrotli(buffer).then(function (decompressed) {
+							return WebAssembly.instantiate(decompressed, imports);
+						});
+					});
+				}
+				
 				if (typeof (WebAssembly.instantiateStreaming) !== 'undefined') {
-					WebAssembly.instantiateStreaming(Promise.resolve(r), imports).then(done);
+					WebAssembly.instantiateStreaming(Promise.resolve(r), imports).then(done).catch(function (error) {
+						// Fallback to arrayBuffer-based instantiation if streaming fails
+						console.warn('WebAssembly.instantiateStreaming failed, falling back to arrayBuffer method:', error);
+						instantiateWithDecompression(r).then(done).catch(function (err) {
+							console.error('Failed to instantiate WebAssembly:', err);
+							throw err;
+						});
+					});
 				} else {
-					r.arrayBuffer().then(function (buffer) {
-						WebAssembly.instantiate(buffer, imports).then(done);
+					instantiateWithDecompression(r).then(done).catch(function (err) {
+						console.error('Failed to instantiate WebAssembly:', err);
+						throw err;
 					});
 				}
 				r = null;
