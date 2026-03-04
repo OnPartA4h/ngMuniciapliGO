@@ -133,30 +133,6 @@ console.log('Firebase ready');
 			<div id="status-notice"></div>
 		</div>
 
-		<!-- Load Brotli decompression library for WASM module -->
-		<script>
-			// Initialize a promise for brotli loading to handle Brotli-compressed WASM
-			window.brotliReady = new Promise((resolve, reject) => {
-				// Try to load brotli from CDN
-				const script = document.createElement('script');
-				script.src = 'https://cdn.jsdelivr.net/npm/brotli@1.3.3/decompress.min.js';
-				script.onload = () => {
-					// Make the BrotliDecode function globally available
-					if (window.BrotliDecode) {
-						resolve(window.BrotliDecode);
-					} else {
-						console.warn('Brotli library loaded but BrotliDecode not found');
-						reject(new Error('Brotli library did not expose BrotliDecode'));
-					}
-				};
-				script.onerror = () => {
-					console.warn('Failed to load Brotli from CDN, will try to use bundled version');
-					resolve(null);
-				};
-				document.head.appendChild(script);
-			});
-		</script>
-
 		<script src="voxel.js"></script>
 		<script>
 const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"voxel","experimentalVK":false,"fileSizes":{"voxel.pck":92208,"voxel.wasm":36145869},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
