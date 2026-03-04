@@ -686,7 +686,7 @@ const Engine = (function () {
 	Engine.load = function (basePath, size) {
 		if (loadPromise == null) {
 			loadPath = basePath;
-			loadPromise = preloader.loadPromise(`${loadPath}.wasm.br`, size, true);
+			loadPromise = preloader.loadPromise(`${loadPath}.wasm`, size, true);
 			requestAnimationFrame(preloader.animateProgress);
 		}
 		return loadPromise;
@@ -735,7 +735,19 @@ const Engine = (function () {
 					// Make sure to test that when refactoring.
 					return new Promise(function (resolve, reject) {
 						promise.then(function (response) {
-							const cloned = new Response(response.clone().body, { 'headers': [['content-type', 'application/wasm']] });
+							// Décompresser le Brotli (.wasm.br) côté navigateur
+							// car Cloudflare Workers ne peut pas servir Content-Encoding: br
+							// de manière fiable et le clone() ci-dessous perd les headers.
+							let wasmBody = response.clone().body;
+							if (typeof DecompressionStream !== 'undefined') {
+								try {
+									wasmBody = wasmBody.pipeThrough(new DecompressionStream('br'));
+								} catch (e) {
+									// Fallback si le navigateur ne supporte pas 'br'
+									console.warn('DecompressionStream br not supported, using raw body', e);
+								}
+							}
+							const cloned = new Response(wasmBody, { 'headers': [['content-type', 'application/wasm']] });
 							Godot(me.config.getModuleConfig(loadPath, cloned)).then(function (module) {
 								const paths = me.config.persistentPaths;
 								module['initFS'](paths).then(function (err) {

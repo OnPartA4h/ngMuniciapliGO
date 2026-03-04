@@ -14,12 +14,12 @@ export default {
     }
 
     // Fichiers .wasm.br : Godot exporte le WASM compressé en Brotli.
-    // Le navigateur doit recevoir Content-Encoding: br pour le décompresser
-    // automatiquement avant de le passer à WebAssembly.instantiateStreaming().
+    // La décompression est gérée côté navigateur (DecompressionStream('br'))
+    // dans voxel.js. Le worker se contente de servir le fichier brut
+    // avec le bon Content-Type pour éviter tout problème MIME.
     if (url.pathname.endsWith('.wasm.br')) {
       const headers = new Headers(response.headers);
-      headers.set('Content-Type', 'application/wasm');
-      headers.set('Content-Encoding', 'br');
+      headers.set('Content-Type', 'application/octet-stream');
       return new Response(response.body, {
         status: response.status,
         statusText: response.statusText,
