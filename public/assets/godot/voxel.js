@@ -580,6 +580,8 @@ const InternalConfig = function (initConfig) { // eslint-disable-line no-unused-
 					return path;
 				} else if (path.endsWith('.side.wasm')) {
 					return `${loadPath}.side.wasm`;
+				} else if (path.endsWith('.wasm.br')) {
+					return `${loadPath}.wasm.br`;
 				} else if (path.endsWith('.wasm')) {
 					return `${loadPath}.wasm`;
 				}
