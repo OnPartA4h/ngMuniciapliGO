@@ -100,6 +100,7 @@
     "CHANGE_PHOTO": "Change Photo",
     "REMOVE_PHOTO": "Remove Photo",
     "CONFIRM_DELETE_PHOTO": "Are you sure you want to delete your profile picture?",
+    "DELETE_PHOTO_TITLE": "Delete Profile Picture",
     "UPLOAD_PHOTO": "Upload Photo",
     "CROP_PHOTO": "Crop Photo",
     "PHOTO_UPLOADED": "Profile picture updated successfully",

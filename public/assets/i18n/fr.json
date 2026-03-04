@@ -100,6 +100,7 @@
     "CHANGE_PHOTO": "Changer la photo",
     "REMOVE_PHOTO": "Supprimer la photo",
     "CONFIRM_DELETE_PHOTO": "Êtes-vous sûr de vouloir supprimer votre photo de profil ?",
+    "DELETE_PHOTO_TITLE": "Supprimer la photo de profil",
     "UPLOAD_PHOTO": "Télécharger une photo",
     "CROP_PHOTO": "Recadrer la photo",
     "PHOTO_UPLOADED": "Photo de profil mise à jour avec succès",
